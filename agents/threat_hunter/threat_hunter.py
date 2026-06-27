@@ -1,9 +1,57 @@
 import ipaddress
 import json
+from pathlib import Path
 from datetime import datetime
 
-LOG_FILE = "scan_log.txt"
-JSON_LOG_FILE = "scan_log.json"
+# ==========================
+# DATA FILES
+# ==========================
+
+BASE_DIR = Path(__file__).resolve().parents[2]
+DATA_DIR = BASE_DIR / "data"
+
+DATA_DIR.mkdir(exist_ok=True)
+
+LOG_FILE = DATA_DIR / "scan_log.txt"
+JSON_LOG_FILE = DATA_DIR / "scan_log.json"
+
+# ==========================
+# THREAT MODEL
+# ==========================
+
+# Well-known public DNS resolvers verified by their operators.
+# These IPs are safe by definition and should never be flagged as threats.
+TRUSTED_RESOLVERS = {
+    "8.8.8.8":          "Google Public DNS",
+    "8.8.4.4":          "Google Public DNS",
+    "1.1.1.1":          "Cloudflare DNS",
+    "1.0.0.1":          "Cloudflare DNS",
+    "9.9.9.9":          "Quad9 DNS",
+    "149.112.112.112":  "Quad9 DNS",
+    "208.67.222.222":   "OpenDNS",
+    "208.67.220.220":   "OpenDNS",
+    "4.2.2.1":          "Level3 DNS",
+    "4.2.2.2":          "Level3 DNS",
+    "4.2.2.3":          "Level3 DNS",
+    "4.2.2.4":          "Level3 DNS",
+    "4.2.2.5":          "Level3 DNS",
+    "4.2.2.6":          "Level3 DNS",
+}
+
+# RFC 6598 — Shared address space used by ISPs for carrier-grade NAT.
+# Behaves like private space; never externally routable.
+_SHARED_CGN = ipaddress.ip_network("100.64.0.0/10")
+
+# RFC 5737 — Reserved exclusively for documentation and examples.
+# Seeing these in live traffic indicates packet spoofing or misconfiguration.
+_TEST_NETS = [
+    ipaddress.ip_network("192.0.2.0/24"),     # TEST-NET-1
+    ipaddress.ip_network("198.51.100.0/24"),  # TEST-NET-2
+    ipaddress.ip_network("203.0.113.0/24"),   # TEST-NET-3
+]
+
+# RFC 1112 — Reserved for future IANA use; never legitimately routed.
+_RESERVED_FUTURE = ipaddress.ip_network("240.0.0.0/4")
 
 scan_count = 0
 high_count = 0
@@ -52,12 +100,22 @@ def build_status(threat):
 
 
 def build_recommendation(threat, ip_type):
-    if threat == "High":
-        return "Block IP immediately and review recent logs"
-    elif threat == "Medium":
-        return "Monitor IP and review related activity"
+    if ip_type.startswith("Trusted DNS"):
+        return "Known public DNS resolver; no action required"
+    elif ip_type == "Documentation IP":
+        return "RFC 5737 documentation address detected in live traffic — investigate for packet spoofing or misconfiguration"
+    elif ip_type == "Reserved IP":
+        return "Reserved address range (RFC 1112) — investigate anomalous routing or misconfiguration"
+    elif ip_type == "Link-Local IP":
+        return "Link-local address; no external threat — check for DHCP issues if unexpected"
+    elif ip_type == "Shared Address Space":
+        return "ISP carrier-grade NAT address; no external threat"
     elif ip_type == "Private IP":
         return "Internal/private IP detected; no external threat"
+    elif threat == "High":
+        return "Block IP immediately and review recent logs"
+    elif threat == "Medium":
+        return "Unknown public IP — run through threat intel feeds before acting"
     elif threat == "Low":
         return "No immediate action required"
     else:
@@ -104,36 +162,66 @@ def scan_ip(ip):
     global scan_count, high_count, medium_count, low_count
 
     address = ipaddress.ip_address(ip)
+    ip_str = str(address)
 
     if address.is_loopback:
+        # RFC 5735 — loopback addresses never leave the host.
         ip_type = "Localhost"
         threat = "None"
         score = 0
 
     elif address.is_private:
+        # RFC 1918 — private ranges (10/8, 172.16/12, 192.168/16).
+        # Internal traffic only; no external exposure.
         ip_type = "Private IP"
+        threat = "Low"
+        score = 5
+
+    elif address.is_link_local:
+        # RFC 3927 — 169.254.0.0/16, auto-configured when DHCP fails.
+        # Never routed beyond the local link.
+        ip_type = "Link-Local IP"
+        threat = "Low"
+        score = 5
+
+    elif address in _SHARED_CGN:
+        # RFC 6598 — 100.64.0.0/10, ISP carrier-grade NAT space.
+        # Functionally private; should not reach the public internet.
+        ip_type = "Shared Address Space"
+        threat = "Low"
+        score = 5
+
+    elif ip_str in TRUSTED_RESOLVERS:
+        # Known, operator-verified public DNS resolver.
+        # Presence in logs is expected and benign.
+        ip_type = f"Trusted DNS ({TRUSTED_RESOLVERS[ip_str]})"
         threat = "Low"
         score = 5
         low_count += 1
 
+    elif any(address in net for net in _TEST_NETS):
+        # RFC 5737 — documentation-only addresses that must never appear in live traffic.
+        # Detecting one strongly suggests a spoofed or malformed packet.
+        ip_type = "Documentation IP"
+        threat = "High"
+        score = 85
+        high_count += 1
+
+    elif address in _RESERVED_FUTURE:
+        # RFC 1112 — 240.0.0.0/4, reserved for future IANA use.
+        # Legitimate routing of these addresses does not exist.
+        ip_type = "Reserved IP"
+        threat = "Medium"
+        score = 55
+        medium_count += 1
+
     else:
+        # Routable public address with no trust classification on record.
+        # Treat as unknown — warrants monitoring but not immediate blocking.
         ip_type = "Public IP"
-        first_octet = int(str(address).split(".")[0])
-
-        if first_octet < 50:
-            threat = "High"
-            score = 90
-            high_count += 1
-
-        elif first_octet < 100:
-            threat = "Medium"
-            score = 60
-            medium_count += 1
-
-        else:
-            threat = "Low"
-            score = 20
-            low_count += 1
+        threat = "Medium"
+        score = 40
+        medium_count += 1
 
     scan_count += 1
 
@@ -142,7 +230,7 @@ def scan_ip(ip):
     print(f"Type: {ip_type}")
     print(f"Threat Level: {threat}")
     print(f"Threat Score: {score}/100")
-    print(f"Assigned Agent: Agent 001")
+    print("Assigned Agent: Agent 001")
     print(f"Status: {build_status(threat)}")
     print(f"Alert: {build_alert(threat)}")
     print(f"Recommendation: {build_recommendation(threat, ip_type)}")
@@ -258,4 +346,5 @@ def main():
             print("Invalid choice. Pick 1, 2, 3, 4, or 5.")
 
 
-main()
+if __name__ == "__main__":
+    main()

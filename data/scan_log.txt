@@ -1,0 +1,20 @@
+2026-06-26 19:34:19.960637 | 8.8.9.8 | Public IP | Threat: Unknown 🟡
+2026-06-26 19:40:45.448874 | 8.8.8.8 | Public IP | High 🔴 | Score: 90
+2026-06-26 19:40:57.374674 | 45.12.33.1 | Public IP | High 🔴 | Score: 90
+2026-06-26 19:41:09.667772 | 75.44.22.10 | Public IP | Medium 🟠 | Score: 60
+2026-06-26 19:41:20.519903 | 150.10.10.10 | Public IP | Low 🟢 | Score: 20
+2026-06-26 19:41:31.756441 | 192.168.1.1 | Private IP | Low 🟢 | Score: 5
+2026-06-26 19:42:57.331414 | 9.9.9.9 | Public IP | High 🔴 | Score: 90
+2026-06-27 09:06:39 | 8.8.8.8 | Public IP | High | Score: 90
+Case #0001 | 2026-06-27 11:14:06 | 8.8.8.8 | Public IP | High | Score: 90 | Alert: HIGH RISK IP DETECTED | Status: Investigating
+Case #0002 | 2026-06-27 12:52:48 | 8.8.8.8 | Public IP | High | Score: 90 | Alert: HIGH RISK IP DETECTED | Status: Investigating
+Case #0003 | 2026-06-27 12:53:50 | 9.9.9.9 | Public IP | High | Score: 90 | Alert: HIGH RISK IP DETECTED | Status: Investigating
+Case #0004 | 2026-06-27 12:54:38 | 8.8.8.8 | Public IP | High | Score: 90 | Alert: HIGH RISK IP DETECTED | Status: Investigating
+Case #0005 | 2026-06-27 12:56:58 | 8.8.8.8 | Public IP | High | Score: 90 | Alert: HIGH RISK IP DETECTED | Status: Investigating
+Case #0006 | 2026-06-27 14:21:32 | 127.0.0.1 | Localhost | None | Score: 0 | Alert: No active threat detected | Status: Closed
+Case #0007 | 2026-06-27 14:22:04 | 192.168.1.1 | Private IP | Low | Score: 5 | Alert: Low risk scan recorded | Status: Closed
+Case #0008 | 2026-06-27 14:22:28 | 8.8.8.8 | Trusted DNS (Google Public DNS) | Low | Score: 5 | Alert: Low risk scan recorded | Status: Closed
+Case #0009 | 2026-06-27 14:22:38 | 1.1.1.1 | Trusted DNS (Cloudflare DNS) | Low | Score: 5 | Alert: Low risk scan recorded | Status: Closed
+Case #0010 | 2026-06-27 14:22:53 | 192.0.2.1 | Private IP | Low | Score: 5 | Alert: Low risk scan recorded | Status: Closed
+Case #0011 | 2026-06-27 14:23:07 | 203.0.113.5 | Private IP | Low | Score: 5 | Alert: Low risk scan recorded | Status: Closed
+Case #0012 | 2026-06-27 14:23:27 | 240.0.0.1 | Private IP | Low | Score: 5 | Alert: Low risk scan recorded | Status: Closed

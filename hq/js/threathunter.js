@@ -59,7 +59,7 @@ function initializeThreatHunter() {
 
     async function readScanLogs(showAllLogs) {
         try {
-            const response = await fetch("scan_log.json?cache=" + Date.now());
+            const response = await fetch("../data/scan_log.json?cache=" + Date.now());
 
             if (!response.ok) {
                 throw new Error("scan_log.json not found");
@@ -84,11 +84,13 @@ function initializeThreatHunter() {
 
                 scans.forEach(function (scan) {
                     addEvent(
-                        scan.timestamp +
+                        "Case #" + String(scan.case_id).padStart(4, "0") +
+                        " | " + scan.timestamp +
                         " | IP: " + scan.ip +
-                        " | Type: " + scan.type +
                         " | Threat: " + scan.threat +
-                        " | Score: " + scan.score + "/100"
+                        " | Score: " + scan.score + "/100" +
+                        " | Agent: " + scan.agent +
+                        " | Status: " + scan.status
                     );
                 });
 
@@ -102,9 +104,11 @@ function initializeThreatHunter() {
 
                 newScans.forEach(function (scan) {
                     addEvent(
-                        "New scan detected → IP: " + scan.ip +
+                        "New case detected → Case #" + String(scan.case_id).padStart(4, "0") +
+                        " | IP: " + scan.ip +
                         " | Threat: " + scan.threat +
-                        " | Score: " + scan.score + "/100"
+                        " | Score: " + scan.score + "/100" +
+                        " | Recommendation: " + scan.recommendation
                     );
                 });
 
@@ -118,7 +122,7 @@ function initializeThreatHunter() {
     }
 
     addEvent("Threat Hunter online. Autonomous monitoring enabled.");
-    addEvent("Checking scan_log.json every 5 seconds...");
+    addEvent("Checking data/scan_log.json every 5 seconds...");
     updateDashboard();
 
     readScanLogs(false);
