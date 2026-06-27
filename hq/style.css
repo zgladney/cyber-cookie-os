@@ -1,209 +1,443 @@
-body{
-    margin:0;
-    background:#090012;
-    overflow:hidden;
-    font-family:Arial;
+/* ===========================
+   CYBERCOOKIEOS ALPHA
+=========================== */
+
+* {
+    box-sizing: border-box;
 }
 
-.hidden{
-    display:none !important;
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: radial-gradient(circle at top, #351055, #090012 65%);
+    overflow: hidden;
+    color: white;
 }
 
-#app{
-    display:flex;
-    gap:30px;
-    justify-content:center;
-    align-items:flex-start;
-    margin-top:30px;
+.hidden {
+    display: none !important;
 }
 
-#room{
-    position:relative;
-    width:900px;
-    height:600px;
+#app {
+    width: 100vw;
+    height: 100vh;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
 }
 
-#back-wall{
-    position:absolute;
-    top:80px;
-    left:230px;
-    width:500px;
-    height:260px;
-    background:#261247;
-    border:5px solid hotpink;
-    box-shadow:0 0 25px hotpink;
+#topBar {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-#left-wall{
-    position:absolute;
-    top:80px;
-    left:80px;
-    width:150px;
-    height:260px;
-    background:#1b0d33;
-    border:5px solid hotpink;
-    transform:skewY(-30deg);
+#topBar h1 {
+    margin: 0;
+    color: hotpink;
+    text-shadow: 0 0 20px hotpink;
+    letter-spacing: 3px;
 }
 
-#floor{
-    position:absolute;
-    top:340px;
-    left:80px;
-    width:650px;
-    height:220px;
-    background:#321a4f;
-    border:5px solid hotpink;
-    transform:skewX(-30deg);
+#topBar p {
+    margin-top: 8px;
+    color: #9cf6ff;
 }
 
-#window{
-    position:absolute;
-    top:120px;
-    left:470px;
-    width:160px;
-    height:90px;
-    background:#060018;
-    border:4px solid #9cf6ff;
-    box-shadow:0 0 15px #9cf6ff;
+#mainLayout {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
 }
 
-#moon{
-    position:absolute;
-    right:10px;
-    top:8px;
-    font-size:32px;
+#room {
+    position: relative;
+    width: 900px;
+    height: 600px;
+    border: 4px solid hotpink;
+    border-radius: 18px;
+    overflow: hidden;
+    background: linear-gradient(#241145 0%, #241145 58%, #3b1d5d 58%, #170022 100%);
+    box-shadow: 0 0 30px hotpink, inset 0 0 40px black;
+    z-index: 1;
 }
 
-.star{
-    position:absolute;
-    color:white;
-    animation:twinkle 1.5s infinite alternate;
+#back-wall {
+    position: absolute;
+    left: 70px;
+    top: 40px;
+    width: 760px;
+    height: 280px;
+    border: 3px solid hotpink;
+    border-radius: 14px;
+    background:
+        linear-gradient(90deg, rgba(255,105,180,.08) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        #28134b;
+    background-size: 40px 40px;
+    z-index: 1;
 }
 
-.one{left:20px;top:18px;}
-.two{left:55px;top:45px;}
-.three{left:95px;top:20px;}
-
-@keyframes twinkle{
-    from{opacity:.2;}
-    to{opacity:1;}
+#floor {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 260px;
+    background:
+        linear-gradient(90deg, rgba(255,105,180,.10) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(#4a266f, #170022);
+    background-size: 50px 50px;
+    border-top: 4px solid hotpink;
+    z-index: 2;
 }
 
-#desk{
-    position:absolute;
-    top:305px;
-    left:395px;
-    width:220px;
-    height:55px;
-    background:#3b1a4d;
-    border:4px solid hotpink;
+#window {
+    position: absolute;
+    top: 35px;
+    right: 50px;
+    width: 170px;
+    height: 100px;
+    border: 4px solid #9cf6ff;
+    border-radius: 12px;
+    background: #060018;
+    box-shadow: 0 0 18px #9cf6ff;
 }
 
-.monitor{
-    position:absolute;
-    top:-65px;
-    width:55px;
-    height:45px;
-    background:black;
-    border:3px solid #9cf6ff;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    cursor:pointer;
+#moon {
+    position: absolute;
+    right: 12px;
+    top: 8px;
+    font-size: 32px;
 }
 
-#securityMonitor{left:20px;}
-.center{left:82px;}
-.right{left:145px;}
-
-#chair{
-    position:absolute;
-    top:375px;
-    left:455px;
-    width:70px;
-    height:70px;
-    background:hotpink;
-    border-radius:12px;
+.star {
+    position: absolute;
+    color: white;
+    animation: twinkle 1.6s infinite alternate;
 }
 
-#agent{
-    position:absolute;
-    left:350px;
-    top:430px;
-    color:#9cf6ff;
-    font-size:34px;
-    text-shadow:0 0 15px #9cf6ff;
+.one { left: 22px; top: 18px; }
+.two { left: 60px; top: 50px; }
+.three { left: 105px; top: 24px; }
+
+@keyframes twinkle {
+    from { opacity: .3; }
+    to { opacity: 1; }
 }
 
-#panel{
-    width:250px;
-    background:#120020;
-    border:4px solid hotpink;
-    color:white;
-    padding:20px;
-    box-shadow:0 0 20px hotpink;
+#neonSign {
+    position: absolute;
+    left: 60px;
+    top: 55px;
+    padding: 10px 20px;
+    border: 2px solid hotpink;
+    border-radius: 10px;
+    color: hotpink;
+    font-weight: bold;
+    letter-spacing: 2px;
+    box-shadow: 0 0 18px hotpink;
+    text-shadow: 0 0 10px hotpink;
 }
 
-#panel h2{
-    color:hotpink;
+#wallScreen {
+    position: absolute;
+    left: 285px;
+    top: 35px;
+    width: 230px;
+    height: 105px;
+    border: 3px solid #9cf6ff;
+    border-radius: 12px;
+    background: #050010;
+    color: #9cf6ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    letter-spacing: 1px;
+    box-shadow: 0 0 16px #9cf6ff;
 }
 
-#popup{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.75);
-    display:flex;
-    justify-content:center;
-    align-items:center;
+#serverRack {
+    position: absolute;
+    left: 95px;
+    top: 330px;
+    width: 85px;
+    height: 180px;
+    border: 3px solid #9cf6ff;
+    border-radius: 10px;
+    background: #080010;
+    box-shadow: 0 0 16px #9cf6ff;
+    z-index: 20;
+    padding: 10px;
 }
 
-#popupWindow{
-    width:500px;
-    background:#120020;
-    border:4px solid hotpink;
-    box-shadow:0 0 30px hotpink;
-    color:white;
+#serverRack div {
+    height: 28px;
+    margin-bottom: 10px;
+    border: 2px solid hotpink;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #190026, #321247);
+    box-shadow: inset 0 0 8px black;
 }
 
-#popupTopBar{
-    background:#2a0a3d;
-    border-bottom:3px solid hotpink;
-    padding:12px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    color:#9cf6ff;
+#serverRack div::after {
+    content: "● ● ●";
+    color: #7dff9c;
+    font-size: 10px;
+    margin-left: 8px;
 }
 
-#closePopup{
-    background:hotpink;
-    border:none;
-    padding:5px 10px;
-    cursor:pointer;
-    font-weight:bold;
+#plant {
+    position: absolute;
+    left: 205px;
+    top: 455px;
+    font-size: 38px;
+    z-index: 25;
+    filter: drop-shadow(0 0 8px #7dff9c);
 }
 
-#popupBody{
-    padding:25px;
-    text-align:center;
+#coffee {
+    position: absolute;
+    left: 560px;
+    top: 315px;
+    font-size: 28px;
+    z-index: 40;
+    filter: drop-shadow(0 0 8px hotpink);
 }
 
-#popupBody h2{
-    color:hotpink;
+#desk {
+    position: absolute;
+    left: 330px;
+    top: 330px;
+    width: 260px;
+    height: 70px;
+    background: linear-gradient(#4d266d, #1b082c);
+    border: 4px solid hotpink;
+    border-radius: 12px;
+    box-shadow: 0 0 18px hotpink;
+    z-index: 30;
 }
 
-#consoleMessage{
-    color:#9cf6ff;
-    min-height:30px;
+#desk::before {
+    content: "⌨";
+    position: absolute;
+    left: 105px;
+    top: 22px;
+    color: #9cf6ff;
+    font-size: 22px;
+}
+
+.monitor {
+    position: absolute;
+    top: -78px;
+    width: 65px;
+    height: 55px;
+    background: #050010;
+    border: 3px solid #9cf6ff;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 24px;
+    box-shadow: 0 0 15px #9cf6ff;
+    transition: .25s;
+}
+
+.monitor:hover {
+    transform: translateY(-4px);
+}
+
+#securityMonitor { left: 25px; }
+.center { left: 98px; }
+.right { left: 172px; }
+
+#chair {
+    position: absolute;
+    left: 425px;
+    top: 420px;
+    width: 78px;
+    height: 85px;
+    background: linear-gradient(hotpink, #691656);
+    border-radius: 18px;
+    border: 3px solid #ffc3ea;
+    box-shadow: 0 0 18px hotpink;
+    z-index: 35;
+}
+
+#agent {
+    position: absolute;
+    left: 345px;
+    top: 395px;
+    width: 95px;
+    height: 120px;
+    z-index: 100;
+    pointer-events: none;
+    transition: transform .15s linear;
+}
+
+#agentSprite {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 0 10px #9cf6ff);
+}
+
+#panel {
+    width: 260px;
+    padding: 20px;
+    background: #120020;
+    border: 3px solid hotpink;
+    border-radius: 16px;
+    box-shadow: 0 0 18px hotpink;
+    position: relative;
+    z-index: 1;
+}
+
+#panel h2 {
+    margin-top: 0;
+    color: hotpink;
+}
+
+#panel span {
+    color: #9cf6ff;
+}
+
+/* ===========================
+   THREAT HUNTER POPUP
+=========================== */
+
+#popup {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,.68);
+    z-index: 9999;
+}
+
+#popupWindow {
+    width: 760px;
+    height: 90vh;
+    overflow: hidden;
+    border-radius: 18px;
+    border: 4px solid hotpink;
+    background: #120020;
+    box-shadow: 0 0 35px hotpink;
+    position: relative;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+}
+
+#popupTopBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: #351055;
+    border-bottom: 3px solid hotpink;
+}
+
+#popupBody {
+    flex: 1;
+    padding: 20px;
+    display: grid;
+    gap: 14px;
+    overflow-y: auto;
+}
+
+#consoleHeader,
+#alertPanel,
+#networkPanel,
+#operationsPanel,
+#feedPanel {
+    border: 2px solid #9cf6ff;
+    border-radius: 12px;
+    padding: 12px;
+    background: rgba(0,0,0,.35);
+}
+
+#consoleHeader h2,
+#alertPanel h3,
+#networkPanel h3,
+#operationsPanel h3,
+#feedPanel h3 {
+    color: hotpink;
+    margin-top: 0;
+}
+
+#consoleMessage {
+    color: #9cf6ff;
+}
+
+#dashboardGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.dashboardCard {
+    padding: 12px;
+    text-align: center;
+    border-radius: 12px;
+    border: 2px solid hotpink;
+    background: rgba(255,105,180,.10);
+}
+
+.dashboardCard h3 {
+    color: #9cf6ff;
+    margin-top: 0;
+}
+
+.dashboardCard p {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+#activeAlert,
+#monitoringStatus,
+#adapterStatus {
+    color: #7dff9c;
+}
+
+#eventFeed {
+    height: 160px;
+    overflow-y: auto;
+    padding: 10px;
+    background: #050010;
+    border: 2px solid hotpink;
+    border-radius: 10px;
+    font-family: Consolas, monospace;
+    color: #9cf6ff;
+}
+
+#eventFeed p {
+    margin: 0 0 6px;
 }
 
 #startScan,
-#viewLogs{
-    margin:10px;
-    padding:12px 18px;
-    background:#090012;
-    color:white;
-    border:2px solid #9cf6ff;
-    cursor:pointer;
-    box-shadow:0 0 10px #9cf6ff;
+#viewLogs,
+#closePopup {
+    padding: 12px 18px;
+    margin-right: 10px;
+    background: #090012;
+    color: white;
+    border: 2px solid #9cf6ff;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#closePopup {
+    background: hotpink;
+    color: #090012;
+    font-weight: bold;
+    margin-right: 0;
+}
+
+#startScan:hover,
+#viewLogs:hover {
+    background: #220035;
 }

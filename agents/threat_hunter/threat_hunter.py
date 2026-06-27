@@ -1,7 +1,9 @@
 import ipaddress
+import json
 from datetime import datetime
 
 LOG_FILE = "scan_log.txt"
+JSON_LOG_FILE = "scan_log.json"
 
 scan_count = 0
 high_count = 0
@@ -12,15 +14,38 @@ invalid_count = 0
 
 def banner():
     print("=" * 50)
-    print("🛡️ CyberCookieOS - Threat Hunter v4")
+    print("🛡️ CyberCookieOS - Threat Hunter v5")
     print("=" * 50)
 
 
 def save_log(address, ip_type, threat, score):
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    text_entry = f"{timestamp} | {address} | {ip_type} | {threat} | Score: {score}\n"
+
+    json_entry = {
+        "timestamp": timestamp,
+        "ip": str(address),
+        "type": ip_type,
+        "threat": threat,
+        "score": score
+    }
+
     with open(LOG_FILE, "a", encoding="utf-8") as log:
-        log.write(
-            f"{datetime.now()} | {address} | {ip_type} | {threat} | Score: {score}\n"
-        )
+        log.write(text_entry)
+
+    try:
+        with open(JSON_LOG_FILE, "r", encoding="utf-8") as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        data = []
+    except json.JSONDecodeError:
+        data = []
+
+    data.append(json_entry)
+
+    with open(JSON_LOG_FILE, "w", encoding="utf-8") as file:
+        json.dump(data, file, indent=4)
 
 
 def scan_ip(ip):
@@ -30,13 +55,14 @@ def scan_ip(ip):
 
     if address.is_loopback:
         ip_type = "Localhost"
-        threat = "None 🟢"
+        threat = "None"
         score = 0
 
     elif address.is_private:
         ip_type = "Private IP"
-        threat = "Low 🟢"
+        threat = "Low"
         score = 5
+        low_count += 1
 
     else:
         ip_type = "Public IP"
@@ -44,17 +70,17 @@ def scan_ip(ip):
         first_octet = int(str(address).split(".")[0])
 
         if first_octet < 50:
-            threat = "High 🔴"
+            threat = "High"
             score = 90
             high_count += 1
 
         elif first_octet < 100:
-            threat = "Medium 🟠"
+            threat = "Medium"
             score = 60
             medium_count += 1
 
         else:
-            threat = "Low 🟢"
+            threat = "Low"
             score = 20
             low_count += 1
 
