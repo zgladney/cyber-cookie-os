@@ -1,269 +1,951 @@
 /* ===========================
-   CYBERCOOKIEOS ALPHA
+   CYBERCOOKIEOS — HQ
+   Cyberpunk RPG Operator Base
 =========================== */
 
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
-    background: radial-gradient(circle at top, #351055, #090012 65%);
+    background: radial-gradient(ellipse at top, #1e0440 0%, #050010 70%);
     overflow: hidden;
     color: white;
 }
 
-.hidden {
-    display: none !important;
-}
+.hidden { display: none !important; }
 
 #app {
     width: 100vw;
     height: 100vh;
-    padding: 20px;
-    position: relative;
-    z-index: 1;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
 }
+
+/* ===========================
+   TOP BAR
+=========================== */
 
 #topBar {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 14px;
+    flex-shrink: 0;
 }
 
 #topBar h1 {
     margin: 0;
+    font-size: 22px;
     color: hotpink;
-    text-shadow: 0 0 20px hotpink;
-    letter-spacing: 3px;
+    text-shadow: 0 0 24px hotpink, 0 0 60px rgba(255,105,180,.3);
+    letter-spacing: 4px;
 }
 
 #topBar p {
-    margin-top: 8px;
+    margin: 5px 0 0;
+    font-size: 11px;
     color: #9cf6ff;
+    letter-spacing: 3px;
 }
+
+/* ===========================
+   LAYOUT
+=========================== */
 
 #mainLayout {
     display: flex;
     justify-content: center;
-    gap: 30px;
+    align-items: flex-start;
+    gap: 20px;
 }
+
+/* ===========================
+   ROOM — the operator's lair
+=========================== */
 
 #room {
     position: relative;
     width: 900px;
     height: 600px;
-    border: 4px solid hotpink;
-    border-radius: 18px;
+    border: 3px solid hotpink;
+    border-radius: 16px;
     overflow: hidden;
-    background: linear-gradient(#241145 0%, #241145 58%, #3b1d5d 58%, #170022 100%);
-    box-shadow: 0 0 30px hotpink, inset 0 0 40px black;
-    z-index: 1;
+    /* Ceiling → upper wall → lower wall → floor (hard seam at 57%) */
+    background: linear-gradient(
+        180deg,
+        #080015 0%,
+        #110330 25%,
+        #1c0a40 55%,
+        #1c0a40 57%,
+        #100220 57.1%,
+        #0a011a 100%
+    );
+    box-shadow:
+        0 0 50px rgba(255,105,180,.4),
+        0 0 100px rgba(255,105,180,.1),
+        inset 0 0 90px rgba(0,0,0,.85);
 }
+
+/* ===========================
+   CEILING PIPE
+=========================== */
+
+#ceilingPipe {
+    position: absolute;
+    top: 10px;
+    left: 80px;
+    right: 80px;
+    height: 9px;
+    background: linear-gradient(180deg, #1a0035, #120025);
+    border: 1px solid rgba(156,246,255,.18);
+    border-radius: 5px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.04);
+    z-index: 10;
+}
+
+/* Pipe joint rings */
+#ceilingPipe::before {
+    content: "";
+    position: absolute;
+    left: 28%;
+    top: -2px; bottom: -2px;
+    width: 5px;
+    background: rgba(156,246,255,.12);
+    border-radius: 2px;
+    box-shadow: 224px 0 0 rgba(255,105,180,.12);
+}
+
+/* ===========================
+   BACK WALL
+=========================== */
 
 #back-wall {
     position: absolute;
-    left: 70px;
-    top: 40px;
-    width: 760px;
-    height: 280px;
-    border: 3px solid hotpink;
-    border-radius: 14px;
+    left: 0;
+    top: 0;
+    width: 900px;
+    height: 310px;
     background:
-        linear-gradient(90deg, rgba(255,105,180,.08) 1px, transparent 1px),
-        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-        #28134b;
-    background-size: 40px 40px;
+        linear-gradient(90deg, rgba(255,105,180,.04) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,.015) 1px, transparent 1px),
+        linear-gradient(180deg, #140430 0%, #1e0e44 100%);
+    background-size: 44px 44px;
+    border-bottom: 3px solid hotpink;
+    box-shadow:
+        0 4px 35px rgba(255,105,180,.28),
+        inset 0 -25px 60px rgba(0,0,0,.45);
     z-index: 1;
 }
 
-#floor {
+/* Top neon strip — the "ceiling meets wall" seam */
+#back-wall::before {
+    content: "";
     position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 260px;
-    background:
-        linear-gradient(90deg, rgba(255,105,180,.10) 1px, transparent 1px),
-        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-        linear-gradient(#4a266f, #170022);
-    background-size: 50px 50px;
-    border-top: 4px solid hotpink;
-    z-index: 2;
+    top: 0;
+    left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent 2%, hotpink 15%, hotpink 85%, transparent 98%);
+    box-shadow: 0 0 16px hotpink, 0 0 32px rgba(255,105,180,.5);
 }
+
+/* Hex rune strip along the wall/floor seam */
+#back-wall::after {
+    content: "⬡  ⬡  ⬡  ⬡  ⬡  ⬡  ⬡  ⬡  ⬡  ⬡  ⬡  ⬡  ⬡  ⬡  ⬡  ⬡  ⬡  ⬡  ⬡";
+    position: absolute;
+    bottom: 6px;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 10px;
+    color: rgba(255,105,180,.16);
+    letter-spacing: 3px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+/* ===========================
+   WINDOW — city view
+=========================== */
 
 #window {
     position: absolute;
-    top: 35px;
-    right: 50px;
-    width: 170px;
-    height: 100px;
-    border: 4px solid #9cf6ff;
-    border-radius: 12px;
-    background: #060018;
-    box-shadow: 0 0 18px #9cf6ff;
+    top: 25px;
+    right: 28px;
+    width: 198px;
+    height: 152px;
+    border: 3px solid #9cf6ff;
+    border-radius: 14px 14px 6px 6px;
+    /* Night sky with city light glow at the horizon */
+    background: linear-gradient(
+        180deg,
+        #02000c 0%,
+        #05001e 35%,
+        #0a0030 60%,
+        #180848 80%,
+        #250a50 100%
+    );
+    box-shadow:
+        0 0 25px #9cf6ff,
+        0 0 60px rgba(156,246,255,.2),
+        inset 0 0 40px rgba(0,0,40,.9);
+    overflow: hidden;
+}
+
+/* Window pane cross bars */
+#window::before {
+    content: "";
+    position: absolute;
+    top: 47%;
+    left: 0; right: 0;
+    height: 2px;
+    background: rgba(156,246,255,.22);
+    z-index: 2;
+}
+#window::after {
+    content: "";
+    position: absolute;
+    left: 48%;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: rgba(156,246,255,.22);
+    z-index: 2;
 }
 
 #moon {
     position: absolute;
-    right: 12px;
+    right: 16px;
     top: 8px;
-    font-size: 32px;
+    font-size: 34px;
+    z-index: 3;
+    filter: drop-shadow(0 0 12px rgba(200,210,255,.7));
 }
 
 .star {
     position: absolute;
     color: white;
+    z-index: 3;
     animation: twinkle 1.6s infinite alternate;
 }
 
-.one { left: 22px; top: 18px; }
-.two { left: 60px; top: 50px; }
-.three { left: 105px; top: 24px; }
+.one   { left: 15px;  top: 20px;  font-size: 9px;  }
+.two   { left: 50px;  top: 52px;  font-size: 7px;  animation-delay: .5s; }
+.three { left: 82px;  top: 14px;  font-size: 10px; animation-delay: 1s; }
 
 @keyframes twinkle {
-    from { opacity: .3; }
-    to { opacity: 1; }
+    from { opacity: .15; }
+    to   { opacity: 1; }
 }
+
+/* ===========================
+   CITY SKYLINE
+=========================== */
+
+#cityView {
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    height: 96px;
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    padding: 0 2px;
+    z-index: 1;
+    /* City glow at horizon */
+    background: linear-gradient(
+        0deg,
+        rgba(80,0,120,.5) 0%,
+        rgba(40,0,80,.2) 50%,
+        transparent 100%
+    );
+}
+
+/* Each building */
+.cBld {
+    position: relative;
+    flex-shrink: 0;
+    background: #060014;
+    border-top: 1px solid rgba(255,255,255,.08);
+}
+
+/* Building sizes */
+.b1 { width: 20px; height: 52px; }
+.b2 { width: 15px; height: 75px; border-top-color: rgba(156,246,255,.4); }
+.b3 { width: 24px; height: 44px; }
+.b4 { width: 13px; height: 90px; }
+.b5 { width: 22px; height: 60px; border-top-color: rgba(255,105,180,.5); }
+.b6 { width: 18px; height: 42px; }
+.b7 { width: 16px; height: 70px; border-top-color: rgba(156,246,255,.35); }
+.b8 { width: 22px; height: 48px; }
+.b9 { width: 14px; height: 80px; }
+
+/* Neon rooftop on tall buildings */
+.b4::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: hotpink;
+    box-shadow: 0 0 8px hotpink, 0 0 16px rgba(255,105,180,.6);
+}
+
+.b5::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: #9cf6ff;
+    box-shadow: 0 0 8px #9cf6ff;
+}
+
+/* Lit windows — box-shadow pixel art technique */
+.cBld.lit::after {
+    content: "";
+    position: absolute;
+    top: 6px;
+    left: 2px;
+    width: 2px;
+    height: 2px;
+    background: transparent;
+    box-shadow:
+        0px  0px 0 1px rgba(255,220,80,.9),
+        0px  9px 0 1px rgba(255,220,80,.55),
+        0px 18px 0 1px rgba(156,246,255,.8),
+        0px 27px 0 1px rgba(255,220,80,.4),
+        5px  4px 0 1px rgba(255,105,180,.85),
+        5px 13px 0 1px rgba(255,220,80,.6),
+        5px 22px 0 1px rgba(156,246,255,.7),
+        5px 31px 0 1px rgba(255,105,180,.45);
+}
+
+/* ===========================
+   MOONBEAM — window light bleeding into room
+=========================== */
+
+#moonbeam {
+    position: absolute;
+    top: 180px;
+    right: 18px;
+    width: 340px;
+    height: 400px;
+    background: radial-gradient(
+        ellipse 50% 100% at 85% 0%,
+        rgba(156,246,255,.06) 0%,
+        rgba(156,246,255,.02) 45%,
+        transparent 100%
+    );
+    pointer-events: none;
+    z-index: 3;
+}
+
+/* ===========================
+   NEON SIGN
+=========================== */
 
 #neonSign {
     position: absolute;
-    left: 60px;
-    top: 55px;
-    padding: 10px 20px;
+    left: 28px;
+    top: 26px;
+    padding: 8px 16px;
     border: 2px solid hotpink;
-    border-radius: 10px;
+    border-radius: 8px;
     color: hotpink;
+    font-size: 13px;
     font-weight: bold;
     letter-spacing: 2px;
-    box-shadow: 0 0 18px hotpink;
-    text-shadow: 0 0 10px hotpink;
+    white-space: nowrap;
+    box-shadow:
+        0 0 16px hotpink,
+        0 0 36px rgba(255,105,180,.35),
+        inset 0 0 12px rgba(255,105,180,.08);
+    text-shadow: 0 0 10px hotpink, 0 0 22px hotpink;
+    animation: neonFlicker 9s infinite;
 }
+
+@keyframes neonFlicker {
+    0%, 91%, 93%, 95%, 100% { opacity: 1; }
+    92%                       { opacity: .7; }
+    94%                       { opacity: .88; }
+}
+
+/* ===========================
+   WALL RUNE
+=========================== */
+
+#wallRune {
+    position: absolute;
+    left: 28px;
+    top: 78px;
+    font-size: 15px;
+    color: rgba(255,105,180,.38);
+    letter-spacing: 8px;
+    text-shadow: 0 0 10px rgba(255,105,180,.2);
+}
+
+/* ===========================
+   MISSION LOG — active cases panel
+=========================== */
+
+#missionLog {
+    position: absolute;
+    left: 28px;
+    top: 108px;
+    width: 188px;
+    background: rgba(5,0,18,.7);
+    border: 1px solid rgba(255,105,180,.3);
+    border-radius: 6px;
+    padding: 8px 10px;
+}
+
+#missionLog::before {
+    content: "ACTIVE CASES";
+    display: block;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: hotpink;
+    margin-bottom: 6px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(255,105,180,.2);
+    text-shadow: 0 0 6px hotpink;
+}
+
+.mEntry {
+    font-size: 9px;
+    color: rgba(156,246,255,.7);
+    letter-spacing: .5px;
+    margin-bottom: 4px;
+    line-height: 1.5;
+}
+
+.mEntry:last-child { margin-bottom: 0; }
+
+.mEntry.warn {
+    color: rgba(255,200,50,.85);
+    text-shadow: 0 0 6px rgba(255,180,0,.4);
+}
+
+/* ===========================
+   WALL SCREEN — threat map
+=========================== */
 
 #wallScreen {
     position: absolute;
-    left: 285px;
-    top: 35px;
-    width: 230px;
-    height: 105px;
-    border: 3px solid #9cf6ff;
-    border-radius: 12px;
-    background: #050010;
-    color: #9cf6ff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 14px;
-    letter-spacing: 1px;
-    box-shadow: 0 0 16px #9cf6ff;
+    left: 248px;
+    top: 22px;
+    width: 335px;
+    height: 158px;
+    border: 2px solid #9cf6ff;
+    border-radius: 10px;
+    background: #02000f;
+    overflow: hidden;
+    box-shadow:
+        0 0 24px #9cf6ff,
+        0 0 55px rgba(156,246,255,.18),
+        inset 0 0 30px rgba(0,0,50,.95);
 }
+
+/* Screen top bezel */
+#wallScreen::before {
+    content: "◉ ACTIVE  ◉ SCANNING  ◉ LIVE";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 16px;
+    background: rgba(156,246,255,.06);
+    border-bottom: 1px solid rgba(156,246,255,.16);
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: rgba(156,246,255,.5);
+    line-height: 16px;
+    padding-left: 8px;
+    z-index: 5;
+}
+
+.mapGrid {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(90deg, rgba(156,246,255,.05) 1px, transparent 1px),
+        linear-gradient(rgba(156,246,255,.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.scanLine {
+    position: absolute;
+    left: 0; right: 0;
+    top: 16px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(156,246,255,.85), transparent);
+    animation: scanDown 4s linear infinite;
+    z-index: 4;
+}
+
+@keyframes scanDown {
+    0%   { top: 16px;  opacity: .8; }
+    88%  {              opacity: .8; }
+    100% { top: 100%;  opacity: 0;  }
+}
+
+.mapLabel {
+    position: absolute;
+    top: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    color: rgba(156,246,255,.6);
+    letter-spacing: 2px;
+    white-space: nowrap;
+    z-index: 5;
+}
+
+.tNode {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: hotpink;
+    border-radius: 50%;
+    box-shadow: 0 0 8px hotpink, 0 0 18px rgba(255,105,180,.4);
+}
+
+.tNode.pulse-node { animation: nodePulse 1.5s ease-in-out infinite alternate; }
+.tNode.slow       { animation: nodePulse 3.4s ease-in-out infinite alternate; }
+
+@keyframes nodePulse {
+    from { transform: scale(1);   opacity: 1;  box-shadow: 0 0 8px hotpink; }
+    to   { transform: scale(2.6); opacity: .3; box-shadow: 0 0 22px hotpink; }
+}
+
+/* ===========================
+   STATUS BAR
+=========================== */
+
+#statusBar {
+    position: absolute;
+    bottom: 12px;
+    left: 28px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: rgba(156,246,255,.6);
+}
+
+.sLed {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.sLabel { margin-right: 5px; }
+
+.sLed.green { background: #7dff9c; box-shadow: 0 0 5px #7dff9c; }
+.sLed.amber { background: #ffcc00; box-shadow: 0 0 5px #ffcc00; animation: blinkAmber 2.2s infinite; }
+.sLed.red   { background: hotpink; box-shadow: 0 0 5px hotpink; animation: blinkRed  1.1s infinite; }
+
+@keyframes blinkAmber { 0%,100% { opacity:1; } 50% { opacity:.2; } }
+@keyframes blinkRed   { 0%,100% { opacity:1; } 50% { opacity:.1; } }
+
+/* ===========================
+   HANGING LAMP — above desk
+=========================== */
+
+#lamp {
+    position: absolute;
+    left: 443px;
+    top: 0;
+    width: 2px;
+    height: 258px;
+    background: linear-gradient(180deg, rgba(255,105,180,.15), rgba(255,105,180,.4));
+    z-index: 6;
+    pointer-events: none;
+}
+
+/* Lamp shade (trapezoid via border trick) */
+#lamp::before {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 48px;
+    height: 28px;
+    background: linear-gradient(180deg, rgba(255,105,180,.45) 0%, rgba(80,0,50,.9) 100%);
+    border-radius: 4px 4px 20px 20px;
+    box-shadow:
+        0 6px 30px rgba(255,105,180,.5),
+        0 0 60px rgba(255,105,180,.18),
+        inset 0 -4px 10px rgba(255,105,180,.2);
+}
+
+/* Lamp bulb glint */
+#lamp::after {
+    content: "";
+    position: absolute;
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background: rgba(255,200,220,.9);
+    border-radius: 50%;
+    box-shadow: 0 0 10px hotpink, 0 0 20px hotpink;
+}
+
+/* Lamp glow pool on desk surface */
+#lampGlow {
+    position: absolute;
+    left: 330px;
+    top: 260px;
+    width: 220px;
+    height: 100px;
+    background: radial-gradient(
+        ellipse at 50% 40%,
+        rgba(255,105,180,.1) 0%,
+        rgba(255,105,180,.04) 50%,
+        transparent 100%
+    );
+    pointer-events: none;
+    z-index: 28;
+}
+
+/* ===========================
+   FLOOR
+=========================== */
+
+#floor {
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    height: 290px;
+    background:
+        linear-gradient(90deg, rgba(255,105,180,.09) 1px, transparent 1px),
+        linear-gradient(rgba(255,105,180,.035) 1px, transparent 1px),
+        linear-gradient(180deg, #280f50 0%, #0e0220 100%);
+    background-size: 50px 50px;
+    box-shadow: inset 0 30px 70px rgba(0,0,0,.5);
+    z-index: 2;
+}
+
+/* Front baseboard glow */
+#floorGlow {
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    height: 80px;
+    background: radial-gradient(ellipse 72% 100% at 50% 100%, rgba(255,105,180,.12), transparent);
+    z-index: 4;
+    pointer-events: none;
+}
+
+/* ===========================
+   FLOOR CABLES
+=========================== */
+
+.floorCable {
+    position: absolute;
+    height: 3px;
+    border-radius: 3px;
+    z-index: 8;
+    pointer-events: none;
+    transform-origin: left center;
+}
+
+#cable1 {
+    left: 112px;
+    top: 358px;
+    width: 168px;
+    background: rgba(255,105,180,.5);
+    box-shadow: 0 0 6px rgba(255,105,180,.45);
+    transform: rotate(-5deg);
+}
+
+#cable2 {
+    left: 115px;
+    top: 366px;
+    width: 155px;
+    background: rgba(156,246,255,.4);
+    box-shadow: 0 0 5px rgba(156,246,255,.35);
+    transform: rotate(-2.5deg);
+}
+
+#cable3 {
+    left: 110px;
+    top: 374px;
+    width: 145px;
+    background: rgba(125,255,156,.3);
+    box-shadow: 0 0 4px rgba(125,255,156,.25);
+    transform: rotate(-7deg);
+}
+
+/* ===========================
+   SERVER RACK
+=========================== */
 
 #serverRack {
     position: absolute;
-    left: 95px;
-    top: 330px;
-    width: 85px;
-    height: 180px;
-    border: 3px solid #9cf6ff;
-    border-radius: 10px;
-    background: #080010;
-    box-shadow: 0 0 16px #9cf6ff;
+    left: 22px;
+    top: 314px;
+    width: 90px;
+    height: 210px;
+    border: 2px solid #9cf6ff;
+    border-radius: 8px 8px 4px 4px;
+    background: linear-gradient(180deg, #08001a 0%, #050010 100%);
+    box-shadow:
+        0 0 24px rgba(156,246,255,.35),
+        0 0 50px rgba(156,246,255,.08),
+        inset 0 0 14px rgba(0,0,0,.8);
     z-index: 20;
-    padding: 10px;
+    padding: 10px 8px 8px;
+}
+
+#serverRack::before {
+    content: "SRV-01";
+    position: absolute;
+    top: -18px;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 9px;
+    color: #9cf6ff;
+    letter-spacing: 2px;
+    text-shadow: 0 0 6px #9cf6ff;
+}
+
+/* Green LED strip on the facing left edge */
+#serverRack::after {
+    content: "";
+    position: absolute;
+    top: 8px; bottom: 8px;
+    left: -4px;
+    width: 3px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, #7dff9c 0%, #00cc55 50%, #7dff9c 100%);
+    box-shadow: 0 0 8px #7dff9c;
+    animation: ledStrip 2.2s ease-in-out infinite alternate;
+}
+
+@keyframes ledStrip {
+    from { opacity: .5;  box-shadow: 0 0 5px #7dff9c; }
+    to   { opacity: 1;   box-shadow: 0 0 16px #7dff9c; }
 }
 
 #serverRack div {
-    height: 28px;
-    margin-bottom: 10px;
-    border: 2px solid hotpink;
-    border-radius: 6px;
-    background: linear-gradient(90deg, #190026, #321247);
-    box-shadow: inset 0 0 8px black;
+    height: 26px;
+    margin-bottom: 7px;
+    border: 1px solid rgba(255,105,180,.35);
+    border-radius: 4px;
+    background: linear-gradient(90deg, #0f001e, #1e0630);
+    box-shadow: inset 0 0 6px rgba(0,0,0,.8);
 }
 
 #serverRack div::after {
     content: "● ● ●";
     color: #7dff9c;
-    font-size: 10px;
-    margin-left: 8px;
+    font-size: 9px;
+    margin-left: 6px;
+    animation: rackBlink 1.8s ease-in-out infinite alternate;
 }
+
+@keyframes rackBlink {
+    from { color: #7dff9c; text-shadow: none; }
+    to   { color: #00cc55; text-shadow: 0 0 5px #7dff9c; }
+}
+
+/* ===========================
+   PLANT & COFFEE
+=========================== */
 
 #plant {
     position: absolute;
-    left: 205px;
-    top: 455px;
-    font-size: 38px;
+    left: 148px;
+    top: 458px;
+    font-size: 36px;
     z-index: 25;
-    filter: drop-shadow(0 0 8px #7dff9c);
+    filter: drop-shadow(0 0 10px rgba(125,255,156,.5));
 }
 
 #coffee {
     position: absolute;
-    left: 560px;
-    top: 315px;
-    font-size: 28px;
+    left: 592px;
+    top: 320px;
+    font-size: 25px;
     z-index: 40;
     filter: drop-shadow(0 0 8px hotpink);
 }
 
+/* ===========================
+   DESK — operator workstation
+=========================== */
+
 #desk {
     position: absolute;
-    left: 330px;
-    top: 330px;
-    width: 260px;
-    height: 70px;
-    background: linear-gradient(#4d266d, #1b082c);
-    border: 4px solid hotpink;
-    border-radius: 12px;
-    box-shadow: 0 0 18px hotpink;
+    left: 260px;
+    top: 338px;
+    width: 365px;
+    height: 74px;
+    background: linear-gradient(180deg, #3a1c5a 0%, #1c0635 100%);
+    border: 3px solid hotpink;
+    border-radius: 10px;
+    box-shadow:
+        0 0 26px rgba(255,105,180,.5),
+        0 0 60px rgba(255,105,180,.12),
+        inset 0 2px 0 rgba(255,105,180,.22),
+        inset 0 -6px 0 rgba(0,0,0,.5);
     z-index: 30;
 }
 
+/* Keyboard */
 #desk::before {
     content: "⌨";
     position: absolute;
-    left: 105px;
-    top: 22px;
-    color: #9cf6ff;
-    font-size: 22px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(156,246,255,.6);
+    font-size: 20px;
 }
+
+/* Desk front-edge depth lip */
+#desk::after {
+    content: "";
+    position: absolute;
+    bottom: -12px;
+    left: 6px; right: 6px;
+    height: 12px;
+    background: #130425;
+    border-radius: 0 0 8px 8px;
+    border: 2px solid rgba(255,105,180,.22);
+    border-top: none;
+}
+
+/* Station name plaque */
+#stationPlaque {
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    color: hotpink;
+    letter-spacing: 2px;
+    white-space: nowrap;
+    text-shadow: 0 0 8px hotpink;
+    pointer-events: none;
+}
+
+/* ===========================
+   MONITORS
+=========================== */
 
 .monitor {
     position: absolute;
-    top: -78px;
-    width: 65px;
-    height: 55px;
-    background: #050010;
-    border: 3px solid #9cf6ff;
+    top: -96px;
+    width: 80px;
+    height: 65px;
+    background: #020010;
+    border: 2px solid #9cf6ff;
     border-radius: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    font-size: 24px;
-    box-shadow: 0 0 15px #9cf6ff;
-    transition: .25s;
+    font-size: 26px;
+    box-shadow:
+        0 0 18px rgba(156,246,255,.42),
+        0 0 40px rgba(156,246,255,.1);
+    transition: transform .2s, box-shadow .2s;
+}
+
+/* Monitor stand */
+.monitor::after {
+    content: "";
+    position: absolute;
+    bottom: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 22px;
+    height: 16px;
+    background: linear-gradient(180deg, #180030, #0c001e);
+    border-left: 2px solid rgba(156,246,255,.25);
+    border-right: 2px solid rgba(156,246,255,.25);
+    border-bottom: 2px solid rgba(156,246,255,.25);
 }
 
 .monitor:hover {
-    transform: translateY(-4px);
+    transform: translateY(-7px);
+    box-shadow:
+        0 0 32px rgba(156,246,255,.8),
+        0 0 70px rgba(156,246,255,.25);
 }
 
-#securityMonitor { left: 25px; }
-.center { left: 98px; }
-.right { left: 172px; }
+/* Shield monitor — pink glow, clearly the primary console */
+#securityMonitor {
+    left: 18px;
+    border-color: hotpink;
+    box-shadow:
+        0 0 22px rgba(255,105,180,.6),
+        0 0 50px rgba(255,105,180,.18);
+}
+
+#securityMonitor:hover {
+    box-shadow:
+        0 0 35px hotpink,
+        0 0 80px rgba(255,105,180,.4);
+    transform: translateY(-7px);
+}
+
+#securityMonitor::after {
+    border-color: rgba(255,105,180,.32);
+}
+
+.center { left: 132px; }
+.right  { left: 250px; }
+
+/* ===========================
+   CHAIR
+=========================== */
 
 #chair {
     position: absolute;
-    left: 425px;
-    top: 420px;
-    width: 78px;
-    height: 85px;
-    background: linear-gradient(hotpink, #691656);
-    border-radius: 18px;
-    border: 3px solid #ffc3ea;
-    box-shadow: 0 0 18px hotpink;
+    left: 415px;
+    top: 428px;
+    width: 84px;
+    height: 90px;
+    background: linear-gradient(180deg, hotpink 0%, #8b1a5c 100%);
+    border-radius: 20px 20px 12px 12px;
+    border: 2px solid #ffc3ea;
+    box-shadow:
+        0 0 26px rgba(255,105,180,.48),
+        0 10px 24px rgba(0,0,0,.65);
     z-index: 35;
 }
+
+/* Chair headrest cap */
+#chair::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 10px; right: 10px;
+    height: 18px;
+    background: #ffc3ea;
+    border-radius: 9px;
+    box-shadow: 0 0 12px hotpink;
+}
+
+/* Chair floor shadow puddle */
+#chair::after {
+    content: "";
+    position: absolute;
+    bottom: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 104px;
+    height: 20px;
+    background: radial-gradient(ellipse, rgba(255,105,180,.36), transparent 70%);
+    border-radius: 50%;
+}
+
+/* ===========================
+   AGENT — the AI you control
+=========================== */
 
 #agent {
     position: absolute;
@@ -281,27 +963,70 @@ body {
     height: 100%;
     object-fit: contain;
     image-rendering: pixelated;
-    filter: drop-shadow(0 0 10px #9cf6ff);
+    filter: drop-shadow(0 0 16px #9cf6ff) drop-shadow(0 0 5px white);
 }
 
+/* Agent floor shadow */
+#agent::after {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 65px;
+    height: 14px;
+    background: radial-gradient(ellipse, rgba(156,246,255,.36), transparent 70%);
+    border-radius: 50%;
+}
+
+/* ===========================
+   SIDE PANEL — operator status
+=========================== */
+
 #panel {
-    width: 260px;
-    padding: 20px;
-    background: #120020;
-    border: 3px solid hotpink;
-    border-radius: 16px;
-    box-shadow: 0 0 18px hotpink;
+    width: 185px;
+    flex-shrink: 0;
+    padding: 16px;
+    background: linear-gradient(180deg, #16003a 0%, #0c001e 100%);
+    border: 2px solid hotpink;
+    border-radius: 14px;
+    box-shadow: 0 0 22px rgba(255,105,180,.35);
+    font-size: 13px;
     position: relative;
     z-index: 1;
 }
 
 #panel h2 {
-    margin-top: 0;
+    margin: 0 0 14px;
     color: hotpink;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px hotpink;
+    border-bottom: 1px solid rgba(255,105,180,.25);
+    padding-bottom: 10px;
+}
+
+#panel p {
+    margin: 0 0 10px;
+    font-size: 12px;
+    color: rgba(156,246,255,.75);
 }
 
 #panel span {
     color: #9cf6ff;
+    text-shadow: 0 0 6px #9cf6ff;
+}
+
+#panel::after {
+    content: "● MONITORING ACTIVE";
+    display: block;
+    color: #7dff9c;
+    font-size: 9px;
+    letter-spacing: 1px;
+    border-top: 1px solid rgba(255,105,180,.22);
+    padding-top: 12px;
+    margin-top: 4px;
+    text-shadow: 0 0 6px #7dff9c;
 }
 
 /* ===========================
@@ -369,9 +1094,7 @@ body {
     margin-top: 0;
 }
 
-#consoleMessage {
-    color: #9cf6ff;
-}
+#consoleMessage { color: #9cf6ff; }
 
 #dashboardGrid {
     display: grid;
@@ -414,9 +1137,7 @@ body {
     color: #9cf6ff;
 }
 
-#eventFeed p {
-    margin: 0 0 6px;
-}
+#eventFeed p { margin: 0 0 6px; }
 
 #startScan,
 #viewLogs,
@@ -438,6 +1159,545 @@ body {
 }
 
 #startScan:hover,
-#viewLogs:hover {
-    background: #220035;
+#viewLogs:hover { background: #220035; }
+
+/* ═══════════════════════════════════════════
+   AMBIENCE — LIVING ROOM LAYER
+═══════════════════════════════════════════ */
+
+/* ── Lightning flash overlay ── */
+#lightning {
+    position: absolute;
+    inset: 0;
+    background: rgba(200,220,255,.12);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 200;
+    transition: opacity .06s;
+}
+
+/* ── Floating dust particles ── */
+#particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 55;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    background: rgba(255,105,180,.55);
+    border-radius: 50%;
+    animation: particleDrift linear infinite;
+}
+
+.particle:nth-child(even) { background: rgba(156,246,255,.45); }
+.particle:nth-child(3n)   { background: rgba(125,255,156,.35); }
+
+@keyframes particleDrift {
+    0%   { transform: translateY(0)      rotate(0deg);   opacity: 0;   }
+    10%  {                                               opacity: .7;  }
+    90%  {                                               opacity: .4;  }
+    100% { transform: translateY(-180px) rotate(180deg); opacity: 0;   }
+}
+
+/* ── Rain inside window ── */
+#windowRain {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+#windowRain::before {
+    content: "";
+    position: absolute;
+    top: -100%;
+    left: -20%;
+    right: -20%;
+    bottom: -100%;
+    background: repeating-linear-gradient(
+        175deg,
+        transparent 0px,
+        transparent 5px,
+        rgba(156,246,255,.1) 5px,
+        rgba(156,246,255,.1) 6px
+    );
+    background-size: 8px 24px;
+    animation: rainFall .7s linear infinite;
+}
+
+#windowRain::after {
+    content: "";
+    position: absolute;
+    top: -100%;
+    left: -20%;
+    right: -20%;
+    bottom: -100%;
+    background: repeating-linear-gradient(
+        174deg,
+        transparent 0px,
+        transparent 10px,
+        rgba(156,246,255,.06) 10px,
+        rgba(156,246,255,.06) 11px
+    );
+    background-size: 14px 30px;
+    animation: rainFall .5s linear infinite;
+    animation-delay: -.25s;
+}
+
+@keyframes rainFall {
+    from { transform: translateY(-24px); }
+    to   { transform: translateY(24px); }
+}
+
+/* ── Steam from coffee mug ── */
+#steamGroup {
+    position: absolute;
+    left: 596px;
+    top: 290px;
+    z-index: 41;
+    pointer-events: none;
+}
+
+.steam {
+    position: absolute;
+    width: 4px;
+    height: 22px;
+    border-radius: 50% 50% 0 0;
+    background: linear-gradient(to top, rgba(255,255,255,.3), transparent);
+    animation: steamRise 2.6s ease-out infinite;
+}
+
+.s1 { left: 1px;  animation-delay: 0s; }
+.s2 { left: 9px;  animation-delay: .9s; }
+.s3 { left: 5px;  animation-delay: 1.8s; }
+
+@keyframes steamRise {
+    0%   { transform: translateY(0)      scaleX(1);   opacity: .55; }
+    50%  { transform: translateY(-14px)  scaleX(1.4); opacity: .3;  }
+    100% { transform: translateY(-30px)  scaleX(2);   opacity: 0;   }
+}
+
+/* ── Plant gentle sway ── */
+#plant {
+    animation: plantSway 5s ease-in-out infinite alternate;
+    transform-origin: bottom center;
+}
+
+@keyframes plantSway {
+    from { transform: rotate(-4deg); }
+    to   { transform: rotate(4deg);  }
+}
+
+/* ── Monitor subtle glow pulse ── */
+.monitor { animation: monitorPulse 4s ease-in-out infinite alternate; }
+
+@keyframes monitorPulse {
+    from { filter: brightness(1);    }
+    to   { filter: brightness(1.22); }
+}
+
+/* ── Agent idle breathing ── */
+#agentSprite {
+    animation: agentBreathe 3.5s ease-in-out infinite;
+    transform-origin: bottom center;
+}
+
+@keyframes agentBreathe {
+    0%, 100% { transform: scaleY(1);     }
+    50%       { transform: scaleY(1.018); }
+}
+
+/* ── Agent headset LED ── */
+#headsetLed {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 5px;
+    height: 5px;
+    background: hotpink;
+    border-radius: 50%;
+    box-shadow: 0 0 6px hotpink;
+    animation: ledBlink 3.2s infinite;
+}
+
+@keyframes ledBlink {
+    0%, 80%, 100% { opacity: 1; }
+    85%            { opacity: .1; }
+    90%            { opacity: 1; }
+    95%            { opacity: .2; }
+}
+
+/* ═══════════════════════════════════════════
+   ROOM DETAILS — LIVED IN
+═══════════════════════════════════════════ */
+
+/* ── Wall bookshelf ── */
+#wallShelf {
+    position: absolute;
+    left: 28px;
+    top: 202px;
+    width: 200px;
+    height: 26px;
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    padding: 0 5px;
+}
+
+/* Shelf board */
+#wallShelf::after {
+    content: "";
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: rgba(80,40,120,.8);
+    border: 1px solid rgba(255,105,180,.28);
+    border-radius: 2px;
+    box-shadow: 0 3px 8px rgba(0,0,0,.5);
+}
+
+.book {
+    width: 13px;
+    height: 20px;
+    border-radius: 2px 2px 0 0;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.bk-pink  { background: linear-gradient(180deg, #6b0028, #3d0018); border-top: 2px solid hotpink; }
+.bk-cyan  { background: linear-gradient(180deg, #003050, #001830); border-top: 2px solid #9cf6ff; }
+.bk-dark  { background: linear-gradient(180deg, #1a0035, #0d001e); border-top: 2px solid #6b5acd; }
+.bk-mint  { background: linear-gradient(180deg, #003520, #001f10); border-top: 2px solid #7dff9c; }
+.bk-tall  { height: 24px !important; }
+.bk-sm    { width: 9px !important; height: 15px !important; }
+
+/* ── Sticky notes ── */
+.stickyNote {
+    position: absolute;
+    width: 72px;
+    padding: 5px 6px;
+    background: rgba(255,255,160,.92);
+    color: #1a0030;
+    font-size: 8px;
+    line-height: 1.5;
+    border-radius: 1px 3px 3px 1px;
+    box-shadow: 2px 2px 6px rgba(0,0,0,.45), inset -2px 0 0 rgba(0,0,0,.08);
+    font-family: Arial, sans-serif;
+}
+
+.stickyNote.sn-pink { background: rgba(255,200,215,.92); }
+
+#sn1 { left: 592px; top: 28px;  transform: rotate(-4deg); }
+#sn2 { left: 601px; top: 88px;  transform: rotate(3deg);  }
+#sn3 { left: 592px; top: 150px; transform: rotate(-2deg); }
+
+/* ── HQ Directory panel (below window) ── */
+#hqDirectory {
+    position: absolute;
+    right: 28px;
+    top: 182px;
+    width: 188px;
+    background: rgba(4,0,18,.82);
+    border: 1px solid rgba(156,246,255,.28);
+    border-radius: 7px;
+    padding: 9px 12px;
+    box-shadow: 0 0 18px rgba(156,246,255,.1), inset 0 0 20px rgba(0,0,0,.6);
+}
+
+.dirTitle {
+    font-size: 9px;
+    color: hotpink;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(255,105,180,.22);
+    text-shadow: 0 0 6px hotpink;
+}
+
+.dirItem {
+    font-size: 8px;
+    letter-spacing: .5px;
+    margin-bottom: 4px;
+    line-height: 1.6;
+    color: rgba(156,246,255,.35);
+}
+
+.dirItem:last-child { margin-bottom: 0; }
+
+.dirItem.current {
+    color: #7dff9c;
+    text-shadow: 0 0 6px #7dff9c;
+}
+
+.dirItem.locked { cursor: not-allowed; }
+
+/* ── Threat map SVG connection lines ── */
+#threatLines {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.tLine {
+    stroke: rgba(255,105,180,.22);
+    stroke-width: 1;
+    stroke-dasharray: 5 5;
+    animation: dashFlow 3s linear infinite;
+    fill: none;
+}
+
+.tLine.pulse {
+    stroke: rgba(156,246,255,.28);
+    animation: dashFlow 1.6s linear infinite;
+}
+
+@keyframes dashFlow { to { stroke-dashoffset: -30; } }
+
+/* ── Holographic globe ── */
+#hologram {
+    position: absolute;
+    left: 635px;
+    top: 260px;
+    width: 50px;
+    height: 50px;
+    z-index: 15;
+    pointer-events: none;
+}
+
+.hCore {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 18px; height: 18px;
+    background: radial-gradient(circle, rgba(156,246,255,.6) 0%, rgba(156,246,255,.1) 70%, transparent 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 16px rgba(156,246,255,.65);
+    animation: hCorePulse 2.2s ease-in-out infinite alternate;
+}
+
+.hOrbit {
+    position: absolute;
+    top: 50%; left: 50%;
+    border-radius: 50%;
+    border: 1px solid transparent;
+}
+
+.h1 {
+    width: 42px; height: 14px;
+    margin-top: -7px; margin-left: -21px;
+    border-color: rgba(156,246,255,.4);
+    box-shadow: 0 0 6px rgba(156,246,255,.25);
+    animation: orbitSpin 4s linear infinite;
+}
+
+.h2 {
+    width: 48px; height: 18px;
+    margin-top: -9px; margin-left: -24px;
+    border-color: rgba(255,105,180,.3);
+    box-shadow: 0 0 6px rgba(255,105,180,.18);
+    animation: orbitSpin 6.5s linear infinite reverse;
+}
+
+@keyframes orbitSpin { to { transform: rotate(360deg); } }
+@keyframes hCorePulse {
+    from { transform: translate(-50%,-50%) scale(1);    opacity: .7; }
+    to   { transform: translate(-50%,-50%) scale(1.18); opacity: 1;  }
+}
+
+/* ── Headphones on wall ── */
+#headphones {
+    position: absolute;
+    left: 26px;
+    top: 290px;
+    font-size: 22px;
+    z-index: 12;
+    filter: drop-shadow(0 0 6px rgba(255,105,180,.5));
+    transform: rotate(-15deg);
+}
+
+/* ── Crystals ── */
+#crystals {
+    position: absolute;
+    left: 130px;
+    top: 510px;
+    font-size: 18px;
+    z-index: 26;
+    filter: drop-shadow(0 0 8px rgba(156,246,255,.6));
+    animation: crystalGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes crystalGlow {
+    from { filter: drop-shadow(0 0 6px rgba(156,246,255,.4)); }
+    to   { filter: drop-shadow(0 0 14px rgba(156,246,255,.8)); }
+}
+
+/* ── Mouse on desk ── */
+#mouse {
+    position: absolute;
+    right: 14px;
+    top: 18px;
+    width: 18px;
+    height: 28px;
+    background: linear-gradient(180deg, #2a0a40, #160525);
+    border: 1px solid rgba(255,105,180,.4);
+    border-radius: 9px 9px 7px 7px;
+    box-shadow: 0 0 6px rgba(255,105,180,.2);
+}
+
+#mouse::before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 10px;
+    background: rgba(255,105,180,.35);
+    border-radius: 1px;
+}
+
+/* ── Server rack slots — colored LEDs ── */
+.rackUnit { /* same as #serverRack div */ }
+
+#serverRack .ru-warn::after {
+    color: #ffcc44 !important;
+    text-shadow: 0 0 4px #ffcc44 !important;
+    animation: rackWarnBlink 1s ease-in-out infinite alternate !important;
+}
+
+#serverRack .ru-alert::after {
+    color: hotpink !important;
+    text-shadow: 0 0 5px hotpink !important;
+    animation: rackAlertBlink .55s ease-in-out infinite alternate !important;
+}
+
+@keyframes rackWarnBlink { from { opacity: .4; } to { opacity: 1; } }
+@keyframes rackAlertBlink { from { opacity: .25; } to { opacity: 1; } }
+
+/* ── Server rack fan ── */
+#rackFan {
+    height: 20px !important;
+    margin-bottom: 0 !important;
+    background: #050010 !important;
+    border-color: rgba(156,246,255,.12) !important;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+}
+
+#rackFan::after {
+    content: "◎" !important;
+    color: rgba(156,246,255,.45) !important;
+    font-size: 15px !important;
+    margin-left: 0 !important;
+    animation: fanSpin .85s linear infinite !important;
+}
+
+@keyframes fanSpin { to { transform: rotate(360deg); } }
+
+/* ═══════════════════════════════════════════
+   WORLD BUILDING — EXIT CORRIDOR
+═══════════════════════════════════════════ */
+
+#exitArch {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 82px;
+    height: 255px;
+    background: linear-gradient(180deg, #04000e, #020008);
+    border-left: 2px solid rgba(255,105,180,.45);
+    border-top: 2px solid rgba(255,105,180,.3);
+    border-radius: 28px 0 0 0;
+    z-index: 22;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+/* Corridor depth and perspective glow */
+#exitArch::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse at 55% 100%, rgba(255,105,180,.08) 0%, transparent 60%),
+        linear-gradient(180deg, transparent 60%, rgba(255,100,30,.04) 100%);
+}
+
+/* Distant corridor light point */
+#exitArch::after {
+    content: "";
+    position: absolute;
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px; height: 8px;
+    background: rgba(255,190,80,.7);
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(255,150,50,.5), 0 0 50px rgba(255,100,30,.2);
+    animation: corridorLight 3.5s ease-in-out infinite alternate;
+}
+
+@keyframes corridorLight {
+    from { opacity: .45; transform: translateX(-50%) scale(1);   }
+    to   { opacity: 1;   transform: translateX(-50%) scale(1.15); }
+}
+
+/* Corridor directional signs */
+#archSigns {
+    position: absolute;
+    top: 24px;
+    left: 6px;
+    right: 4px;
+}
+
+.archSign {
+    font-size: 7px;
+    color: rgba(156,246,255,.55);
+    letter-spacing: .5px;
+    line-height: 2;
+    white-space: nowrap;
+}
+
+/* Wing label above the arch */
+#archLabel {
+    position: absolute;
+    right: 90px;
+    top: 316px;
+    font-size: 8px;
+    color: rgba(255,105,180,.6);
+    letter-spacing: 1px;
+    z-index: 23;
+    white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════════
+   HOVER TOOLTIP — cursor-following label
+═══════════════════════════════════════════ */
+
+[data-tip] { cursor: help; }
+
+#roomTooltip {
+    position: absolute;
+    padding: 5px 11px;
+    background: rgba(4,0,18,.92);
+    border: 1px solid rgba(255,105,180,.5);
+    border-radius: 5px;
+    color: #9cf6ff;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 499;
+    opacity: 0;
+    transition: opacity .18s ease;
+    box-shadow: 0 0 14px rgba(255,105,180,.2), inset 0 0 8px rgba(0,0,0,.5);
 }

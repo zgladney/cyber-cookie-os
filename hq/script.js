@@ -1,3 +1,4 @@
 initializeUI();
 startAgents();
 initializeThreatHunter();
+startAmbience();

@@ -12,6 +12,19 @@ The project is being built as my cybersecurity capstone and portfolio project. I
 
 ---
 
+# How to Run
+
+```bash
+python launch.py
+```
+
+This starts a local server on port 8080 and opens the dashboard automatically.
+Dashboard URL: http://localhost:8080/hq/index.html
+
+Press Ctrl+C to stop the server.
+
+---
+
 # Current Features
 
 ## 🛡️ Agent 001 – Threat Hunter

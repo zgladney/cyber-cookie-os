@@ -13,43 +13,188 @@
 
     <header id="topBar">
         <h1>CyberCookieOS</h1>
-        <p>Pink Cyber SOC Headquarters</p>
+        <p>CyberCookieOS // Pink Ops Command</p>
     </header>
 
     <main id="mainLayout">
 
         <section id="room">
 
+            <!-- Environment overlays -->
+            <div id="lightning"></div>
+            <div id="particles"></div>
+
+            <!-- Ceiling -->
+            <div id="ceilingPipe"></div>
+
+            <!-- ═══════════════════════════ BACK WALL ═══════════════════════════ -->
             <div id="back-wall">
-                <div id="window">
+
+                <!-- Night window with rain + city -->
+                <div id="window" data-tip="NIGHT CITY — RAINY SEASON">
                     <div id="moon">🌙</div>
                     <div class="star one">✦</div>
                     <div class="star two">✦</div>
                     <div class="star three">✦</div>
+                    <div id="windowRain"></div>
+                    <div id="cityView">
+                        <div class="cBld b1"></div>
+                        <div class="cBld b2 lit"></div>
+                        <div class="cBld b3"></div>
+                        <div class="cBld b4 tall lit"></div>
+                        <div class="cBld b5 lit"></div>
+                        <div class="cBld b6"></div>
+                        <div class="cBld b7 lit"></div>
+                        <div class="cBld b8"></div>
+                        <div class="cBld b9 lit"></div>
+                    </div>
                 </div>
 
+                <!-- Left column: sign, runes, cases, shelf -->
                 <div id="neonSign">THREAT HUNTER HQ</div>
-                <div id="wallScreen">LIVE THREAT MAP</div>
+                <div id="wallRune">✦ ⬡ ✦</div>
+
+                <div id="missionLog">
+                    <div class="mEntry">▸ CASE #0042 — ACTIVE</div>
+                    <div class="mEntry">▸ CASE #0041 — CLOSED</div>
+                    <div class="mEntry warn">⚠ SUSPICIOUS IP FLAGGED</div>
+                </div>
+
+                <!-- Bookshelf below mission log -->
+                <div id="wallShelf" data-tip="RESEARCH ARCHIVE">
+                    <div class="book bk-pink bk-tall"></div>
+                    <div class="book bk-cyan"></div>
+                    <div class="book bk-dark"></div>
+                    <div class="book bk-pink bk-sm"></div>
+                    <div class="book bk-mint bk-tall"></div>
+                    <div class="book bk-dark bk-sm"></div>
+                    <div class="book bk-cyan"></div>
+                    <div class="book bk-pink"></div>
+                    <div class="book bk-dark bk-tall"></div>
+                </div>
+
+                <!-- Center: Threat map -->
+                <div id="wallScreen">
+                    <div class="mapGrid"></div>
+                    <div class="scanLine"></div>
+                    <div class="mapLabel">LIVE THREAT MAP</div>
+                    <!-- SVG connection lines between nodes -->
+                    <svg id="threatLines" viewBox="0 0 335 158" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                        <line class="tLine"       x1="50"  y1="69"  x2="137" y2="110"/>
+                        <line class="tLine pulse"  x1="137" y1="110" x2="191" y2="95"/>
+                        <line class="tLine"       x1="191" y1="95"  x2="224" y2="50"/>
+                        <line class="tLine"       x1="224" y1="50"  x2="278" y2="79"/>
+                        <line class="tLine pulse"  x1="77"  y1="122" x2="137" y2="110"/>
+                        <line class="tLine"       x1="50"  y1="69"  x2="77"  y2="122"/>
+                    </svg>
+                    <span class="tNode"            style="top:42%;left:14%"></span>
+                    <span class="tNode pulse-node" style="top:68%;left:40%"></span>
+                    <span class="tNode slow"       style="top:30%;left:66%"></span>
+                    <span class="tNode pulse-node" style="top:75%;left:22%"></span>
+                    <span class="tNode"            style="top:48%;left:82%"></span>
+                    <span class="tNode slow"       style="top:58%;left:56%"></span>
+                </div>
+
+                <!-- Sticky notes in wall-screen to window gap -->
+                <div class="stickyNote" id="sn1">SCAN @23:00</div>
+                <div class="stickyNote sn-pink" id="sn2">AGENT 001 ✓</div>
+                <div class="stickyNote" id="sn3">CHECK LOGS</div>
+
+                <!-- HQ Directory below window -->
+                <div id="hqDirectory" data-tip="HQ WING MAP — ROOMS LOCKED">
+                    <div class="dirTitle">★ HQ DIRECTORY</div>
+                    <div class="dirItem current">▸ Threat Hunter</div>
+                    <div class="dirItem locked">⬡ Apt. Hunter</div>
+                    <div class="dirItem locked">⬡ Cloud Lab</div>
+                    <div class="dirItem locked">⬡ AI Workshop</div>
+                    <div class="dirItem locked">⬡ Obsidian Lib</div>
+                    <div class="dirItem locked">⬡ Calendar</div>
+                </div>
+
+                <div id="statusBar">
+                    <span class="sLed green"></span><span class="sLabel">NET</span>
+                    <span class="sLed green"></span><span class="sLabel">FW</span>
+                    <span class="sLed amber"></span><span class="sLabel">PERIM</span>
+                    <span class="sLed red"></span><span class="sLabel">THR</span>
+                </div>
+
+            </div><!-- /back-wall -->
+
+            <!-- Moonbeam from window -->
+            <div id="moonbeam"></div>
+
+            <!-- Desk lamp -->
+            <div id="lamp"></div>
+            <div id="lampGlow"></div>
+
+            <!-- Floating holographic globe (above desk area) -->
+            <div id="hologram">
+                <div class="hOrbit h1"></div>
+                <div class="hOrbit h2"></div>
+                <div class="hCore"></div>
             </div>
 
-            <div id="serverRack">
-                <div></div><div></div><div></div><div></div>
+            <!-- Headphones hanging on left wall -->
+            <div id="headphones">🎧</div>
+
+            <!-- ═══════════════════════════ SERVER RACK ═══════════════════════════ -->
+            <div id="serverRack" data-tip="SRV-01 | SLOT 3: WARN | SLOT 5: ALERT">
+                <div class="rackUnit"></div>
+                <div class="rackUnit"></div>
+                <div class="rackUnit ru-warn"></div>
+                <div class="rackUnit"></div>
+                <div class="rackUnit ru-alert"></div>
+                <div id="rackFan"></div>
             </div>
 
+            <!-- Floor cables -->
+            <div id="cable1" class="floorCable"></div>
+            <div id="cable2" class="floorCable"></div>
+            <div id="cable3" class="floorCable"></div>
+
+            <!-- Small crystals near server rack -->
+            <div id="crystals">💎</div>
+
+            <!-- Plant with sway -->
             <div id="plant">🌱</div>
-            <div id="coffee">☕</div>
-            <div id="floor"></div>
 
+            <!-- Steam rising from coffee -->
+            <div id="steamGroup">
+                <div class="steam s1"></div>
+                <div class="steam s2"></div>
+                <div class="steam s3"></div>
+            </div>
+            <div id="coffee" data-tip="AGENT FUEL — ALWAYS HOT">☕</div>
+
+            <div id="floor"></div>
+            <div id="floorGlow"></div>
+
+            <!-- ═══════════════════════════ WORKSTATION ═══════════════════════════ -->
             <div id="desk">
                 <div class="monitor" id="securityMonitor">🛡️</div>
                 <div class="monitor center">📊</div>
                 <div class="monitor right">🤖</div>
+                <div id="stationPlaque">▸ AGENT 001</div>
+                <div id="mouse"></div>
             </div>
 
             <div id="chair"></div>
 
+            <!-- ═══════════════════════════ WORLD BUILDING ═══════════════════════ -->
+            <!-- Exit corridor — hints the HQ is larger -->
+            <div id="exitArch">
+                <div id="archSigns">
+                    <div class="archSign">↑ CLOUD LAB</div>
+                    <div class="archSign">→ AI WORKSHOP</div>
+                    <div class="archSign">↓ LOBBY</div>
+                </div>
+            </div>
+            <div id="archLabel">WING B →</div>
+
+            <!-- ═══════════════════════════ AGENT ═══════════════════════════════ -->
             <div id="agent">
                 <img id="agentSprite" src="assets/agent001.png" alt="Cyber Cookie Agent 001">
+                <div id="headsetLed"></div>
             </div>
 
         </section>
@@ -65,6 +210,7 @@
 
 </div>
 
+<!-- ═══════════════════════════ POPUP (unchanged) ═══════════════════════════ -->
 <div id="popup" class="hidden">
 
     <div id="popupWindow">
@@ -87,12 +233,10 @@
                     <h3>Total Scans</h3>
                     <p id="totalScans">0</p>
                 </div>
-
                 <div class="dashboardCard">
                     <h3>Threat Level</h3>
                     <p id="dashboardThreat">Low</p>
                 </div>
-
                 <div class="dashboardCard">
                     <h3>Last Scan</h3>
                     <p id="lastScan">None</p>
@@ -132,6 +276,7 @@
 <script src="js/ui.js"></script>
 <script src="js/agent.js"></script>
 <script src="js/threathunter.js"></script>
+<script src="js/ambience.js"></script>
 <script src="script.js"></script>
 
 </body>
