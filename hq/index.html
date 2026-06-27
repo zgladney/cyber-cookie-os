@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberCookieOS</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="app">
+
+    <div id="room">
+        <div id="back-wall"></div>
+        <div id="left-wall"></div>
+        <div id="floor"></div>
+
+        <div id="window">
+            <div id="moon">🌙</div>
+            <div class="star one">✦</div>
+            <div class="star two">✦</div>
+            <div class="star three">✦</div>
+        </div>
+
+        <div id="desk">
+            <div class="monitor" id="securityMonitor">🛡️</div>
+            <div class="monitor center">📊</div>
+            <div class="monitor right">🤖</div>
+        </div>
+
+        <div id="chair"></div>
+        <div id="agent">●</div>
+    </div>
+
+    <div id="panel">
+        <h2>Threat Hunter</h2>
+        <p>Status: <span id="status">Online</span></p>
+        <p>State: <span id="currentState">Patrol</span></p>
+        <p>Threat: <span id="threat">Low</span></p>
+    </div>
+
+</div>
+
+<div id="popup" class="hidden">
+    <div id="popupWindow">
+
+        <div id="popupTopBar">
+            <span>🛡️ Threat Hunter Console</span>
+            <button id="closePopup">X</button>
+        </div>
+
+        <div id="popupBody">
+            <h2>Threat Hunter v1.0</h2>
+            <p id="consoleStatus">🟢 Status: Online</p>
+            <p id="consoleMessage">Ready to scan.</p>
+
+            <button id="startScan">Start Scan</button>
+            <button id="viewLogs">View Logs</button>
+        </div>
+
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
