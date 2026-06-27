@@ -1,69 +1,180 @@
 import ipaddress
 from datetime import datetime
 
-print("=" * 45)
-print("🛡️ CyberCookieOS - Threat Hunter v3")
-print("=" * 45)
+LOG_FILE = "scan_log.txt"
 
-while True:
+scan_count = 0
+high_count = 0
+medium_count = 0
+low_count = 0
+invalid_count = 0
 
-    ip = input("\nEnter an IP address (or type 'quit' to exit): ")
 
-    if ip.strip() == "":
-        continue
+def banner():
+    print("=" * 50)
+    print("🛡️ CyberCookieOS - Threat Hunter v4")
+    print("=" * 50)
 
-    if ip.lower() == "quit":
-        print("\nThreat Hunter shutting down...")
-        break
 
-    try:
-        address = ipaddress.ip_address(ip)
+def save_log(address, ip_type, threat, score):
+    with open(LOG_FILE, "a", encoding="utf-8") as log:
+        log.write(
+            f"{datetime.now()} | {address} | {ip_type} | {threat} | Score: {score}\n"
+        )
 
-        print("\nScanning...\n")
-        print(f"IP: {address}")
 
-        # Determine IP type
-        if address.is_private:
-            ip_type = "Private IP"
-            threat = "Low 🟢"
-            score = 5
+def scan_ip(ip):
+    global scan_count, high_count, medium_count, low_count
 
-        elif address.is_loopback:
-            ip_type = "Localhost"
-            threat = "None 🟢"
-            score = 0
+    address = ipaddress.ip_address(ip)
+
+    if address.is_loopback:
+        ip_type = "Localhost"
+        threat = "None 🟢"
+        score = 0
+
+    elif address.is_private:
+        ip_type = "Private IP"
+        threat = "Low 🟢"
+        score = 5
+
+    else:
+        ip_type = "Public IP"
+
+        first_octet = int(str(address).split(".")[0])
+
+        if first_octet < 50:
+            threat = "High 🔴"
+            score = 90
+            high_count += 1
+
+        elif first_octet < 100:
+            threat = "Medium 🟠"
+            score = 60
+            medium_count += 1
 
         else:
-            ip_type = "Public IP"
+            threat = "Low 🟢"
+            score = 20
+            low_count += 1
 
-            # Fake intelligence engine
-            first_octet = int(str(address).split(".")[0])
+    scan_count += 1
 
-            if first_octet < 50:
-                threat = "High 🔴"
-                score = 90
+    print("\nScanning...\n")
+    print(f"IP: {address}")
+    print(f"Type: {ip_type}")
+    print(f"Threat Level: {threat}")
+    print(f"Threat Score: {score}/100")
 
-            elif first_octet < 100:
-                threat = "Medium 🟠"
-                score = 60
+    save_log(address, ip_type, threat, score)
 
+    print("\n✅ Scan saved successfully!")
+
+
+def view_logs():
+    print("\n========== Scan History ==========\n")
+
+    try:
+        with open(LOG_FILE, "r", encoding="utf-8") as log:
+            history = log.read()
+
+            if history.strip() == "":
+                print("No scans saved yet.")
             else:
-                threat = "Low 🟢"
-                score = 20
+                print(history)
 
-        print(f"Type: {ip_type}")
-        print(f"Threat Level: {threat}")
-        print(f"Threat Score: {score}/100")
+    except FileNotFoundError:
+        print("No scan log found yet.")
 
-        with open("scan_log.txt", "a", encoding="utf-8") as log:
-            log.write(
-                f"{datetime.now()} | {address} | {ip_type} | {threat} | Score: {score}\n"
-            )
 
-        print("\n✅ Scan saved successfully!")
+def search_logs():
+    keyword = input("\nSearch logs for IP, threat level, or score: ").strip()
 
-    except ValueError:
-        print("❌ Invalid IP address. Please try again.")
+    if keyword == "":
+        print("Search cancelled.")
+        return
 
-    except Exception as e:
-        print(f"⚠️ Unexpected error: {e}")
+    print("\n========== Search Results ==========\n")
+
+    try:
+        with open(LOG_FILE, "r", encoding="utf-8") as log:
+            matches = []
+
+            for line in log:
+                if keyword.lower() in line.lower():
+                    matches.append(line)
+
+            if matches:
+                for match in matches:
+                    print(match.strip())
+            else:
+                print("No matching logs found.")
+
+    except FileNotFoundError:
+        print("No scan log found yet.")
+
+
+def show_stats():
+    print("\n========== Session Stats ==========\n")
+    print(f"Total scans this session: {scan_count}")
+    print(f"High threats found: {high_count}")
+    print(f"Medium threats found: {medium_count}")
+    print(f"Low threats found: {low_count}")
+    print(f"Invalid entries: {invalid_count}")
+
+
+def menu():
+    print("\nWhat do you want to do?")
+    print("1. Scan an IP address")
+    print("2. View scan history")
+    print("3. Search scan logs")
+    print("4. Show session stats")
+    print("5. Quit")
+
+
+def main():
+    global invalid_count
+
+    banner()
+
+    while True:
+        menu()
+        choice = input("\nChoose an option: ").strip()
+
+        if choice == "1":
+            ip = input("\nEnter an IP address: ").strip()
+
+            if ip == "":
+                print("No IP entered.")
+                continue
+
+            try:
+                scan_ip(ip)
+
+            except ValueError:
+                invalid_count += 1
+                print("❌ Invalid IP address. Please try again.")
+
+            except Exception as e:
+                print(f"⚠️ Unexpected error: {e}")
+
+        elif choice == "2":
+            view_logs()
+
+        elif choice == "3":
+            search_logs()
+
+        elif choice == "4":
+            show_stats()
+
+        elif choice == "5":
+            print("\nFinal session summary:")
+            show_stats()
+            print("\nThreat Hunter shutting down...")
+            break
+
+        else:
+            print("Invalid choice. Pick 1, 2, 3, 4, or 5.")
+
+
+main()
