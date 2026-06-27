@@ -6,65 +6,18 @@ function startAgents() {
 
     let x = 120;
     const floorY = 395;
+    const leftBoundary = 80;
+    const rightBoundary = 720;
+    const monitorPosition = 410;
 
     let direction = 1;
-    let state = "patrol";
+    let mode = "patrol";
 
-    const states = [
-        "patrol",
-        "patrol",
-        "idle",
-        "investigate",
-        "scan"
-    ];
-
-    function chooseState() {
-        state = states[Math.floor(Math.random() * states.length)];
-        stateText.textContent = state;
-
-        switch (state) {
-            case "investigate":
-                threatText.textContent = "Medium";
-                break;
-            case "scan":
-                threatText.textContent = "Scanning...";
-                break;
-            default:
-                threatText.textContent = "Low";
-        }
-
-        if (Math.random() < 0.25) {
-            direction *= -1;
-        }
+    function getThreatLevel() {
+        return threatText.textContent.trim();
     }
 
-    function updateAgent() {
-        if (state === "idle") {
-            return;
-        }
-
-        let speed = 2.5;
-
-        if (state === "investigate") {
-            speed = 4.5;
-        }
-
-        if (state === "scan") {
-            speed = 1.5;
-        }
-
-        x += direction * speed;
-
-        if (x > 720) {
-            x = 720;
-            direction = -1;
-        }
-
-        if (x < 80) {
-            x = 80;
-            direction = 1;
-        }
-
+    function setAgentPosition() {
         const bounce = Math.sin(Date.now() / 180) * 2;
 
         agent.style.left = x + "px";
@@ -77,8 +30,66 @@ function startAgents() {
         }
     }
 
-    chooseState();
+    function moveToward(target, speed) {
+        if (x < target) {
+            x += speed;
+            direction = 1;
+        } else if (x > target) {
+            x -= speed;
+            direction = -1;
+        }
 
-    setInterval(chooseState, 5000);
+        if (Math.abs(x - target) < speed) {
+            x = target;
+        }
+    }
+
+    function patrol() {
+        mode = "patrol";
+        stateText.textContent = "patrol";
+
+        x += direction * 2.2;
+
+        if (x > rightBoundary) {
+            x = rightBoundary;
+            direction = -1;
+        }
+
+        if (x < leftBoundary) {
+            x = leftBoundary;
+            direction = 1;
+        }
+    }
+
+    function investigate(threat) {
+        mode = "investigate";
+        stateText.textContent = "investigate";
+
+        let speed = 3;
+
+        if (threat === "High") {
+            speed = 5;
+        }
+
+        moveToward(monitorPosition, speed);
+    }
+
+    function updateAgent() {
+        const threat = getThreatLevel();
+
+        if (threat === "High" || threat === "Medium") {
+            investigate(threat);
+        } else if (threat === "Scanning...") {
+            stateText.textContent = "scan";
+            moveToward(monitorPosition, 3);
+        } else {
+            patrol();
+        }
+
+        setAgentPosition();
+    }
+
+    setAgentPosition();
+
     setInterval(updateAgent, 30);
 }

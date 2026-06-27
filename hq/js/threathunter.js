@@ -18,6 +18,7 @@ function initializeThreatHunter() {
     let totalScans = 0;
     let lastScanTime = "None";
     let currentThreat = "Low";
+    let lastKnownScanCount = 0;
 
     function getTime() {
         return new Date().toLocaleTimeString();
@@ -43,22 +44,22 @@ function initializeThreatHunter() {
         adapterStatusText.textContent = "Connected";
 
         sideThreatText.textContent = currentThreat;
-        sideStateText.textContent = "logs";
 
         if (currentThreat === "High") {
             activeAlertText.textContent = "HIGH RISK IP DETECTED";
+            sideStateText.textContent = "investigate";
         } else if (currentThreat === "Medium") {
             activeAlertText.textContent = "Suspicious activity detected.";
+            sideStateText.textContent = "investigate";
         } else {
             activeAlertText.textContent = "No active alerts.";
+            sideStateText.textContent = "patrol";
         }
     }
 
-    async function loadScanLogs() {
+    async function readScanLogs(showAllLogs) {
         try {
-            addEvent("Loading real scan data from scan_log.json...");
-
-            const response = await fetch("scan_log.json");
+            const response = await fetch("scan_log.json?cache=" + Date.now());
 
             if (!response.ok) {
                 throw new Error("scan_log.json not found");
@@ -66,10 +67,7 @@ function initializeThreatHunter() {
 
             const scans = await response.json();
 
-            clearFeed();
-
             if (scans.length === 0) {
-                addEvent("No scans found in scan_log.json.");
                 return;
             }
 
@@ -81,38 +79,65 @@ function initializeThreatHunter() {
 
             updateDashboard();
 
-            scans.forEach(function (scan) {
-                addEvent(
-                    scan.timestamp +
-                    " | IP: " + scan.ip +
-                    " | Type: " + scan.type +
-                    " | Threat: " + scan.threat +
-                    " | Score: " + scan.score + "/100"
-                );
-            });
+            if (showAllLogs === true) {
+                clearFeed();
 
-            addEvent("Real scan logs loaded successfully.");
+                scans.forEach(function (scan) {
+                    addEvent(
+                        scan.timestamp +
+                        " | IP: " + scan.ip +
+                        " | Type: " + scan.type +
+                        " | Threat: " + scan.threat +
+                        " | Score: " + scan.score + "/100"
+                    );
+                });
+
+                addEvent("Real scan logs loaded successfully.");
+                lastKnownScanCount = scans.length;
+                return;
+            }
+
+            if (scans.length > lastKnownScanCount) {
+                const newScans = scans.slice(lastKnownScanCount);
+
+                newScans.forEach(function (scan) {
+                    addEvent(
+                        "New scan detected → IP: " + scan.ip +
+                        " | Threat: " + scan.threat +
+                        " | Score: " + scan.score + "/100"
+                    );
+                });
+
+                lastKnownScanCount = scans.length;
+            }
 
         } catch (error) {
-            addEvent("Could not load scan_log.json yet.");
-            addEvent("Make sure scan_log.json is inside the hq folder.");
+            monitoringStatusText.textContent = "Waiting";
+            adapterStatusText.textContent = "No log file yet";
         }
     }
 
-    addEvent("Threat Hunter online. Awaiting operator...");
+    addEvent("Threat Hunter online. Autonomous monitoring enabled.");
+    addEvent("Checking scan_log.json every 5 seconds...");
     updateDashboard();
+
+    readScanLogs(false);
+
+    setInterval(function () {
+        readScanLogs(false);
+    }, 5000);
 
     startScan.onclick = function () {
         sideStateText.textContent = "scan";
         currentThreat = "Scanning...";
         updateDashboard();
 
-        addEvent("Run Python Threat Hunter in the terminal to create a real scan.");
-        addEvent("Then copy scan_log.json into the hq folder and click View Logs.");
+        addEvent("Autonomous mode active.");
+        addEvent("Run Python Threat Hunter in the terminal. Dashboard will update automatically.");
     };
 
     viewLogs.onclick = function () {
         sideStateText.textContent = "logs";
-        loadScanLogs();
+        readScanLogs(true);
     };
 }

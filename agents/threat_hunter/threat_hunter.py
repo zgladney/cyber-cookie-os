@@ -14,38 +14,90 @@ invalid_count = 0
 
 def banner():
     print("=" * 50)
-    print("🛡️ CyberCookieOS - Threat Hunter v5")
+    print("🛡️ CyberCookieOS - Threat Hunter v6")
     print("=" * 50)
+
+
+def get_existing_cases():
+    try:
+        with open(JSON_LOG_FILE, "r", encoding="utf-8") as file:
+            data = json.load(file)
+            return data
+    except FileNotFoundError:
+        return []
+    except json.JSONDecodeError:
+        return []
+
+
+def build_alert(threat):
+    if threat == "High":
+        return "HIGH RISK IP DETECTED"
+    elif threat == "Medium":
+        return "Suspicious activity detected"
+    elif threat == "Low":
+        return "Low risk scan recorded"
+    else:
+        return "No active threat detected"
+
+
+def build_status(threat):
+    if threat == "High":
+        return "Investigating"
+    elif threat == "Medium":
+        return "Monitoring"
+    elif threat == "Low":
+        return "Closed"
+    else:
+        return "Closed"
+
+
+def build_recommendation(threat, ip_type):
+    if threat == "High":
+        return "Block IP immediately and review recent logs"
+    elif threat == "Medium":
+        return "Monitor IP and review related activity"
+    elif ip_type == "Private IP":
+        return "Internal/private IP detected; no external threat"
+    elif threat == "Low":
+        return "No immediate action required"
+    else:
+        return "No action required"
 
 
 def save_log(address, ip_type, threat, score):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    existing_cases = get_existing_cases()
+    case_id = len(existing_cases) + 1
 
-    text_entry = f"{timestamp} | {address} | {ip_type} | {threat} | Score: {score}\n"
+    alert = build_alert(threat)
+    status = build_status(threat)
+    recommendation = build_recommendation(threat, ip_type)
+
+    text_entry = (
+        f"Case #{case_id:04d} | {timestamp} | {address} | {ip_type} | "
+        f"{threat} | Score: {score} | Alert: {alert} | Status: {status}\n"
+    )
 
     json_entry = {
+        "case_id": case_id,
         "timestamp": timestamp,
         "ip": str(address),
         "type": ip_type,
         "threat": threat,
-        "score": score
+        "score": score,
+        "alert": alert,
+        "status": status,
+        "agent": "Agent 001",
+        "recommendation": recommendation
     }
 
     with open(LOG_FILE, "a", encoding="utf-8") as log:
         log.write(text_entry)
 
-    try:
-        with open(JSON_LOG_FILE, "r", encoding="utf-8") as file:
-            data = json.load(file)
-    except FileNotFoundError:
-        data = []
-    except json.JSONDecodeError:
-        data = []
-
-    data.append(json_entry)
+    existing_cases.append(json_entry)
 
     with open(JSON_LOG_FILE, "w", encoding="utf-8") as file:
-        json.dump(data, file, indent=4)
+        json.dump(existing_cases, file, indent=4)
 
 
 def scan_ip(ip):
@@ -66,7 +118,6 @@ def scan_ip(ip):
 
     else:
         ip_type = "Public IP"
-
         first_octet = int(str(address).split(".")[0])
 
         if first_octet < 50:
@@ -91,10 +142,14 @@ def scan_ip(ip):
     print(f"Type: {ip_type}")
     print(f"Threat Level: {threat}")
     print(f"Threat Score: {score}/100")
+    print(f"Assigned Agent: Agent 001")
+    print(f"Status: {build_status(threat)}")
+    print(f"Alert: {build_alert(threat)}")
+    print(f"Recommendation: {build_recommendation(threat, ip_type)}")
 
     save_log(address, ip_type, threat, score)
 
-    print("\n✅ Scan saved successfully!")
+    print("\n✅ Case saved successfully!")
 
 
 def view_logs():
@@ -114,7 +169,7 @@ def view_logs():
 
 
 def search_logs():
-    keyword = input("\nSearch logs for IP, threat level, or score: ").strip()
+    keyword = input("\nSearch logs for IP, threat level, score, or case ID: ").strip()
 
     if keyword == "":
         print("Search cancelled.")
