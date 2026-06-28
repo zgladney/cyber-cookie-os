@@ -2,6 +2,16 @@ function startAmbience() {
     initLightning();
     initParticles();
     initTooltips();
+    initNavigation();
+}
+
+function initNavigation() {
+    document.querySelectorAll('[data-href]').forEach(function (el) {
+        el.style.cursor = 'pointer';
+        el.addEventListener('click', function () {
+            window.location.href = el.dataset.href;
+        });
+    });
 }
 
 function initTooltips() {

@@ -105,21 +105,51 @@ Agent 001
 
 ---
 
-## Phase 2 🚧
+## Phase 2 ✅
 
-### Agent 002
+### Agent 002 — Apartment Hunter
 
-Apartment Hunter
+Features built:
+
+- Filter by max rent budget
+- Filter by pet-friendly requirement
+- Filter by housing voucher acceptance
+- Filter by preferred cities
+- Filter by minimum bedrooms
+- Score and rank matches 0–100
+- Save ranked results to JSON
+- Apartment Hunter room in CyberCookieOS HQ
+- HQ Hallway connecting rooms
+- Live panel updates from apartment_results.json
+
+How to run:
+
+```bash
+cd agents/apartment_hunter
+python apartment_hunter.py
+```
+
+Results saved to: `data/apartment_results.json`
+
+Apartment Hunter room: `http://localhost:8080/apartment/index.html`
+
+HQ Hallway: `http://localhost:8080/hallway/index.html`
+
+Sample data note:
+
+`data/apartments.json` contains 15 sample listings for Burlington County, NJ
+(Willingboro, Mount Laurel, Marlton, Southampton). These are fictional listings
+for development and demo purposes. The `listing_url` field on each listing
+points to a real estate search page for that city. To use real listings:
+replace `listing_url` values with actual property URLs from Zillow, Realtor.com,
+or Apartments.com, and update the other fields to match real listings.
 
 Features planned:
 
-- Search apartments
-- Filter by city
-- Filter by rent
-- Pet friendly search
-- Voucher friendly search
+- Live apartment scraping
+- Daily update scheduler
 - Save favorites
-- Daily updates
+- Email alerts for new matches
 
 ---
 

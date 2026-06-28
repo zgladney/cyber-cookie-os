@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HQ Hallway — CyberCookieOS</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="hw-app">
+
+    <header id="hw-topBar">
+        <h1>CyberCookieOS</h1>
+        <p>CyberCookieOS // Pink Ops Command</p>
+    </header>
+
+    <main id="hw-main">
+
+        <div id="hw-room">
+
+            <!-- Overhead corridor lights -->
+            <div id="hw-ceiling">
+                <div class="hw-light hl1"></div>
+                <div class="hw-light hl2"></div>
+                <div class="hw-light hl3"></div>
+                <div class="hw-light hl4"></div>
+            </div>
+
+            <!-- Back wall: locked rooms -->
+            <div id="hw-backWall">
+                <div id="hw-logo">
+                    <div id="hw-logoText">CyberCookieOS</div>
+                    <div id="hw-logoSub">// HEADQUARTERS</div>
+                </div>
+
+                <div id="hw-lockedDoors">
+                    <div class="hw-lockedDoor">
+                        <div class="hw-lockIcon">⬡</div>
+                        <div class="hw-lockedLabel">Cloud Lab</div>
+                        <div class="hw-lockedBadge">LOCKED</div>
+                    </div>
+                    <div class="hw-lockedDoor">
+                        <div class="hw-lockIcon">⬡</div>
+                        <div class="hw-lockedLabel">AI Workshop</div>
+                        <div class="hw-lockedBadge">LOCKED</div>
+                    </div>
+                    <div class="hw-lockedDoor">
+                        <div class="hw-lockIcon">⬡</div>
+                        <div class="hw-lockedLabel">Obsidian Library</div>
+                        <div class="hw-lockedBadge">LOCKED</div>
+                    </div>
+                </div>
+
+                <div id="hw-wallRune">✦ ⬡ ✦ ⬡ ✦</div>
+            </div>
+
+            <!-- Perspective floor with converging lines -->
+            <div id="hw-floor">
+                <svg id="hw-perspective" viewBox="0 0 900 290" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                    <!-- Vanishing point at center-top of floor (450, 0) -->
+                    <!-- Left wall lines -->
+                    <line x1="0"   y1="290" x2="450" y2="0" stroke="rgba(255,105,180,.15)" stroke-width="1"/>
+                    <line x1="90"  y1="290" x2="450" y2="0" stroke="rgba(255,105,180,.1)"  stroke-width="1"/>
+                    <line x1="200" y1="290" x2="450" y2="0" stroke="rgba(255,105,180,.07)" stroke-width="1"/>
+                    <line x1="330" y1="290" x2="450" y2="0" stroke="rgba(255,105,180,.05)" stroke-width="1"/>
+                    <!-- Right wall lines -->
+                    <line x1="900" y1="290" x2="450" y2="0" stroke="rgba(150,80,255,.15)"  stroke-width="1"/>
+                    <line x1="810" y1="290" x2="450" y2="0" stroke="rgba(150,80,255,.1)"   stroke-width="1"/>
+                    <line x1="700" y1="290" x2="450" y2="0" stroke="rgba(150,80,255,.07)"  stroke-width="1"/>
+                    <line x1="570" y1="290" x2="450" y2="0" stroke="rgba(150,80,255,.05)"  stroke-width="1"/>
+                    <!-- Floor grid horizontals (perspective shrink) -->
+                    <line x1="0" y1="240" x2="900" y2="240" stroke="rgba(200,150,255,.05)" stroke-width="1"/>
+                    <line x1="60" y1="180" x2="840" y2="180" stroke="rgba(200,150,255,.04)" stroke-width="1"/>
+                    <line x1="130" y1="120" x2="770" y2="120" stroke="rgba(200,150,255,.03)" stroke-width="1"/>
+                    <line x1="200" y1="70"  x2="700" y2="70"  stroke="rgba(200,150,255,.02)" stroke-width="1"/>
+                    <!-- Center glow streak -->
+                    <line x1="450" y1="0" x2="450" y2="290" stroke="rgba(200,150,255,.06)" stroke-width="20"/>
+                </svg>
+            </div>
+
+            <!-- Floor glow -->
+            <div id="hw-floorGlow"></div>
+
+            <!-- Left door: Threat Hunter HQ (pink) -->
+            <div id="hw-doorLeft" onclick="window.location.href='../hq/index.html'" role="button" tabindex="0">
+                <div class="hw-doorInner">
+                    <div class="hw-doorGlow hw-glowPink"></div>
+                    <div class="hw-doorSign">🛡️</div>
+                    <div class="hw-doorName">THREAT HUNTER</div>
+                    <div class="hw-doorSub">WING A — HQ</div>
+                    <div class="hw-doorStatus hw-statusOpen">● OPEN</div>
+                </div>
+                <div class="hw-doorArrow">←</div>
+            </div>
+
+            <!-- Right door: Apartment Hunter (purple) -->
+            <div id="hw-doorRight" onclick="window.location.href='../apartment/index.html'" role="button" tabindex="0">
+                <div class="hw-doorInner">
+                    <div class="hw-doorGlow hw-glowPurple"></div>
+                    <div class="hw-doorSign">🏠</div>
+                    <div class="hw-doorName">APARTMENT HUNTER</div>
+                    <div class="hw-doorSub">WING B — AGENT 002</div>
+                    <div class="hw-doorStatus hw-statusOpen">● OPEN</div>
+                </div>
+                <div class="hw-doorArrow">→</div>
+            </div>
+
+            <!-- Wall signs along corridor -->
+            <div id="hw-signLeft">
+                <div class="hw-wallSign">← WING A</div>
+                <div class="hw-wallSign">← THREAT HUNTER</div>
+            </div>
+            <div id="hw-signRight">
+                <div class="hw-wallSign">WING B →</div>
+                <div class="hw-wallSign">APT HUNTER →</div>
+            </div>
+
+            <!-- Center floor badge -->
+            <div id="hw-floorBadge">
+                <div id="hw-badgeText">CyberCookieOS</div>
+                <div id="hw-badgeSub">HQ NEXUS</div>
+            </div>
+
+        </div><!-- /hw-room -->
+
+    </main>
+
+</div>
+
+</body>
+</html>

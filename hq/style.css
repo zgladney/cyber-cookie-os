@@ -1701,3 +1701,16 @@ body {
     transition: opacity .18s ease;
     box-shadow: 0 0 14px rgba(255,105,180,.2), inset 0 0 8px rgba(0,0,0,.5);
 }
+
+/* ── Unlocked directory item ── */
+.dirItem[data-href] {
+    color: #bf7fff !important;
+    text-shadow: 0 0 6px rgba(150,80,255,.6);
+    cursor: pointer;
+    transition: color .2s, text-shadow .2s;
+}
+
+.dirItem[data-href]:hover {
+    color: white !important;
+    text-shadow: 0 0 10px #9b59b6, 0 0 20px rgba(150,80,255,.5);
+}

@@ -1,0 +1,402 @@
+/* =============================================
+   CYBERCOOKIEOS — HQ HALLWAY
+   Vibe: Dark Cyber Corridor — Connecting Rooms
+============================================= */
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #02000a;
+    overflow: hidden;
+    color: white;
+}
+
+#hw-app {
+    width: 100vw;
+    height: 100vh;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* =============================================
+   TOP BAR
+============================================= */
+
+#hw-topBar {
+    text-align: center;
+    margin-bottom: 14px;
+    flex-shrink: 0;
+}
+
+#hw-topBar h1 {
+    margin: 0;
+    font-size: 22px;
+    color: hotpink;
+    text-shadow: 0 0 24px hotpink, 0 0 60px rgba(255,105,180,.3);
+    letter-spacing: 4px;
+    animation: hwLogoFlicker 8s infinite;
+}
+
+@keyframes hwLogoFlicker {
+    0%, 89%, 91%, 93%, 100% { opacity: 1; }
+    90% { opacity: .5; }
+    92% { opacity: .9; }
+}
+
+#hw-topBar p {
+    margin: 5px 0 0;
+    font-size: 11px;
+    color: #9cf6ff;
+    letter-spacing: 3px;
+}
+
+/* =============================================
+   MAIN + ROOM
+============================================= */
+
+#hw-main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow: hidden;
+}
+
+#hw-room {
+    position: relative;
+    width: 900px;
+    height: 600px;
+    border: 3px solid rgba(150,80,255,.4);
+    border-radius: 6px;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 35%, #0d001f 0%, #02000a 70%);
+    box-shadow: 0 0 60px rgba(107,53,213,.2), inset 0 0 80px rgba(0,0,0,.7);
+}
+
+/* =============================================
+   CEILING + LIGHTS
+============================================= */
+
+#hw-ceiling {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 14px;
+    background: linear-gradient(180deg, #0a001a, #06001a);
+    border-bottom: 2px solid rgba(150,80,255,.25);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.hw-light {
+    width: 120px;
+    height: 6px;
+    background: linear-gradient(90deg, transparent, rgba(200,150,255,.55), transparent);
+    border-radius: 3px;
+    box-shadow: 0 0 14px rgba(200,150,255,.4), 0 6px 20px rgba(150,80,255,.15);
+    animation: hwLightFlicker 6s ease-in-out infinite alternate;
+}
+
+.hl1 { animation-delay: 0s; }
+.hl2 { animation-delay: 1.2s; }
+.hl3 { animation-delay: 2.4s; }
+.hl4 { animation-delay: 3.6s; }
+
+@keyframes hwLightFlicker {
+    0%, 95%, 100% { opacity: 1; }
+    96%            { opacity: .6; }
+    97%            { opacity: 1;  }
+    98%            { opacity: .7; }
+}
+
+/* =============================================
+   BACK WALL
+============================================= */
+
+#hw-backWall {
+    position: absolute;
+    left: 0; top: 0;
+    width: 900px;
+    height: 310px;
+    background: linear-gradient(180deg, #06001a 0%, #04000e 100%);
+    border-bottom: 2px solid rgba(150,80,255,.3);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Logo on back wall */
+#hw-logo {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+#hw-logoText {
+    font-size: 22px;
+    letter-spacing: 6px;
+    color: rgba(200,150,255,.7);
+    text-shadow: 0 0 20px rgba(150,80,255,.5);
+    animation: hwLogoPulse 5s ease-in-out infinite alternate;
+}
+
+#hw-logoSub {
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: rgba(156,246,255,.4);
+    margin-top: 4px;
+}
+
+@keyframes hwLogoPulse {
+    from { text-shadow: 0 0 14px rgba(150,80,255,.4); }
+    to   { text-shadow: 0 0 30px rgba(150,80,255,.7), 0 0 60px rgba(107,53,213,.3); }
+}
+
+/* Locked room doors on back wall */
+#hw-lockedDoors {
+    display: flex;
+    gap: 22px;
+    margin-bottom: 20px;
+}
+
+.hw-lockedDoor {
+    width: 110px;
+    height: 80px;
+    background: rgba(4,0,18,.8);
+    border: 1px solid rgba(150,80,255,.18);
+    border-radius: 6px 6px 0 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: not-allowed;
+    opacity: .55;
+    transition: opacity .2s;
+}
+
+.hw-lockedDoor:hover { opacity: .7; }
+
+.hw-lockIcon {
+    font-size: 18px;
+    color: rgba(150,80,255,.4);
+}
+
+.hw-lockedLabel {
+    font-size: 8px;
+    letter-spacing: 1px;
+    color: rgba(200,150,255,.5);
+}
+
+.hw-lockedBadge {
+    font-size: 7px;
+    letter-spacing: 2px;
+    color: rgba(255,80,80,.5);
+    border: 1px solid rgba(255,80,80,.2);
+    padding: 1px 5px;
+    border-radius: 3px;
+}
+
+#hw-wallRune {
+    font-size: 11px;
+    letter-spacing: 10px;
+    color: rgba(150,80,255,.25);
+}
+
+/* =============================================
+   FLOOR + PERSPECTIVE
+============================================= */
+
+#hw-floor {
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    height: 290px;
+    background: linear-gradient(180deg, #06001a 0%, #03000e 100%);
+    border-top: 2px solid rgba(150,80,255,.3);
+    z-index: 2;
+    overflow: hidden;
+}
+
+#hw-perspective {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#hw-floorGlow {
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    height: 80px;
+    background: linear-gradient(0deg, rgba(107,53,213,.1) 0%, transparent 100%);
+    z-index: 3;
+    pointer-events: none;
+}
+
+/* Floor badge (center floor medallion) */
+#hw-floorBadge {
+    position: absolute;
+    left: 50%;
+    bottom: 55px;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 4;
+    opacity: .35;
+}
+
+#hw-badgeText {
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: rgba(200,150,255,.6);
+}
+
+#hw-badgeSub {
+    font-size: 8px;
+    letter-spacing: 3px;
+    color: rgba(150,80,255,.4);
+    margin-top: 2px;
+}
+
+/* =============================================
+   SIDE DOORS (interactive)
+============================================= */
+
+/* Left door: Threat Hunter (pink) */
+#hw-doorLeft,
+#hw-doorRight {
+    position: absolute;
+    bottom: 0;
+    width: 130px;
+    height: 250px;
+    cursor: pointer;
+    z-index: 20;
+    transition: filter .25s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#hw-doorLeft  { left: 0; }
+#hw-doorRight { right: 0; }
+
+#hw-doorLeft:hover  { filter: brightness(1.3); }
+#hw-doorRight:hover { filter: brightness(1.3); }
+
+.hw-doorInner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    overflow: hidden;
+}
+
+.hw-doorGlow {
+    position: absolute;
+    inset: 0;
+}
+
+.hw-glowPink {
+    background: linear-gradient(180deg, rgba(255,105,180,.08) 0%, rgba(255,105,180,.18) 100%);
+    border-right: 2px solid rgba(255,105,180,.5);
+    border-top: 2px solid rgba(255,105,180,.35);
+    border-radius: 0 22px 0 0;
+    box-shadow: inset -4px 0 20px rgba(255,105,180,.1);
+}
+
+.hw-glowPurple {
+    background: linear-gradient(180deg, rgba(150,80,255,.08) 0%, rgba(150,80,255,.18) 100%);
+    border-left: 2px solid rgba(150,80,255,.5);
+    border-top: 2px solid rgba(150,80,255,.35);
+    border-radius: 22px 0 0 0;
+    box-shadow: inset 4px 0 20px rgba(150,80,255,.1);
+}
+
+.hw-doorSign {
+    font-size: 30px;
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 0 10px rgba(255,255,255,.3));
+}
+
+.hw-doorName {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    font-weight: bold;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+#hw-doorLeft  .hw-doorName { color: hotpink;  text-shadow: 0 0 8px hotpink; }
+#hw-doorRight .hw-doorName { color: #bf7fff;  text-shadow: 0 0 8px #9b59b6; }
+
+.hw-doorSub {
+    font-size: 7px;
+    letter-spacing: 1px;
+    color: rgba(156,246,255,.5);
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+.hw-doorStatus {
+    font-size: 7px;
+    letter-spacing: 2px;
+    position: relative;
+    z-index: 1;
+    animation: doorStatusBlink 2s infinite;
+}
+
+.hw-statusOpen { color: #7dff9c; text-shadow: 0 0 6px #7dff9c; }
+
+@keyframes doorStatusBlink {
+    0%, 80%, 100% { opacity: 1;   }
+    85%            { opacity: .3; }
+    90%            { opacity: 1;  }
+}
+
+.hw-doorArrow {
+    position: absolute;
+    bottom: 18px;
+    font-size: 18px;
+    z-index: 2;
+}
+
+#hw-doorLeft  .hw-doorArrow { color: rgba(255,105,180,.6); }
+#hw-doorRight .hw-doorArrow { color: rgba(150,80,255,.6); }
+
+/* =============================================
+   WALL SIGNS
+============================================= */
+
+#hw-signLeft {
+    position: absolute;
+    left: 135px;
+    top: 338px;
+    z-index: 10;
+}
+
+#hw-signRight {
+    position: absolute;
+    right: 135px;
+    top: 338px;
+    z-index: 10;
+    text-align: right;
+}
+
+.hw-wallSign {
+    font-size: 8px;
+    letter-spacing: 1px;
+    color: rgba(200,150,255,.4);
+    line-height: 2;
+}
