@@ -6,82 +6,179 @@
 <title>Operations Center — CyberCookieOS</title>
 <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
 <div id="oc-app">
 
-    <header id="oc-topBar">
-        <a href="../hallway/index.html" class="oc-backLink">← HALLWAY</a>
-        <div id="oc-title">
-            <h1>CyberCookieOS</h1>
-            <p>// OPERATIONS CENTER — MISSION CONTROL</p>
-        </div>
-        <div id="oc-clock"></div>
-    </header>
-
-    <!-- Mission Control Stats Bar -->
-    <div id="oc-missionBar">
-        <div class="oc-mStat">
-            <span class="oc-mLabel">EMPLOYEES</span>
-            <span class="oc-mVal" id="mc-total">—</span>
-        </div>
-        <div class="oc-mDivider"></div>
-        <div class="oc-mStat oc-m-running">
-            <span class="oc-mLabel">RUNNING</span>
-            <span class="oc-mVal" id="mc-running">0</span>
-        </div>
-        <div class="oc-mStat oc-m-idle">
-            <span class="oc-mLabel">IDLE</span>
-            <span class="oc-mVal" id="mc-idle">0</span>
-        </div>
-        <div class="oc-mStat oc-m-blocked">
-            <span class="oc-mLabel">BLOCKED</span>
-            <span class="oc-mVal" id="mc-blocked">0</span>
-        </div>
-        <div class="oc-mStat oc-m-done">
-            <span class="oc-mLabel">COMPLETED</span>
-            <span class="oc-mVal" id="mc-completed">0</span>
-        </div>
-        <div class="oc-mDivider"></div>
-        <div class="oc-mStat oc-m-alert">
-            <span class="oc-mLabel">ALERTS</span>
-            <span class="oc-mVal" id="mc-alerts">0</span>
-        </div>
-        <div class="oc-mStat">
-            <span class="oc-mLabel">DEPT HEALTH</span>
-            <span class="oc-mVal oc-health-ok" id="mc-health">OK</span>
-        </div>
-        <div class="oc-mDivider"></div>
-        <div class="oc-mStat">
-            <span class="oc-mLabel">LAST UPDATED</span>
-            <span class="oc-mVal oc-m-time" id="oc-lastUpdated">—</span>
-        </div>
+  <!-- TOP BAR -->
+  <header id="oc-topBar">
+    <a href="../hallway/index.html" id="oc-hallwayBtn">&#8592;&#8592; HALLWAY</a>
+    <div id="oc-titleBlock">
+      <h1 id="oc-logo">CyberC<span class="oc-logoAccent">&#9670;</span>okieOS</h1>
+      <p id="oc-subtitle">// OPERATIONS CENTER // MISSION CONTROL</p>
     </div>
+    <div id="oc-topClock"></div>
+  </header>
 
-    <!-- Notifications bar -->
-    <div id="oc-notifBar">
-        <span class="oc-notifPrefix">// SYS</span>
-        <span id="oc-notifText">All systems nominal. CyberCookieOS operational. Polling every 5s.</span>
-    </div>
+  <!-- PAGE BODY -->
+  <div id="oc-pageBody">
 
-    <main id="oc-grid">
-        <!-- Department cards rendered by ops_dashboard.js -->
+    <!-- SIDEBAR -->
+    <aside id="oc-sidebar">
+
+      <nav id="oc-nav">
+        <a class="oc-navItem oc-navActive" href="./index.html">
+          <span class="oc-navIcon">&#127963;</span>
+          <span class="oc-navLabel">Operations Center</span>
+        </a>
+        <a class="oc-navItem" href="../hq/index.html" style="--nav-color:#9b6bff">
+          <span class="oc-navIcon">&#128737;</span>
+          <span class="oc-navLabel">Security Ops</span>
+        </a>
+        <a class="oc-navItem" href="../housing/index.html" style="--nav-color:#c4784a">
+          <span class="oc-navIcon">&#127968;</span>
+          <span class="oc-navLabel">Housing</span>
+        </a>
+        <a class="oc-navItem" href="../commerce/index.html" style="--nav-color:#ff69b4">
+          <span class="oc-navIcon">&#128717;</span>
+          <span class="oc-navLabel">Commerce</span>
+        </a>
+        <a class="oc-navItem" href="../productivity/index.html" style="--nav-color:#3aa8c8">
+          <span class="oc-navIcon">&#128197;</span>
+          <span class="oc-navLabel">Productivity</span>
+        </a>
+        <a class="oc-navItem" href="../finance/index.html" style="--nav-color:#2ecc71">
+          <span class="oc-navIcon">&#128176;</span>
+          <span class="oc-navLabel">Finance</span>
+        </a>
+      </nav>
+
+      <div id="oc-sysStatus">
+        <div class="oc-sysTitle">SYSTEM STATUS</div>
+        <div class="oc-sysStat">
+          <span class="oc-sysLabel">CPU</span>
+          <div class="oc-sysBarWrap"><div class="oc-sysBar" id="sysbar-cpu" style="width:28%"></div></div>
+          <span class="oc-sysVal" id="sys-cpu">28%</span>
+        </div>
+        <div class="oc-sysStat">
+          <span class="oc-sysLabel">RAM</span>
+          <div class="oc-sysBarWrap"><div class="oc-sysBar" id="sysbar-ram" style="width:44%"></div></div>
+          <span class="oc-sysVal" id="sys-ram">44%</span>
+        </div>
+        <div class="oc-sysRow">
+          <span class="oc-sysLabel">MEMORY</span>
+          <span class="oc-sysVal">2.1 GB</span>
+        </div>
+        <div class="oc-sysRow">
+          <span class="oc-sysLabel">UPTIME</span>
+          <span class="oc-sysVal" id="sys-uptime">0:00:00</span>
+        </div>
+        <canvas id="oc-sysGraph" width="172" height="46"></canvas>
+      </div>
+
+      <div id="oc-sideFooter">CyberCookieOS v0.3.0</div>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main id="oc-main">
+
+      <div id="oc-topRow">
+
+        <!-- OPERATIONS CENTER PANEL -->
+        <section id="oc-overview" class="oc-panel">
+          <div class="oc-panelHeader">
+            <span class="oc-panelTitle">OPERATIONS CENTER</span>
+            <span class="oc-panelSub">AI COMPANY OVERVIEW</span>
+          </div>
+
+          <div id="oc-bigStats">
+            <div class="oc-bigStat">
+              <div class="oc-bigNum" id="stat-total">18</div>
+              <div class="oc-bigLabel">TOTAL EMPLOYEES</div>
+              <div class="oc-bigSub oc-sub-online">ONLINE</div>
+            </div>
+            <div class="oc-bigStat">
+              <div class="oc-bigNum oc-num-running" id="stat-running">9</div>
+              <div class="oc-bigLabel">RUNNING</div>
+              <div class="oc-bigSub oc-sub-online">ONLINE</div>
+            </div>
+            <div class="oc-bigStat">
+              <div class="oc-bigNum oc-num-idle" id="stat-idle">4</div>
+              <div class="oc-bigLabel">IDLE</div>
+              <div class="oc-bigSub oc-sub-online">ONLINE</div>
+            </div>
+            <div class="oc-bigStat">
+              <div class="oc-bigNum oc-num-blocked" id="stat-blocked">2</div>
+              <div class="oc-bigLabel">BLOCKED</div>
+              <div class="oc-bigSub oc-sub-alert">ATTENTION</div>
+            </div>
+          </div>
+
+          <div class="oc-panelDivider"></div>
+
+          <div class="oc-tasksLabel">TASKS &amp; ALERTS</div>
+          <div id="oc-taskBlocks">
+            <div class="oc-taskBlock">
+              <div class="oc-taskNum" id="stat-tasks">317</div>
+              <div class="oc-taskDesc">TASKS COMPLETED</div>
+              <div class="oc-taskSub">TODAY</div>
+            </div>
+            <div class="oc-taskBlock oc-taskAlert">
+              <div class="oc-taskNum oc-taskNumAlert" id="stat-alerts">2</div>
+              <div class="oc-taskDesc">SYSTEM ALERTS</div>
+              <div class="oc-taskSub">ACTIVE</div>
+            </div>
+            <div class="oc-taskBlock">
+              <div class="oc-taskNum oc-taskTime" id="stat-time">--:--</div>
+              <div class="oc-taskDesc">LAST UPDATED</div>
+              <div class="oc-taskSub" id="stat-date">--</div>
+            </div>
+          </div>
+
+          <div class="oc-panelDivider"></div>
+
+          <div class="oc-actLabel">RECENT ACTIVITY</div>
+          <div id="oc-activityFeed"></div>
+        </section>
+
+        <!-- DEPT HEALTH + NOTIFICATIONS -->
+        <div id="oc-rightCol">
+
+          <section id="oc-deptHealth" class="oc-panel">
+            <div class="oc-panelTitle">DEPARTMENT HEALTH</div>
+            <div id="oc-healthList"></div>
+          </section>
+
+          <section id="oc-notifs" class="oc-panel">
+            <div class="oc-panelTitle">NOTIFICATIONS</div>
+            <div id="oc-notifList"></div>
+            <button class="oc-viewAllBtn">VIEW ALL</button>
+          </section>
+
+        </div>
+
+        <!-- DEPARTMENT ROOMS -->
+        <section id="oc-rooms" class="oc-panel">
+          <div class="oc-panelTitle">DEPARTMENT ROOMS</div>
+          <div id="oc-roomGrid"></div>
+        </section>
+
+      </div>
+
+      <!-- EMPLOYEE DIRECTORY -->
+      <section id="oc-empDir" class="oc-panel">
+        <div class="oc-panelTitle">EMPLOYEE DIRECTORY</div>
+        <div id="oc-empGrid"></div>
+      </section>
+
+      <footer id="oc-footer">
+        // &nbsp; CyberCookieOS v0.3.0 &nbsp; // &nbsp; Run Your World. Automate Everything. &nbsp; //
+      </footer>
+
     </main>
-
-    <footer id="oc-footer">
-        LAST POLL: <span id="oc-footerTime">—</span>
-        &nbsp;|&nbsp; POLLING: 5s
-        &nbsp;|&nbsp; <a href="../hallway/index.html">HALLWAY</a>
-        &nbsp;|&nbsp; <a href="../hq/index.html">SECURITY OPS</a>
-        &nbsp;|&nbsp; <a href="../housing/index.html">HOUSING</a>
-        &nbsp;|&nbsp; <a href="../commerce/index.html">COMMERCE</a>
-        &nbsp;|&nbsp; <a href="../productivity/index.html">PRODUCTIVITY</a>
-        &nbsp;|&nbsp; <a href="../finance/index.html">FINANCE</a>
-    </footer>
+  </div>
 
 </div>
-
 <script src="js/ops_dashboard.js" defer></script>
 </body>
 </html>

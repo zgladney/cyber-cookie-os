@@ -1,405 +1,1084 @@
-/* =============================================
-   CYBERCOOKIEOS — OPERATIONS CENTER
-   Vibe: Mission Control / Dark Cyber Dashboard
-============================================= */
+/* ================================================================
+   CYBERCOOKIEOS — OPERATIONS CENTER v3
+   Design: Dark Cyberpunk | Mission Control | Management Sim
+================================================================ */
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-deep:      #03000e;
+  --bg-panel:     rgba(8,2,22,.88);
+  --border-dim:   rgba(150,80,255,.12);
+  --border-mid:   rgba(150,80,255,.22);
+  --pink:         #ff69b4;
+  --cyan:         #9cf6ff;
+  --purple:       #9b6bff;
+  --yellow:       #ffdc32;
+  --green:        #2ecc71;
+  --red:          #ff5050;
+  --text-dim:     rgba(200,160,255,.35);
+  --text-mid:     rgba(220,190,255,.55);
+  --text-bright:  rgba(240,220,255,.85);
+  --sidebar-w:    210px;
+  --rightcol-w:   256px;
+  --rooms-w:      340px;
+  --radius:       8px;
+}
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: radial-gradient(ellipse at 50% 0%, #0d0025 0%, #02000a 65%);
-    min-height: 100vh;
-    color: white;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: radial-gradient(ellipse at 50% 0%, #100028 0%, var(--bg-deep) 70%);
+  min-height: 100vh;
+  color: white;
+  font-size: 13px;
 }
 
 a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: inherit; }
 
-/* =============================================
+/* ================================================================
    TOP BAR
-============================================= */
+================================================================ */
 
 #oc-topBar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 24px 10px;
-    border-bottom: 1px solid rgba(150,80,255,.2);
-    background: linear-gradient(180deg, rgba(10,0,26,.9) 0%, transparent 100%);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px 10px;
+  border-bottom: 1px solid var(--border-dim);
+  background: linear-gradient(180deg, rgba(12,0,28,.95) 0%, transparent 100%);
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  backdrop-filter: blur(8px);
 }
 
-.oc-backLink {
-    font-size: 9px;
-    letter-spacing: 2px;
-    color: rgba(156,246,255,.5);
-    padding: 5px 10px;
-    border: 1px solid rgba(156,246,255,.2);
-    border-radius: 4px;
-    transition: all .2s;
-    white-space: nowrap;
+#oc-hallwayBtn {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: rgba(156,246,255,.5);
+  padding: 5px 12px;
+  border: 1px solid rgba(156,246,255,.2);
+  border-radius: 4px;
+  transition: all .2s;
+  white-space: nowrap;
 }
-.oc-backLink:hover {
-    color: rgba(156,246,255,.9);
-    border-color: rgba(156,246,255,.5);
-    background: rgba(156,246,255,.05);
-}
-
-#oc-title {
-    text-align: center;
-    flex: 1;
+#oc-hallwayBtn:hover {
+  color: var(--cyan);
+  border-color: rgba(156,246,255,.5);
+  background: rgba(156,246,255,.05);
+  box-shadow: 0 0 12px rgba(156,246,255,.1);
 }
 
-#oc-title h1 {
-    font-size: 20px;
-    color: hotpink;
-    letter-spacing: 5px;
-    text-shadow: 0 0 24px hotpink, 0 0 60px rgba(255,105,180,.3);
-    animation: ocLogoFlicker 10s infinite;
+#oc-titleBlock { text-align: center; flex: 1; }
+
+#oc-logo {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 5px;
+  color: var(--pink);
+  text-shadow: 0 0 24px var(--pink), 0 0 60px rgba(255,105,180,.3);
+  animation: logoFlicker 12s infinite;
 }
 
-@keyframes ocLogoFlicker {
-    0%, 89%, 91%, 93%, 100% { opacity: 1; }
-    90% { opacity: .5; }
-    92% { opacity: .9; }
+.oc-logoAccent {
+  color: var(--cyan);
+  text-shadow: 0 0 16px var(--cyan);
 }
 
-#oc-title p {
-    font-size: 9px;
-    letter-spacing: 4px;
-    color: rgba(156,246,255,.5);
-    margin-top: 3px;
+@keyframes logoFlicker {
+  0%,88%,90%,92%,100% { opacity:1; }
+  89%  { opacity:.4; }
+  91%  { opacity:.85; }
 }
 
-#oc-clock {
-    font-size: 9px;
-    letter-spacing: 2px;
-    color: rgba(200,150,255,.5);
-    white-space: nowrap;
-    min-width: 120px;
-    text-align: right;
+#oc-subtitle {
+  font-size: 8px;
+  letter-spacing: 4px;
+  color: rgba(156,246,255,.4);
+  margin-top: 3px;
 }
 
-/* =============================================
-   MISSION CONTROL BAR
-============================================= */
-
-#oc-missionBar {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    padding: 8px 24px;
-    border-bottom: 1px solid rgba(150,80,255,.15);
-    background: rgba(0,0,0,.3);
-    backdrop-filter: blur(2px);
-    overflow-x: auto;
-    flex-shrink: 0;
+#oc-topClock {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: rgba(180,130,255,.45);
+  white-space: nowrap;
+  min-width: 140px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
-.oc-mStat {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    padding: 4px 18px;
-    min-width: 70px;
+/* ================================================================
+   PAGE BODY: sidebar + main
+================================================================ */
+
+#oc-pageBody {
+  display: flex;
+  min-height: calc(100vh - 57px);
 }
 
-.oc-mLabel {
-    font-size: 7px;
-    letter-spacing: 1.5px;
-    color: rgba(200,150,255,.35);
-    white-space: nowrap;
+/* ================================================================
+   SIDEBAR
+================================================================ */
+
+#oc-sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  border-right: 1px solid var(--border-dim);
+  background: rgba(4,0,14,.6);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 57px;
+  height: calc(100vh - 57px);
+  overflow-y: auto;
 }
 
-.oc-mVal {
-    font-size: 14px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    color: rgba(200,150,255,.7);
+/* NAV */
+#oc-nav {
+  padding: 14px 0 6px;
 }
 
-.oc-mDivider {
-    width: 1px;
-    height: 28px;
-    background: rgba(150,80,255,.15);
-    margin: 0 4px;
-    flex-shrink: 0;
+.oc-navItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 16px;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all .18s;
+  border-left: 2px solid transparent;
 }
 
-.oc-m-running .oc-mVal { color: rgba(255,220,50,.9); }
-.oc-m-idle    .oc-mVal { color: rgba(156,246,255,.6); }
-.oc-m-blocked .oc-mVal { color: rgba(255,80,80,.9); }
-.oc-m-done    .oc-mVal { color: rgba(125,255,156,.8); }
-.oc-m-alert   .oc-mVal { color: rgba(255,80,80,.8); animation: ocAlertPulse 1s ease-in-out infinite alternate; }
-.oc-m-time    { font-size: 10px; color: rgba(156,246,255,.5); }
-
-.oc-health-ok     { color: rgba(125,255,156,.8) !important; }
-.oc-health-active { color: rgba(255,220,50,.9)  !important; }
-.oc-health-alert  { color: rgba(255,80,80,.9)   !important; }
-
-@keyframes ocAlertPulse {
-    from { opacity: .5; } to { opacity: 1; }
+.oc-navItem:hover {
+  color: var(--text-bright);
+  background: rgba(150,80,255,.07);
+  border-left-color: rgba(150,80,255,.4);
 }
 
-/* =============================================
-   NOTIFICATIONS BAR
-============================================= */
-
-#oc-notifBar {
-    padding: 5px 24px;
-    border-bottom: 1px solid rgba(150,80,255,.08);
-    background: rgba(0,0,0,.15);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
+.oc-navActive {
+  color: var(--pink) !important;
+  background: rgba(255,105,180,.07) !important;
+  border-left-color: var(--pink) !important;
+  text-shadow: 0 0 10px rgba(255,105,180,.3);
 }
 
-.oc-notifPrefix {
-    font-size: 7px;
-    letter-spacing: 2px;
-    color: rgba(255,105,180,.4);
-    flex-shrink: 0;
+.oc-navItem[style*="nav-color"] {
+  border-left-color: transparent;
+}
+.oc-navItem[style*="nav-color"]:hover {
+  border-left-color: var(--nav-color);
+  color: var(--nav-color);
+  background: color-mix(in srgb, var(--nav-color) 8%, transparent);
 }
 
-#oc-notifText {
-    font-size: 8px;
-    letter-spacing: 1px;
-    color: rgba(156,246,255,.35);
-    transition: opacity .3s;
+.oc-navIcon { font-size: 14px; flex-shrink: 0; }
+.oc-navLabel { line-height: 1; }
+
+/* SYSTEM STATUS */
+#oc-sysStatus {
+  margin: 14px 12px;
+  padding: 14px 12px 10px;
+  background: rgba(8,2,22,.6);
+  border: 1px solid var(--border-dim);
+  border-radius: 6px;
+  flex-shrink: 0;
 }
 
-/* =============================================
-   STATUS LINE (legacy, hidden in v3)
-============================================= */
-
-#oc-statusLine { display: none; }
-
-.oc-stat-running  { color: rgba(255,220,50,.8); }
-.oc-stat-idle     { color: rgba(156,246,255,.5); }
-.oc-stat-done     { color: rgba(125,255,156,.7); }
-.oc-stat-fail     { color: rgba(255,80,80,.8); }
-
-/* =============================================
-   DEPARTMENT GRID
-============================================= */
-
-#oc-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 18px;
-    padding: 22px 24px;
-    max-width: 1400px;
-    margin: 0 auto;
+.oc-sysTitle {
+  font-size: 7px;
+  letter-spacing: 2.5px;
+  color: var(--text-dim);
+  margin-bottom: 10px;
 }
 
-/* =============================================
-   DEPARTMENT CARDS
-============================================= */
-
-.oc-deptCard {
-    background: rgba(8, 0, 22, .75);
-    border: 1px solid rgba(255,255,255,.06);
-    border-top: 3px solid var(--dept-color);
-    border-radius: 8px;
-    padding: 16px 18px 18px;
-    transition: border-color .3s, box-shadow .3s;
+.oc-sysStat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
 }
 
-.oc-deptCard:hover {
-    border-color: rgba(255,255,255,.1);
-    box-shadow: 0 0 30px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.04);
+.oc-sysLabel {
+  font-size: 7px;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  width: 32px;
+  flex-shrink: 0;
 }
 
-/* Card header */
-.oc-deptHeader {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid rgba(255,255,255,.06);
+.oc-sysBarWrap {
+  flex: 1;
+  height: 4px;
+  background: rgba(150,80,255,.1);
+  border-radius: 2px;
+  overflow: hidden;
 }
 
-.oc-deptIcon {
-    font-size: 18px;
-    line-height: 1;
-    filter: drop-shadow(0 0 6px var(--dept-color));
+.oc-sysBar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green), var(--cyan));
+  border-radius: 2px;
+  transition: width 1s ease;
+  box-shadow: 0 0 6px rgba(46,204,113,.4);
 }
 
-.oc-deptName {
-    font-size: 11px;
-    font-weight: bold;
-    letter-spacing: 2px;
-    color: var(--dept-color);
-    text-shadow: 0 0 12px var(--dept-color);
-    flex: 1;
+.oc-sysVal {
+  font-size: 8px;
+  font-weight: bold;
+  color: var(--green);
+  font-variant-numeric: tabular-nums;
+  width: 30px;
+  text-align: right;
+  flex-shrink: 0;
 }
 
-.oc-agentCount {
-    font-size: 7px;
-    letter-spacing: 1px;
-    color: rgba(255,255,255,.2);
-    background: rgba(255,255,255,.04);
-    border: 1px solid rgba(255,255,255,.08);
-    border-radius: 10px;
-    padding: 2px 8px;
+.oc-sysRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
 }
 
-/* Agent list within card */
-.oc-agentList {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
+.oc-sysRow .oc-sysLabel { width: auto; }
+.oc-sysRow .oc-sysVal { color: var(--text-mid); width: auto; }
+
+#oc-sysGraph {
+  display: block;
+  margin-top: 10px;
+  border-radius: 3px;
+  opacity: .85;
+  width: 100%;
+  height: auto;
 }
 
-.oc-agentRow {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 5px 6px;
-    border-radius: 4px;
-    background: rgba(255,255,255,.02);
-    transition: background .2s;
+#oc-sideFooter {
+  margin-top: auto;
+  padding: 12px 16px;
+  font-size: 7px;
+  letter-spacing: 2px;
+  color: rgba(150,80,255,.25);
+  border-top: 1px solid var(--border-dim);
 }
 
-.oc-agentRow:hover {
-    background: rgba(255,255,255,.04);
+/* ================================================================
+   MAIN CONTENT
+================================================================ */
+
+#oc-main {
+  flex: 1;
+  min-width: 0;
+  padding: 16px 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-/* Status dot */
-.oc-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-.oc-dot-idle      { background: rgba(156,246,255,.4); }
-.oc-dot-running   { background: #ffdc32; animation: ocDotPulse 1.1s ease-in-out infinite alternate; }
-.oc-dot-blocked   { background: #ff5050; }
-.oc-dot-completed { background: #7dff9c; }
-.oc-dot-failed    { background: #ff5050; animation: ocDotFail .6s ease-in-out infinite alternate; }
+/* ================================================================
+   TOP ROW
+================================================================ */
 
-@keyframes ocDotPulse {
-    from { opacity: .4; box-shadow: none; }
-    to   { opacity: 1;  box-shadow: 0 0 8px #ffdc32; }
-}
-@keyframes ocDotFail {
-    from { opacity: .5; }
-    to   { opacity: 1; }
+#oc-topRow {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
 }
 
-/* Agent name */
-.oc-agentName {
-    flex: 1;
-    font-size: 9px;
-    letter-spacing: 1px;
-    color: rgba(220,200,255,.7);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+/* ================================================================
+   PANEL BASE
+================================================================ */
+
+.oc-panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  transition: border-color .2s;
 }
 
-/* Status badge */
-.oc-statusBadge {
-    font-size: 7px;
-    letter-spacing: 1px;
-    padding: 2px 7px;
-    border-radius: 8px;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-.oc-badge-idle      { color: rgba(156,246,255,.55); background: rgba(156,246,255,.06); }
-.oc-badge-running   { color: rgba(255,220,50,.9);   background: rgba(255,220,50,.1); }
-.oc-badge-blocked   { color: rgba(255,80,80,.9);    background: rgba(255,80,80,.1); }
-.oc-badge-completed { color: rgba(125,255,156,.9);  background: rgba(125,255,156,.08); }
-.oc-badge-failed    { color: rgba(255,80,80,.9);    background: rgba(255,80,80,.1); }
+.oc-panel:hover { border-color: var(--border-mid); }
 
-/* Agent name + title layout */
+.oc-panelHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.oc-panelTitle {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: var(--pink);
+  text-shadow: 0 0 12px rgba(255,105,180,.3);
+  display: block;
+  margin-bottom: 12px;
+}
+
+.oc-panelSub {
+  font-size: 7px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+}
+
+.oc-panelDivider {
+  height: 1px;
+  background: var(--border-dim);
+  margin: 12px 0;
+}
+
+/* ================================================================
+   OPERATIONS CENTER OVERVIEW
+================================================================ */
+
+#oc-overview {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Big stats */
+#oc-bigStats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.oc-bigStat {
+  background: rgba(255,255,255,.02);
+  border: 1px solid var(--border-dim);
+  border-radius: 6px;
+  padding: 12px 10px 10px;
+  text-align: center;
+}
+
+.oc-bigNum {
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  color: var(--cyan);
+  text-shadow: 0 0 20px rgba(156,246,255,.4);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.oc-num-running { color: var(--yellow);  text-shadow: 0 0 20px rgba(255,220,50,.4);  }
+.oc-num-idle    { color: var(--cyan);    text-shadow: 0 0 20px rgba(156,246,255,.3); }
+.oc-num-blocked { color: var(--red);     text-shadow: 0 0 20px rgba(255,80,80,.4);   }
+
+.oc-bigLabel {
+  font-size: 7px;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  margin-top: 5px;
+  white-space: nowrap;
+}
+
+.oc-bigSub {
+  font-size: 6px;
+  letter-spacing: 1.5px;
+  margin-top: 3px;
+}
+.oc-sub-online { color: rgba(46,204,113,.6); }
+.oc-sub-alert  { color: rgba(255,80,80,.7);  animation: alertPulse 1.5s ease-in-out infinite alternate; }
+
+@keyframes alertPulse { from { opacity:.4; } to { opacity:1; } }
+
+/* Tasks section */
+.oc-tasksLabel {
+  font-size: 7px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+#oc-taskBlocks {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.2fr;
+  gap: 8px;
+}
+
+.oc-taskBlock {
+  background: rgba(255,255,255,.02);
+  border: 1px solid var(--border-dim);
+  border-radius: 5px;
+  padding: 10px 10px 8px;
+}
+
+.oc-taskAlert {
+  border-color: rgba(255,80,80,.2);
+  background: rgba(255,80,80,.04);
+}
+
+.oc-taskNum {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--pink);
+  letter-spacing: -1px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.oc-taskNumAlert { color: var(--red); text-shadow: 0 0 16px rgba(255,80,80,.5); animation: alertPulse 1.5s ease-in-out infinite alternate; }
+.oc-taskTime     { font-size: 14px; font-weight: 700; color: var(--cyan); letter-spacing: .5px; }
+
+.oc-taskDesc {
+  font-size: 7px;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  margin-top: 5px;
+}
+
+.oc-taskSub {
+  font-size: 6px;
+  letter-spacing: 1.5px;
+  color: var(--green);
+  margin-top: 2px;
+}
+
+#stat-date { color: var(--text-dim); }
+
+/* Activity feed */
+.oc-actLabel {
+  font-size: 7px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+#oc-activityFeed {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.oc-actRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 7px;
+  background: rgba(255,255,255,.02);
+  border-radius: 4px;
+  border-left: 2px solid var(--act-color, rgba(150,80,255,.3));
+  animation: actFadeIn .4s ease-out;
+}
+
+@keyframes actFadeIn {
+  from { opacity:0; transform:translateX(-6px); }
+  to   { opacity:1; transform:translateX(0); }
+}
+
+.oc-actTime {
+  font-size: 7px;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+  min-width: 42px;
+}
+
+.oc-actAgent {
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--act-color, var(--purple));
+  flex-shrink: 0;
+  min-width: 68px;
+}
+
+.oc-actMsg {
+  font-size: 8px;
+  color: var(--text-mid);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ================================================================
+   RIGHT COLUMN (dept health + notifs)
+================================================================ */
+
+#oc-rightCol {
+  width: var(--rightcol-w);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Department health */
+#oc-deptHealth { padding-bottom: 12px; }
+
+#oc-healthList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.oc-healthRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+  background: rgba(255,255,255,.02);
+  border-radius: 5px;
+  border: 1px solid var(--border-dim);
+}
+
+.oc-healthIcon { font-size: 13px; flex-shrink: 0; }
+
+.oc-healthName {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--text-bright);
+  flex: 1;
+}
+
+.oc-healthPct {
+  font-size: 11px;
+  font-weight: 900;
+  color: var(--green);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.oc-healthTag {
+  font-size: 6px;
+  letter-spacing: 1.5px;
+  display: block;
+  text-align: right;
+  color: var(--green);
+  margin-top: 1px;
+}
+
+.oc-healthTag.alert { color: var(--yellow); }
+
+.oc-healthPctWrap { text-align: right; }
+
+/* Notifications */
+#oc-notifList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.oc-notifRow {
+  display: flex;
+  gap: 7px;
+  align-items: flex-start;
+  padding: 6px 7px;
+  background: rgba(255,255,255,.025);
+  border-radius: 4px;
+  border-left: 2px solid rgba(255,105,180,.3);
+  animation: actFadeIn .3s ease-out;
+}
+
+.oc-notifDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--pink);
+  margin-top: 4px;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px var(--pink);
+}
+
+.oc-notifText {
+  font-size: 8px;
+  color: var(--text-mid);
+  line-height: 1.5;
+}
+
+.oc-viewAllBtn {
+  width: 100%;
+  padding: 7px;
+  background: transparent;
+  border: 1px solid rgba(255,105,180,.2);
+  border-radius: 4px;
+  color: rgba(255,105,180,.5);
+  font-size: 7px;
+  letter-spacing: 2px;
+  transition: all .2s;
+}
+.oc-viewAllBtn:hover {
+  border-color: rgba(255,105,180,.5);
+  color: var(--pink);
+  background: rgba(255,105,180,.04);
+}
+
+/* ================================================================
+   DEPARTMENT ROOMS
+================================================================ */
+
+#oc-rooms {
+  width: var(--rooms-w);
+  flex-shrink: 0;
+}
+
+#oc-roomGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.oc-roomCard {
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border-dim);
+  background: rgba(4,0,12,.6);
+  transition: all .22s;
+  cursor: pointer;
+}
+
+.oc-roomCard:hover {
+  border-color: var(--rc-color);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--rc-color) 25%, transparent);
+  transform: translateY(-2px);
+}
+
+.oc-roomArt {
+  height: 78px;
+  position: relative;
+  overflow: hidden;
+  background: var(--rc-bg);
+}
+
+/* ── SECURITY OPS room art ── */
+.oc-room-security .oc-roomArt {
+  background: linear-gradient(160deg, #0c0020 0%, #1c0045 70%, #060010 100%);
+}
+.oc-room-security .oc-roomArt::before {
+  content: '';
+  position: absolute;
+  left: 6px; top: 8px;
+  width: 12px; height: 50px;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(155,107,255,.55) 0px, rgba(155,107,255,.55) 2px,
+    rgba(0,0,0,.4) 2px, rgba(0,0,0,.4) 6px
+  );
+  border: 1px solid rgba(155,107,255,.3);
+  border-radius: 1px;
+  box-shadow: 0 0 8px rgba(155,107,255,.3);
+}
+.oc-room-security .oc-roomArt::after {
+  content: '';
+  position: absolute;
+  right: 14px; top: 10px;
+  width: 28px; height: 28px;
+  border: 1.5px solid rgba(155,107,255,.5);
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(155,107,255,.3), inset 0 0 8px rgba(155,107,255,.1);
+}
+
+/* ── HOUSING room art ── */
+.oc-room-housing .oc-roomArt {
+  background: linear-gradient(160deg, #1a0c00 0%, #2e1800 60%, #120a00 100%);
+}
+.oc-room-housing .oc-roomArt::before {
+  content: '';
+  position: absolute;
+  right: 8px; top: 8px;
+  width: 36px; height: 28px;
+  border: 1.5px solid rgba(196,120,74,.4);
+  background: rgba(196,120,74,.06);
+  box-shadow: 0 0 8px rgba(196,120,74,.2);
+}
+.oc-room-housing .oc-roomArt::after {
+  content: '🌿';
+  position: absolute;
+  left: 8px; bottom: 4px;
+  font-size: 18px;
+  filter: brightness(.7) sepia(.4);
+}
+
+/* ── COMMERCE room art ── */
+.oc-room-commerce .oc-roomArt {
+  background: linear-gradient(160deg, #200015 0%, #380020 70%, #100008 100%);
+}
+.oc-room-commerce .oc-roomArt::before {
+  content: '📈';
+  position: absolute;
+  right: 8px; top: 6px;
+  font-size: 22px;
+  filter: hue-rotate(300deg) brightness(1.2);
+}
+.oc-room-commerce .oc-roomArt::after {
+  content: '';
+  position: absolute;
+  left: 6px; top: 10px;
+  width: 40px; height: 24px;
+  border: 1.5px solid rgba(255,105,180,.4);
+  background: rgba(255,105,180,.05);
+  box-shadow: 0 0 10px rgba(255,105,180,.2);
+}
+
+/* ── PRODUCTIVITY room art ── */
+.oc-room-productivity .oc-roomArt {
+  background: linear-gradient(160deg, #001520 0%, #002535 70%, #000d18 100%);
+}
+.oc-room-productivity .oc-roomArt::before {
+  content: '📋';
+  position: absolute;
+  right: 8px; top: 6px;
+  font-size: 20px;
+  filter: hue-rotate(180deg);
+}
+.oc-room-productivity .oc-roomArt::after {
+  content: '';
+  position: absolute;
+  left: 6px; top: 10px;
+  width: 38px; height: 28px;
+  background:
+    linear-gradient(0deg, rgba(58,168,200,.4) 0px, rgba(58,168,200,.4) 1px, transparent 1px, transparent 5px) 0 0 / 100% 5px,
+    linear-gradient(90deg, rgba(58,168,200,.3) 0px, rgba(58,168,200,.3) 1px, transparent 1px, transparent 9px) 0 0 / 9px 100%;
+  border: 1px solid rgba(58,168,200,.3);
+}
+
+/* ── FINANCE room art ── */
+.oc-room-finance .oc-roomArt {
+  background: linear-gradient(160deg, #001508 0%, #002810 70%, #000e05 100%);
+}
+.oc-room-finance .oc-roomArt::before {
+  content: '$';
+  position: absolute;
+  right: 12px; top: 4px;
+  font-size: 36px;
+  font-weight: 900;
+  color: rgba(46,204,113,.25);
+  text-shadow: 0 0 20px rgba(46,204,113,.4);
+}
+.oc-room-finance .oc-roomArt::after {
+  content: '';
+  position: absolute;
+  left: 6px; bottom: 8px;
+  width: 60px; height: 30px;
+  background:
+    linear-gradient(90deg, transparent 0%, transparent 10%, rgba(46,204,113,.6) 10%, rgba(46,204,113,.6) 20%, transparent 20%,
+    transparent 25%, rgba(46,204,113,.8) 25%, rgba(46,204,113,.8) 35%, transparent 35%,
+    transparent 40%, rgba(46,204,113,.5) 40%, rgba(46,204,113,.5) 50%, transparent 50%,
+    transparent 55%, rgba(46,204,113,.9) 55%, rgba(46,204,113,.9) 65%, transparent 65%,
+    transparent 70%, rgba(46,204,113,.7) 70%, rgba(46,204,113,.7) 80%, transparent 80%) no-repeat;
+  background-size: 100% 100%;
+}
+
+/* ── OPS CENTER room art ── */
+.oc-room-ops .oc-roomArt {
+  background: linear-gradient(160deg, #000820 0%, #001040 70%, #00050e 100%);
+}
+.oc-room-ops .oc-roomArt::before {
+  content: '';
+  position: absolute;
+  left: 50%; top: 6px;
+  transform: translateX(-50%);
+  width: 38px; height: 38px;
+  border: 2px solid rgba(156,246,255,.4);
+  border-radius: 50%;
+  box-shadow: 0 0 16px rgba(156,246,255,.3), inset 0 0 12px rgba(156,246,255,.08);
+}
+.oc-room-ops .oc-roomArt::after {
+  content: '';
+  position: absolute;
+  left: 50%; top: 25px;
+  transform: translateX(-50%);
+  width: 60px; height: 1px;
+  background: rgba(156,246,255,.2);
+}
+
+/* Atmospheric glow overlay on all rooms */
+.oc-roomArtGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 80%, rgba(var(--rc-rgb),.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Characters in room art */
+.oc-roomChar {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 20px;
+  filter: brightness(.7);
+}
+
+/* Floor line */
+.oc-roomFloor {
+  position: absolute;
+  bottom: 18px;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(var(--rc-rgb),.3), transparent);
+}
+
+.oc-roomInfo {
+  padding: 7px 9px 8px;
+}
+
+.oc-roomName {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--rc-color);
+  text-shadow: 0 0 10px var(--rc-color);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.oc-roomDesc {
+  font-size: 6px;
+  letter-spacing: .5px;
+  color: var(--text-dim);
+  display: block;
+  margin-bottom: 7px;
+}
+
+.oc-enterBtn {
+  display: block;
+  width: 100%;
+  padding: 4px 0;
+  text-align: center;
+  font-size: 7px;
+  letter-spacing: 2px;
+  background: transparent;
+  border: 1px solid var(--rc-color);
+  color: var(--rc-color);
+  border-radius: 3px;
+  transition: all .18s;
+  text-transform: uppercase;
+}
+.oc-enterBtn:hover {
+  background: color-mix(in srgb, var(--rc-color) 15%, transparent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--rc-color) 30%, transparent);
+}
+
+/* ================================================================
+   EMPLOYEE DIRECTORY
+================================================================ */
+
+#oc-empDir {
+  margin-top: 0;
+}
+
+#oc-empGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+}
+
+.oc-empDept {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.oc-empDeptHeader {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 6px 0;
+  border-bottom: 2px solid var(--dept-color);
+  text-shadow: 0 0 10px var(--dept-color);
+  color: var(--dept-color);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.oc-empCard {
+  background: rgba(8,2,22,.7);
+  border: 1px solid var(--border-dim);
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all .2s;
+}
+
+.oc-empCard:hover {
+  border-color: var(--dept-color);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--dept-color) 20%, transparent);
+}
+
+/* Avatar area */
+.oc-empAvatarWrap {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: linear-gradient(180deg, rgba(8,2,22,0) 0%, rgba(8,2,22,.5) 100%),
+              radial-gradient(ellipse at 50% 80%, color-mix(in srgb, var(--dept-color) 10%, transparent) 0%, transparent 70%);
+  position: relative;
+  overflow: hidden;
+}
+
+.oc-empImg {
+  max-height: 96px;
+  max-width: 80%;
+  object-fit: contain;
+  object-position: bottom;
+  image-rendering: pixelated;
+  display: block;
+  margin-bottom: 2px;
+}
+
+/* Placeholder avatar */
+.oc-empPlaceholder {
+  width: 54px;
+  height: 78px;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--dept-color) 18%, transparent) 0%,
+    color-mix(in srgb, var(--dept-color) 6%, transparent) 100%
+  );
+  border: 1px solid color-mix(in srgb, var(--dept-color) 30%, transparent);
+  border-radius: 4px 4px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0;
+  position: relative;
+}
+
+.oc-empPlaceholder::before {
+  content: attr(data-initial);
+  font-size: 28px;
+  font-weight: 900;
+  color: color-mix(in srgb, var(--dept-color) 60%, transparent);
+  text-shadow: 0 0 16px var(--dept-color);
+  letter-spacing: -1px;
+}
+
+/* Employee info */
+.oc-empInfo {
+  width: 100%;
+  padding: 8px 8px 9px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
 .oc-empName {
-    font-size: 9px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    color: rgba(220,200,255,.8);
-    min-width: 70px;
-    flex-shrink: 0;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--text-bright);
 }
 
 .oc-empTitle {
-    font-size: 7px;
-    letter-spacing: .5px;
-    color: rgba(200,150,255,.35);
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  font-size: 7px;
+  letter-spacing: .5px;
+  color: var(--text-dim);
 }
 
-.oc-lastTime {
-    font-size: 7px;
-    color: rgba(156,246,255,.3);
-    letter-spacing: .5px;
-    flex-shrink: 0;
+.oc-empStatusRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
 }
 
-/* Department summary line */
-.oc-deptSummary {
-    display: flex;
-    gap: 8px;
-    font-size: 7px;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid rgba(255,255,255,.04);
+.oc-empDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 5px var(--green);
 }
 
-.oc-sum-idle    { color: rgba(156,246,255,.5); }
-.oc-sum-running { color: rgba(255,220,50,.8); }
-.oc-sum-blocked { color: rgba(255,80,80,.8); }
-.oc-sum-done    { color: rgba(125,255,156,.7); }
+.oc-empDot.idle    { background: rgba(156,246,255,.5); box-shadow: none; }
+.oc-empDot.running { background: var(--yellow); box-shadow: 0 0 6px var(--yellow); animation: dotPulse 1s ease-in-out infinite alternate; }
+.oc-empDot.blocked { background: var(--red); animation: dotPulse .6s ease-in-out infinite alternate; }
 
-/* Room enter link */
-.oc-roomLink {
-    display: block;
-    font-size: 7px;
-    letter-spacing: 1.5px;
-    color: rgba(150,80,255,.3);
-    text-decoration: none;
-    text-align: right;
-    margin-top: 10px;
-    padding-top: 8px;
-    border-top: 1px solid rgba(255,255,255,.04);
-    transition: color .2s;
+@keyframes dotPulse { from { opacity:.4; } to { opacity:1; } }
+
+.oc-empStatus {
+  font-size: 6px;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
 }
 
-.oc-roomLink:hover {
-    color: rgba(150,80,255,.7);
+.oc-empStatus.running { color: var(--yellow); }
+.oc-empStatus.idle    { color: rgba(156,246,255,.5); }
+.oc-empStatus.blocked { color: var(--red); }
+
+/* Buttons */
+.oc-empBtns {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+  width: 100%;
 }
 
-/* =============================================
+.oc-dlBtn {
+  flex: 1;
+  padding: 4px 0;
+  font-size: 6px;
+  letter-spacing: 1px;
+  background: transparent;
+  border: 1px solid var(--dept-color);
+  color: var(--dept-color);
+  border-radius: 3px;
+  transition: all .18s;
+}
+
+.oc-dlBtn:hover {
+  background: color-mix(in srgb, var(--dept-color) 15%, transparent);
+}
+
+.oc-profileBtn {
+  flex: 1;
+  padding: 4px 0;
+  font-size: 6px;
+  letter-spacing: 1px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,.08);
+  color: rgba(255,255,255,.2);
+  border-radius: 3px;
+  cursor: not-allowed;
+}
+
+/* ================================================================
    FOOTER
-============================================= */
+================================================================ */
 
 #oc-footer {
-    text-align: center;
-    font-size: 8px;
-    letter-spacing: 2px;
-    color: rgba(150,80,255,.3);
-    padding: 14px;
-    border-top: 1px solid rgba(150,80,255,.1);
+  text-align: center;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: rgba(150,80,255,.25);
+  padding: 18px 14px;
+  border-top: 1px solid var(--border-dim);
+  margin-top: 14px;
 }
 
-#oc-footer a {
-    color: rgba(150,80,255,.4);
-    text-decoration: none;
-    transition: color .2s;
+/* ================================================================
+   SCROLLBAR
+================================================================ */
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: rgba(0,0,0,.2); }
+::-webkit-scrollbar-thumb { background: rgba(150,80,255,.3); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(150,80,255,.6); }
+
+/* ================================================================
+   RESPONSIVE
+================================================================ */
+
+@media (max-width: 1200px) {
+  :root {
+    --rooms-w: 280px;
+    --rightcol-w: 220px;
+  }
 }
 
-#oc-footer a:hover { color: rgba(150,80,255,.8); }
-
-#oc-lastUpdated {
-    color: rgba(156,246,255,.4);
+@media (max-width: 900px) {
+  #oc-topRow { flex-wrap: wrap; }
+  #oc-rooms { width: 100%; }
+  #oc-roomGrid { grid-template-columns: repeat(3, 1fr); }
+  #oc-empGrid { grid-template-columns: repeat(3, 1fr); }
 }
