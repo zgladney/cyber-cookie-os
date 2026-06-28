@@ -416,11 +416,21 @@
     if (resetBtn) {
       resetBtn.addEventListener('click', function () {
         if (!confirm('Clear all budget data and start over?')) return;
+
         COS.state.remove(BUDGET_KEY);
-        FIELDS.forEach(function (f) { var el = document.getElementById(f.id); if (el) el.value = ''; });
-        ['pb-income','pb-savingsGoalPct','pb-emergencyGoal','pb-currentSavings'].forEach(function (id) {
-          var el = document.getElementById(id); if (el) el.value = '';
+
+        var panel = document.getElementById('pennySetupPanel');
+        if (panel) {
+          panel.querySelectorAll('input').forEach(function (input) {
+            input.value = '';
+          });
+        }
+
+        ['fn-bdSummary','fn-bdCategories','fn-bdSavings','fn-bdRecs'].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.innerHTML = '';
         });
+
         showSetup();
       });
     }
