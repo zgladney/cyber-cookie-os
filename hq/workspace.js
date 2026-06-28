@@ -180,3 +180,181 @@
   });
 
 })();
+
+/* ================================================================
+   THREAT HUNTER — IP SCAN CONSOLE
+================================================================ */
+(function () {
+  'use strict';
+
+  var SCAN_STORE = 'hq.scan.history';
+  var _scanning  = false;
+
+  var THREAT_PROFILES = {
+    low:      { label:'LOW',      color:'#2ecc71', score:'12/100', glyph:'✓' },
+    medium:   { label:'MEDIUM',   color:'#ffdc32', score:'45/100', glyph:'⚡' },
+    high:     { label:'HIGH',     color:'#ff8c42', score:'68/100', glyph:'⚠' },
+    critical: { label:'CRITICAL', color:'#ff5050', score:'91/100', glyph:'🚨' },
+    clean:    { label:'CLEAN',    color:'#2ecc71', score:'3/100',  glyph:'✓' },
+  };
+
+  var SCAN_STEPS = [
+    'Initializing scanner…',
+    'Resolving hostname…',
+    'Checking geolocation…',
+    'Port enumeration…',
+    'Running threat signature match…',
+    'Cross-referencing threat feeds…',
+    'Checking blacklist databases…',
+    'Analyzing traffic patterns…',
+    'Generating threat score…',
+    'Compiling report…',
+  ];
+
+  var KNOWN_THREATS = {
+    '203.45.12.8':  'critical',
+    '192.168.1.1':  'clean',
+    '10.0.0.1':     'clean',
+    '185.220.101.':  'high',
+    '45.33.':        'medium',
+  };
+
+  function detectThreatLevel(ip) {
+    for (var prefix in KNOWN_THREATS) {
+      if (ip.startsWith(prefix)) return KNOWN_THREATS[prefix];
+    }
+    var levels = ['clean','low','low','low','medium','medium','high','critical'];
+    var sum    = ip.split('').reduce(function (s, c) { return s + c.charCodeAt(0); }, 0);
+    return levels[sum % levels.length];
+  }
+
+  function validateIP(ip) {
+    return /^[\d\.a-fA-F:]+$/.test(ip.trim()) && ip.trim().length >= 7;
+  }
+
+  function saveScan(scan)  {
+    var hist = COS.state.get(SCAN_STORE) || [];
+    hist.unshift(scan);
+    if (hist.length > 20) hist.pop();
+    COS.state.set(SCAN_STORE, hist);
+  }
+
+  function renderHistory() {
+    var histEl = document.getElementById('hq-scanHistory');
+    if (!histEl) return;
+    var hist = COS.state.get(SCAN_STORE) || [];
+    if (!hist.length) { histEl.innerHTML = '<div style="font-size:8px;color:rgba(200,160,255,.2);font-style:italic">No scans yet — enter an IP above and run a scan.</div>'; return; }
+    histEl.innerHTML = hist.slice(0, 8).map(function (s) {
+      var p = THREAT_PROFILES[s.level] || THREAT_PROFILES.clean;
+      var d = new Date(s.ts);
+      var ts = d.getHours() + ':' + String(d.getMinutes()).padStart(2,'0');
+      return '<div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid rgba(150,80,255,.06);font-size:8px">' +
+        '<span style="color:rgba(200,160,255,.3);min-width:40px">' + ts + '</span>' +
+        '<span style="color:rgba(220,190,255,.7);flex:1;font-family:monospace">' + s.ip + '</span>' +
+        '<span style="color:rgba(200,160,255,.4)">' + s.type + '</span>' +
+        '<span style="color:' + p.color + ';font-weight:700;min-width:60px;text-align:right">' + p.glyph + ' ' + p.label + '</span>' +
+        '</div>';
+    }).join('');
+  }
+
+  function runScan() {
+    if (_scanning) return;
+    var ip  = (document.getElementById('hq-scanIP').value || '').trim();
+    if (!ip) { alert('Enter an IP address to scan.'); return; }
+    if (!validateIP(ip)) { alert('Invalid IP address format.'); return; }
+
+    _scanning = true;
+    var scanType = document.getElementById('hq-scanType').value;
+    var level    = detectThreatLevel(ip);
+    var profile  = THREAT_PROFILES[level] || THREAT_PROFILES.clean;
+
+    // Show progress
+    var progEl   = document.getElementById('hq-scanProgress');
+    var resultEl = document.getElementById('hq-scanResult');
+    var barEl    = document.getElementById('hq-scanBar');
+    var stepEl   = document.getElementById('hq-scanStep');
+    var pctEl    = document.getElementById('hq-scanPct');
+    var btn      = document.getElementById('hq-runScan');
+    if (progEl)   progEl.style.display = '';
+    if (resultEl) resultEl.style.display = 'none';
+    if (btn)      btn.disabled = true;
+
+    var stepCount = SCAN_STEPS.length;
+    var current   = 0;
+    var baseDur   = scanType === 'deep' ? 600 : scanType === 'stealth' ? 800 : 350;
+
+    function tick() {
+      if (current >= stepCount) {
+        finalize(ip, scanType, level, profile);
+        return;
+      }
+      var p = Math.round((current / stepCount) * 100);
+      if (stepEl)  stepEl.textContent  = SCAN_STEPS[current];
+      if (pctEl)   pctEl.textContent   = p + '%';
+      if (barEl)   barEl.style.width   = p + '%';
+      current++;
+      setTimeout(tick, baseDur + Math.random() * 200);
+    }
+    tick();
+  }
+
+  function finalize(ip, scanType, level, profile) {
+    var barEl    = document.getElementById('hq-scanBar');
+    var pctEl    = document.getElementById('hq-scanPct');
+    var stepEl   = document.getElementById('hq-scanStep');
+    var resultEl = document.getElementById('hq-scanResult');
+    var outputEl = document.getElementById('hq-scanOutput');
+    var btn      = document.getElementById('hq-runScan');
+
+    if (barEl)  barEl.style.width  = '100%';
+    if (pctEl)  pctEl.textContent  = '100%';
+    if (stepEl) stepEl.textContent = 'Scan complete.';
+
+    var openPorts = profile.label === 'CLEAN' ? '22, 80, 443' : profile.label === 'LOW' ? '22, 80, 443, 8080' : '22, 80, 443, 3389, 8443, 1337';
+    var geo       = ['United States','Russia','China','Germany','Netherlands','Brazil'][Math.floor(Math.random()*6)];
+
+    var scan = { ip: ip, type: scanType, level: level, ts: Date.now() };
+    saveScan(scan);
+
+    if (outputEl) {
+      outputEl.innerHTML =
+        '<div style="background:rgba(255,255,255,.02);border:1px solid ' + profile.color + '33;border-radius:5px;padding:12px">' +
+          '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">' +
+            '<span style="font-size:18px;line-height:1">' + profile.glyph + '</span>' +
+            '<div>' +
+              '<div style="font-size:14px;font-weight:900;color:' + profile.color + ';text-shadow:0 0 10px ' + profile.color + '">' + profile.label + ' THREAT</div>' +
+              '<div style="font-size:8px;color:rgba(200,160,255,.4)">Score: ' + profile.score + ' · ' + ip + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:7px;color:rgba(200,160,255,.5)">' +
+            '<div><span style="color:rgba(200,160,255,.3)">SCAN TYPE:</span> ' + scanType.toUpperCase() + '</div>' +
+            '<div><span style="color:rgba(200,160,255,.3)">GEOLOCATION:</span> ' + geo + '</div>' +
+            '<div><span style="color:rgba(200,160,255,.3)">OPEN PORTS:</span> ' + openPorts + '</div>' +
+            '<div><span style="color:rgba(200,160,255,.3)">AGENT:</span> Athena v2.4</div>' +
+          '</div>' +
+        '</div>';
+    }
+
+    if (resultEl) resultEl.style.display = '';
+
+    // Log to threat board + activity
+    if (typeof COS !== 'undefined') {
+      COS.activity.log({ agent: 'Athena', dept: 'security', msg: 'Scan complete — ' + ip + ' [' + profile.label + '] — ' + profile.score, source: 'scan' });
+    }
+    if (typeof OE !== 'undefined') {
+      OE.generate({ type: 'analyze_traffic', title: 'IP Scan: ' + ip }, 'athena', 'security');
+    }
+
+    renderHistory();
+    setTimeout(function () { _scanning = false; if (btn) btn.disabled = false; }, 500);
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    renderHistory();
+    var btn = document.getElementById('hq-runScan');
+    if (btn) btn.addEventListener('click', runScan);
+    var inp = document.getElementById('hq-scanIP');
+    if (inp) inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') runScan(); });
+  });
+
+})();

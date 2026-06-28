@@ -233,3 +233,131 @@
   });
 
 })();
+
+/* ================================================================
+   NOVA PROPERTY SEARCH — Burlington County, NJ Simulated Results
+================================================================ */
+(function () {
+  'use strict';
+
+  var SAVED_KEY   = 'hs.search.saved';
+  var HIDDEN_KEY  = 'hs.search.hidden';
+
+  var PROPERTIES = [
+    { id:'p1',  addr:'412 Levitt Pkwy',     city:'Willingboro',  rent:1350, beds:3, baths:1.5, type:'house',     pets:true,  voucher:true,  desc:'Spacious 3BR in Rancocas Woods area. Large yard, central AC. Pets welcome.' },
+    { id:'p2',  addr:'88 Garfield Dr',      city:'Willingboro',  rent:1200, beds:2, baths:1,   type:'house',     pets:false, voucher:true,  desc:'Well-maintained 2BR. Updated kitchen. Close to schools and bus routes.' },
+    { id:'p3',  addr:'223 Birch Ave',       city:'Willingboro',  rent:1450, beds:3, baths:2,   type:'house',     pets:true,  voucher:true,  desc:'3BR corner lot. Renovated bathrooms. Quiet neighborhood.' },
+    { id:'p4',  addr:'1001 Lincoln Dr',     city:'Mount Laurel', rent:1750, beds:2, baths:2,   type:'condo',     pets:false, voucher:false, desc:'Modern condo in gated community. Gym, pool included. 20 min to Philly.' },
+    { id:'p5',  addr:'55 Heritage Blvd',    city:'Mount Laurel', rent:2050, beds:3, baths:2,   type:'townhouse', pets:true,  voucher:false, desc:'End-unit townhouse. Attached garage. Top-rated school district.' },
+    { id:'p6',  addr:'734 E Main St',       city:'Marlton',      rent:1600, beds:2, baths:1,   type:'apartment', pets:false, voucher:true,  desc:'Updated apartment, first floor. Parking included. Near shops.' },
+    { id:'p7',  addr:'18 Oak Valley Rd',    city:'Marlton',      rent:1900, beds:3, baths:2,   type:'house',     pets:true,  voucher:true,  desc:'Ranch-style 3BR. New flooring. Fenced backyard, ideal for pets.' },
+    { id:'p8',  addr:'290 Southampton Rd',  city:'Southampton',  rent:1400, beds:3, baths:1.5, type:'house',     pets:true,  voucher:true,  desc:'Rural setting. Large lot. 2-car driveway. Quiet community.' },
+    { id:'p9',  addr:'47 Creek View Ln',    city:'Burlington',   rent:1250, beds:2, baths:1,   type:'apartment', pets:false, voucher:true,  desc:'Ground-floor apartment. Walk to Delaware River path. Utilities included.' },
+    { id:'p10', addr:'612 Lumberton Rd',    city:'Lumberton',    rent:1500, beds:3, baths:2,   type:'house',     pets:true,  voucher:false, desc:'Spacious split-level. Finished basement. 2 miles to Route 38.' },
+    { id:'p11', addr:'101 Township Line Rd',city:'Mount Laurel', rent:1850, beds:2, baths:2,   type:'condo',     pets:true,  voucher:true,  desc:'Pet-friendly condo. Accepts Section 8. Walk-in closets, balcony.' },
+    { id:'p12', addr:'320 John F Kennedy Way',city:'Willingboro',rent:1100, beds:2, baths:1,   type:'house',     pets:false, voucher:true,  desc:'Budget-friendly 2BR. Corner property. Quick access to Route 130.' },
+    { id:'p13', addr:'5 Plantation Dr',     city:'Marlton',      rent:2100, beds:4, baths:2.5, type:'house',     pets:true,  voucher:false, desc:'4BR colonial. Updated kitchen. Near Evesham Township schools.' },
+    { id:'p14', addr:'88 Larchmont Dr',     city:'Southampton',  rent:1650, beds:3, baths:2,   type:'townhouse', pets:false, voucher:true,  desc:'New construction townhouse. Energy-efficient. Vouchers accepted.' },
+    { id:'p15', addr:'202 Church St',       city:'Burlington',   rent:1300, beds:2, baths:1,   type:'house',     pets:true,  voucher:true,  desc:'Historic neighborhood 2BR. Hardwood floors. 5 min to train station.' },
+  ];
+
+  function getSaved()  { return COS.state.get(SAVED_KEY)  || []; }
+  function getHidden() { return COS.state.get(HIDDEN_KEY) || []; }
+  function toggleSave(id) {
+    var s = getSaved();
+    var i = s.indexOf(id);
+    if (i >= 0) s.splice(i, 1); else s.push(id);
+    COS.state.set(SAVED_KEY, s);
+  }
+  function hideProperty(id) {
+    var h = getHidden(); h.push(id); COS.state.set(HIDDEN_KEY, h);
+  }
+
+  function filterProperties(filters) {
+    var hidden = getHidden();
+    return PROPERTIES.filter(function (p) {
+      if (hidden.indexOf(p.id) >= 0) return false;
+      if (filters.city !== 'all' && p.city !== filters.city) return false;
+      if (p.rent > filters.maxRent) return false;
+      if (p.beds < filters.minBeds) return false;
+      if (filters.type !== 'all' && p.type !== filters.type) return false;
+      if (filters.voucher && !p.voucher) return false;
+      if (filters.pets && !p.pets) return false;
+      return true;
+    });
+  }
+
+  function renderProperties(props) {
+    var el     = document.getElementById('sp-results');
+    var statEl = document.getElementById('sp-status');
+    if (!el) return;
+    var saved  = getSaved();
+    if (statEl) statEl.textContent = props.length + ' properties found in Burlington County, NJ';
+    if (!props.length) {
+      el.innerHTML = '<div style="font-size:9px;color:rgba(200,160,255,.3);padding:16px;font-style:italic">No properties match your filters. Try adjusting the criteria.</div>';
+      return;
+    }
+    el.innerHTML = props.map(function (p) {
+      var isSaved = saved.indexOf(p.id) >= 0;
+      var typeIcon = { house:'🏡', townhouse:'🏘', condo:'🏢', apartment:'🏠' }[p.type] || '🏠';
+      return '<div class="sp-propCard" id="sp-card-' + p.id + '">' +
+        '<div class="sp-propHeader">' +
+          '<div class="sp-propAddr">' + typeIcon + ' ' + p.addr + '</div>' +
+          '<div class="sp-propCity">' + p.city + ', NJ</div>' +
+        '</div>' +
+        '<div class="sp-propRent">$' + p.rent.toLocaleString() + '<span>/mo</span></div>' +
+        '<div class="sp-propMeta">' +
+          '<span>' + p.beds + ' BD</span>' +
+          '<span>' + p.baths + ' BA</span>' +
+          '<span>' + p.type.charAt(0).toUpperCase() + p.type.slice(1) + '</span>' +
+          (p.pets    ? '<span class="sp-badge sp-pet">🐾 Pets</span>'     : '') +
+          (p.voucher ? '<span class="sp-badge sp-voucher">🏷 Voucher</span>' : '') +
+        '</div>' +
+        '<div class="sp-propDesc">' + p.desc + '</div>' +
+        '<div class="sp-propBtns">' +
+          '<button class="sp-btnSave ' + (isSaved ? 'sp-saved' : '') + '" data-id="' + p.id + '">' + (isSaved ? '★ SAVED' : '☆ SAVE') + '</button>' +
+          '<button class="sp-btnHide" data-id="' + p.id + '">✕ HIDE</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+    // Wire buttons
+    el.querySelectorAll('.sp-btnSave').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        toggleSave(this.getAttribute('data-id'));
+        runSearch();
+      }.bind(btn));
+    });
+    el.querySelectorAll('.sp-btnHide').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        hideProperty(this.getAttribute('data-id'));
+        runSearch();
+      }.bind(btn));
+    });
+  }
+
+  function runSearch() {
+    var filters = {
+      city:     (document.getElementById('sp-city')    || {}).value || 'all',
+      maxRent:  parseFloat((document.getElementById('sp-maxRent') || {}).value) || 9999,
+      minBeds:  parseInt((document.getElementById('sp-beds')      || {}).value, 10) || 1,
+      type:     (document.getElementById('sp-type')    || {}).value || 'all',
+      pets:     (document.getElementById('sp-pets')    || {}).checked || false,
+      voucher:  (document.getElementById('sp-voucher') || {}).checked || false,
+    };
+    var results = filterProperties(filters);
+    renderProperties(results);
+    COS.activity.log({ agent: 'Nova', dept: 'housing', msg: 'Property search: ' + results.length + ' results (' + filters.city + ', max $' + filters.maxRent + ')', source: 'search' });
+    if (typeof OE !== 'undefined') {
+      OE.generate({ type: 'search_listings', title: 'Property Search Results' }, 'nova', 'housing');
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var btn = document.getElementById('sp-searchBtn');
+    if (btn) btn.addEventListener('click', runSearch);
+    // Auto-run initial search
+    runSearch();
+  });
+
+})();

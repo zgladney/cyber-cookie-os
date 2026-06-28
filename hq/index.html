@@ -280,6 +280,65 @@
       </div>
     </div>
 
+    <!-- ══ THREAT HUNTER SCAN CONSOLE ══ -->
+    <div class="ws-panel ws-panel-full" id="hq-scanPanel">
+      <div class="ws-pTitle" style="display:flex;align-items:center;gap:10px">
+        <span>🛡 THREAT HUNTER — IP SCAN CONSOLE</span>
+        <span id="hq-scanOnline" style="font-size:7px;color:rgba(46,204,113,.7);letter-spacing:1px">● ATHENA ONLINE</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <!-- Left: Scanner input -->
+        <div>
+          <div class="ws-form">
+            <div class="ws-field">
+              <label class="ws-label">TARGET IP ADDRESS</label>
+              <input class="ws-input" id="hq-scanIP" type="text" placeholder="e.g. 192.168.1.1 or 203.45.12.8" maxlength="64" />
+            </div>
+            <div class="ws-form-row">
+              <div class="ws-field">
+                <label class="ws-label">SCAN TYPE</label>
+                <select class="ws-input" id="hq-scanType">
+                  <option value="quick">Quick Scan</option>
+                  <option value="deep">Deep Scan</option>
+                  <option value="stealth">Stealth Scan</option>
+                  <option value="osint">OSINT Lookup</option>
+                </select>
+              </div>
+              <div class="ws-field">
+                <label class="ws-label">INTENSITY</label>
+                <select class="ws-input" id="hq-scanIntensity">
+                  <option value="low">Low</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+            </div>
+            <button class="ws-btn ws-btn-full" id="hq-runScan" style="background:rgba(255,80,80,.08);border-color:rgba(255,80,80,.3);color:rgba(255,80,80,.8)">▶ RUN SCAN</button>
+          </div>
+          <!-- Scan progress bar -->
+          <div id="hq-scanProgress" style="display:none;margin-top:12px">
+            <div style="display:flex;justify-content:space-between;font-size:7px;color:rgba(200,160,255,.5);margin-bottom:4px">
+              <span id="hq-scanStep">Initializing scan...</span>
+              <span id="hq-scanPct">0%</span>
+            </div>
+            <div style="height:6px;background:rgba(255,255,255,.05);border-radius:3px">
+              <div id="hq-scanBar" style="height:100%;width:0%;background:linear-gradient(90deg,#ff5050,#9b6bff);border-radius:3px;transition:width .4s;box-shadow:0 0 8px rgba(255,80,80,.4)"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Right: Scan result -->
+        <div id="hq-scanResult" style="display:none">
+          <div style="font-size:7px;letter-spacing:2px;color:rgba(200,160,255,.4);margin-bottom:8px">SCAN RESULT</div>
+          <div id="hq-scanOutput"></div>
+        </div>
+      </div>
+      <!-- Scan history -->
+      <div style="margin-top:14px;padding-top:10px;border-top:1px solid rgba(150,80,255,.1)">
+        <div style="font-size:7px;letter-spacing:2px;color:rgba(200,160,255,.3);margin-bottom:8px">RECENT SCANS</div>
+        <div id="hq-scanHistory"></div>
+      </div>
+    </div>
+
   </div>
 </section>
 

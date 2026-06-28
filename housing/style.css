@@ -1279,3 +1279,37 @@ body {
   background-size: 200% 100%;
   animation: hs-shimmer 1.8s linear infinite;
 }
+
+/* ── Nova Property Search Cards ─────────────────────────── */
+.sp-propCard {
+  background: rgba(255,255,255,.025);
+  border: 1px solid rgba(196,120,74,.12);
+  border-radius: 6px;
+  padding: 12px;
+  transition: border-color .2s, box-shadow .2s;
+}
+.sp-propCard:hover {
+  border-color: rgba(196,120,74,.35);
+  box-shadow: 0 0 12px rgba(196,120,74,.1);
+}
+.sp-propHeader { margin-bottom: 6px; }
+.sp-propAddr  { font-size: 11px; font-weight: 700; color: rgba(240,220,200,.85); letter-spacing: .5px; }
+.sp-propCity  { font-size: 8px; color: rgba(196,120,74,.6); letter-spacing: 1px; margin-top: 2px; }
+.sp-propRent  { font-size: 20px; font-weight: 900; color: rgba(196,120,74,.9); text-shadow: 0 0 10px rgba(196,120,74,.4); line-height: 1.1; }
+.sp-propRent span { font-size: 10px; color: rgba(196,120,74,.5); font-weight: 400; }
+.sp-propMeta  { display: flex; flex-wrap: wrap; gap: 5px; margin: 7px 0; }
+.sp-propMeta span { font-size: 7px; background: rgba(196,120,74,.08); border: 1px solid rgba(196,120,74,.15); border-radius: 3px; padding: 2px 6px; color: rgba(220,190,170,.6); letter-spacing: .5px; }
+.sp-badge     { font-size: 7px !important; }
+.sp-pet       { background: rgba(46,204,113,.06) !important; border-color: rgba(46,204,113,.2) !important; color: rgba(100,220,120,.6) !important; }
+.sp-voucher   { background: rgba(155,107,255,.06) !important; border-color: rgba(155,107,255,.2) !important; color: rgba(180,140,255,.6) !important; }
+.sp-propDesc  { font-size: 8px; color: rgba(200,170,150,.45); line-height: 1.5; margin-bottom: 10px; }
+.sp-propBtns  { display: flex; gap: 6px; }
+.sp-btnSave, .sp-btnHide {
+  font-size: 7px; letter-spacing: 1px; border-radius: 3px; padding: 4px 10px; cursor: pointer;
+  border: 1px solid; background: transparent; font-family: inherit; transition: all .15s;
+}
+.sp-btnSave          { border-color: rgba(196,120,74,.3); color: rgba(196,120,74,.7); }
+.sp-btnSave:hover    { background: rgba(196,120,74,.08); }
+.sp-btnSave.sp-saved { border-color: rgba(196,120,74,.6); color: rgba(196,120,74,1); background: rgba(196,120,74,.08); }
+.sp-btnHide          { border-color: rgba(255,255,255,.08); color: rgba(200,160,255,.3); }
+.sp-btnHide:hover    { background: rgba(255,80,80,.05); color: rgba(255,120,120,.5); border-color: rgba(255,80,80,.2); }

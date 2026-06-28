@@ -1782,3 +1782,11 @@ body::before {
 .statusDot.running, .status-dot.active {
   animation: hq-pulse 1.5s ease-in-out infinite;
 }
+
+/* ── Threat Hunter Scan Panel ──────────────────────────── */
+#hq-scanPanel .ws-btn[id="hq-runScan"] { transition: opacity .2s; }
+#hq-scanPanel .ws-btn[id="hq-runScan"]:disabled { opacity: .4; cursor: not-allowed; }
+
+#hq-scanOutput .sp-scan-threat {
+  animation: hq-pulse 2s ease-in-out infinite;
+}
