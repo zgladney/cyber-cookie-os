@@ -1,0 +1,12 @@
+{
+  "id": "housing",
+  "name": "Housing",
+  "short_name": "HOUSING",
+  "room": "housing",
+  "wing": "B",
+  "theme_color": "#C4784A",
+  "accent_color": "#E8986A",
+  "icon": "🏠",
+  "employees": ["nova", "beacon", "atlas"],
+  "agent_ids": ["housing_scout", "rental_assistant", "landlord_contact"]
+}

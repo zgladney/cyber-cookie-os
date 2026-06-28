@@ -1,0 +1,16 @@
+{
+  "name": "Atlas Planner",
+  "title": "Task Manager",
+  "department": "Productivity",
+  "department_id": "productivity",
+  "agent_id": "task_manager",
+  "room": "productivity",
+  "reports_to": "Operations Center",
+  "theme_color": "#96D8F0",
+  "accent_color": "#B8E8F8",
+  "status": "idle",
+  "current_task": null,
+  "personality": ["Structured", "Deadline-Focused", "Cross-Department", "Reliable"],
+  "description": "Atlas Planner tracks open tasks across all CyberCookieOS departments, monitors deadlines, and generates daily progress reports.",
+  "version": "1.0.0"
+}

@@ -1,0 +1,7 @@
+{
+  "agent_id": "bill_tracker",
+  "script_path": "agents/bill_tracker/bill_tracker.py",
+  "results_path": "data/bill_tracker_results.json",
+  "enabled": true,
+  "version": "0.1.0-placeholder"
+}

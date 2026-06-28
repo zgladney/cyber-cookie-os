@@ -1,0 +1,16 @@
+{
+  "name": "Pixel",
+  "title": "Trend Hunter",
+  "department": "Commerce",
+  "department_id": "commerce",
+  "agent_id": "trend_hunter",
+  "room": "commerce",
+  "reports_to": "Operations Center",
+  "theme_color": "#FF69B4",
+  "accent_color": "#FF99CC",
+  "status": "idle",
+  "current_task": null,
+  "personality": ["Creative", "Trend-Savvy", "Fast", "Intuitive"],
+  "description": "Pixel monitors Etsy and TikTok for emerging product trends and business opportunities, scoring trends by momentum.",
+  "version": "1.0.0"
+}

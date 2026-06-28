@@ -1,0 +1,12 @@
+{
+  "id": "finance",
+  "name": "Finance",
+  "short_name": "FINANCE",
+  "room": "finance",
+  "wing": "E",
+  "theme_color": "#2ECC71",
+  "accent_color": "#52DC91",
+  "icon": "💰",
+  "employees": ["greenbean", "ledger", "penny", "vault"],
+  "agent_ids": ["finance_manager", "bill_tracker", "budget_planner", "savings_tracker"]
+}

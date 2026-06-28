@@ -1,0 +1,16 @@
+{
+  "name": "Calypso",
+  "title": "Calendar Assistant",
+  "department": "Productivity",
+  "department_id": "productivity",
+  "agent_id": "calendar_assistant",
+  "room": "productivity",
+  "reports_to": "Operations Center",
+  "theme_color": "#3AA8C8",
+  "accent_color": "#7EC8E3",
+  "status": "idle",
+  "current_task": null,
+  "personality": ["Organized", "Punctual", "Calm", "Proactive"],
+  "description": "Calypso manages schedules, generates reminders, and keeps daily planning organized across all departments.",
+  "version": "1.0.0"
+}

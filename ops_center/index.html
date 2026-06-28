@@ -20,18 +20,64 @@
         <div id="oc-clock"></div>
     </header>
 
-    <div id="oc-statusLine">Loading agent status...</div>
+    <!-- Mission Control Stats Bar -->
+    <div id="oc-missionBar">
+        <div class="oc-mStat">
+            <span class="oc-mLabel">EMPLOYEES</span>
+            <span class="oc-mVal" id="mc-total">—</span>
+        </div>
+        <div class="oc-mDivider"></div>
+        <div class="oc-mStat oc-m-running">
+            <span class="oc-mLabel">RUNNING</span>
+            <span class="oc-mVal" id="mc-running">0</span>
+        </div>
+        <div class="oc-mStat oc-m-idle">
+            <span class="oc-mLabel">IDLE</span>
+            <span class="oc-mVal" id="mc-idle">0</span>
+        </div>
+        <div class="oc-mStat oc-m-blocked">
+            <span class="oc-mLabel">BLOCKED</span>
+            <span class="oc-mVal" id="mc-blocked">0</span>
+        </div>
+        <div class="oc-mStat oc-m-done">
+            <span class="oc-mLabel">COMPLETED</span>
+            <span class="oc-mVal" id="mc-completed">0</span>
+        </div>
+        <div class="oc-mDivider"></div>
+        <div class="oc-mStat oc-m-alert">
+            <span class="oc-mLabel">ALERTS</span>
+            <span class="oc-mVal" id="mc-alerts">0</span>
+        </div>
+        <div class="oc-mStat">
+            <span class="oc-mLabel">DEPT HEALTH</span>
+            <span class="oc-mVal oc-health-ok" id="mc-health">OK</span>
+        </div>
+        <div class="oc-mDivider"></div>
+        <div class="oc-mStat">
+            <span class="oc-mLabel">LAST UPDATED</span>
+            <span class="oc-mVal oc-m-time" id="oc-lastUpdated">—</span>
+        </div>
+    </div>
+
+    <!-- Notifications bar -->
+    <div id="oc-notifBar">
+        <span class="oc-notifPrefix">// SYS</span>
+        <span id="oc-notifText">All systems nominal. CyberCookieOS operational. Polling every 5s.</span>
+    </div>
 
     <main id="oc-grid">
         <!-- Department cards rendered by ops_dashboard.js -->
     </main>
 
     <footer id="oc-footer">
-        LAST UPDATED: <span id="oc-lastUpdated">—</span>
+        LAST POLL: <span id="oc-footerTime">—</span>
         &nbsp;|&nbsp; POLLING: 5s
-        &nbsp;|&nbsp; <a href="../hallway/index.html" style="color:rgba(150,80,255,.4)">HALLWAY</a>
-        &nbsp;|&nbsp; <a href="../hq/index.html" style="color:rgba(150,80,255,.4)">THREAT HUNTER HQ</a>
-        &nbsp;|&nbsp; <a href="../apartment/index.html" style="color:rgba(150,80,255,.4)">HOUSING</a>
+        &nbsp;|&nbsp; <a href="../hallway/index.html">HALLWAY</a>
+        &nbsp;|&nbsp; <a href="../hq/index.html">SECURITY OPS</a>
+        &nbsp;|&nbsp; <a href="../housing/index.html">HOUSING</a>
+        &nbsp;|&nbsp; <a href="../commerce/index.html">COMMERCE</a>
+        &nbsp;|&nbsp; <a href="../productivity/index.html">PRODUCTIVITY</a>
+        &nbsp;|&nbsp; <a href="../finance/index.html">FINANCE</a>
     </footer>
 
 </div>

@@ -1,0 +1,11 @@
+{
+  "agent_id": "threat_hunter",
+  "script_path": "agents/threat_hunter/threat_hunter.py",
+  "results_path": "data/scan_log.json",
+  "enabled": true,
+  "supports_ipv4": true,
+  "supports_ipv6": true,
+  "threat_levels": ["None", "Low", "Medium", "High"],
+  "log_format": "json",
+  "version": "7.0.0"
+}

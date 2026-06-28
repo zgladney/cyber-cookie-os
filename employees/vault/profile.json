@@ -1,0 +1,16 @@
+{
+  "name": "Vault",
+  "title": "Savings Tracker",
+  "department": "Finance",
+  "department_id": "finance",
+  "agent_id": "savings_tracker",
+  "room": "finance",
+  "reports_to": "Operations Center",
+  "theme_color": "#1A9955",
+  "accent_color": "#2ECC71",
+  "status": "idle",
+  "current_task": null,
+  "personality": ["Patient", "Goal-Oriented", "Celebratory", "Vigilant"],
+  "description": "Vault tracks progress toward savings goals, monitors balances, and celebrates financial milestones.",
+  "version": "1.0.0"
+}

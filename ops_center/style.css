@@ -83,22 +83,101 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* =============================================
-   STATUS LINE
+   MISSION CONTROL BAR
 ============================================= */
 
-#oc-statusLine {
-    text-align: center;
-    font-size: 8px;
-    letter-spacing: 2px;
-    color: rgba(156,246,255,.4);
-    padding: 7px 24px;
-    border-bottom: 1px solid rgba(150,80,255,.1);
-    background: rgba(0,0,0,.2);
+#oc-missionBar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 8px 24px;
+    border-bottom: 1px solid rgba(150,80,255,.15);
+    background: rgba(0,0,0,.3);
+    backdrop-filter: blur(2px);
+    overflow-x: auto;
+    flex-shrink: 0;
 }
 
-#oc-statusLine span {
-    margin: 0 10px;
+.oc-mStat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 4px 18px;
+    min-width: 70px;
 }
+
+.oc-mLabel {
+    font-size: 7px;
+    letter-spacing: 1.5px;
+    color: rgba(200,150,255,.35);
+    white-space: nowrap;
+}
+
+.oc-mVal {
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: rgba(200,150,255,.7);
+}
+
+.oc-mDivider {
+    width: 1px;
+    height: 28px;
+    background: rgba(150,80,255,.15);
+    margin: 0 4px;
+    flex-shrink: 0;
+}
+
+.oc-m-running .oc-mVal { color: rgba(255,220,50,.9); }
+.oc-m-idle    .oc-mVal { color: rgba(156,246,255,.6); }
+.oc-m-blocked .oc-mVal { color: rgba(255,80,80,.9); }
+.oc-m-done    .oc-mVal { color: rgba(125,255,156,.8); }
+.oc-m-alert   .oc-mVal { color: rgba(255,80,80,.8); animation: ocAlertPulse 1s ease-in-out infinite alternate; }
+.oc-m-time    { font-size: 10px; color: rgba(156,246,255,.5); }
+
+.oc-health-ok     { color: rgba(125,255,156,.8) !important; }
+.oc-health-active { color: rgba(255,220,50,.9)  !important; }
+.oc-health-alert  { color: rgba(255,80,80,.9)   !important; }
+
+@keyframes ocAlertPulse {
+    from { opacity: .5; } to { opacity: 1; }
+}
+
+/* =============================================
+   NOTIFICATIONS BAR
+============================================= */
+
+#oc-notifBar {
+    padding: 5px 24px;
+    border-bottom: 1px solid rgba(150,80,255,.08);
+    background: rgba(0,0,0,.15);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.oc-notifPrefix {
+    font-size: 7px;
+    letter-spacing: 2px;
+    color: rgba(255,105,180,.4);
+    flex-shrink: 0;
+}
+
+#oc-notifText {
+    font-size: 8px;
+    letter-spacing: 1px;
+    color: rgba(156,246,255,.35);
+    transition: opacity .3s;
+}
+
+/* =============================================
+   STATUS LINE (legacy, hidden in v3)
+============================================= */
+
+#oc-statusLine { display: none; }
+
 .oc-stat-running  { color: rgba(255,220,50,.8); }
 .oc-stat-idle     { color: rgba(156,246,255,.5); }
 .oc-stat-done     { color: rgba(125,255,156,.7); }
@@ -239,6 +318,67 @@ a { color: inherit; text-decoration: none; }
 .oc-badge-completed { color: rgba(125,255,156,.9);  background: rgba(125,255,156,.08); }
 .oc-badge-failed    { color: rgba(255,80,80,.9);    background: rgba(255,80,80,.1); }
 
+/* Agent name + title layout */
+.oc-empName {
+    font-size: 9px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: rgba(220,200,255,.8);
+    min-width: 70px;
+    flex-shrink: 0;
+}
+
+.oc-empTitle {
+    font-size: 7px;
+    letter-spacing: .5px;
+    color: rgba(200,150,255,.35);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.oc-lastTime {
+    font-size: 7px;
+    color: rgba(156,246,255,.3);
+    letter-spacing: .5px;
+    flex-shrink: 0;
+}
+
+/* Department summary line */
+.oc-deptSummary {
+    display: flex;
+    gap: 8px;
+    font-size: 7px;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(255,255,255,.04);
+}
+
+.oc-sum-idle    { color: rgba(156,246,255,.5); }
+.oc-sum-running { color: rgba(255,220,50,.8); }
+.oc-sum-blocked { color: rgba(255,80,80,.8); }
+.oc-sum-done    { color: rgba(125,255,156,.7); }
+
+/* Room enter link */
+.oc-roomLink {
+    display: block;
+    font-size: 7px;
+    letter-spacing: 1.5px;
+    color: rgba(150,80,255,.3);
+    text-decoration: none;
+    text-align: right;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,.04);
+    transition: color .2s;
+}
+
+.oc-roomLink:hover {
+    color: rgba(150,80,255,.7);
+}
+
 /* =============================================
    FOOTER
 ============================================= */
@@ -248,10 +388,17 @@ a { color: inherit; text-decoration: none; }
     font-size: 8px;
     letter-spacing: 2px;
     color: rgba(150,80,255,.3);
-    padding: 16px;
+    padding: 14px;
     border-top: 1px solid rgba(150,80,255,.1);
-    margin-top: 8px;
 }
+
+#oc-footer a {
+    color: rgba(150,80,255,.4);
+    text-decoration: none;
+    transition: color .2s;
+}
+
+#oc-footer a:hover { color: rgba(150,80,255,.8); }
 
 #oc-lastUpdated {
     color: rgba(156,246,255,.4);

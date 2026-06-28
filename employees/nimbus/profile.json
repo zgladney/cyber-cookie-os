@@ -1,0 +1,16 @@
+{
+  "name": "Nimbus",
+  "title": "Cloud Monitor",
+  "department": "Security Operations",
+  "department_id": "security",
+  "agent_id": "cloud_monitor",
+  "room": "hq",
+  "reports_to": "Operations Center",
+  "theme_color": "#6B35D5",
+  "accent_color": "#9B6BFF",
+  "status": "idle",
+  "current_task": null,
+  "personality": ["Vigilant", "Thorough", "Methodical", "Alert"],
+  "description": "Nimbus monitors cloud infrastructure events, detects cost anomalies, and surfaces security alerts from cloud providers.",
+  "version": "1.0.0"
+}

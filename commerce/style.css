@@ -1,0 +1,423 @@
+/* =============================================
+   CYBERCOOKIEOS — COMMERCE DEPARTMENT
+   Vibe: Pink Neon Creative Studio
+============================================= */
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: radial-gradient(ellipse at top, #1a0030 0%, #050010 70%);
+    overflow: hidden;
+    color: white;
+}
+
+#cm-app {
+    width: 100vw;
+    height: 100vh;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* TOP BAR */
+#cm-topBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    flex-shrink: 0;
+}
+
+#cm-title {
+    text-align: center;
+    flex: 1;
+}
+
+#cm-title h1 {
+    margin: 0;
+    font-size: 20px;
+    color: hotpink;
+    text-shadow: 0 0 24px hotpink, 0 0 60px rgba(255,105,180,.3);
+    letter-spacing: 4px;
+}
+
+#cm-title p {
+    margin: 4px 0 0;
+    font-size: 10px;
+    color: rgba(255,150,200,.5);
+    letter-spacing: 3px;
+}
+
+.cm-back {
+    font-size: 9px;
+    color: rgba(255,105,180,.6);
+    text-decoration: none;
+    letter-spacing: 1.5px;
+    border: 1px solid rgba(255,105,180,.25);
+    padding: 5px 12px;
+    border-radius: 4px;
+    transition: all .2s;
+}
+
+.cm-back:hover {
+    color: hotpink;
+    border-color: rgba(255,105,180,.6);
+    box-shadow: 0 0 8px rgba(255,105,180,.2);
+}
+
+/* MAIN LAYOUT */
+#cm-main {
+    flex: 1;
+    display: flex;
+    gap: 14px;
+    overflow: hidden;
+}
+
+/* ROOM */
+#cm-room {
+    position: relative;
+    width: 900px;
+    height: 600px;
+    flex-shrink: 0;
+    border: 3px solid #FF69B4;
+    border-radius: 6px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #0f0018 0%, #080010 100%);
+    box-shadow: 0 0 40px rgba(255,105,180,.3), inset 0 0 60px rgba(0,0,0,.6);
+}
+
+/* BACK WALL */
+#cm-backWall {
+    position: absolute;
+    left: 0; top: 0;
+    width: 900px;
+    height: 310px;
+    border-bottom: 3px solid rgba(255,105,180,.5);
+    background: linear-gradient(180deg, rgba(25,0,40,.9) 0%, rgba(15,0,25,.85) 100%);
+    z-index: 1;
+}
+
+#cm-neonSign {
+    position: absolute;
+    left: 50%;
+    top: 30px;
+    transform: translateX(-50%);
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: 6px;
+    color: hotpink;
+    text-shadow: 0 0 20px hotpink, 0 0 50px rgba(255,105,180,.5);
+    animation: cmNeonFlicker 9s infinite;
+}
+
+@keyframes cmNeonFlicker {
+    0%, 90%, 92%, 100% { opacity: 1; }
+    91% { opacity: .5; }
+}
+
+#cm-subSign {
+    position: absolute;
+    left: 50%;
+    top: 74px;
+    transform: translateX(-50%);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(255,150,200,.4);
+}
+
+#cm-productWall {
+    position: absolute;
+    left: 50%;
+    top: 100px;
+    transform: translateX(-50%);
+    width: 500px;
+    background: rgba(5,0,15,.75);
+    border: 1px solid rgba(255,105,180,.3);
+    border-radius: 8px;
+    padding: 12px 16px;
+}
+
+.cm-wallTitle {
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: rgba(255,105,180,.6);
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.cm-productGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.cm-productSlot {
+    background: rgba(255,105,180,.08);
+    border: 1px solid rgba(255,105,180,.25);
+    border-radius: 5px;
+    padding: 8px 6px;
+    text-align: center;
+    font-size: 8px;
+    letter-spacing: 1px;
+    color: rgba(255,150,200,.7);
+    line-height: 1.6;
+}
+
+.cm-productSlot span {
+    font-size: 7px;
+    color: rgba(255,105,180,.4);
+    letter-spacing: .5px;
+}
+
+.cm-slot-etsy   { border-color: rgba(255,100,100,.4); }
+.cm-slot-tiktok { border-color: rgba(255,150,255,.3); }
+.cm-slot-pod    { border-color: rgba(255,200,100,.3); }
+.cm-slot-trend  { border-color: hotpink; animation: slotGlow 3s ease-in-out infinite alternate; }
+
+@keyframes slotGlow {
+    from { box-shadow: none; }
+    to   { box-shadow: 0 0 10px rgba(255,105,180,.3); }
+}
+
+#cm-statusBar {
+    position: absolute;
+    bottom: 12px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cm-sLed {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    animation: cmLedPulse 2s ease-in-out infinite alternate;
+}
+
+.led-pink { background: hotpink; box-shadow: 0 0 6px hotpink; }
+.led-hot  { background: #FF2D78; box-shadow: 0 0 6px #FF2D78; }
+
+@keyframes cmLedPulse { from { opacity: .4; } to { opacity: 1; } }
+
+.cm-sLabel {
+    font-size: 8px;
+    color: rgba(255,150,200,.5);
+    letter-spacing: 1px;
+    margin-right: 4px;
+}
+
+/* FLOOR */
+#cm-floor {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 290px;
+    background: linear-gradient(180deg, #0f0020 0%, #09000e 100%);
+    border-top: 2px solid rgba(255,105,180,.4);
+    z-index: 2;
+}
+
+#cm-floorGlow {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 60px;
+    background: linear-gradient(0deg, rgba(255,105,180,.08) 0%, transparent 100%);
+    z-index: 4;
+    pointer-events: none;
+}
+
+/* SHELVES */
+#cm-shelf1 {
+    position: absolute;
+    left: 20px;
+    top: 330px;
+    width: 140px;
+    height: 30px;
+    background: linear-gradient(180deg, #1a0030, #10001e);
+    border: 1px solid rgba(255,105,180,.4);
+    border-radius: 4px;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+}
+
+.cm-box {
+    width: 22px; height: 20px;
+    border-radius: 3px;
+}
+
+.cm-box-pink  { background: rgba(255,105,180,.5); box-shadow: 0 0 6px rgba(255,105,180,.4); }
+.cm-box-hot   { background: rgba(255,45,120,.5);  box-shadow: 0 0 6px rgba(255,45,120,.4); }
+.cm-box-light { background: rgba(255,180,220,.3); }
+
+/* DESK */
+#cm-desk {
+    position: absolute;
+    left: 250px; top: 330px;
+    width: 380px; height: 70px;
+    background: linear-gradient(180deg, #1a0030, #100020);
+    border: 2px solid rgba(255,105,180,.45);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    z-index: 30;
+    box-shadow: 0 0 20px rgba(255,105,180,.2);
+}
+
+#cm-monitor, #cm-monitor2 {
+    position: absolute;
+    top: -80px;
+    width: 75px; height: 58px;
+    background: rgba(4,0,12,.9);
+    border: 1.5px solid rgba(255,105,180,.5);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    box-shadow: 0 0 16px rgba(255,105,180,.35);
+}
+
+#cm-monitor  { left: 16px; }
+#cm-monitor2 { left: 110px; }
+
+#cm-deskPlaque {
+    position: absolute;
+    bottom: 8px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 8px;
+    color: rgba(255,150,200,.6);
+    letter-spacing: 2px;
+    white-space: nowrap;
+}
+
+/* DECORATIONS */
+#cm-plant {
+    position: absolute;
+    left: 620px; top: 460px;
+    font-size: 24px; z-index: 25;
+    filter: drop-shadow(0 0 8px rgba(255,105,180,.4));
+    animation: cmPlantSway 5s ease-in-out infinite alternate;
+    transform-origin: bottom center;
+}
+
+@keyframes cmPlantSway { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }
+
+#cm-packages {
+    position: absolute;
+    left: 680px; top: 490px;
+    font-size: 30px; z-index: 24;
+    filter: drop-shadow(0 0 6px rgba(255,105,180,.3));
+}
+
+/* EXIT ARCH */
+#cm-exitArch {
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 80px; height: 240px;
+    background: linear-gradient(180deg, #04000e, #020008);
+    border-right: 2px solid rgba(255,105,180,.4);
+    border-top: 2px solid rgba(255,105,180,.25);
+    border-radius: 0 28px 0 0;
+    z-index: 22;
+    padding: 22px 6px 0;
+}
+
+.cm-archSign {
+    font-size: 7px;
+    color: rgba(255,105,180,.5);
+    letter-spacing: .5px;
+    line-height: 2.2;
+}
+
+/* SIDE PANEL */
+#cm-panel {
+    flex: 1;
+    background: rgba(4,0,14,.9);
+    border: 2px solid rgba(255,105,180,.3);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    min-width: 175px;
+    max-width: 210px;
+    box-shadow: 0 0 24px rgba(255,105,180,.1);
+}
+
+#cm-panel h2 {
+    margin: 0;
+    font-size: 13px;
+    color: hotpink;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px hotpink;
+}
+
+#cm-panel p {
+    margin: 0;
+    font-size: 10px;
+    color: rgba(255,180,210,.6);
+    letter-spacing: .5px;
+}
+
+#cm-panel p span { color: #7dff9c; font-weight: bold; }
+
+.cm-empCard {
+    border: 1px solid rgba(255,105,180,.2);
+    border-radius: 7px;
+    padding: 8px 10px;
+    background: rgba(0,0,0,.25);
+}
+
+.cm-empName {
+    font-size: 11px;
+    color: hotpink;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+}
+
+.cm-empTitle {
+    font-size: 8px;
+    color: rgba(255,150,200,.5);
+    letter-spacing: .5px;
+    margin-bottom: 5px;
+}
+
+.cm-empStatus {
+    font-size: 7px;
+    letter-spacing: 1.5px;
+}
+
+.cm-s-idle { color: rgba(156,246,255,.6); }
+.cm-s-running { color: rgba(255,220,50,.9); }
+.cm-s-completed { color: rgba(125,255,156,.9); }
+
+.cm-navLinks {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cm-navLink {
+    display: block;
+    font-size: 9px;
+    color: rgba(255,105,180,.5);
+    text-decoration: none;
+    letter-spacing: .5px;
+    padding: 6px 10px;
+    border: 1px solid rgba(255,105,180,.2);
+    border-radius: 4px;
+    transition: all .2s;
+    text-align: center;
+}
+
+.cm-navLink:hover {
+    color: hotpink;
+    border-color: rgba(255,105,180,.5);
+    background: rgba(255,105,180,.05);
+}

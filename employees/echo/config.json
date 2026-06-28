@@ -1,0 +1,7 @@
+{
+  "agent_id": "email_assistant",
+  "script_path": "agents/email_assistant/email_assistant.py",
+  "results_path": "data/email_assistant_results.json",
+  "enabled": true,
+  "version": "0.1.0-placeholder"
+}

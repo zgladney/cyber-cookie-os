@@ -1,0 +1,7 @@
+{
+  "agent_id": "rental_assistant",
+  "script_path": "agents/rental_assistant/rental_assistant.py",
+  "results_path": "data/rental_assistant_results.json",
+  "enabled": true,
+  "version": "0.1.0-placeholder"
+}

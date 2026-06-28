@@ -1,0 +1,12 @@
+{
+  "id": "productivity",
+  "name": "Productivity",
+  "short_name": "PRODUCTIVITY",
+  "room": "productivity",
+  "wing": "D",
+  "theme_color": "#3AA8C8",
+  "accent_color": "#7EC8E3",
+  "icon": "📅",
+  "employees": ["calypso", "echo", "atlas_planner", "memo"],
+  "agent_ids": ["calendar_assistant", "email_assistant", "task_manager", "reminder_assistant"]
+}

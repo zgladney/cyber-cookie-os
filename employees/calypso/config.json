@@ -1,0 +1,7 @@
+{
+  "agent_id": "calendar_assistant",
+  "script_path": "agents/calendar_assistant/calendar_assistant.py",
+  "results_path": "data/calendar_results.json",
+  "enabled": true,
+  "version": "0.1.0-skeleton"
+}

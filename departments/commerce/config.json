@@ -1,0 +1,12 @@
+{
+  "id": "commerce",
+  "name": "Commerce",
+  "short_name": "COMMERCE",
+  "room": "commerce",
+  "wing": "C",
+  "theme_color": "#FF69B4",
+  "accent_color": "#FF99CC",
+  "icon": "🛍",
+  "employees": ["pixel", "etsybot", "spark", "forge"],
+  "agent_ids": ["trend_hunter", "etsy_manager", "tiktok_researcher", "pod_manager"]
+}

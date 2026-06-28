@@ -1,0 +1,12 @@
+{
+  "id": "security",
+  "name": "Security Operations",
+  "short_name": "SECURITY OPS",
+  "room": "hq",
+  "wing": "A",
+  "theme_color": "#6B35D5",
+  "accent_color": "#9B6BFF",
+  "icon": "🛡",
+  "employees": ["athena", "nimbus", "sentinel"],
+  "agent_ids": ["threat_hunter", "cloud_monitor", "soc_analyst"]
+}

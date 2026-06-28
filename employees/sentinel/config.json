@@ -1,0 +1,7 @@
+{
+  "agent_id": "soc_analyst",
+  "script_path": "agents/soc_analyst/soc_analyst.py",
+  "results_path": "data/soc_analyst_results.json",
+  "enabled": true,
+  "version": "0.1.0-placeholder"
+}

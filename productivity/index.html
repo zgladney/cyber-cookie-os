@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Productivity Department — CyberCookieOS</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="pd-app">
+
+    <header id="pd-topBar">
+        <a href="../hallway/index.html" class="pd-back">← HALLWAY</a>
+        <div id="pd-title">
+            <h1>Productivity Department</h1>
+            <p>// Bright Office — Planning &amp; Coordination — WING D</p>
+        </div>
+        <a href="../ops_center/index.html" class="pd-back">OPS CENTER →</a>
+    </header>
+
+    <main id="pd-main">
+
+        <div id="pd-room">
+
+            <!-- Back wall -->
+            <div id="pd-backWall">
+                <div id="pd-neonSign">PRODUCTIVITY</div>
+                <div id="pd-subSign">// PLAN · SCHEDULE · EXECUTE</div>
+
+                <div id="pd-plannerWall">
+                    <div class="pd-wallTitle">PLANNER BOARD</div>
+                    <div class="pd-planGrid">
+                        <div class="pd-planBlock pd-b-today">
+                            <div class="pd-blockHead">TODAY</div>
+                            <div class="pd-task">Morning brief</div>
+                            <div class="pd-task">Review tasks</div>
+                            <div class="pd-task pd-task-done">✓ Agent sync</div>
+                        </div>
+                        <div class="pd-planBlock pd-b-week">
+                            <div class="pd-blockHead">THIS WEEK</div>
+                            <div class="pd-task">Calendar review</div>
+                            <div class="pd-task">Email triage</div>
+                            <div class="pd-task">Reminders set</div>
+                        </div>
+                        <div class="pd-planBlock pd-b-goals">
+                            <div class="pd-blockHead">GOALS</div>
+                            <div class="pd-task">Inbox zero</div>
+                            <div class="pd-task">Housing search</div>
+                            <div class="pd-task">Finance review</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="pd-statusBar">
+                    <span class="pd-sLed led-blue"></span><span class="pd-sLabel">CALYPSO</span>
+                    <span class="pd-sLed led-teal"></span><span class="pd-sLabel">ECHO</span>
+                    <span class="pd-sLed led-blue"></span><span class="pd-sLabel">ATLAS P.</span>
+                    <span class="pd-sLed led-teal"></span><span class="pd-sLabel">MEMO</span>
+                </div>
+            </div>
+
+            <!-- Floor -->
+            <div id="pd-floor"></div>
+            <div id="pd-floorGlow"></div>
+
+            <!-- Calendar on wall -->
+            <div id="pd-calendar">
+                <div class="pd-calHead">📅 JUNE 2026</div>
+                <div class="pd-calGrid">
+                    <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span>
+                    <span class="pd-day">23</span><span class="pd-day">24</span>
+                    <span class="pd-day">25</span><span class="pd-day">26</span>
+                    <span class="pd-day pd-today">27</span>
+                    <span class="pd-day">30</span>
+                </div>
+            </div>
+
+            <!-- Desk -->
+            <div id="pd-desk">
+                <div id="pd-monitor">📅</div>
+                <div id="pd-monitor2">📧</div>
+                <div id="pd-deskPlaque">▸ CALYPSO / ECHO</div>
+            </div>
+
+            <!-- Plants and whiteboard -->
+            <div id="pd-plant">🌱</div>
+            <div id="pd-whiteboard">
+                <div class="pd-wbTitle">WHITEBOARD</div>
+                <div class="pd-wbLine">→ Housing scout: ON</div>
+                <div class="pd-wbLine">→ Finance: REVIEW</div>
+                <div class="pd-wbLine">→ Email: TRIAGE</div>
+            </div>
+
+            <!-- Exit arch -->
+            <div id="pd-exitArch">
+                <div class="pd-archSign">← HALLWAY</div>
+                <div class="pd-archSign">← OPS CTR</div>
+            </div>
+
+        </div><!-- /pd-room -->
+
+        <!-- Side panel -->
+        <aside id="pd-panel">
+            <h2>Productivity</h2>
+            <p>Department status: <span id="pd-deptStatus">Online</span></p>
+
+            <div class="pd-empCard">
+                <div class="pd-empName">Calypso</div>
+                <div class="pd-empTitle">Calendar Assistant</div>
+                <div class="pd-empStatus pd-s-idle">● IDLE</div>
+            </div>
+            <div class="pd-empCard">
+                <div class="pd-empName">Echo</div>
+                <div class="pd-empTitle">Email Assistant</div>
+                <div class="pd-empStatus pd-s-idle">● IDLE</div>
+            </div>
+            <div class="pd-empCard">
+                <div class="pd-empName">Atlas Planner</div>
+                <div class="pd-empTitle">Task Manager</div>
+                <div class="pd-empStatus pd-s-idle">● IDLE</div>
+            </div>
+            <div class="pd-empCard">
+                <div class="pd-empName">Memo</div>
+                <div class="pd-empTitle">Reminder Assistant</div>
+                <div class="pd-empStatus pd-s-idle">● IDLE</div>
+            </div>
+
+            <div class="pd-navLinks">
+                <a href="../hallway/index.html" class="pd-navLink">⬡ Hallway</a>
+                <a href="../ops_center/index.html" class="pd-navLink">⬡ Ops Center</a>
+            </div>
+        </aside>
+
+    </main>
+
+</div>
+
+</body>
+</html>

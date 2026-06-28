@@ -1,0 +1,16 @@
+{
+  "name": "Ledger",
+  "title": "Bill Tracker",
+  "department": "Finance",
+  "department_id": "finance",
+  "agent_id": "bill_tracker",
+  "room": "finance",
+  "reports_to": "Operations Center",
+  "theme_color": "#27AE60",
+  "accent_color": "#4DC87A",
+  "status": "idle",
+  "current_task": null,
+  "personality": ["Meticulous", "Reliable", "Deadline-Aware", "Vigilant"],
+  "description": "Ledger tracks all recurring bills, monitors due dates, and logs payment history.",
+  "version": "1.0.0"
+}

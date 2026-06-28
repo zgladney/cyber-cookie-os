@@ -1,0 +1,16 @@
+{
+  "name": "Forge",
+  "title": "Print-on-Demand Manager",
+  "department": "Commerce",
+  "department_id": "commerce",
+  "agent_id": "pod_manager",
+  "room": "commerce",
+  "reports_to": "Operations Center",
+  "theme_color": "#FF2D78",
+  "accent_color": "#FF6CA0",
+  "status": "idle",
+  "current_task": null,
+  "personality": ["Creative", "Process-Driven", "Detail-Oriented", "Productive"],
+  "description": "Forge manages the print-on-demand product pipeline from design concept to live listing.",
+  "version": "1.0.0"
+}

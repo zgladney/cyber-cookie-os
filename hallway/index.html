@@ -13,8 +13,13 @@
 <div id="hw-app">
 
     <header id="hw-topBar">
-        <h1>CyberCookieOS</h1>
-        <p>CyberCookieOS // Pink Ops Command</p>
+        <div id="hw-logo">
+            <div id="hw-logoText">CyberCookieOS</div>
+            <div id="hw-logoSub">// HEADQUARTERS — DEPARTMENT DIRECTORY</div>
+        </div>
+        <div id="hw-opsBtn" onclick="window.location.href='../ops_center/index.html'" role="button" tabindex="0">
+            <span class="hw-opsIcon">⬡</span> OPS CENTER
+        </div>
     </header>
 
     <main id="hw-main">
@@ -27,48 +32,39 @@
                 <div class="hw-light hl2"></div>
                 <div class="hw-light hl3"></div>
                 <div class="hw-light hl4"></div>
+                <div class="hw-light hl5"></div>
             </div>
 
-            <!-- Back wall: locked rooms -->
+            <!-- Back wall: agent status board + ops link -->
             <div id="hw-backWall">
-                <div id="hw-logo">
-                    <div id="hw-logoText">CyberCookieOS</div>
-                    <div id="hw-logoSub">// HEADQUARTERS</div>
-                </div>
 
                 <div id="hw-agentBoard">
-                    <div class="hw-boardTitle">// AGENT COMMAND STATUS</div>
+                    <div class="hw-boardTitle">// EMPLOYEE STATUS</div>
                     <div id="hw-agentRows">
-                        <!-- Populated by agent_status.js -->
                         <div class="hw-agentRow">
                             <span class="hw-aIcon">🛡</span>
-                            <span class="hw-aName">THREAT HUNTER</span>
+                            <span class="hw-aName">ATHENA</span>
                             <span class="hw-aStatus hw-s-idle">● IDLE</span>
-                            <span class="hw-aTime">—</span>
                         </div>
                         <div class="hw-agentRow">
                             <span class="hw-aIcon">🏠</span>
-                            <span class="hw-aName">HOUSING SCOUT</span>
+                            <span class="hw-aName">NOVA</span>
                             <span class="hw-aStatus hw-s-idle">● IDLE</span>
-                            <span class="hw-aTime">—</span>
                         </div>
                         <div class="hw-agentRow">
                             <span class="hw-aIcon">📈</span>
-                            <span class="hw-aName">TREND HUNTER</span>
+                            <span class="hw-aName">PIXEL</span>
                             <span class="hw-aStatus hw-s-idle">● IDLE</span>
-                            <span class="hw-aTime">—</span>
                         </div>
                         <div class="hw-agentRow">
                             <span class="hw-aIcon">📅</span>
-                            <span class="hw-aName">CALENDAR ASST</span>
+                            <span class="hw-aName">CALYPSO</span>
                             <span class="hw-aStatus hw-s-idle">● IDLE</span>
-                            <span class="hw-aTime">—</span>
                         </div>
                         <div class="hw-agentRow">
-                            <span class="hw-aIcon">☁</span>
-                            <span class="hw-aName">CLOUD MONITOR</span>
+                            <span class="hw-aIcon">💰</span>
+                            <span class="hw-aName">GREENBEAN</span>
                             <span class="hw-aStatus hw-s-idle">● IDLE</span>
-                            <span class="hw-aTime">—</span>
                         </div>
                     </div>
                 </div>
@@ -82,66 +78,26 @@
                 <div id="hw-wallRune">✦ ⬡ ✦ ⬡ ✦</div>
             </div>
 
-            <!-- Perspective floor with converging lines -->
+            <!-- Perspective floor -->
             <div id="hw-floor">
                 <svg id="hw-perspective" viewBox="0 0 900 290" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-                    <!-- Vanishing point at center-top of floor (450, 0) -->
-                    <!-- Left wall lines -->
                     <line x1="0"   y1="290" x2="450" y2="0" stroke="rgba(255,105,180,.15)" stroke-width="1"/>
                     <line x1="90"  y1="290" x2="450" y2="0" stroke="rgba(255,105,180,.1)"  stroke-width="1"/>
                     <line x1="200" y1="290" x2="450" y2="0" stroke="rgba(255,105,180,.07)" stroke-width="1"/>
                     <line x1="330" y1="290" x2="450" y2="0" stroke="rgba(255,105,180,.05)" stroke-width="1"/>
-                    <!-- Right wall lines -->
                     <line x1="900" y1="290" x2="450" y2="0" stroke="rgba(150,80,255,.15)"  stroke-width="1"/>
                     <line x1="810" y1="290" x2="450" y2="0" stroke="rgba(150,80,255,.1)"   stroke-width="1"/>
                     <line x1="700" y1="290" x2="450" y2="0" stroke="rgba(150,80,255,.07)"  stroke-width="1"/>
                     <line x1="570" y1="290" x2="450" y2="0" stroke="rgba(150,80,255,.05)"  stroke-width="1"/>
-                    <!-- Floor grid horizontals (perspective shrink) -->
                     <line x1="0" y1="240" x2="900" y2="240" stroke="rgba(200,150,255,.05)" stroke-width="1"/>
                     <line x1="60" y1="180" x2="840" y2="180" stroke="rgba(200,150,255,.04)" stroke-width="1"/>
                     <line x1="130" y1="120" x2="770" y2="120" stroke="rgba(200,150,255,.03)" stroke-width="1"/>
                     <line x1="200" y1="70"  x2="700" y2="70"  stroke="rgba(200,150,255,.02)" stroke-width="1"/>
-                    <!-- Center glow streak -->
                     <line x1="450" y1="0" x2="450" y2="290" stroke="rgba(200,150,255,.06)" stroke-width="20"/>
                 </svg>
             </div>
 
-            <!-- Floor glow -->
             <div id="hw-floorGlow"></div>
-
-            <!-- Left door: Threat Hunter HQ (pink) -->
-            <div id="hw-doorLeft" onclick="window.location.href='../hq/index.html'" role="button" tabindex="0">
-                <div class="hw-doorInner">
-                    <div class="hw-doorGlow hw-glowPink"></div>
-                    <div class="hw-doorSign">🛡️</div>
-                    <div class="hw-doorName">THREAT HUNTER</div>
-                    <div class="hw-doorSub">WING A — HQ</div>
-                    <div class="hw-doorStatus hw-statusOpen">● OPEN</div>
-                </div>
-                <div class="hw-doorArrow">←</div>
-            </div>
-
-            <!-- Right door: Apartment Hunter (purple) -->
-            <div id="hw-doorRight" onclick="window.location.href='../apartment/index.html'" role="button" tabindex="0">
-                <div class="hw-doorInner">
-                    <div class="hw-doorGlow hw-glowPurple"></div>
-                    <div class="hw-doorSign">🏠</div>
-                    <div class="hw-doorName">APARTMENT HUNTER</div>
-                    <div class="hw-doorSub">WING B — AGENT 002</div>
-                    <div class="hw-doorStatus hw-statusOpen">● OPEN</div>
-                </div>
-                <div class="hw-doorArrow">→</div>
-            </div>
-
-            <!-- Wall signs along corridor -->
-            <div id="hw-signLeft">
-                <div class="hw-wallSign">← WING A</div>
-                <div class="hw-wallSign">← THREAT HUNTER</div>
-            </div>
-            <div id="hw-signRight">
-                <div class="hw-wallSign">WING B →</div>
-                <div class="hw-wallSign">APT HUNTER →</div>
-            </div>
 
             <!-- Center floor badge -->
             <div id="hw-floorBadge">
@@ -150,6 +106,59 @@
             </div>
 
         </div><!-- /hw-room -->
+
+        <!-- ═══════════ DEPARTMENT CARDS ═══════════ -->
+        <div id="hw-deptGrid">
+
+            <div class="hw-deptCard hw-dept-security" onclick="window.location.href='../hq/index.html'" role="button" tabindex="0">
+                <div class="hw-deptIcon">🛡</div>
+                <div class="hw-deptName">SECURITY OPS</div>
+                <div class="hw-deptSub">Athena · Nimbus · Sentinel</div>
+                <div class="hw-deptBadge">● WING A</div>
+                <div class="hw-deptEnter">ENTER ROOM →</div>
+            </div>
+
+            <div class="hw-deptCard hw-dept-housing" onclick="window.location.href='../housing/index.html'" role="button" tabindex="0">
+                <div class="hw-deptIcon">🏠</div>
+                <div class="hw-deptName">HOUSING</div>
+                <div class="hw-deptSub">Nova · Beacon · Atlas</div>
+                <div class="hw-deptBadge">● WING B</div>
+                <div class="hw-deptEnter">ENTER ROOM →</div>
+            </div>
+
+            <div class="hw-deptCard hw-dept-commerce" onclick="window.location.href='../commerce/index.html'" role="button" tabindex="0">
+                <div class="hw-deptIcon">🛍</div>
+                <div class="hw-deptName">COMMERCE</div>
+                <div class="hw-deptSub">Pixel · EtsyBot · Spark · Forge</div>
+                <div class="hw-deptBadge">● WING C</div>
+                <div class="hw-deptEnter">ENTER ROOM →</div>
+            </div>
+
+            <div class="hw-deptCard hw-dept-productivity" onclick="window.location.href='../productivity/index.html'" role="button" tabindex="0">
+                <div class="hw-deptIcon">📅</div>
+                <div class="hw-deptName">PRODUCTIVITY</div>
+                <div class="hw-deptSub">Calypso · Echo · Atlas P. · Memo</div>
+                <div class="hw-deptBadge">● WING D</div>
+                <div class="hw-deptEnter">ENTER ROOM →</div>
+            </div>
+
+            <div class="hw-deptCard hw-dept-finance" onclick="window.location.href='../finance/index.html'" role="button" tabindex="0">
+                <div class="hw-deptIcon">💰</div>
+                <div class="hw-deptName">FINANCE</div>
+                <div class="hw-deptSub">Greenbean · Ledger · Penny · Vault</div>
+                <div class="hw-deptBadge">● WING E</div>
+                <div class="hw-deptEnter">ENTER ROOM →</div>
+            </div>
+
+            <div class="hw-deptCard hw-dept-ops" onclick="window.location.href='../ops_center/index.html'" role="button" tabindex="0">
+                <div class="hw-deptIcon">⬡</div>
+                <div class="hw-deptName">OPS CENTER</div>
+                <div class="hw-deptSub">Mission Control · HQ</div>
+                <div class="hw-deptBadge">● COMMAND</div>
+                <div class="hw-deptEnter">ENTER HQ →</div>
+            </div>
+
+        </div><!-- /hw-deptGrid -->
 
     </main>
 

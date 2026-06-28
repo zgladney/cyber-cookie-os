@@ -1,0 +1,7 @@
+{
+  "agent_id": "finance_manager",
+  "script_path": "agents/finance_manager/finance_manager.py",
+  "results_path": "data/finance_manager_results.json",
+  "enabled": true,
+  "version": "0.1.0-placeholder"
+}

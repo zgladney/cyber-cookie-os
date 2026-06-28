@@ -1,0 +1,7 @@
+{
+  "agent_id": "cloud_monitor",
+  "script_path": "agents/cloud_monitor/cloud_monitor.py",
+  "results_path": "data/cloud_monitor_results.json",
+  "enabled": true,
+  "version": "0.1.0-skeleton"
+}

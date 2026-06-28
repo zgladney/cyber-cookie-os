@@ -527,3 +527,163 @@ body {
     from { opacity: .7; }
     to   { opacity: 1;  text-shadow: 0 0 8px rgba(255,220,50,.6); }
 }
+
+/* =============================================
+   TOP BAR (Phase 3 layout)
+============================================= */
+
+#hw-topBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(150,80,255,.2);
+    background: linear-gradient(180deg, rgba(10,0,26,.9) 0%, transparent 100%);
+    backdrop-filter: blur(4px);
+    flex-shrink: 0;
+    margin-bottom: 0;
+    text-align: left;
+}
+
+#hw-logoText {
+    font-size: 18px;
+    letter-spacing: 4px;
+    color: hotpink;
+    text-shadow: 0 0 20px hotpink;
+    animation: hwLogoFlicker 8s infinite;
+}
+
+#hw-logoSub {
+    font-size: 8px;
+    letter-spacing: 3px;
+    color: rgba(156,246,255,.4);
+    margin-top: 2px;
+}
+
+#hw-opsBtn {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: rgba(156,246,255,.7);
+    border: 1px solid rgba(156,246,255,.25);
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#hw-opsBtn:hover {
+    color: #9cf6ff;
+    border-color: rgba(156,246,255,.6);
+    background: rgba(156,246,255,.05);
+}
+
+/* =============================================
+   MAIN LAYOUT (Phase 3 — room + dept grid)
+============================================= */
+
+#hw-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    overflow: hidden;
+}
+
+#hw-room {
+    flex-shrink: 0;
+    height: 220px;
+}
+
+/* =============================================
+   DEPARTMENT GRID
+============================================= */
+
+#hw-deptGrid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0;
+    border-top: 2px solid rgba(150,80,255,.25);
+    flex: 1;
+}
+
+.hw-deptCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 18px 10px;
+    cursor: pointer;
+    border-right: 1px solid rgba(150,80,255,.12);
+    background: rgba(4,0,14,.8);
+    transition: background .2s, filter .2s;
+    text-align: center;
+}
+
+.hw-deptCard:last-child { border-right: none; }
+
+.hw-deptCard:hover {
+    background: rgba(8,0,22,.95);
+    filter: brightness(1.25);
+}
+
+.hw-deptIcon {
+    font-size: 26px;
+    filter: drop-shadow(0 0 8px var(--dept-glow, rgba(255,255,255,.3)));
+    animation: deptIconPulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes deptIconPulse {
+    from { filter: drop-shadow(0 0 4px var(--dept-glow, rgba(255,255,255,.2))); }
+    to   { filter: drop-shadow(0 0 14px var(--dept-glow, rgba(255,255,255,.5))); }
+}
+
+.hw-deptName {
+    font-size: 9px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: var(--dept-color, #bf7fff);
+    text-shadow: 0 0 10px var(--dept-color, rgba(150,80,255,.5));
+}
+
+.hw-deptSub {
+    font-size: 7px;
+    letter-spacing: .5px;
+    color: rgba(200,160,255,.4);
+    line-height: 1.6;
+}
+
+.hw-deptBadge {
+    font-size: 7px;
+    letter-spacing: 1.5px;
+    color: var(--dept-color, rgba(150,80,255,.5));
+    border: 1px solid var(--dept-color, rgba(150,80,255,.2));
+    padding: 2px 8px;
+    border-radius: 8px;
+    opacity: .7;
+}
+
+.hw-deptEnter {
+    font-size: 7px;
+    letter-spacing: 1px;
+    color: rgba(156,246,255,.35);
+    margin-top: 2px;
+}
+
+.hw-deptCard:hover .hw-deptEnter {
+    color: rgba(156,246,255,.7);
+}
+
+/* Department color vars */
+.hw-dept-security    { --dept-color: #9b6bff; --dept-glow: rgba(150,80,255,.5); }
+.hw-dept-housing     { --dept-color: #C4784A; --dept-glow: rgba(196,120,74,.5); }
+.hw-dept-commerce    { --dept-color: #FF69B4; --dept-glow: rgba(255,105,180,.5); }
+.hw-dept-productivity{ --dept-color: #3AA8C8; --dept-glow: rgba(58,168,200,.5); }
+.hw-dept-finance     { --dept-color: #2ECC71; --dept-glow: rgba(46,204,113,.5); }
+.hw-dept-ops         { --dept-color: #9cf6ff; --dept-glow: rgba(156,246,255,.5); }
+
+/* light 5 */
+.hl5 { animation-delay: 4.8s; }

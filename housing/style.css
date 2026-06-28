@@ -1,0 +1,1237 @@
+/* =============================================
+   CYBERCOOKIEOS — HOUSING SCOUT ROOM
+   Vibe: Purple Cyber Cozy Housing Command
+============================================= */
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: radial-gradient(ellipse at top, #1e0545 0%, #050010 70%);
+    overflow: hidden;
+    color: white;
+}
+
+.hidden { display: none !important; }
+
+#ah-app {
+    width: 100vw;
+    height: 100vh;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* =============================================
+   TOP BAR
+============================================= */
+
+#ah-topBar {
+    text-align: center;
+    margin-bottom: 14px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+#ah-topBar h1 {
+    margin: 0;
+    font-size: 22px;
+    color: #bf7fff;
+    text-shadow: 0 0 24px #9b59b6, 0 0 60px rgba(150,80,255,.3);
+    letter-spacing: 4px;
+}
+
+#ah-topBar p {
+    margin: 5px 0 0;
+    font-size: 11px;
+    color: #9cf6ff;
+    letter-spacing: 3px;
+}
+
+#ah-nav {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 12px;
+}
+
+.ah-navLink {
+    font-size: 10px;
+    color: rgba(191,127,255,.7);
+    text-decoration: none;
+    letter-spacing: 1px;
+    border: 1px solid rgba(150,80,255,.3);
+    padding: 4px 10px;
+    border-radius: 4px;
+    transition: all .2s;
+}
+
+.ah-navLink:hover {
+    color: #bf7fff;
+    border-color: rgba(150,80,255,.7);
+    box-shadow: 0 0 8px rgba(150,80,255,.3);
+}
+
+/* =============================================
+   MAIN LAYOUT
+============================================= */
+
+#ah-mainLayout {
+    flex: 1;
+    display: flex;
+    gap: 16px;
+    overflow: hidden;
+}
+
+/* =============================================
+   ROOM
+============================================= */
+
+#ah-room {
+    position: relative;
+    width: 900px;
+    height: 600px;
+    flex-shrink: 0;
+    border: 3px solid #9b59b6;
+    border-radius: 6px;
+    overflow: hidden;
+    background:
+        radial-gradient(ellipse at 30% 30%, rgba(107,53,213,.15) 0%, transparent 55%),
+        linear-gradient(180deg, #0d0020 0%, #08001a 45%, #100025 100%);
+    box-shadow:
+        0 0 40px rgba(107,53,213,.4),
+        0 0 80px rgba(107,53,213,.1),
+        inset 0 0 60px rgba(0,0,0,.6);
+}
+
+/* =============================================
+   CEILING
+============================================= */
+
+#ah-ceilingPipe {
+    position: absolute;
+    top: 10px;
+    left: 80px;
+    right: 80px;
+    height: 10px;
+    background: linear-gradient(180deg, #1a003a, #0d001f);
+    border: 1px solid rgba(150,80,255,.35);
+    border-radius: 4px;
+    box-shadow:
+        0 0 12px rgba(150,80,255,.3),
+        inset 0 2px 4px rgba(0,0,0,.6);
+    z-index: 10;
+}
+
+#ah-ceilingPipe::before {
+    content: "";
+    position: absolute;
+    top: 50%; left: 20%;
+    transform: translateY(-50%);
+    width: 18px; height: 18px;
+    background: rgba(150,80,255,.6);
+    border-radius: 50%;
+    box-shadow: 0 0 10px #9b59b6;
+}
+
+#ah-ceilingPipe::after {
+    content: "";
+    position: absolute;
+    top: 50%; left: 75%;
+    transform: translateY(-50%);
+    width: 18px; height: 18px;
+    background: rgba(150,80,255,.6);
+    border-radius: 50%;
+    box-shadow: 0 0 10px #9b59b6;
+}
+
+/* =============================================
+   BACK WALL
+============================================= */
+
+#ah-backWall {
+    position: absolute;
+    left: 0; top: 0;
+    width: 900px;
+    height: 310px;
+    border-bottom: 3px solid #9b59b6;
+    background:
+        linear-gradient(180deg, rgba(20,0,50,.9) 0%, rgba(12,0,30,.85) 100%),
+        repeating-linear-gradient(
+            0deg,
+            transparent 0px,
+            transparent 22px,
+            rgba(150,80,255,.04) 22px,
+            rgba(150,80,255,.04) 23px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            transparent 0px,
+            transparent 22px,
+            rgba(150,80,255,.04) 22px,
+            rgba(150,80,255,.04) 23px
+        );
+    z-index: 1;
+}
+
+/* ── Neon sign ── */
+#ah-neonSign {
+    position: absolute;
+    left: 28px;
+    top: 26px;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: #bf7fff;
+    white-space: nowrap;
+    box-shadow:
+        0 0 16px #9b59b6,
+        0 0 36px rgba(107,53,213,.35),
+        inset 0 0 12px rgba(107,53,213,.08);
+    text-shadow: 0 0 10px #9b59b6, 0 0 22px #9b59b6;
+    animation: ahNeonFlicker 11s infinite;
+}
+
+@keyframes ahNeonFlicker {
+    0%, 90%, 92%, 94%, 100% { opacity: 1; }
+    91%                       { opacity: .6; }
+    93%                       { opacity: .85; }
+}
+
+/* ── Rune ── */
+#ah-rune {
+    position: absolute;
+    left: 28px;
+    top: 48px;
+    font-size: 13px;
+    color: rgba(150,80,255,.4);
+    letter-spacing: 7px;
+    text-shadow: 0 0 10px rgba(150,80,255,.25);
+}
+
+/* ── Application tracker board ── */
+#ah-appBoard {
+    position: absolute;
+    left: 28px;
+    top: 72px;
+    width: 196px;
+    background: rgba(5,0,18,.75);
+    border: 1px solid rgba(150,80,255,.35);
+    border-radius: 7px;
+    padding: 10px 12px;
+    box-shadow: 0 0 14px rgba(107,53,213,.15);
+}
+
+.ah-boardTitle {
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: #bf7fff;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(150,80,255,.22);
+    text-shadow: 0 0 6px #9b59b6;
+}
+
+.ah-appCols {
+    display: flex;
+    gap: 8px;
+}
+
+.ah-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.ah-colHead {
+    font-size: 7px;
+    letter-spacing: 1px;
+    color: rgba(156,246,255,.5);
+    margin-bottom: 3px;
+}
+
+.ah-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    animation: dotPulse 2.4s ease-in-out infinite alternate;
+}
+
+.ah-dotGreen  { background: #7dff9c; box-shadow: 0 0 6px #7dff9c; }
+.ah-dotYellow { background: #ffcc44; box-shadow: 0 0 6px #ffcc44; animation-duration: 1.6s; }
+.ah-dotRed    { background: hotpink; box-shadow: 0 0 6px hotpink; animation-duration: .8s; }
+
+@keyframes dotPulse {
+    from { opacity: .5; }
+    to   { opacity: 1;  }
+}
+
+/* ── City map wall (center) ── */
+#ah-cityMap {
+    position: absolute;
+    left: 238px;
+    top: 22px;
+    width: 345px;
+    height: 168px;
+    background: rgba(4,0,18,.82);
+    border: 1px solid rgba(150,80,255,.38);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow:
+        0 0 20px rgba(107,53,213,.2),
+        inset 0 0 30px rgba(0,0,0,.5);
+}
+
+#ah-cityMap::before {
+    content: "";
+    position: absolute;
+    top: 14px; left: 0; right: 0;
+    height: 1px;
+    background: rgba(150,80,255,.3);
+}
+
+.ah-mapLabel {
+    position: absolute;
+    top: 4px;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: rgba(150,80,255,.7);
+}
+
+.ah-mapGrid {
+    position: absolute;
+    top: 14px; inset: 14px 0 0 0;
+    background:
+        repeating-linear-gradient(0deg, transparent 0, transparent 14px,
+            rgba(150,80,255,.08) 14px, rgba(150,80,255,.08) 15px),
+        repeating-linear-gradient(90deg, transparent 0, transparent 14px,
+            rgba(150,80,255,.08) 14px, rgba(150,80,255,.08) 15px);
+}
+
+.ah-district {
+    position: absolute;
+    border-radius: 4px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 4px 6px;
+}
+
+.d-atl { background: rgba(107,53,213,.22); border: 1px solid rgba(150,80,255,.35); }
+.d-dec { background: rgba(156,246,255,.08); border: 1px solid rgba(156,246,255,.2); }
+.d-ep  { background: rgba(125,255,156,.07); border: 1px solid rgba(125,255,156,.18); }
+
+.ah-distLabel {
+    font-size: 7px;
+    letter-spacing: 1px;
+    color: rgba(191,127,255,.6);
+}
+
+/* Apartment pins */
+.ah-pin {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    animation: pinPulse 2s ease-in-out infinite;
+}
+
+.pin-best { background: #7dff9c; box-shadow: 0 0 8px #7dff9c, 0 0 16px rgba(125,255,156,.4); animation-duration: 1s; }
+.pin-good { background: #bf7fff; box-shadow: 0 0 6px #9b59b6; }
+.pin-ok   { background: #ffcc44; box-shadow: 0 0 5px #ffcc44; animation-duration: 3s; }
+
+@keyframes pinPulse {
+    0%, 100% { transform: scale(1);    opacity: 1; }
+    50%       { transform: scale(1.4); opacity: .7; }
+}
+
+.ah-mapLegend {
+    position: absolute;
+    bottom: 6px;
+    right: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 7px;
+    color: rgba(191,127,255,.6);
+}
+
+.ah-legDot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+/* ── Budget + pet panel (right) ── */
+#ah-budgetPanel {
+    position: absolute;
+    right: 28px;
+    top: 22px;
+    width: 172px;
+    background: rgba(5,0,18,.82);
+    border: 1px solid rgba(150,80,255,.35);
+    border-radius: 7px;
+    padding: 10px 13px;
+    box-shadow: 0 0 14px rgba(107,53,213,.15);
+}
+
+.ah-panelTitle {
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: #bf7fff;
+    margin-bottom: 8px;
+    text-shadow: 0 0 6px #9b59b6;
+}
+
+.ah-budgetRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.ah-bLabel {
+    font-size: 8px;
+    color: rgba(156,246,255,.5);
+    letter-spacing: .5px;
+}
+
+.ah-bValue {
+    font-size: 10px;
+    color: #7dff9c;
+    font-weight: bold;
+    text-shadow: 0 0 6px #7dff9c;
+}
+
+.ah-budgetBar {
+    height: 5px;
+    background: rgba(150,80,255,.2);
+    border-radius: 3px;
+    margin-bottom: 5px;
+    overflow: hidden;
+}
+
+.ah-budgetFill {
+    height: 100%;
+    background: linear-gradient(90deg, #7dff9c, #9b59b6);
+    border-radius: 3px;
+    box-shadow: 0 0 6px rgba(125,255,156,.4);
+    transition: width .5s ease;
+}
+
+.ah-budgetStatus {
+    font-size: 8px;
+    letter-spacing: 1px;
+    color: #7dff9c;
+    text-shadow: 0 0 6px #7dff9c;
+    margin-bottom: 6px;
+    text-align: right;
+}
+
+.ah-divider {
+    height: 1px;
+    background: rgba(150,80,255,.2);
+    margin: 8px 0;
+}
+
+.ah-petLed {
+    width: 10px;
+    height: 10px;
+    background: #7dff9c;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #7dff9c;
+    display: inline-block;
+    animation: dotPulse 2s ease-in-out infinite alternate;
+}
+
+.ah-transitRow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+.ah-transitIcon { font-size: 14px; }
+
+.ah-transitLabel {
+    font-size: 8px;
+    color: rgba(156,246,255,.6);
+    letter-spacing: 1px;
+}
+
+.ah-transitNote {
+    font-size: 7px;
+    color: rgba(150,80,255,.5);
+    letter-spacing: .5px;
+}
+
+/* ── Room directory back link ── */
+#ah-roomDir {
+    position: absolute;
+    right: 28px;
+    top: 202px;
+    width: 172px;
+    background: rgba(4,0,18,.82);
+    border: 1px solid rgba(150,80,255,.28);
+    border-radius: 7px;
+    padding: 9px 12px;
+}
+
+.ah-dirTitle {
+    font-size: 8px;
+    color: hotpink;
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+    text-shadow: 0 0 6px hotpink;
+}
+
+.ah-dirLink {
+    display: block;
+    font-size: 8px;
+    color: rgba(191,127,255,.5);
+    text-decoration: none;
+    letter-spacing: .5px;
+    margin-bottom: 4px;
+    transition: color .2s;
+}
+
+.ah-dirLink:hover { color: #bf7fff; }
+
+/* ── Status bar ── */
+#ah-statusBar {
+    position: absolute;
+    bottom: 12px;
+    left: 28px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ah-sLed {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.led-purple { background: #9b59b6; box-shadow: 0 0 6px #9b59b6; animation: dotPulse 2s infinite alternate; }
+.led-green  { background: #7dff9c; box-shadow: 0 0 6px #7dff9c; animation: dotPulse 2.4s infinite alternate; }
+.led-amber  { background: #ffcc44; box-shadow: 0 0 6px #ffcc44; animation: dotPulse 1.6s infinite alternate; }
+
+.ah-sLabel {
+    font-size: 8px;
+    color: rgba(156,246,255,.5);
+    letter-spacing: 1px;
+    margin-right: 4px;
+}
+
+/* =============================================
+   LAMP
+============================================= */
+
+#ah-lamp {
+    position: absolute;
+    left: 443px;
+    top: 0;
+    width: 3px;
+    height: 258px;
+    background: linear-gradient(180deg, #1a0035 0%, #100028 100%);
+    border: 1px solid rgba(150,80,255,.4);
+    border-top: none;
+    z-index: 6;
+}
+
+#ah-lamp::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 36px; height: 20px;
+    background: linear-gradient(180deg, #2a005a, #1a003a);
+    border: 1px solid rgba(150,80,255,.4);
+    border-radius: 4px 4px 8px 8px;
+}
+
+#ah-lamp::after {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px; height: 6px;
+    background: rgba(150,80,255,.6);
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 0 14px rgba(150,80,255,.7), 0 0 30px rgba(107,53,213,.3);
+}
+
+#ah-lampGlow {
+    position: absolute;
+    left: 330px;
+    top: 255px;
+    width: 225px;
+    height: 100px;
+    background: radial-gradient(ellipse at 50% 0%, rgba(150,80,255,.2) 0%, transparent 70%);
+    z-index: 5;
+    pointer-events: none;
+}
+
+/* =============================================
+   FLOOR
+============================================= */
+
+#ah-floor {
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    height: 290px;
+    background:
+        linear-gradient(180deg, #100022 0%, #0c0018 100%),
+        repeating-linear-gradient(
+            90deg,
+            transparent 0,
+            transparent 44px,
+            rgba(150,80,255,.06) 44px,
+            rgba(150,80,255,.06) 45px
+        );
+    border-top: 2px solid #9b59b6;
+    z-index: 2;
+}
+
+#ah-floorGlow {
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    height: 60px;
+    background: linear-gradient(0deg, rgba(107,53,213,.12) 0%, transparent 100%);
+    z-index: 4;
+    pointer-events: none;
+}
+
+/* =============================================
+   FILING CABINET
+============================================= */
+
+#ah-fileCabinet {
+    position: absolute;
+    left: 22px;
+    top: 342px;
+    width: 82px;
+    height: 175px;
+    background: linear-gradient(180deg, #14003a, #0c0025);
+    border: 2px solid rgba(150,80,255,.5);
+    border-radius: 6px 6px 4px 4px;
+    z-index: 20;
+    padding: 8px 7px;
+    box-shadow: 0 0 20px rgba(107,53,213,.3), inset 0 0 12px rgba(0,0,0,.6);
+}
+
+#ah-fileCabinet::before {
+    content: "FILES";
+    position: absolute;
+    top: -18px;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: #bf7fff;
+    text-shadow: 0 0 6px #9b59b6;
+}
+
+.ah-drawer {
+    height: 42px;
+    border: 1px solid rgba(150,80,255,.4);
+    border-radius: 3px;
+    background: linear-gradient(90deg, #0f001e, #1a0035);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+.ah-drawer:hover { background: rgba(107,53,213,.25); }
+
+.ah-drawer::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 18px;
+    height: 4px;
+    background: rgba(150,80,255,.5);
+    border-radius: 2px;
+    box-shadow: 0 0 4px #9b59b6;
+    bottom: 6px;
+}
+
+.ah-drawerLabel {
+    font-size: 7px;
+    color: rgba(156,246,255,.5);
+    letter-spacing: 1px;
+    margin-top: -8px;
+}
+
+.ah-drawerBase {
+    height: 8px;
+    background: linear-gradient(90deg, #0a001a, #140028);
+    border: 1px solid rgba(150,80,255,.3);
+    border-radius: 0 0 4px 4px;
+}
+
+/* =============================================
+   STICKY NOTES (floor level)
+============================================= */
+
+.ah-stickyNote {
+    position: absolute;
+    width: 74px;
+    padding: 5px 7px;
+    background: rgba(255,255,160,.9);
+    color: #1a0030;
+    font-size: 8px;
+    line-height: 1.5;
+    border-radius: 2px;
+    box-shadow: 2px 2px 6px rgba(0,0,0,.4);
+    z-index: 15;
+}
+
+.ah-stickyNote.ah-snPurple { background: rgba(210,180,255,.9); }
+
+#ah-sn1 { left: 118px; top: 296px; transform: rotate(-3deg); }
+#ah-sn2 { left: 130px; top: 356px; transform: rotate(2deg);  }
+#ah-sn3 { left: 115px; top: 416px; transform: rotate(-2deg); }
+
+/* =============================================
+   DESK
+============================================= */
+
+#ah-desk {
+    position: absolute;
+    left: 260px;
+    top: 338px;
+    width: 360px;
+    height: 74px;
+    background: linear-gradient(180deg, #1a0040, #10002a);
+    border: 2px solid rgba(150,80,255,.5);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    z-index: 30;
+    box-shadow:
+        0 0 20px rgba(107,53,213,.35),
+        inset 0 2px 8px rgba(0,0,0,.6);
+}
+
+#ah-desk::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: -2px; right: -2px;
+    height: 8px;
+    background: linear-gradient(180deg, rgba(150,80,255,.35), transparent);
+    border: 2px solid rgba(150,80,255,.4);
+    border-top: none;
+}
+
+#ah-monitor,
+#ah-monitor2 {
+    position: absolute;
+    top: -88px;
+    width: 78px;
+    height: 62px;
+    background: linear-gradient(180deg, #060014, #0d001f);
+    border: 1.5px solid rgba(150,80,255,.55);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    box-shadow: 0 0 18px rgba(150,80,255,.45);
+    cursor: pointer;
+    transition: transform .2s, box-shadow .2s;
+    animation: ahMonitorPulse 4.5s ease-in-out infinite alternate;
+}
+
+#ah-monitor  { left: 18px; }
+#ah-monitor2 { left: 116px; }
+
+#ah-monitor:hover,
+#ah-monitor2:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 28px rgba(150,80,255,.7);
+}
+
+@keyframes ahMonitorPulse {
+    from { filter: brightness(1); }
+    to   { filter: brightness(1.25); }
+}
+
+#ah-monitor::after,
+#ah-monitor2::after {
+    content: "";
+    position: absolute;
+    bottom: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 14px;
+    background: rgba(107,53,213,.5);
+    border-radius: 0 0 4px 4px;
+    border: 1px solid rgba(150,80,255,.35);
+    border-top: none;
+}
+
+#ah-deskPlaque {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    color: rgba(191,127,255,.7);
+    letter-spacing: 2px;
+    white-space: nowrap;
+}
+
+#ah-keyboard {
+    position: absolute;
+    bottom: 12px;
+    left: 220px;
+    font-size: 22px;
+    filter: drop-shadow(0 0 6px rgba(150,80,255,.6));
+    animation: ahKeyboardGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes ahKeyboardGlow {
+    from { filter: drop-shadow(0 0 4px rgba(150,80,255,.4)); }
+    to   { filter: drop-shadow(0 0 12px rgba(150,80,255,.8)); }
+}
+
+/* =============================================
+   CHAIR
+============================================= */
+
+#ah-chair {
+    position: absolute;
+    left: 415px;
+    top: 428px;
+    width: 84px;
+    height: 60px;
+    background: linear-gradient(180deg, #1a0040, #0d0022);
+    border: 1.5px solid rgba(150,80,255,.45);
+    border-radius: 8px 8px 0 0;
+    z-index: 35;
+    box-shadow: 0 0 14px rgba(107,53,213,.25);
+}
+
+#ah-chair::before {
+    content: "";
+    position: absolute;
+    top: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 74px;
+    height: 22px;
+    background: linear-gradient(180deg, #220055, #1a0040);
+    border: 1.5px solid rgba(150,80,255,.45);
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+}
+
+#ah-chair::after {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    left: 10%; right: 10%;
+    height: 6px;
+    background: rgba(107,53,213,.2);
+    border-radius: 0 0 4px 4px;
+    filter: blur(4px);
+}
+
+/* =============================================
+   PLANT
+============================================= */
+
+#ah-plant {
+    position: absolute;
+    left: 625px;
+    top: 468px;
+    font-size: 26px;
+    z-index: 25;
+    filter: drop-shadow(0 0 8px rgba(107,53,213,.5));
+    animation: ahPlantSway 5s ease-in-out infinite alternate;
+    transform-origin: bottom center;
+}
+
+@keyframes ahPlantSway {
+    from { transform: rotate(-4deg); }
+    to   { transform: rotate(4deg); }
+}
+
+/* =============================================
+   COFFEE + STEAM
+============================================= */
+
+#ah-steamGroup {
+    position: absolute;
+    left: 208px;
+    top: 305px;
+    z-index: 41;
+    pointer-events: none;
+}
+
+.ah-steam {
+    position: absolute;
+    width: 4px;
+    height: 22px;
+    border-radius: 50% 50% 0 0;
+    background: linear-gradient(to top, rgba(255,255,255,.3), transparent);
+    animation: ahSteamRise 2.6s ease-out infinite;
+}
+
+.as1 { left: 1px;  animation-delay: 0s; }
+.as2 { left: 9px;  animation-delay: .9s; }
+.as3 { left: 5px;  animation-delay: 1.8s; }
+
+@keyframes ahSteamRise {
+    0%   { transform: translateY(0)     scaleX(1);   opacity: .55; }
+    50%  { transform: translateY(-14px) scaleX(1.4); opacity: .3;  }
+    100% { transform: translateY(-30px) scaleX(2);   opacity: 0;   }
+}
+
+#ah-coffee {
+    position: absolute;
+    left: 204px;
+    top: 318px;
+    font-size: 22px;
+    z-index: 40;
+    cursor: pointer;
+    filter: drop-shadow(0 0 6px rgba(150,80,255,.4));
+}
+
+/* =============================================
+   CRYSTALS
+============================================= */
+
+#ah-crystals {
+    position: absolute;
+    left: 672px;
+    top: 510px;
+    font-size: 18px;
+    z-index: 26;
+    filter: drop-shadow(0 0 8px rgba(150,80,255,.7));
+    animation: ahCrystalGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes ahCrystalGlow {
+    from { filter: drop-shadow(0 0 6px rgba(150,80,255,.4)); }
+    to   { filter: drop-shadow(0 0 16px rgba(150,80,255,.9)); }
+}
+
+/* =============================================
+   EXIT ARCH
+============================================= */
+
+#ah-exitArch {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 82px;
+    height: 245px;
+    background: linear-gradient(180deg, #04000e, #020008);
+    border-right: 2px solid rgba(255,105,180,.45);
+    border-top: 2px solid rgba(255,105,180,.3);
+    border-radius: 0 28px 0 0;
+    z-index: 22;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+#ah-exitArch::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 45% 100%, rgba(255,105,180,.08) 0%, transparent 60%);
+}
+
+#ah-exitArch::after {
+    content: "";
+    position: absolute;
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px; height: 8px;
+    background: rgba(255,190,80,.7);
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(255,150,50,.5), 0 0 50px rgba(255,100,30,.2);
+    animation: ahCorridorLight 3.5s ease-in-out infinite alternate;
+}
+
+@keyframes ahCorridorLight {
+    from { opacity: .45; transform: translateX(-50%) scale(1);    }
+    to   { opacity: 1;   transform: translateX(-50%) scale(1.15); }
+}
+
+#ah-archSigns {
+    position: absolute;
+    top: 24px;
+    left: 5px;
+    right: 5px;
+}
+
+.ah-archSign {
+    font-size: 7px;
+    color: rgba(255,105,180,.55);
+    letter-spacing: .5px;
+    line-height: 2;
+    white-space: nowrap;
+}
+
+#ah-archLabel {
+    position: absolute;
+    left: 90px;
+    top: 316px;
+    font-size: 8px;
+    color: rgba(255,105,180,.6);
+    letter-spacing: 1px;
+    z-index: 23;
+    white-space: nowrap;
+}
+
+/* =============================================
+   AGENT (stationary, breathing only)
+============================================= */
+
+#ah-agent {
+    position: absolute;
+    left: 380px;
+    top: 400px;
+    width: 95px;
+    height: 120px;
+    z-index: 100;
+    transform-origin: bottom center;
+}
+
+#ah-agent::after {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    left: 10%; right: 10%;
+    height: 8px;
+    background: rgba(107,53,213,.3);
+    border-radius: 50%;
+    filter: blur(5px);
+}
+
+#ah-agentSprite {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 0 10px rgba(150,80,255,.55));
+    animation: ahAgentBreathe 3.5s ease-in-out infinite;
+    transform-origin: bottom center;
+}
+
+@keyframes ahAgentBreathe {
+    0%, 100% { transform: scaleY(1);     }
+    50%       { transform: scaleY(1.018); }
+}
+
+#ah-headsetLed {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 5px;
+    height: 5px;
+    background: #bf7fff;
+    border-radius: 50%;
+    box-shadow: 0 0 6px #9b59b6;
+    animation: ahLedBlink 3.2s infinite;
+}
+
+@keyframes ahLedBlink {
+    0%, 80%, 100% { opacity: 1; }
+    85%            { opacity: .1; }
+    90%            { opacity: 1; }
+    95%            { opacity: .2; }
+}
+
+/* =============================================
+   SIDE PANEL
+============================================= */
+
+#ah-panel {
+    flex: 1;
+    background: rgba(4,0,18,.9);
+    border: 2px solid rgba(150,80,255,.4);
+    border-radius: 12px;
+    padding: 18px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    min-width: 185px;
+    max-width: 220px;
+    box-shadow: 0 0 24px rgba(107,53,213,.25);
+}
+
+#ah-panel h2 {
+    margin: 0;
+    font-size: 13px;
+    color: #bf7fff;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px #9b59b6;
+}
+
+#ah-panel p {
+    margin: 0;
+    font-size: 10px;
+    color: rgba(156,246,255,.7);
+    letter-spacing: .5px;
+}
+
+#ah-panel p span {
+    color: #7dff9c;
+    font-weight: bold;
+}
+
+.ah-statBlock {
+    border: 1px solid rgba(150,80,255,.25);
+    border-radius: 8px;
+    padding: 10px 12px;
+    background: rgba(0,0,0,.3);
+}
+
+.ah-statRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 7px;
+    font-size: 10px;
+}
+
+.ah-statRow:last-child { margin-bottom: 0; }
+
+.ah-statLabel { color: rgba(156,246,255,.55); letter-spacing: .5px; }
+
+.ah-statVal {
+    color: #bf7fff;
+    font-weight: bold;
+    min-width: 30px;
+    text-align: right;
+}
+
+#ah-bestFitCard {
+    border: 1px solid rgba(125,255,156,.3);
+    border-radius: 8px;
+    padding: 10px 12px;
+    background: rgba(0,0,0,.35);
+}
+
+.ah-bestTitle {
+    font-size: 9px;
+    color: #7dff9c;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    text-shadow: 0 0 6px #7dff9c;
+}
+
+#ah-bestName {
+    font-size: 11px;
+    color: white;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+#ah-bestScore, #ah-bestCity, #ah-bestRent {
+    font-size: 9px;
+    color: rgba(191,127,255,.7);
+    margin-bottom: 3px;
+    letter-spacing: .5px;
+}
+
+#ah-topListPanel {
+    border: 1px solid rgba(150,80,255,.25);
+    border-radius: 8px;
+    padding: 8px 10px;
+    background: rgba(0,0,0,.3);
+    flex: 1;
+    overflow-y: auto;
+}
+
+.ah-topTitle {
+    font-size: 9px;
+    color: rgba(150,80,255,.7);
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+}
+
+.ah-listItem {
+    font-size: 9px;
+    color: rgba(156,246,255,.65);
+    letter-spacing: .3px;
+    margin-bottom: 6px;
+    line-height: 1.5;
+    border-bottom: 1px solid rgba(150,80,255,.1);
+    padding-bottom: 5px;
+}
+
+.ah-listItem:last-child { border-bottom: none; margin-bottom: 0; }
+
+.ah-listScore { color: #bf7fff; font-weight: bold; }
+
+.ah-listLink {
+    color: #9cf6ff;
+    text-decoration: none;
+    letter-spacing: .3px;
+    transition: color .15s, text-shadow .15s;
+}
+
+.ah-listLink:hover {
+    color: #fff;
+    text-shadow: 0 0 8px #9cf6ff;
+    text-decoration: underline;
+}
+
+.ah-listMeta {
+    color: rgba(156,246,255,.45);
+    font-size: 8px;
+    letter-spacing: .2px;
+}
+
+#ah-runAgent {
+    padding: 10px;
+    background: linear-gradient(135deg, #220055, #1a003a);
+    color: #bf7fff;
+    border: 1.5px solid rgba(150,80,255,.5);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 11px;
+    letter-spacing: 1px;
+    transition: all .2s;
+    text-align: center;
+}
+
+#ah-runAgent:hover {
+    background: rgba(107,53,213,.35);
+    box-shadow: 0 0 12px rgba(107,53,213,.4);
+    color: white;
+}
+
+.ah-updateLine {
+    font-size: 8px !important;
+    color: rgba(150,80,255,.4) !important;
+    text-align: center;
+    letter-spacing: .5px;
+}

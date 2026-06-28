@@ -1,0 +1,7 @@
+{
+  "agent_id": "pod_manager",
+  "script_path": "agents/pod_manager/pod_manager.py",
+  "results_path": "data/pod_manager_results.json",
+  "enabled": true,
+  "version": "0.1.0-placeholder"
+}

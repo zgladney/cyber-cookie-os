@@ -1,0 +1,7 @@
+{
+  "agent_id": "savings_tracker",
+  "script_path": "agents/savings_tracker/savings_tracker.py",
+  "results_path": "data/savings_tracker_results.json",
+  "enabled": true,
+  "version": "0.1.0-placeholder"
+}

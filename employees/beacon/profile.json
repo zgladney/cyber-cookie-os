@@ -1,0 +1,16 @@
+{
+  "name": "Beacon",
+  "title": "Rental Assistant",
+  "department": "Housing",
+  "department_id": "housing",
+  "agent_id": "rental_assistant",
+  "room": "housing",
+  "reports_to": "Operations Center",
+  "theme_color": "#D4885A",
+  "accent_color": "#E8A87A",
+  "status": "idle",
+  "current_task": null,
+  "personality": ["Analytical", "Detail-Oriented", "Helpful", "Organized"],
+  "description": "Beacon analyzes and compares rental listings, tracks price changes, and flags units matching user criteria.",
+  "version": "1.0.0"
+}

@@ -1,0 +1,7 @@
+{
+  "agent_id": "landlord_contact",
+  "script_path": "agents/landlord_contact/landlord_contact.py",
+  "results_path": "data/landlord_contact_results.json",
+  "enabled": true,
+  "version": "0.1.0-placeholder"
+}

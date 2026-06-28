@@ -1,0 +1,12 @@
+{
+  "agent_id": "housing_scout",
+  "script_path": "agents/housing_scout_v2/housing_scout_browser.py",
+  "results_path": "data/housing_scout_v2_results.json",
+  "enabled": true,
+  "search_area": "Burlington County, NJ",
+  "max_rent": 2100,
+  "bedrooms_min": 2,
+  "pets": true,
+  "voucher": true,
+  "version": "2.0.0"
+}

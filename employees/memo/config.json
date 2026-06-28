@@ -1,0 +1,7 @@
+{
+  "agent_id": "reminder_assistant",
+  "script_path": "agents/reminder_assistant/reminder_assistant.py",
+  "results_path": "data/reminder_assistant_results.json",
+  "enabled": true,
+  "version": "0.1.0-placeholder"
+}

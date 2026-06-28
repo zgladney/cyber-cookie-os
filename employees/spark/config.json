@@ -1,0 +1,7 @@
+{
+  "agent_id": "tiktok_researcher",
+  "script_path": "agents/tiktok_researcher/tiktok_researcher.py",
+  "results_path": "data/tiktok_researcher_results.json",
+  "enabled": true,
+  "version": "0.1.0-placeholder"
+}

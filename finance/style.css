@@ -1,0 +1,221 @@
+/* =============================================
+   CYBERCOOKIEOS — FINANCE DEPARTMENT
+   Vibe: Emerald Dark — Gold Accents — Vault
+============================================= */
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: radial-gradient(ellipse at top, #001a08 0%, #020a04 70%);
+    overflow: hidden;
+    color: white;
+}
+
+#fn-app { width: 100vw; height: 100vh; padding: 14px 18px; display: flex; flex-direction: column; }
+
+#fn-topBar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-shrink: 0; }
+#fn-title { text-align: center; flex: 1; }
+
+#fn-title h1 {
+    margin: 0; font-size: 20px;
+    color: #2ECC71;
+    text-shadow: 0 0 24px #2ECC71, 0 0 60px rgba(46,204,113,.3);
+    letter-spacing: 4px;
+}
+
+#fn-title p { margin: 4px 0 0; font-size: 10px; color: rgba(80,200,120,.45); letter-spacing: 3px; }
+
+.fn-back {
+    font-size: 9px; color: rgba(46,204,113,.6);
+    text-decoration: none; letter-spacing: 1.5px;
+    border: 1px solid rgba(46,204,113,.25);
+    padding: 5px 12px; border-radius: 4px; transition: all .2s;
+}
+.fn-back:hover { color: #2ECC71; border-color: rgba(46,204,113,.6); box-shadow: 0 0 8px rgba(46,204,113,.2); }
+
+#fn-main { flex: 1; display: flex; gap: 14px; overflow: hidden; }
+
+#fn-room {
+    position: relative; width: 900px; height: 600px;
+    flex-shrink: 0;
+    border: 3px solid #27AE60; border-radius: 6px; overflow: hidden;
+    background: linear-gradient(180deg, #001508 0%, #000c04 100%);
+    box-shadow: 0 0 40px rgba(46,204,113,.2), inset 0 0 60px rgba(0,0,0,.6);
+}
+
+#fn-backWall {
+    position: absolute; left: 0; top: 0; width: 900px; height: 310px;
+    border-bottom: 3px solid rgba(46,204,113,.45);
+    background: linear-gradient(180deg, rgba(0,22,8,.9) 0%, rgba(0,14,5,.85) 100%);
+    z-index: 1;
+}
+
+#fn-neonSign {
+    position: absolute; left: 50%; top: 28px;
+    transform: translateX(-50%);
+    font-size: 26px; font-weight: bold; letter-spacing: 6px;
+    color: #2ECC71;
+    text-shadow: 0 0 20px #2ECC71, 0 0 50px rgba(46,204,113,.4);
+    animation: fnNeonFlicker 12s infinite;
+}
+
+@keyframes fnNeonFlicker { 0%, 93%, 100% { opacity: 1; } 94% { opacity: .6; } }
+
+#fn-subSign {
+    position: absolute; left: 50%; top: 68px;
+    transform: translateX(-50%);
+    font-size: 9px; letter-spacing: 3px; color: rgba(80,200,120,.4);
+}
+
+#fn-dashboardWall {
+    position: absolute; left: 50%; top: 90px;
+    transform: translateX(-50%);
+    width: 560px; background: rgba(0,12,4,.8);
+    border: 1px solid rgba(46,204,113,.3); border-radius: 8px; padding: 12px 14px;
+}
+
+.fn-wallTitle { font-size: 8px; letter-spacing: 2px; color: rgba(46,204,113,.6); margin-bottom: 10px; text-align: center; }
+
+.fn-dashGrid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; }
+
+.fn-dashTile {
+    background: rgba(0,20,8,.7); border: 1px solid rgba(46,204,113,.2);
+    border-radius: 5px; padding: 8px 7px;
+}
+
+.fn-t-budget  { border-color: rgba(46,204,113,.45); }
+.fn-t-bills   { border-color: rgba(255,200,60,.3); }
+.fn-t-savings { border-color: rgba(82,220,145,.4); }
+.fn-t-income  { border-color: rgba(46,204,113,.25); }
+
+.fn-tileLabel { font-size: 7px; letter-spacing: 1.5px; color: rgba(80,200,120,.5); margin-bottom: 5px; }
+
+.fn-tileVal { font-size: 10px; font-weight: bold; color: #2ECC71; margin-bottom: 5px; }
+.fn-tv-warn { color: #ffcc44; text-shadow: 0 0 6px rgba(255,200,60,.4); }
+.fn-tv-good { color: #52DC91; text-shadow: 0 0 6px rgba(82,220,145,.3); }
+
+.fn-tileNote { font-size: 7px; color: rgba(80,200,120,.4); letter-spacing: .3px; }
+
+.fn-tileBar { height: 4px; background: rgba(46,204,113,.15); border-radius: 2px; overflow: hidden; }
+.fn-tileBarFill { height: 100%; background: linear-gradient(90deg, #1A9955, #2ECC71); border-radius: 2px; }
+.fn-fill-green { background: linear-gradient(90deg, #2ECC71, #52DC91); }
+
+#fn-statusBar { position: absolute; bottom: 12px; left: 20px; display: flex; align-items: center; gap: 10px; }
+
+.fn-sLed { width: 7px; height: 7px; border-radius: 50%; animation: fnLedPulse 2s infinite alternate; }
+.led-green   { background: #2ECC71; box-shadow: 0 0 6px #2ECC71; }
+.led-emerald { background: #1A9955; box-shadow: 0 0 6px #1A9955; }
+@keyframes fnLedPulse { from { opacity: .4; } to { opacity: 1; } }
+
+.fn-sLabel { font-size: 8px; color: rgba(80,200,120,.5); letter-spacing: 1px; margin-right: 4px; }
+
+#fn-floor {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 290px;
+    background: linear-gradient(180deg, #001508 0%, #000c04 100%);
+    border-top: 2px solid rgba(46,204,113,.3); z-index: 2;
+}
+
+#fn-floorGlow {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 60px;
+    background: linear-gradient(0deg, rgba(46,204,113,.07) 0%, transparent 100%);
+    z-index: 4; pointer-events: none;
+}
+
+#fn-desk {
+    position: absolute; left: 220px; top: 330px; width: 380px; height: 70px;
+    background: linear-gradient(180deg, #001508, #000c04);
+    border: 2px solid rgba(46,204,113,.4); border-bottom: none; border-radius: 8px 8px 0 0;
+    z-index: 30; box-shadow: 0 0 18px rgba(46,204,113,.12);
+}
+
+#fn-monitor, #fn-monitor2 {
+    position: absolute; top: -80px; width: 75px; height: 58px;
+    background: rgba(0,8,3,.9); border: 1.5px solid rgba(46,204,113,.5); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; box-shadow: 0 0 14px rgba(46,204,113,.25);
+}
+#fn-monitor  { left: 16px; }
+#fn-monitor2 { left: 110px; }
+
+#fn-deskPlaque {
+    position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+    font-size: 8px; color: rgba(80,200,120,.55); letter-spacing: 2px; white-space: nowrap;
+}
+
+/* Vault door */
+#fn-vault {
+    position: absolute; right: 30px; top: 336px;
+    width: 120px; height: 140px; z-index: 20;
+    background: linear-gradient(180deg, #002008, #001505);
+    border: 3px solid rgba(46,204,113,.5);
+    border-radius: 8px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+    box-shadow: 0 0 20px rgba(46,204,113,.15), inset 0 0 20px rgba(0,0,0,.5);
+}
+
+.fn-vaultDial {
+    width: 50px; height: 50px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #2ECC71, #1A9955);
+    border: 3px solid rgba(46,204,113,.6);
+    box-shadow: 0 0 16px rgba(46,204,113,.4);
+    animation: vaultRotate 8s linear infinite;
+}
+
+@keyframes vaultRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+.fn-vaultLabel { font-size: 9px; letter-spacing: 3px; color: rgba(46,204,113,.6); }
+
+#fn-coins {
+    position: absolute; left: 640px; top: 490px;
+    font-size: 26px; z-index: 25;
+    filter: drop-shadow(0 0 10px rgba(255,215,0,.4));
+    animation: coinsGlow 3s ease-in-out infinite alternate;
+}
+@keyframes coinsGlow { from { filter: drop-shadow(0 0 6px rgba(255,215,0,.2)); } to { filter: drop-shadow(0 0 16px rgba(255,215,0,.6)); } }
+
+#fn-plant {
+    position: absolute; left: 30px; top: 460px;
+    font-size: 22px; z-index: 25;
+    filter: drop-shadow(0 0 8px rgba(46,204,113,.3));
+    animation: fnPlantSway 5s ease-in-out infinite alternate;
+    transform-origin: bottom center;
+}
+@keyframes fnPlantSway { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }
+
+#fn-exitArch {
+    position: absolute; left: 0; bottom: 0;
+    width: 80px; height: 240px;
+    background: linear-gradient(180deg, #000c04, #000602);
+    border-right: 2px solid rgba(46,204,113,.4); border-top: 2px solid rgba(46,204,113,.25);
+    border-radius: 0 28px 0 0; z-index: 22; padding: 22px 6px 0;
+}
+.fn-archSign { font-size: 7px; color: rgba(46,204,113,.5); letter-spacing: .5px; line-height: 2.2; }
+
+#fn-panel {
+    flex: 1; background: rgba(0,8,3,.9);
+    border: 2px solid rgba(46,204,113,.3); border-radius: 12px;
+    padding: 16px; display: flex; flex-direction: column; gap: 10px;
+    overflow-y: auto; min-width: 175px; max-width: 210px;
+    box-shadow: 0 0 24px rgba(46,204,113,.08);
+}
+
+#fn-panel h2 { margin: 0; font-size: 13px; color: #2ECC71; letter-spacing: 2px; text-shadow: 0 0 10px #2ECC71; }
+#fn-panel p  { margin: 0; font-size: 10px; color: rgba(80,200,120,.6); letter-spacing: .5px; }
+#fn-panel p span { color: #7dff9c; font-weight: bold; }
+
+.fn-empCard { border: 1px solid rgba(46,204,113,.2); border-radius: 7px; padding: 8px 10px; background: rgba(0,0,0,.25); }
+.fn-empName  { font-size: 11px; color: #2ECC71; font-weight: bold; letter-spacing: 1px; margin-bottom: 2px; }
+.fn-empTitle { font-size: 8px; color: rgba(80,200,120,.45); letter-spacing: .5px; margin-bottom: 5px; }
+.fn-empStatus { font-size: 7px; letter-spacing: 1.5px; }
+.fn-s-idle { color: rgba(156,246,255,.6); }
+
+.fn-navLinks { margin-top: auto; display: flex; flex-direction: column; gap: 6px; }
+.fn-navLink {
+    display: block; font-size: 9px; color: rgba(46,204,113,.5);
+    text-decoration: none; letter-spacing: .5px;
+    padding: 6px 10px; border: 1px solid rgba(46,204,113,.2);
+    border-radius: 4px; transition: all .2s; text-align: center;
+}
+.fn-navLink:hover { color: #2ECC71; border-color: rgba(46,204,113,.5); background: rgba(46,204,113,.05); }

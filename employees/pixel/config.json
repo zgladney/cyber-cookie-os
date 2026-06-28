@@ -1,0 +1,7 @@
+{
+  "agent_id": "trend_hunter",
+  "script_path": "agents/trend_hunter/trend_hunter.py",
+  "results_path": "data/trend_results.json",
+  "enabled": true,
+  "version": "0.1.0-skeleton"
+}

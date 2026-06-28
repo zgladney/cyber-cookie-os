@@ -1,0 +1,7 @@
+{
+  "agent_id": "budget_planner",
+  "script_path": "agents/budget_planner/budget_planner.py",
+  "results_path": "data/budget_planner_results.json",
+  "enabled": true,
+  "version": "0.1.0-placeholder"
+}

@@ -1,0 +1,7 @@
+{
+  "agent_id": "etsy_manager",
+  "script_path": "agents/etsy_manager/etsy_manager.py",
+  "results_path": "data/etsy_manager_results.json",
+  "enabled": true,
+  "version": "0.1.0-placeholder"
+}

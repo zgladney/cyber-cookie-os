@@ -1,0 +1,7 @@
+{
+  "agent_id": "task_manager",
+  "script_path": "agents/task_manager/task_manager.py",
+  "results_path": "data/task_manager_results.json",
+  "enabled": true,
+  "version": "0.1.0-placeholder"
+}

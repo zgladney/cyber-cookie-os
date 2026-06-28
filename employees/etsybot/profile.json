@@ -1,0 +1,16 @@
+{
+  "name": "EtsyBot",
+  "title": "Etsy Manager",
+  "department": "Commerce",
+  "department_id": "commerce",
+  "agent_id": "etsy_manager",
+  "room": "commerce",
+  "reports_to": "Operations Center",
+  "theme_color": "#FF4DA6",
+  "accent_color": "#FF80C0",
+  "status": "idle",
+  "current_task": null,
+  "personality": ["Efficient", "Sales-Focused", "Optimizing", "Strategic"],
+  "description": "EtsyBot manages Etsy shop listings, monitors performance metrics, and researches competitor pricing.",
+  "version": "1.0.0"
+}
