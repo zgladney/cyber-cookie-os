@@ -1,0 +1,449 @@
+{
+  "version": "2.0",
+  "last_updated": "2026-06-27T00:00:00",
+  "departments": [
+    { "id": "security",    "name": "Security Operations Center", "theme_color": "#6B35D5", "accent_color": "#9B6BFF", "room": "hq" },
+    { "id": "housing",     "name": "Housing Department",          "theme_color": "#C4784A", "accent_color": "#E8986A", "room": "apartment" },
+    { "id": "commerce",    "name": "Commerce Department",         "theme_color": "#FF69B4", "accent_color": "#FF99CC", "room": "commerce" },
+    { "id": "productivity","name": "Productivity Department",     "theme_color": "#3AA8C8", "accent_color": "#7EC8E3", "room": "productivity" },
+    { "id": "finance",     "name": "Finance Department",          "theme_color": "#2ECC71", "accent_color": "#52DC91", "room": "finance" }
+  ],
+  "agents": [
+    {
+      "id": "threat_hunter",
+      "name": "Threat Hunter",
+      "title": "Senior Threat Analyst",
+      "department": "security",
+      "room": "hq",
+      "description": "Analyzes IP addresses, classifies threats, assigns scores, and manages security investigation cases.",
+      "primary_duties": [
+        "Scan and classify IPv4 and IPv6 addresses",
+        "Assign threat scores and severity levels",
+        "Open and manage investigation cases",
+        "Generate alerts and recommendations"
+      ],
+      "secondary_duties": [
+        "Maintain scan history and case archive",
+        "Cross-reference against trusted resolver lists",
+        "Flag documentation and reserved IPs in live traffic"
+      ],
+      "script_path": "agents/threat_hunter/threat_hunter.py",
+      "results_path": "data/scan_log.json",
+      "animation_state": "active",
+      "theme_color": "#8B45E8",
+      "enabled": true,
+      "version": "6.1.0"
+    },
+    {
+      "id": "cloud_monitor",
+      "name": "Cloud Monitor",
+      "title": "Cloud Security Specialist",
+      "department": "security",
+      "room": "hq",
+      "description": "Monitors cloud infrastructure events, detects cost anomalies, and surfaces security alerts from cloud providers.",
+      "primary_duties": [
+        "Monitor cloud infrastructure and security events",
+        "Detect IAM anomalies and unauthorized access",
+        "Track cloud cost spikes and usage patterns",
+        "Surface dependency security vulnerabilities"
+      ],
+      "secondary_duties": [
+        "Correlate cloud events with SOC alerts",
+        "Generate cloud health summaries"
+      ],
+      "script_path": "agents/cloud_monitor/cloud_monitor.py",
+      "results_path": "data/cloud_monitor_results.json",
+      "animation_state": "active",
+      "theme_color": "#6B35D5",
+      "enabled": true,
+      "version": "0.1.0-skeleton"
+    },
+    {
+      "id": "soc_analyst",
+      "name": "SOC Analyst",
+      "title": "Security Operations Analyst",
+      "department": "security",
+      "room": null,
+      "description": "Monitors security dashboards, correlates alerts from multiple sources, and investigates anomalous activity.",
+      "primary_duties": [
+        "Monitor SIEM dashboards and security feeds",
+        "Correlate alerts from multiple sources",
+        "Investigate anomalous activity and escalate threats",
+        "Generate daily security summary reports"
+      ],
+      "secondary_duties": [
+        "Assist Threat Hunter with analysis",
+        "Document incident timelines",
+        "Maintain security runbooks"
+      ],
+      "script_path": "agents/soc_analyst/soc_analyst.py",
+      "results_path": "data/soc_analyst_results.json",
+      "animation_state": "placeholder",
+      "theme_color": "#9B55F8",
+      "enabled": true,
+      "version": "0.1.0-placeholder"
+    },
+    {
+      "id": "housing_scout",
+      "name": "Housing Scout",
+      "title": "Property Search Specialist",
+      "department": "housing",
+      "room": "apartment",
+      "description": "Scrapes accessible housing sites, filters listings to match user criteria, and identifies verified direct listing URLs.",
+      "primary_duties": [
+        "Scout accessible real estate and rental sites",
+        "Filter listings by budget, bedrooms, pets, and vouchers",
+        "Classify and document blocked data sources",
+        "Identify verified direct property listing URLs"
+      ],
+      "secondary_duties": [
+        "Track price changes across revisited sources",
+        "Screenshot and archive source pages",
+        "Document bot-blocked domains to avoid"
+      ],
+      "script_path": "agents/housing_scout_v2/housing_scout_browser.py",
+      "results_path": "data/housing_scout_v2_results.json",
+      "animation_state": "active",
+      "theme_color": "#C4784A",
+      "enabled": true,
+      "version": "2.0.0"
+    },
+    {
+      "id": "rental_assistant",
+      "name": "Rental Assistant",
+      "title": "Listings Analyst",
+      "department": "housing",
+      "room": null,
+      "description": "Analyzes and compares rental listings, tracks price changes, and flags units matching user criteria.",
+      "primary_duties": [
+        "Analyze rental listings from all active sources",
+        "Compare properties side-by-side on key criteria",
+        "Track listing price drops and availability changes",
+        "Flag voucher-friendly and pet-friendly units"
+      ],
+      "secondary_duties": [
+        "Maintain a prioritized favorites list",
+        "Monitor listing expiration dates",
+        "Score listings against user-defined criteria"
+      ],
+      "script_path": "agents/rental_assistant/rental_assistant.py",
+      "results_path": "data/rental_assistant_results.json",
+      "animation_state": "placeholder",
+      "theme_color": "#D4885A",
+      "enabled": true,
+      "version": "0.1.0-placeholder"
+    },
+    {
+      "id": "landlord_contact",
+      "name": "Landlord Contact",
+      "title": "Outreach Coordinator",
+      "department": "housing",
+      "room": null,
+      "description": "Handles landlord outreach, drafts contact emails, and tracks all communication history.",
+      "primary_duties": [
+        "Draft professional contact emails to landlords",
+        "Track outreach status per listing",
+        "Log landlord responses and schedule follow-ups",
+        "Coordinate viewing appointment scheduling"
+      ],
+      "secondary_duties": [
+        "Research landlord and property management reputation",
+        "Maintain full contact history log"
+      ],
+      "script_path": "agents/landlord_contact/landlord_contact.py",
+      "results_path": "data/landlord_contact_results.json",
+      "animation_state": "placeholder",
+      "theme_color": "#C87040",
+      "enabled": true,
+      "version": "0.1.0-placeholder"
+    },
+    {
+      "id": "trend_hunter",
+      "name": "Trend Hunter",
+      "title": "Market Trend Analyst",
+      "department": "commerce",
+      "room": null,
+      "description": "Monitors Etsy and TikTok for emerging product trends and business opportunities.",
+      "primary_duties": [
+        "Identify trending products and categories on Etsy",
+        "Scout viral content and products on TikTok",
+        "Score trends by momentum and relevance",
+        "Generate trend reports with business recommendations"
+      ],
+      "secondary_duties": [
+        "Track seasonal demand shifts",
+        "Monitor competitor trend responses"
+      ],
+      "script_path": "agents/trend_hunter/trend_hunter.py",
+      "results_path": "data/trend_results.json",
+      "animation_state": "active",
+      "theme_color": "#FF69B4",
+      "enabled": true,
+      "version": "0.1.0-skeleton"
+    },
+    {
+      "id": "etsy_manager",
+      "name": "Etsy Manager",
+      "title": "Shop & Listing Specialist",
+      "department": "commerce",
+      "room": null,
+      "description": "Manages Etsy shop listings, monitors performance metrics, and researches competitor pricing.",
+      "primary_duties": [
+        "Manage and update active Etsy listings",
+        "Monitor shop traffic, sales, and conversion rates",
+        "Research competitor pricing and positioning",
+        "Draft and optimize listing titles and descriptions"
+      ],
+      "secondary_duties": [
+        "Track seasonal demand patterns",
+        "Identify and refresh underperforming listings"
+      ],
+      "script_path": "agents/etsy_manager/etsy_manager.py",
+      "results_path": "data/etsy_manager_results.json",
+      "animation_state": "placeholder",
+      "theme_color": "#FF4DA6",
+      "enabled": true,
+      "version": "0.1.0-placeholder"
+    },
+    {
+      "id": "tiktok_researcher",
+      "name": "TikTok Researcher",
+      "title": "Content Trend Scout",
+      "department": "commerce",
+      "room": null,
+      "description": "Scouts trending TikTok sounds, hashtags, and viral product opportunities.",
+      "primary_duties": [
+        "Scout trending sounds, hashtags, and challenges",
+        "Identify viral product opportunities in target niches",
+        "Research competitor content and engagement patterns",
+        "Log trend patterns with timestamps"
+      ],
+      "secondary_duties": [
+        "Track trending creators in relevant niches",
+        "Monitor niche communities for emerging demand"
+      ],
+      "script_path": "agents/tiktok_researcher/tiktok_researcher.py",
+      "results_path": "data/tiktok_researcher_results.json",
+      "animation_state": "placeholder",
+      "theme_color": "#FF85C8",
+      "enabled": true,
+      "version": "0.1.0-placeholder"
+    },
+    {
+      "id": "pod_manager",
+      "name": "POD Manager",
+      "title": "Print-on-Demand Specialist",
+      "department": "commerce",
+      "room": null,
+      "description": "Manages the print-on-demand product pipeline from design concept to live listing.",
+      "primary_duties": [
+        "Track product design pipeline status",
+        "Coordinate design-to-listing workflow",
+        "Research winning POD design categories",
+        "Monitor POD platform performance metrics"
+      ],
+      "secondary_duties": [
+        "Track production costs vs revenue margins",
+        "Monitor platform fees and policy changes"
+      ],
+      "script_path": "agents/pod_manager/pod_manager.py",
+      "results_path": "data/pod_manager_results.json",
+      "animation_state": "placeholder",
+      "theme_color": "#FF2D78",
+      "enabled": true,
+      "version": "0.1.0-placeholder"
+    },
+    {
+      "id": "calendar_assistant",
+      "name": "Calendar Assistant",
+      "title": "Schedule Coordinator",
+      "department": "productivity",
+      "room": null,
+      "description": "Manages schedules, generates reminders, and keeps daily planning organized.",
+      "primary_duties": [
+        "Generate daily and weekly schedule summaries",
+        "Create reminders for upcoming deadlines",
+        "Organize events across personal, work, and goals calendars",
+        "Alert on scheduling conflicts"
+      ],
+      "secondary_duties": [
+        "Suggest optimal time blocks for focused work",
+        "Archive completed calendar events"
+      ],
+      "script_path": "agents/calendar_assistant/calendar_assistant.py",
+      "results_path": "data/calendar_results.json",
+      "animation_state": "active",
+      "theme_color": "#3AA8C8",
+      "enabled": true,
+      "version": "0.1.0-skeleton"
+    },
+    {
+      "id": "email_assistant",
+      "name": "Email Assistant",
+      "title": "Communications Specialist",
+      "department": "productivity",
+      "room": null,
+      "description": "Organizes incoming emails by priority, drafts reply templates, and flags time-sensitive messages.",
+      "primary_duties": [
+        "Organize incoming emails by urgency and category",
+        "Draft response templates for common message types",
+        "Flag time-sensitive and high-priority messages",
+        "Archive and categorize processed emails"
+      ],
+      "secondary_duties": [
+        "Identify and unsubscribe from low-value mailing lists",
+        "Maintain an updated contact directory"
+      ],
+      "script_path": "agents/email_assistant/email_assistant.py",
+      "results_path": "data/email_assistant_results.json",
+      "animation_state": "placeholder",
+      "theme_color": "#5BB8D4",
+      "enabled": true,
+      "version": "0.1.0-placeholder"
+    },
+    {
+      "id": "task_manager",
+      "name": "Task Manager",
+      "title": "Project Coordinator",
+      "department": "productivity",
+      "room": null,
+      "description": "Tracks open tasks across all departments, monitors deadlines, and generates daily progress reports.",
+      "primary_duties": [
+        "Track open tasks across all CyberCookieOS departments",
+        "Set and enforce task priorities",
+        "Monitor upcoming deadlines and send alerts",
+        "Generate daily task completion reports"
+      ],
+      "secondary_duties": [
+        "Flag overdue and stalled tasks",
+        "Coordinate task handoffs between agents"
+      ],
+      "script_path": "agents/task_manager/task_manager.py",
+      "results_path": "data/task_manager_results.json",
+      "animation_state": "placeholder",
+      "theme_color": "#96D8F0",
+      "enabled": true,
+      "version": "0.1.0-placeholder"
+    },
+    {
+      "id": "reminder_assistant",
+      "name": "Reminder Assistant",
+      "title": "Alert Specialist",
+      "department": "productivity",
+      "room": null,
+      "description": "Manages time-based reminders, handles recurring alerts, and ensures nothing important is missed.",
+      "primary_duties": [
+        "Set and manage time-based reminders",
+        "Monitor and trigger recurring task alerts",
+        "Log all reminder deliveries and acknowledgments",
+        "Handle snooze and reschedule requests"
+      ],
+      "secondary_duties": [
+        "Suggest optimal reminder timing based on patterns",
+        "Escalate unacknowledged high-priority reminders"
+      ],
+      "script_path": "agents/reminder_assistant/reminder_assistant.py",
+      "results_path": "data/reminder_assistant_results.json",
+      "animation_state": "placeholder",
+      "theme_color": "#2890A8",
+      "enabled": true,
+      "version": "0.1.0-placeholder"
+    },
+    {
+      "id": "finance_manager",
+      "name": "Finance Manager",
+      "title": "Financial Operations Lead",
+      "department": "finance",
+      "room": null,
+      "description": "Oversees all financial operations, generates summaries, and coordinates the Finance Department.",
+      "primary_duties": [
+        "Generate monthly income vs expense summaries",
+        "Track all revenue streams and income sources",
+        "Monitor overall financial health and budget adherence",
+        "Flag unusual transactions and spending anomalies"
+      ],
+      "secondary_duties": [
+        "Forecast next-month spending based on trends",
+        "Coordinate Bill Tracker, Budget Planner, and Savings Tracker"
+      ],
+      "script_path": "agents/finance_manager/finance_manager.py",
+      "results_path": "data/finance_manager_results.json",
+      "animation_state": "placeholder",
+      "theme_color": "#2ECC71",
+      "enabled": true,
+      "version": "0.1.0-placeholder"
+    },
+    {
+      "id": "bill_tracker",
+      "name": "Bill Tracker",
+      "title": "Expense Monitor",
+      "department": "finance",
+      "room": null,
+      "description": "Tracks all recurring bills, monitors due dates, and logs payment history.",
+      "primary_duties": [
+        "Track all recurring bills and their due dates",
+        "Flag payments due within the next 7 days",
+        "Log payment confirmations and history",
+        "Monitor subscription and service costs"
+      ],
+      "secondary_duties": [
+        "Identify duplicate or unused subscriptions",
+        "Alert on subscription price increases"
+      ],
+      "script_path": "agents/bill_tracker/bill_tracker.py",
+      "results_path": "data/bill_tracker_results.json",
+      "animation_state": "placeholder",
+      "theme_color": "#27AE60",
+      "enabled": true,
+      "version": "0.1.0-placeholder"
+    },
+    {
+      "id": "budget_planner",
+      "name": "Budget Planner",
+      "title": "Budget Analyst",
+      "department": "finance",
+      "room": null,
+      "description": "Sets and monitors monthly category budgets, tracks spending, and generates budget vs actual reports.",
+      "primary_duties": [
+        "Set monthly category budgets",
+        "Track spending by category in real time",
+        "Generate budget vs actual comparison reports",
+        "Flag categories approaching or over budget"
+      ],
+      "secondary_duties": [
+        "Suggest budget adjustments based on trends",
+        "Identify categories with consistent savings opportunities"
+      ],
+      "script_path": "agents/budget_planner/budget_planner.py",
+      "results_path": "data/budget_planner_results.json",
+      "animation_state": "placeholder",
+      "theme_color": "#52DC91",
+      "enabled": true,
+      "version": "0.1.0-placeholder"
+    },
+    {
+      "id": "savings_tracker",
+      "name": "Savings Tracker",
+      "title": "Wealth Growth Monitor",
+      "department": "finance",
+      "room": null,
+      "description": "Tracks progress toward savings goals, monitors balances, and celebrates financial milestones.",
+      "primary_duties": [
+        "Track progress toward defined savings goals",
+        "Monitor savings account balance changes",
+        "Calculate estimated time to reach each goal",
+        "Log and celebrate savings milestones"
+      ],
+      "secondary_duties": [
+        "Suggest additional savings strategies",
+        "Monitor high-yield savings rate opportunities"
+      ],
+      "script_path": "agents/savings_tracker/savings_tracker.py",
+      "results_path": "data/savings_tracker_results.json",
+      "animation_state": "placeholder",
+      "theme_color": "#1A9955",
+      "enabled": true,
+      "version": "0.1.0-placeholder"
+    }
+  ]
+}

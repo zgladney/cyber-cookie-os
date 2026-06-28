@@ -1,0 +1,42 @@
+{
+  "agent_id": "budget_planner",
+  "agent_name": "Budget Planner",
+  "title": "Budget Analyst",
+  "version": "0.1.0-placeholder",
+  "department": "finance",
+  "results_path": "data/budget_planner_results.json",
+  "status_path": "data/agent_status.json",
+  "sample_data": {
+    "result_key": "categories",
+    "items": [
+      {
+        "category": "Housing",
+        "budgeted": 1500.0,
+        "spent": 1500.0,
+        "remaining": 0.0,
+        "status": "on_budget"
+      },
+      {
+        "category": "Food & Groceries",
+        "budgeted": 400.0,
+        "spent": 285.0,
+        "remaining": 115.0,
+        "status": "under_budget"
+      },
+      {
+        "category": "Transportation",
+        "budgeted": 200.0,
+        "spent": 175.0,
+        "remaining": 25.0,
+        "status": "under_budget"
+      },
+      {
+        "category": "Entertainment",
+        "budgeted": 100.0,
+        "spent": 118.0,
+        "remaining": -18.0,
+        "status": "over_budget"
+      }
+    ]
+  }
+}

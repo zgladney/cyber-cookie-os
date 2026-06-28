@@ -1,0 +1,30 @@
+{
+  "data_notice": "SAMPLE DATA - FOR TESTING ONLY",
+  "generated_at": "2026-06-27T21:35:12.243937",
+  "agent": "SOC Analyst",
+  "version": "0.1.0-placeholder",
+  "count": 3,
+  "alerts": [
+    {
+      "alert_id": "ALT-001",
+      "severity": "medium",
+      "source": "SIEM",
+      "title": "Anomalous login attempt from new IP",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "alert_id": "ALT-002",
+      "severity": "low",
+      "source": "Firewall",
+      "title": "Port scan detected on subnet",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "alert_id": "ALT-003",
+      "severity": "high",
+      "source": "Cloud Monitor",
+      "title": "IAM privilege escalation attempt",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    }
+  ]
+}

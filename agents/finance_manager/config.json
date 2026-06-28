@@ -1,0 +1,22 @@
+{
+  "agent_id": "finance_manager",
+  "agent_name": "Finance Manager",
+  "title": "Financial Operations Lead",
+  "version": "0.1.0-placeholder",
+  "department": "finance",
+  "results_path": "data/finance_manager_results.json",
+  "status_path": "data/agent_status.json",
+  "sample_data": {
+    "result_key": "reports",
+    "items": [
+      {
+        "report_id": "FIN-001",
+        "period": "June 2026",
+        "income": 3200.0,
+        "expenses": 2650.0,
+        "net": 550.0,
+        "savings_rate": "17.2%"
+      }
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "agent_id": "pod_manager",
+  "agent_name": "POD Manager",
+  "title": "Print-on-Demand Specialist",
+  "version": "0.1.0-placeholder",
+  "department": "commerce",
+  "results_path": "data/pod_manager_results.json",
+  "status_path": "data/agent_status.json",
+  "sample_data": {
+    "result_key": "products",
+    "items": [
+      {
+        "product_id": "POD-001",
+        "title": "Affirmation Mug - Pink Edition",
+        "platform": "Printify",
+        "status": "design_in_progress"
+      },
+      {
+        "product_id": "POD-002",
+        "title": "Kawaii Tote Bag",
+        "platform": "Printful",
+        "status": "live",
+        "monthly_revenue": 42.0
+      },
+      {
+        "product_id": "POD-003",
+        "title": "Motivational Poster Set",
+        "platform": "Printify",
+        "status": "design_pending"
+      }
+    ]
+  }
+}

@@ -1,0 +1,116 @@
+[
+  {
+    "searched_url": "https://www.zillow.com/willingboro-nj/rentals/",
+    "final_url": "https://www.zillow.com/willingboro-nj/rentals/",
+    "status": "VISITED_WITH_BROWSER",
+    "screenshot": "data/housing_scout_screenshots/housing_search_1_20260627_202848.png",
+    "searched_at": "2026-06-27T20:29:02.183279"
+  },
+  {
+    "searched_url": "https://www.zillow.com/mount-laurel-township-nj/rentals/",
+    "final_url": "https://www.zillow.com/mount-laurel-township-nj/rentals/",
+    "status": "VISITED_WITH_BROWSER",
+    "screenshot": "data/housing_scout_screenshots/housing_search_2_20260627_202910.png",
+    "searched_at": "2026-06-27T20:29:22.647918"
+  },
+  {
+    "searched_url": "https://www.zillow.com/marlton-nj/rentals/",
+    "final_url": "https://www.zillow.com/marlton-nj/rentals/",
+    "status": "VISITED_WITH_BROWSER",
+    "screenshot": "data/housing_scout_screenshots/housing_search_3_20260627_202928.png",
+    "searched_at": "2026-06-27T20:29:30.395318"
+  },
+  {
+    "searched_url": "https://www.zillow.com/southampton-nj/rentals/",
+    "final_url": "https://www.zillow.com/southampton-nj/rentals/",
+    "status": "VISITED_WITH_BROWSER",
+    "screenshot": "data/housing_scout_screenshots/housing_search_4_20260627_202936.png",
+    "searched_at": "2026-06-27T20:29:40.848365"
+  },
+  {
+    "started_at": "2026-06-27T20:38:39.157631",
+    "manual_url_count": 1,
+    "known_blocked_domains": [
+      "zillow.com",
+      "trulia.com",
+      "realtor.com",
+      "redfin.com",
+      "homes.com",
+      "apartments.com",
+      "rent.com"
+    ],
+    "source_results": [
+      {
+        "source_name": "AffordableHousing.com — Willingboro",
+        "source_url": "https://www.affordablehousing.com/willingboro-nj/",
+        "source_status": "BLOCKED_BY_BOT_CHECK",
+        "block_reason": "Bot indicator on page: 'captcha'",
+        "listings": [],
+        "screenshot": "C:\\Users\\zglad\\OneDrive\\Documents\\CyberCookieOS\\data\\housing_scout_screenshots\\affordablehousing_com_willingboro_20260627_203856.png",
+        "scraped_at": "2026-06-27T20:38:44.640632"
+      },
+      {
+        "source_name": "AffordableHousing.com — Mount Laurel",
+        "source_url": "https://www.affordablehousing.com/mount-laurel-nj/",
+        "source_status": "BLOCKED_BY_BOT_CHECK",
+        "block_reason": "Bot indicator on page: 'captcha'",
+        "listings": [],
+        "screenshot": "C:\\Users\\zglad\\OneDrive\\Documents\\CyberCookieOS\\data\\housing_scout_screenshots\\affordablehousing_com_mount_laurel_20260627_203913.png",
+        "scraped_at": "2026-06-27T20:39:07.407255"
+      },
+      {
+        "source_name": "AffordableHousing.com — Marlton",
+        "source_url": "https://www.affordablehousing.com/marlton-nj/",
+        "source_status": "BLOCKED_BY_BOT_CHECK",
+        "block_reason": "Bot indicator on page: 'captcha'",
+        "listings": [],
+        "screenshot": "C:\\Users\\zglad\\OneDrive\\Documents\\CyberCookieOS\\data\\housing_scout_screenshots\\affordablehousing_com_marlton_20260627_203920.png",
+        "scraped_at": "2026-06-27T20:39:14.061973"
+      },
+      {
+        "source_name": "AffordableHousing.com — Southampton",
+        "source_url": "https://www.affordablehousing.com/southampton-nj/",
+        "source_status": "BLOCKED_BY_BOT_CHECK",
+        "block_reason": "Bot indicator on page: 'captcha'",
+        "listings": [],
+        "screenshot": "C:\\Users\\zglad\\OneDrive\\Documents\\CyberCookieOS\\data\\housing_scout_screenshots\\affordablehousing_com_southampton_20260627_203944.png",
+        "scraped_at": "2026-06-27T20:39:30.858481"
+      },
+      {
+        "source_name": "Craigslist Philadelphia — Housing for Rent",
+        "source_url": "https://philadelphia.craigslist.org/search/hhh?query=willingboro+OR+%22mount+laurel%22+OR+marlton+OR+southampton&min_price=1000&max_price=2100",
+        "source_status": "ACCESSIBLE",
+        "block_reason": null,
+        "listings": [],
+        "screenshot": "C:\\Users\\zglad\\OneDrive\\Documents\\CyberCookieOS\\data\\housing_scout_screenshots\\craigslist_philadelphia_housing_for_rent_20260627_203952.png",
+        "scraped_at": "2026-06-27T20:39:47.769794"
+      },
+      {
+        "source_name": "Craigslist Philadelphia — Apts/Houses",
+        "source_url": "https://philadelphia.craigslist.org/search/apa?query=willingboro+OR+%22mount+laurel%22+OR+marlton+OR+southampton&min_price=1000&max_price=2100&bedrooms=2",
+        "source_status": "ACCESSIBLE",
+        "block_reason": null,
+        "listings": [],
+        "screenshot": "C:\\Users\\zglad\\OneDrive\\Documents\\CyberCookieOS\\data\\housing_scout_screenshots\\craigslist_philadelphia_apts_houses_20260627_203956.png",
+        "scraped_at": "2026-06-27T20:39:53.303663"
+      }
+    ],
+    "manual_listings": [
+      {
+        "listing_url": "https://www.trulia.com/home/103-dorset-dr-marlton-nj-08053-38101814",
+        "url_class": "VERIFIED",
+        "source_site": "www.trulia.com",
+        "source_status": "MANUAL_DIRECT_URL",
+        "passes_filters": true,
+        "filter_failure": null,
+        "raw_text": "Manual: https://www.trulia.com/home/103-dorset-dr-marlton-nj-08053-38101814",
+        "city": "Unknown",
+        "property_type": "unknown",
+        "bedrooms": null,
+        "bathrooms": null,
+        "rent": null
+      }
+    ],
+    "finished_at": "2026-06-27T20:39:59.377670"
+  }
+]

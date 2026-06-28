@@ -1,0 +1,36 @@
+{
+  "data_notice": "SAMPLE DATA - FOR TESTING ONLY",
+  "generated_at": "2026-06-27T21:35:15.046237",
+  "agent": "Task Manager",
+  "version": "0.1.0-placeholder",
+  "count": 3,
+  "tasks": [
+    {
+      "task_id": "TSK-001",
+      "title": "Submit housing application - Marlton unit",
+      "priority": "high",
+      "due": "2026-06-30",
+      "status": "in_progress",
+      "department": "housing",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "task_id": "TSK-002",
+      "title": "Upload 3 new Etsy listings",
+      "priority": "medium",
+      "due": "2026-07-01",
+      "status": "open",
+      "department": "commerce",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "task_id": "TSK-003",
+      "title": "Review monthly budget",
+      "priority": "medium",
+      "due": "2026-06-28",
+      "status": "open",
+      "department": "finance",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    }
+  ]
+}

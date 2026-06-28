@@ -1,0 +1,32 @@
+{
+  "agent_id": "soc_analyst",
+  "agent_name": "SOC Analyst",
+  "title": "Security Operations Analyst",
+  "version": "0.1.0-placeholder",
+  "department": "security",
+  "results_path": "data/soc_analyst_results.json",
+  "status_path": "data/agent_status.json",
+  "sample_data": {
+    "result_key": "alerts",
+    "items": [
+      {
+        "alert_id": "ALT-001",
+        "severity": "medium",
+        "source": "SIEM",
+        "title": "Anomalous login attempt from new IP"
+      },
+      {
+        "alert_id": "ALT-002",
+        "severity": "low",
+        "source": "Firewall",
+        "title": "Port scan detected on subnet"
+      },
+      {
+        "alert_id": "ALT-003",
+        "severity": "high",
+        "source": "Cloud Monitor",
+        "title": "IAM privilege escalation attempt"
+      }
+    ]
+  }
+}

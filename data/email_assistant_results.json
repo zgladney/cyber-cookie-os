@@ -1,0 +1,33 @@
+{
+  "data_notice": "SAMPLE DATA - FOR TESTING ONLY",
+  "generated_at": "2026-06-27T21:35:14.070637",
+  "agent": "Email Assistant",
+  "version": "0.1.0-placeholder",
+  "count": 3,
+  "emails": [
+    {
+      "email_id": "EML-001",
+      "subject": "Apartment viewing - 14 Oak Court",
+      "priority": "high",
+      "action": "confirm",
+      "category": "housing",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "email_id": "EML-002",
+      "subject": "Etsy order received - Sticker Bundle",
+      "priority": "medium",
+      "action": "process",
+      "category": "commerce",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "email_id": "EML-003",
+      "subject": "Your monthly bank statement",
+      "priority": "low",
+      "action": "archive",
+      "category": "finance",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    }
+  ]
+}

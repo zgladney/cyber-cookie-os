@@ -1,0 +1,45 @@
+{
+  "data_notice": "SAMPLE DATA - FOR TESTING ONLY",
+  "generated_at": "2026-06-27T21:11:45.128410",
+  "agent": "Cloud Monitor",
+  "version": "0.1.0-skeleton",
+  "sources_planned": [
+    "aws_cloudwatch",
+    "github_security"
+  ],
+  "event_count": 3,
+  "critical_count": 1,
+  "unresolved_count": 2,
+  "events": [
+    {
+      "event_id": "evt_001",
+      "type": "security",
+      "severity": "medium",
+      "title": "IAM login from new location",
+      "source": "aws_cloudwatch",
+      "timestamp": "2026-06-27T20:11:45.128093",
+      "resolved": false,
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "event_id": "evt_002",
+      "type": "cost",
+      "severity": "low",
+      "title": "S3 data transfer spike (+18%)",
+      "source": "aws_cloudwatch",
+      "timestamp": "2026-06-27T18:11:45.128093",
+      "resolved": true,
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "event_id": "evt_003",
+      "type": "security",
+      "severity": "high",
+      "title": "Dependabot: critical CVE in dependency",
+      "source": "github_security",
+      "timestamp": "2026-06-27T15:11:45.128093",
+      "resolved": false,
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    }
+  ]
+}

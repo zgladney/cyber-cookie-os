@@ -1,0 +1,25 @@
+{
+  "data_notice": "SAMPLE DATA - FOR TESTING ONLY",
+  "generated_at": "2026-06-27T21:35:12.642478",
+  "agent": "Landlord Contact",
+  "version": "0.1.0-placeholder",
+  "count": 2,
+  "contacts": [
+    {
+      "contact_id": "CON-001",
+      "name": "Sunrise Properties LLC",
+      "property": "14 Oak Court",
+      "last_contact": "2026-06-25",
+      "status": "awaiting_response",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "contact_id": "CON-002",
+      "name": "J. Williams",
+      "property": "77 Willow Dr",
+      "last_contact": "2026-06-24",
+      "status": "viewing_scheduled",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    }
+  ]
+}

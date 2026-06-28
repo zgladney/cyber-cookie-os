@@ -1,0 +1,38 @@
+{
+  "agent_id": "tiktok_researcher",
+  "agent_name": "TikTok Researcher",
+  "title": "Content Trend Scout",
+  "version": "0.1.0-placeholder",
+  "department": "commerce",
+  "results_path": "data/tiktok_researcher_results.json",
+  "status_path": "data/agent_status.json",
+  "sample_data": {
+    "result_key": "trends",
+    "items": [
+      {
+        "trend_id": "TIK-001",
+        "type": "hashtag",
+        "tag": "#digitalplanner",
+        "views": "892M",
+        "momentum": "rising",
+        "relevance": "high"
+      },
+      {
+        "trend_id": "TIK-002",
+        "type": "product",
+        "tag": "printable affirmations",
+        "views": "44M",
+        "momentum": "stable",
+        "relevance": "high"
+      },
+      {
+        "trend_id": "TIK-003",
+        "type": "sound",
+        "tag": "cozy productive beats",
+        "views": "120M",
+        "momentum": "rising",
+        "relevance": "medium"
+      }
+    ]
+  }
+}

@@ -83,10 +83,12 @@ function initializeThreatHunter() {
                 clearFeed();
 
                 scans.forEach(function (scan) {
+                    const ver = scan.ip_version ? " [IPv" + scan.ip_version + "]" : "";
                     addEvent(
                         "Case #" + String(scan.case_id).padStart(4, "0") +
                         " | " + scan.timestamp +
-                        " | IP: " + scan.ip +
+                        " | IP: " + scan.ip + ver +
+                        " | Type: " + scan.type +
                         " | Threat: " + scan.threat +
                         " | Score: " + scan.score + "/100" +
                         " | Agent: " + scan.agent +
@@ -94,7 +96,7 @@ function initializeThreatHunter() {
                     );
                 });
 
-                addEvent("Real scan logs loaded successfully.");
+                addEvent("Scan logs loaded successfully.");
                 lastKnownScanCount = scans.length;
                 return;
             }
@@ -103,12 +105,14 @@ function initializeThreatHunter() {
                 const newScans = scans.slice(lastKnownScanCount);
 
                 newScans.forEach(function (scan) {
+                    const ver = scan.ip_version ? " [IPv" + scan.ip_version + "]" : "";
                     addEvent(
-                        "New case detected → Case #" + String(scan.case_id).padStart(4, "0") +
-                        " | IP: " + scan.ip +
+                        "New case -> Case #" + String(scan.case_id).padStart(4, "0") +
+                        " | IP: " + scan.ip + ver +
+                        " | Type: " + scan.type +
                         " | Threat: " + scan.threat +
                         " | Score: " + scan.score + "/100" +
-                        " | Recommendation: " + scan.recommendation
+                        " | " + scan.recommendation
                     );
                 });
 

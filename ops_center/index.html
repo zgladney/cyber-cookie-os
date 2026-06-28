@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Operations Center — CyberCookieOS</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="oc-app">
+
+    <header id="oc-topBar">
+        <a href="../hallway/index.html" class="oc-backLink">← HALLWAY</a>
+        <div id="oc-title">
+            <h1>CyberCookieOS</h1>
+            <p>// OPERATIONS CENTER — MISSION CONTROL</p>
+        </div>
+        <div id="oc-clock"></div>
+    </header>
+
+    <div id="oc-statusLine">Loading agent status...</div>
+
+    <main id="oc-grid">
+        <!-- Department cards rendered by ops_dashboard.js -->
+    </main>
+
+    <footer id="oc-footer">
+        LAST UPDATED: <span id="oc-lastUpdated">—</span>
+        &nbsp;|&nbsp; POLLING: 5s
+        &nbsp;|&nbsp; <a href="../hallway/index.html" style="color:rgba(150,80,255,.4)">HALLWAY</a>
+        &nbsp;|&nbsp; <a href="../hq/index.html" style="color:rgba(150,80,255,.4)">THREAT HUNTER HQ</a>
+        &nbsp;|&nbsp; <a href="../apartment/index.html" style="color:rgba(150,80,255,.4)">HOUSING</a>
+    </footer>
+
+</div>
+
+<script src="js/ops_dashboard.js" defer></script>
+</body>
+</html>

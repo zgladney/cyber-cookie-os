@@ -1,0 +1,36 @@
+{
+  "data_notice": "SAMPLE DATA - FOR TESTING ONLY",
+  "generated_at": "2026-06-27T21:35:13.096798",
+  "agent": "TikTok Researcher",
+  "version": "0.1.0-placeholder",
+  "count": 3,
+  "trends": [
+    {
+      "trend_id": "TIK-001",
+      "type": "hashtag",
+      "tag": "#digitalplanner",
+      "views": "892M",
+      "momentum": "rising",
+      "relevance": "high",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "trend_id": "TIK-002",
+      "type": "product",
+      "tag": "printable affirmations",
+      "views": "44M",
+      "momentum": "stable",
+      "relevance": "high",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "trend_id": "TIK-003",
+      "type": "sound",
+      "tag": "cozy productive beats",
+      "views": "120M",
+      "momentum": "rising",
+      "relevance": "medium",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    }
+  ]
+}

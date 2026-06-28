@@ -1,0 +1,9 @@
+{
+  "agent_id": "calendar_assistant",
+  "agent_name": "Calendar Assistant",
+  "version": "0.1.0-skeleton",
+  "calendars": ["personal", "work", "goals"],
+  "reminder_lead_time_hours": 24,
+  "results_path": "data/calendar_results.json",
+  "status_path": "data/agent_status.json"
+}

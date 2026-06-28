@@ -1,0 +1,38 @@
+{
+  "agent_id": "etsy_manager",
+  "agent_name": "Etsy Manager",
+  "title": "Shop & Listing Specialist",
+  "version": "0.1.0-placeholder",
+  "department": "commerce",
+  "results_path": "data/etsy_manager_results.json",
+  "status_path": "data/agent_status.json",
+  "sample_data": {
+    "result_key": "listings",
+    "items": [
+      {
+        "listing_id": "ETY-001",
+        "title": "Kawaii Sticker Sheet Bundle",
+        "price": 5.99,
+        "views_7d": 142,
+        "sales_7d": 8,
+        "status": "active"
+      },
+      {
+        "listing_id": "ETY-002",
+        "title": "2026 Budget Planner Printable",
+        "price": 7.99,
+        "views_7d": 230,
+        "sales_7d": 14,
+        "status": "active"
+      },
+      {
+        "listing_id": "ETY-003",
+        "title": "Affirmation Card Digital Pack",
+        "price": 4.99,
+        "views_7d": 88,
+        "sales_7d": 3,
+        "status": "needs_refresh"
+      }
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "agent_id": "cloud_monitor",
+  "agent_name": "Cloud Monitor",
+  "version": "0.1.0-skeleton",
+  "sources": ["aws_cloudwatch", "github_security"],
+  "severity_threshold": "medium",
+  "results_path": "data/cloud_monitor_results.json",
+  "status_path": "data/agent_status.json"
+}

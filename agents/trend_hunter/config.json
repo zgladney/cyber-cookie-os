@@ -1,0 +1,10 @@
+{
+  "agent_id": "trend_hunter",
+  "agent_name": "Trend Hunter",
+  "version": "0.1.0-skeleton",
+  "sources": ["etsy", "tiktok"],
+  "categories": ["digital products", "printables", "stickers"],
+  "max_results": 20,
+  "results_path": "data/trend_results.json",
+  "status_path": "data/agent_status.json"
+}

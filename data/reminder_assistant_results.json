@@ -1,0 +1,33 @@
+{
+  "data_notice": "SAMPLE DATA - FOR TESTING ONLY",
+  "generated_at": "2026-06-27T21:35:16.768802",
+  "agent": "Reminder Assistant",
+  "version": "0.1.0-placeholder",
+  "count": 3,
+  "reminders": [
+    {
+      "reminder_id": "REM-001",
+      "title": "Call landlord about Oak Court viewing",
+      "trigger_at": "2026-06-28T09:00:00",
+      "repeat": "none",
+      "priority": "high",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "reminder_id": "REM-002",
+      "title": "Pay rent - due 1st of month",
+      "trigger_at": "2026-06-29T08:00:00",
+      "repeat": "monthly",
+      "priority": "high",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "reminder_id": "REM-003",
+      "title": "Review Etsy shop analytics",
+      "trigger_at": "2026-06-30T18:00:00",
+      "repeat": "weekly",
+      "priority": "medium",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "data_notice": "SAMPLE DATA - FOR TESTING ONLY",
+  "generated_at": "2026-06-27T21:35:12.452997",
+  "agent": "Rental Assistant",
+  "version": "0.1.0-placeholder",
+  "count": 3,
+  "listings": [
+    {
+      "listing_id": "LST-001",
+      "address": "14 Oak Court, Marlton NJ",
+      "monthly_rent": 1850,
+      "bedrooms": 3,
+      "status": "available",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "listing_id": "LST-002",
+      "address": "77 Willow Dr, Willingboro NJ",
+      "monthly_rent": 1700,
+      "bedrooms": 2,
+      "status": "available",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "listing_id": "LST-003",
+      "address": "55 Pine Rd, Mt Laurel NJ",
+      "monthly_rent": 2000,
+      "bedrooms": 3,
+      "status": "pending",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    }
+  ]
+}

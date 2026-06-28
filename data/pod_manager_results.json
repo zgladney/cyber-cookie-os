@@ -1,0 +1,31 @@
+{
+  "data_notice": "SAMPLE DATA - FOR TESTING ONLY",
+  "generated_at": "2026-06-27T21:35:13.799177",
+  "agent": "POD Manager",
+  "version": "0.1.0-placeholder",
+  "count": 3,
+  "products": [
+    {
+      "product_id": "POD-001",
+      "title": "Affirmation Mug - Pink Edition",
+      "platform": "Printify",
+      "status": "design_in_progress",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "product_id": "POD-002",
+      "title": "Kawaii Tote Bag",
+      "platform": "Printful",
+      "status": "live",
+      "monthly_revenue": 42.0,
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "product_id": "POD-003",
+      "title": "Motivational Poster Set",
+      "platform": "Printify",
+      "status": "design_pending",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    }
+  ]
+}

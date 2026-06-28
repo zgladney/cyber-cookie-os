@@ -1,0 +1,38 @@
+{
+  "data_notice": "SAMPLE DATA - FOR TESTING ONLY",
+  "generated_at": "2026-06-27T21:10:02.838541",
+  "agent": "Calendar Assistant",
+  "version": "0.1.0-skeleton",
+  "calendars": [
+    "personal",
+    "work",
+    "goals"
+  ],
+  "reminder_count": 3,
+  "reminders": [
+    {
+      "id": "rem_001",
+      "title": "Check housing leads",
+      "due": "2026-06-27T23:10:02.838494",
+      "calendar": "personal",
+      "priority": "high",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "id": "rem_002",
+      "title": "Review Etsy listing drafts",
+      "due": "2026-06-28T21:10:02.838494",
+      "calendar": "work",
+      "priority": "medium",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "id": "rem_003",
+      "title": "Monthly goal review",
+      "due": "2026-06-30T21:10:02.838494",
+      "calendar": "goals",
+      "priority": "medium",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    }
+  ]
+}

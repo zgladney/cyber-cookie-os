@@ -1,0 +1,41 @@
+{
+  "data_notice": "SAMPLE DATA - FOR TESTING ONLY",
+  "generated_at": "2026-06-27T21:35:18.854086",
+  "agent": "Budget Planner",
+  "version": "0.1.0-placeholder",
+  "count": 4,
+  "categories": [
+    {
+      "category": "Housing",
+      "budgeted": 1500.0,
+      "spent": 1500.0,
+      "remaining": 0.0,
+      "status": "on_budget",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "category": "Food & Groceries",
+      "budgeted": 400.0,
+      "spent": 285.0,
+      "remaining": 115.0,
+      "status": "under_budget",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "category": "Transportation",
+      "budgeted": 200.0,
+      "spent": 175.0,
+      "remaining": 25.0,
+      "status": "under_budget",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "category": "Entertainment",
+      "budgeted": 100.0,
+      "spent": 118.0,
+      "remaining": -18.0,
+      "status": "over_budget",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    }
+  ]
+}

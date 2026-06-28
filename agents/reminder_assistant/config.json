@@ -1,0 +1,35 @@
+{
+  "agent_id": "reminder_assistant",
+  "agent_name": "Reminder Assistant",
+  "title": "Alert Specialist",
+  "version": "0.1.0-placeholder",
+  "department": "productivity",
+  "results_path": "data/reminder_assistant_results.json",
+  "status_path": "data/agent_status.json",
+  "sample_data": {
+    "result_key": "reminders",
+    "items": [
+      {
+        "reminder_id": "REM-001",
+        "title": "Call landlord about Oak Court viewing",
+        "trigger_at": "2026-06-28T09:00:00",
+        "repeat": "none",
+        "priority": "high"
+      },
+      {
+        "reminder_id": "REM-002",
+        "title": "Pay rent - due 1st of month",
+        "trigger_at": "2026-06-29T08:00:00",
+        "repeat": "monthly",
+        "priority": "high"
+      },
+      {
+        "reminder_id": "REM-003",
+        "title": "Review Etsy shop analytics",
+        "trigger_at": "2026-06-30T18:00:00",
+        "repeat": "weekly",
+        "priority": "medium"
+      }
+    ]
+  }
+}

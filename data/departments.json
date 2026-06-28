@@ -1,0 +1,56 @@
+{
+  "version": "1.0",
+  "last_updated": "2026-06-27T00:00:00",
+  "departments": [
+    {
+      "id": "security",
+      "name": "Security Operations Center",
+      "abbr": "SOC",
+      "description": "Monitors threats, cloud security, and system integrity across all CyberCookieOS infrastructure.",
+      "theme_color": "#6B35D5",
+      "accent_color": "#9B6BFF",
+      "room": "hq",
+      "agent_ids": ["threat_hunter", "cloud_monitor", "soc_analyst"]
+    },
+    {
+      "id": "housing",
+      "name": "Housing Department",
+      "abbr": "HOUSING",
+      "description": "Finds, tracks, compares, and manages rental property listings and landlord communications.",
+      "theme_color": "#C4784A",
+      "accent_color": "#E8986A",
+      "room": "apartment",
+      "agent_ids": ["housing_scout", "rental_assistant", "landlord_contact"]
+    },
+    {
+      "id": "commerce",
+      "name": "Commerce Department",
+      "abbr": "COMMERCE",
+      "description": "Researches market trends, manages Etsy listings, scouts TikTok content, and drives passive income.",
+      "theme_color": "#FF69B4",
+      "accent_color": "#FF99CC",
+      "room": "commerce",
+      "agent_ids": ["trend_hunter", "etsy_manager", "tiktok_researcher", "pod_manager"]
+    },
+    {
+      "id": "productivity",
+      "name": "Productivity Department",
+      "abbr": "PROD",
+      "description": "Manages schedules, tasks, emails, and reminders across the entire operations center.",
+      "theme_color": "#3AA8C8",
+      "accent_color": "#7EC8E3",
+      "room": "productivity",
+      "agent_ids": ["calendar_assistant", "email_assistant", "task_manager", "reminder_assistant"]
+    },
+    {
+      "id": "finance",
+      "name": "Finance Department",
+      "abbr": "FINANCE",
+      "description": "Tracks bills, manages budgets, monitors income streams, and grows savings toward financial goals.",
+      "theme_color": "#2ECC71",
+      "accent_color": "#52DC91",
+      "room": "finance",
+      "agent_ids": ["finance_manager", "bill_tracker", "budget_planner", "savings_tracker"]
+    }
+  ]
+}

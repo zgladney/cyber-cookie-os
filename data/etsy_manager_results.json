@@ -1,0 +1,36 @@
+{
+  "data_notice": "SAMPLE DATA - FOR TESTING ONLY",
+  "generated_at": "2026-06-27T21:35:12.859302",
+  "agent": "Etsy Manager",
+  "version": "0.1.0-placeholder",
+  "count": 3,
+  "listings": [
+    {
+      "listing_id": "ETY-001",
+      "title": "Kawaii Sticker Sheet Bundle",
+      "price": 5.99,
+      "views_7d": 142,
+      "sales_7d": 8,
+      "status": "active",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "listing_id": "ETY-002",
+      "title": "2026 Budget Planner Printable",
+      "price": 7.99,
+      "views_7d": 230,
+      "sales_7d": 14,
+      "status": "active",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "listing_id": "ETY-003",
+      "title": "Affirmation Card Digital Pack",
+      "price": 4.99,
+      "views_7d": 88,
+      "sales_7d": 3,
+      "status": "needs_refresh",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "data_notice": "SAMPLE DATA - FOR TESTING ONLY",
+  "generated_at": "2026-06-27T21:35:18.074977",
+  "agent": "Finance Manager",
+  "version": "0.1.0-placeholder",
+  "count": 1,
+  "reports": [
+    {
+      "report_id": "FIN-001",
+      "period": "June 2026",
+      "income": 3200.0,
+      "expenses": 2650.0,
+      "net": 550.0,
+      "savings_rate": "17.2%",
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "agent_id": "rental_assistant",
+  "agent_name": "Rental Assistant",
+  "title": "Listings Analyst",
+  "version": "0.1.0-placeholder",
+  "department": "housing",
+  "results_path": "data/rental_assistant_results.json",
+  "status_path": "data/agent_status.json",
+  "sample_data": {
+    "result_key": "listings",
+    "items": [
+      {
+        "listing_id": "LST-001",
+        "address": "14 Oak Court, Marlton NJ",
+        "monthly_rent": 1850,
+        "bedrooms": 3,
+        "status": "available"
+      },
+      {
+        "listing_id": "LST-002",
+        "address": "77 Willow Dr, Willingboro NJ",
+        "monthly_rent": 1700,
+        "bedrooms": 2,
+        "status": "available"
+      },
+      {
+        "listing_id": "LST-003",
+        "address": "55 Pine Rd, Mt Laurel NJ",
+        "monthly_rent": 2000,
+        "bedrooms": 3,
+        "status": "pending"
+      }
+    ]
+  }
+}

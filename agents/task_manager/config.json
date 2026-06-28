@@ -1,0 +1,38 @@
+{
+  "agent_id": "task_manager",
+  "agent_name": "Task Manager",
+  "title": "Project Coordinator",
+  "version": "0.1.0-placeholder",
+  "department": "productivity",
+  "results_path": "data/task_manager_results.json",
+  "status_path": "data/agent_status.json",
+  "sample_data": {
+    "result_key": "tasks",
+    "items": [
+      {
+        "task_id": "TSK-001",
+        "title": "Submit housing application - Marlton unit",
+        "priority": "high",
+        "due": "2026-06-30",
+        "status": "in_progress",
+        "department": "housing"
+      },
+      {
+        "task_id": "TSK-002",
+        "title": "Upload 3 new Etsy listings",
+        "priority": "medium",
+        "due": "2026-07-01",
+        "status": "open",
+        "department": "commerce"
+      },
+      {
+        "task_id": "TSK-003",
+        "title": "Review monthly budget",
+        "priority": "medium",
+        "due": "2026-06-28",
+        "status": "open",
+        "department": "finance"
+      }
+    ]
+  }
+}

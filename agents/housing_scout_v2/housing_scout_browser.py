@@ -567,17 +567,20 @@ def run_housing_scout():
                     listing["passes_filters"] = ok
                     listing["filter_failure"] = fail_reason
 
-                source_result["source_status"] = "ACCESSIBLE"
-                source_result["listings"]      = raw_listings
-                print(f"  [OK] Accessible — {len(raw_listings)} listing(s) extracted.")
-
-                # If 0 listings found, note it but don't mark as failed
+                # Classify the source status based on what was extracted
                 if not raw_listings:
-                    content = page.content().lower()
-                    if "no matching results" in content or "0 rentals" in content:
-                        source_result["source_status"] = "ACCESSIBLE"
-                        source_result["block_reason"]  = "Page loaded but 0 listings in this city"
-                    print(f"  (No listings found — city may have no current inventory)")
+                    source_result["source_status"] = "ACCESSIBLE"
+                    source_result["block_reason"]  = "Page loaded but 0 listings found — city may have no current inventory"
+                    print(f"  [OK] ACCESSIBLE — 0 listings (no inventory this city)")
+                elif all(l.get("url_class") == "SEARCH_PAGE" for l in raw_listings):
+                    source_result["source_status"] = "SEARCH_ONLY"
+                    source_result["block_reason"]  = "Page accessible but URLs are search/category pages, not individual listings"
+                    print(f"  [~] SEARCH_ONLY — {len(raw_listings)} result(s), no direct listing URLs")
+                else:
+                    source_result["source_status"] = "ACCESSIBLE"
+                    print(f"  [OK] ACCESSIBLE — {len(raw_listings)} listing(s) extracted.")
+
+                source_result["listings"] = raw_listings
 
             except Exception as err:
                 print(f"  [!!] FAILED: {err}")

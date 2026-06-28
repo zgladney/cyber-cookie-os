@@ -1,0 +1,113 @@
+{
+  "last_updated": "2026-06-27T21:35:19.149712",
+  "agents": {
+    "threat_hunter": {
+      "status": "idle",
+      "current_task": null,
+      "last_run": "2026-06-27T21:11:33.118495",
+      "message": "Waiting for scan request"
+    },
+    "cloud_monitor": {
+      "status": "completed",
+      "current_task": null,
+      "last_run": "2026-06-27T21:11:45.126195",
+      "message": "Scanned 3 sample events"
+    },
+    "soc_analyst": {
+      "status": "completed",
+      "current_task": null,
+      "last_run": "2026-06-27T21:35:12.242873",
+      "message": "Generated 3 sample alerts"
+    },
+    "housing_scout": {
+      "status": "idle",
+      "current_task": null,
+      "last_run": null,
+      "message": "Ready to scout"
+    },
+    "rental_assistant": {
+      "status": "completed",
+      "current_task": null,
+      "last_run": "2026-06-27T21:35:12.451327",
+      "message": "Generated 3 sample listings"
+    },
+    "landlord_contact": {
+      "status": "completed",
+      "current_task": null,
+      "last_run": "2026-06-27T21:35:12.641238",
+      "message": "Generated 2 sample contacts"
+    },
+    "trend_hunter": {
+      "status": "completed",
+      "current_task": null,
+      "last_run": "2026-06-27T21:10:02.536643",
+      "message": "Generated 3 sample trends"
+    },
+    "etsy_manager": {
+      "status": "completed",
+      "current_task": null,
+      "last_run": "2026-06-27T21:35:12.858499",
+      "message": "Generated 3 sample listings"
+    },
+    "tiktok_researcher": {
+      "status": "completed",
+      "current_task": null,
+      "last_run": "2026-06-27T21:35:13.081964",
+      "message": "Generated 3 sample trends"
+    },
+    "pod_manager": {
+      "status": "completed",
+      "current_task": null,
+      "last_run": "2026-06-27T21:35:13.796485",
+      "message": "Generated 3 sample products"
+    },
+    "calendar_assistant": {
+      "status": "completed",
+      "current_task": null,
+      "last_run": "2026-06-27T21:10:02.836322",
+      "message": "Generated 3 sample reminders"
+    },
+    "email_assistant": {
+      "status": "completed",
+      "current_task": null,
+      "last_run": "2026-06-27T21:35:14.069718",
+      "message": "Generated 3 sample emails"
+    },
+    "task_manager": {
+      "status": "completed",
+      "current_task": null,
+      "last_run": "2026-06-27T21:35:14.688658",
+      "message": "Generated 3 sample tasks"
+    },
+    "reminder_assistant": {
+      "status": "completed",
+      "current_task": null,
+      "last_run": "2026-06-27T21:35:16.753956",
+      "message": "Generated 3 sample reminders"
+    },
+    "finance_manager": {
+      "status": "completed",
+      "current_task": null,
+      "last_run": "2026-06-27T21:35:18.074125",
+      "message": "Generated 1 sample reports"
+    },
+    "bill_tracker": {
+      "status": "completed",
+      "current_task": null,
+      "last_run": "2026-06-27T21:35:18.557089",
+      "message": "Generated 4 sample bills"
+    },
+    "budget_planner": {
+      "status": "completed",
+      "current_task": null,
+      "last_run": "2026-06-27T21:35:18.852874",
+      "message": "Generated 4 sample categories"
+    },
+    "savings_tracker": {
+      "status": "completed",
+      "current_task": null,
+      "last_run": "2026-06-27T21:35:19.131903",
+      "message": "Generated 3 sample goals"
+    }
+  }
+}

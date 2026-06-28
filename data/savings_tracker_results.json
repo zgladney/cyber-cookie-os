@@ -1,0 +1,36 @@
+{
+  "data_notice": "SAMPLE DATA - FOR TESTING ONLY",
+  "generated_at": "2026-06-27T21:35:19.134444",
+  "agent": "Savings Tracker",
+  "version": "0.1.0-placeholder",
+  "count": 3,
+  "goals": [
+    {
+      "goal_id": "SAV-001",
+      "name": "Emergency Fund (3 months)",
+      "target": 9600.0,
+      "current": 3200.0,
+      "percent": 33.3,
+      "months_to_goal": 18,
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "goal_id": "SAV-002",
+      "name": "Moving Deposit & First Month",
+      "target": 4500.0,
+      "current": 1800.0,
+      "percent": 40.0,
+      "months_to_goal": 9,
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    },
+    {
+      "goal_id": "SAV-003",
+      "name": "Etsy Business Fund",
+      "target": 2000.0,
+      "current": 650.0,
+      "percent": 32.5,
+      "months_to_goal": 12,
+      "note": "SAMPLE DATA - FOR TESTING ONLY"
+    }
+  ]
+}

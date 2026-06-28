@@ -1,0 +1,35 @@
+{
+  "agent_id": "email_assistant",
+  "agent_name": "Email Assistant",
+  "title": "Communications Specialist",
+  "version": "0.1.0-placeholder",
+  "department": "productivity",
+  "results_path": "data/email_assistant_results.json",
+  "status_path": "data/agent_status.json",
+  "sample_data": {
+    "result_key": "emails",
+    "items": [
+      {
+        "email_id": "EML-001",
+        "subject": "Apartment viewing - 14 Oak Court",
+        "priority": "high",
+        "action": "confirm",
+        "category": "housing"
+      },
+      {
+        "email_id": "EML-002",
+        "subject": "Etsy order received - Sticker Bundle",
+        "priority": "medium",
+        "action": "process",
+        "category": "commerce"
+      },
+      {
+        "email_id": "EML-003",
+        "subject": "Your monthly bank statement",
+        "priority": "low",
+        "action": "archive",
+        "category": "finance"
+      }
+    ]
+  }
+}

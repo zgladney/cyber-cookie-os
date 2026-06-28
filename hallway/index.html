@@ -6,6 +6,7 @@
 <title>HQ Hallway — CyberCookieOS</title>
 <link rel="stylesheet" href="style.css">
 </head>
+<script src="js/agent_status.js" defer></script>
 
 <body>
 
@@ -35,22 +36,47 @@
                     <div id="hw-logoSub">// HEADQUARTERS</div>
                 </div>
 
-                <div id="hw-lockedDoors">
-                    <div class="hw-lockedDoor">
-                        <div class="hw-lockIcon">⬡</div>
-                        <div class="hw-lockedLabel">Cloud Lab</div>
-                        <div class="hw-lockedBadge">LOCKED</div>
+                <div id="hw-agentBoard">
+                    <div class="hw-boardTitle">// AGENT COMMAND STATUS</div>
+                    <div id="hw-agentRows">
+                        <!-- Populated by agent_status.js -->
+                        <div class="hw-agentRow">
+                            <span class="hw-aIcon">🛡</span>
+                            <span class="hw-aName">THREAT HUNTER</span>
+                            <span class="hw-aStatus hw-s-idle">● IDLE</span>
+                            <span class="hw-aTime">—</span>
+                        </div>
+                        <div class="hw-agentRow">
+                            <span class="hw-aIcon">🏠</span>
+                            <span class="hw-aName">HOUSING SCOUT</span>
+                            <span class="hw-aStatus hw-s-idle">● IDLE</span>
+                            <span class="hw-aTime">—</span>
+                        </div>
+                        <div class="hw-agentRow">
+                            <span class="hw-aIcon">📈</span>
+                            <span class="hw-aName">TREND HUNTER</span>
+                            <span class="hw-aStatus hw-s-idle">● IDLE</span>
+                            <span class="hw-aTime">—</span>
+                        </div>
+                        <div class="hw-agentRow">
+                            <span class="hw-aIcon">📅</span>
+                            <span class="hw-aName">CALENDAR ASST</span>
+                            <span class="hw-aStatus hw-s-idle">● IDLE</span>
+                            <span class="hw-aTime">—</span>
+                        </div>
+                        <div class="hw-agentRow">
+                            <span class="hw-aIcon">☁</span>
+                            <span class="hw-aName">CLOUD MONITOR</span>
+                            <span class="hw-aStatus hw-s-idle">● IDLE</span>
+                            <span class="hw-aTime">—</span>
+                        </div>
                     </div>
-                    <div class="hw-lockedDoor">
-                        <div class="hw-lockIcon">⬡</div>
-                        <div class="hw-lockedLabel">AI Workshop</div>
-                        <div class="hw-lockedBadge">LOCKED</div>
-                    </div>
-                    <div class="hw-lockedDoor">
-                        <div class="hw-lockIcon">⬡</div>
-                        <div class="hw-lockedLabel">Obsidian Library</div>
-                        <div class="hw-lockedBadge">LOCKED</div>
-                    </div>
+                </div>
+
+                <div id="hw-opsLink" onclick="window.location.href='../ops_center/index.html'" role="button" tabindex="0">
+                    <div class="hw-opsIcon">⬡</div>
+                    <div class="hw-opsName">OPS CENTER</div>
+                    <div class="hw-opsSub">MISSION CONTROL →</div>
                 </div>
 
                 <div id="hw-wallRune">✦ ⬡ ✦ ⬡ ✦</div>

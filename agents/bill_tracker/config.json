@@ -1,0 +1,42 @@
+{
+  "agent_id": "bill_tracker",
+  "agent_name": "Bill Tracker",
+  "title": "Expense Monitor",
+  "version": "0.1.0-placeholder",
+  "department": "finance",
+  "results_path": "data/bill_tracker_results.json",
+  "status_path": "data/agent_status.json",
+  "sample_data": {
+    "result_key": "bills",
+    "items": [
+      {
+        "bill_id": "BIL-001",
+        "name": "Rent",
+        "amount": 1500.0,
+        "due_date": "2026-07-01",
+        "status": "upcoming"
+      },
+      {
+        "bill_id": "BIL-002",
+        "name": "Internet",
+        "amount": 69.99,
+        "due_date": "2026-07-05",
+        "status": "upcoming"
+      },
+      {
+        "bill_id": "BIL-003",
+        "name": "Phone",
+        "amount": 45.0,
+        "due_date": "2026-07-10",
+        "status": "upcoming"
+      },
+      {
+        "bill_id": "BIL-004",
+        "name": "Netflix",
+        "amount": 15.49,
+        "due_date": "2026-07-12",
+        "status": "upcoming"
+      }
+    ]
+  }
+}

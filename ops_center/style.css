@@ -1,0 +1,258 @@
+/* =============================================
+   CYBERCOOKIEOS — OPERATIONS CENTER
+   Vibe: Mission Control / Dark Cyber Dashboard
+============================================= */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: radial-gradient(ellipse at 50% 0%, #0d0025 0%, #02000a 65%);
+    min-height: 100vh;
+    color: white;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* =============================================
+   TOP BAR
+============================================= */
+
+#oc-topBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px 10px;
+    border-bottom: 1px solid rgba(150,80,255,.2);
+    background: linear-gradient(180deg, rgba(10,0,26,.9) 0%, transparent 100%);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(4px);
+}
+
+.oc-backLink {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: rgba(156,246,255,.5);
+    padding: 5px 10px;
+    border: 1px solid rgba(156,246,255,.2);
+    border-radius: 4px;
+    transition: all .2s;
+    white-space: nowrap;
+}
+.oc-backLink:hover {
+    color: rgba(156,246,255,.9);
+    border-color: rgba(156,246,255,.5);
+    background: rgba(156,246,255,.05);
+}
+
+#oc-title {
+    text-align: center;
+    flex: 1;
+}
+
+#oc-title h1 {
+    font-size: 20px;
+    color: hotpink;
+    letter-spacing: 5px;
+    text-shadow: 0 0 24px hotpink, 0 0 60px rgba(255,105,180,.3);
+    animation: ocLogoFlicker 10s infinite;
+}
+
+@keyframes ocLogoFlicker {
+    0%, 89%, 91%, 93%, 100% { opacity: 1; }
+    90% { opacity: .5; }
+    92% { opacity: .9; }
+}
+
+#oc-title p {
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: rgba(156,246,255,.5);
+    margin-top: 3px;
+}
+
+#oc-clock {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: rgba(200,150,255,.5);
+    white-space: nowrap;
+    min-width: 120px;
+    text-align: right;
+}
+
+/* =============================================
+   STATUS LINE
+============================================= */
+
+#oc-statusLine {
+    text-align: center;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: rgba(156,246,255,.4);
+    padding: 7px 24px;
+    border-bottom: 1px solid rgba(150,80,255,.1);
+    background: rgba(0,0,0,.2);
+}
+
+#oc-statusLine span {
+    margin: 0 10px;
+}
+.oc-stat-running  { color: rgba(255,220,50,.8); }
+.oc-stat-idle     { color: rgba(156,246,255,.5); }
+.oc-stat-done     { color: rgba(125,255,156,.7); }
+.oc-stat-fail     { color: rgba(255,80,80,.8); }
+
+/* =============================================
+   DEPARTMENT GRID
+============================================= */
+
+#oc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+    padding: 22px 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* =============================================
+   DEPARTMENT CARDS
+============================================= */
+
+.oc-deptCard {
+    background: rgba(8, 0, 22, .75);
+    border: 1px solid rgba(255,255,255,.06);
+    border-top: 3px solid var(--dept-color);
+    border-radius: 8px;
+    padding: 16px 18px 18px;
+    transition: border-color .3s, box-shadow .3s;
+}
+
+.oc-deptCard:hover {
+    border-color: rgba(255,255,255,.1);
+    box-shadow: 0 0 30px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.04);
+}
+
+/* Card header */
+.oc-deptHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+.oc-deptIcon {
+    font-size: 18px;
+    line-height: 1;
+    filter: drop-shadow(0 0 6px var(--dept-color));
+}
+
+.oc-deptName {
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: var(--dept-color);
+    text-shadow: 0 0 12px var(--dept-color);
+    flex: 1;
+}
+
+.oc-agentCount {
+    font-size: 7px;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,.2);
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 10px;
+    padding: 2px 8px;
+}
+
+/* Agent list within card */
+.oc-agentList {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.oc-agentRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 6px;
+    border-radius: 4px;
+    background: rgba(255,255,255,.02);
+    transition: background .2s;
+}
+
+.oc-agentRow:hover {
+    background: rgba(255,255,255,.04);
+}
+
+/* Status dot */
+.oc-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.oc-dot-idle      { background: rgba(156,246,255,.4); }
+.oc-dot-running   { background: #ffdc32; animation: ocDotPulse 1.1s ease-in-out infinite alternate; }
+.oc-dot-blocked   { background: #ff5050; }
+.oc-dot-completed { background: #7dff9c; }
+.oc-dot-failed    { background: #ff5050; animation: ocDotFail .6s ease-in-out infinite alternate; }
+
+@keyframes ocDotPulse {
+    from { opacity: .4; box-shadow: none; }
+    to   { opacity: 1;  box-shadow: 0 0 8px #ffdc32; }
+}
+@keyframes ocDotFail {
+    from { opacity: .5; }
+    to   { opacity: 1; }
+}
+
+/* Agent name */
+.oc-agentName {
+    flex: 1;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: rgba(220,200,255,.7);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Status badge */
+.oc-statusBadge {
+    font-size: 7px;
+    letter-spacing: 1px;
+    padding: 2px 7px;
+    border-radius: 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+.oc-badge-idle      { color: rgba(156,246,255,.55); background: rgba(156,246,255,.06); }
+.oc-badge-running   { color: rgba(255,220,50,.9);   background: rgba(255,220,50,.1); }
+.oc-badge-blocked   { color: rgba(255,80,80,.9);    background: rgba(255,80,80,.1); }
+.oc-badge-completed { color: rgba(125,255,156,.9);  background: rgba(125,255,156,.08); }
+.oc-badge-failed    { color: rgba(255,80,80,.9);    background: rgba(255,80,80,.1); }
+
+/* =============================================
+   FOOTER
+============================================= */
+
+#oc-footer {
+    text-align: center;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: rgba(150,80,255,.3);
+    padding: 16px;
+    border-top: 1px solid rgba(150,80,255,.1);
+    margin-top: 8px;
+}
+
+#oc-lastUpdated {
+    color: rgba(156,246,255,.4);
+}

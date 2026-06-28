@@ -1,0 +1,28 @@
+{
+  "agent_id": "landlord_contact",
+  "agent_name": "Landlord Contact",
+  "title": "Outreach Coordinator",
+  "version": "0.1.0-placeholder",
+  "department": "housing",
+  "results_path": "data/landlord_contact_results.json",
+  "status_path": "data/agent_status.json",
+  "sample_data": {
+    "result_key": "contacts",
+    "items": [
+      {
+        "contact_id": "CON-001",
+        "name": "Sunrise Properties LLC",
+        "property": "14 Oak Court",
+        "last_contact": "2026-06-25",
+        "status": "awaiting_response"
+      },
+      {
+        "contact_id": "CON-002",
+        "name": "J. Williams",
+        "property": "77 Willow Dr",
+        "last_contact": "2026-06-24",
+        "status": "viewing_scheduled"
+      }
+    ]
+  }
+}
