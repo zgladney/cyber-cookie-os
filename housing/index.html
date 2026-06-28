@@ -443,7 +443,15 @@
         <div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:4px">
           <button class="ws-btn" id="sp-searchBtn" style="background:rgba(196,120,74,.08);border-color:rgba(196,120,74,.35);color:rgba(196,120,74,.85)">🔍 SEARCH</button>
           <button class="ws-btn" id="sp-loadZee" style="background:rgba(150,80,255,.06);border-color:rgba(150,80,255,.3);color:rgba(180,130,255,.85)">★ LOAD ZEE'S SEARCH PROFILE</button>
+          <button class="ws-btn sp-btnScout" id="sp-scoutBtn">▸ RUN HOUSING SCOUT</button>
         </div>
+      </div>
+
+      <!-- Scout status bar (hidden until first run) -->
+      <div class="sp-scoutBar" id="sp-scoutBar" style="display:none">
+        <span class="sp-scoutMode" id="sp-scoutMode"></span>
+        <span class="sp-scoutMsg"  id="sp-scoutMsg"></span>
+        <span class="sp-scoutTime" id="sp-scoutTime"></span>
       </div>
 
       <!-- Search summary -->

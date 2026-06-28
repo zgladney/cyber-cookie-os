@@ -241,10 +241,11 @@
 (function () {
   'use strict';
 
-  var SAVED_KEY   = 'hs.search.saved';
-  var HIDDEN_KEY  = 'hs.search.hidden';
-  var STATUS_KEY  = 'hs.search.statuses';
-  var NOTES_KEY   = 'hs.search.notes';
+  var SAVED_KEY        = 'hs.search.saved';
+  var HIDDEN_KEY       = 'hs.search.hidden';
+  var STATUS_KEY       = 'hs.search.statuses';
+  var NOTES_KEY        = 'hs.search.notes';
+  var currentDisplayed = [];   // tracks what's currently rendered (real or simulated)
 
   // Landlord inquiry message template
   var CONTACT_MSG =
@@ -322,6 +323,7 @@
   function renderHousingResults(listings) {
     // Entry point for live scraper pipeline.
     // Currently called directly by runSearch() with filtered PROPERTIES.
+    currentDisplayed = listings;
     renderProperties(listings);
   }
 
@@ -488,7 +490,8 @@
         '<div style="font-size:8px;color:rgba(200,160,255,.22);font-style:italic;padding:10px 0">No saved properties yet. Click ☆ SAVE on any listing above.</div>';
       return;
     }
-    var savedProps = PROPERTIES.filter(function (p) { return saved.indexOf(p.id) >= 0; });
+    var pool       = currentDisplayed.length ? currentDisplayed : PROPERTIES;
+    var savedProps = pool.filter(function (p) { return saved.indexOf(p.id) >= 0; });
     sec.innerHTML =
       '<div class="sp-savedTitle">★ SAVED PROPERTIES (' + savedProps.length + ')</div>' +
       '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px">' +
@@ -619,15 +622,212 @@
     runSearch();
   }
 
+  // ── HOUSING SCOUT — frontend integration ────────────────────
+  // Calls POST /api/housing/scout (served by server.py).
+  // Falls back to simulated results if backend is not running.
+
+  var SCOUT_STEPS = [
+    'Initializing browser agent...',
+    'Checking AffordableHousing.com — Willingboro...',
+    'Checking AffordableHousing.com — Mount Laurel...',
+    'Checking AffordableHousing.com — Marlton...',
+    'Checking AffordableHousing.com — Southampton...',
+    'Scanning Craigslist Philadelphia — Housing for Rent...',
+    'Scanning Craigslist Philadelphia — Apts & Houses...',
+    'Filtering by rent / pets / voucher...',
+    'Extracting listing details...',
+    'Normalizing listing cards...',
+    'Almost done...',
+  ];
+
+  function setScoutMode(mode, badge, text, time) {
+    var bar    = document.getElementById('sp-scoutBar');
+    var modeEl = document.getElementById('sp-scoutMode');
+    var msgEl  = document.getElementById('sp-scoutMsg');
+    var timeEl = document.getElementById('sp-scoutTime');
+    if (!bar) return;
+    bar.style.display = '';
+    bar.className = 'sp-scoutBar scout-' + (
+      mode === 'real'    ? 'success' :
+      mode === 'running' ? 'running' :
+      mode === 'offline' ? 'offline' : 'fallback'
+    );
+    if (modeEl) {
+      modeEl.textContent = badge || '';
+      modeEl.className   = 'sp-scoutMode sp-mode-' + (
+        mode === 'real'    ? 'real'    :
+        mode === 'running' ? 'running' :
+        mode === 'offline' ? 'offline' : 'sim'
+      );
+    }
+    if (msgEl)  msgEl.textContent  = text || '';
+    if (timeEl) timeEl.textContent = time || '';
+  }
+
+  function displayScoutResults(listings) {
+    currentDisplayed = listings;
+    var el = document.getElementById('sp-results');
+    if (!el) return;
+    if (!listings.length) {
+      el.innerHTML = '<div style="font-size:9px;color:rgba(200,160,255,.3);padding:16px;font-style:italic;grid-column:1/-1">Scout returned 0 listings. Try again or widen your filters.</div>';
+    } else {
+      el.innerHTML = listings.map(function (p) { return buildCard(p, false); }).join('');
+      wireCards(el);
+    }
+    updateSummary(listings);
+    updateHiddenBar();
+    renderSavedSection();
+  }
+
+  function runScout() {
+    var btn = document.getElementById('sp-scoutBtn');
+    if (!btn || btn.disabled) return;
+
+    btn.textContent = '⟳ SCOUTING...';
+    btn.disabled    = true;
+
+    var stepIdx   = 0;
+    var stepTimer = setInterval(function () {
+      var msgEl = document.getElementById('sp-scoutMsg');
+      if (msgEl) msgEl.textContent = SCOUT_STEPS[stepIdx % SCOUT_STEPS.length];
+      stepIdx++;
+    }, 2200);
+
+    setScoutMode('running', '⟳ SCOUTING', SCOUT_STEPS[0], '');
+
+    var filters = getFilters();
+    var body = JSON.stringify({
+      cities:   filters.city === 'zee-cities' ? ZEE_CITIES :
+                filters.city === 'all'        ? [] : [filters.city],
+      maxRent:  filters.maxRent,
+      minBeds:  filters.minBeds,
+      minBaths: filters.minBaths,
+      types:    filters.type === 'all' ? [] : [filters.type],
+      pets:     filters.pets,
+      voucher:  filters.voucher,
+      family:   filters.family,
+      keyword:  filters.keyword,
+    });
+
+    fetch('/api/housing/scout', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    body,
+    })
+    .then(function (res) {
+      if (!res.ok) {
+        return res.json().then(function (e) {
+          throw new Error(e.error || ('Server returned ' + res.status));
+        });
+      }
+      return res.json();
+    })
+    .then(function (data) {
+      clearInterval(stepTimer);
+      btn.textContent = '▸ RUN HOUSING SCOUT';
+      btn.disabled    = false;
+
+      if (!data.success) throw new Error(data.error || 'Scout returned failure status.');
+
+      var listings = (data.listings || []).map(function (l, i) {
+        return {
+          id:      l.id      || ('scout_' + (i + 1)),
+          name:    l.name    || l.addr || ('Listing #' + (i + 1)),
+          addr:    l.addr    || l.name || '',
+          city:    l.city    || 'Unknown',
+          rent:    l.rent    || 0,
+          beds:    l.beds    || 0,
+          baths:   l.baths   || 0,
+          type:    l.type    || 'house',
+          pets:    !!l.pets,
+          voucher: !!l.voucher,
+          family:  !!l.family,
+          source:  l.source  || 'housing scout',
+          link:    l.link    || '',
+          desc:    l.desc    || '',
+        };
+      });
+
+      var now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      if (!listings.length) {
+        setScoutMode('fallback', 'SIMULATED',
+          'Scout ran but found 0 listings — showing simulated results.',
+          'Last run: ' + now
+        );
+        runSearch();
+        return;
+      }
+
+      var cheapest = null;
+      var total    = 0;
+      listings.forEach(function (p) {
+        total += (p.rent || 0);
+        if (!cheapest || (p.rent && p.rent < cheapest.rent)) cheapest = p;
+      });
+      var avgRent = listings.length ? Math.round(total / listings.length) : 0;
+
+      setScoutMode('real', 'REAL SCOUT',
+        listings.length + ' listing' + (listings.length !== 1 ? 's' : '') +
+        ' · ' + (data.sources_checked || 0) + ' sources checked',
+        'Last run: ' + now
+      );
+      displayScoutResults(listings);
+
+      COS.activity.log({
+        agent: 'Nova', dept: 'housing',
+        msg: 'Housing Scout complete — ' + listings.length + ' real listings, avg $' + avgRent + '/mo',
+        source: 'real_scout',
+      });
+      if (typeof OE !== 'undefined') {
+        OE.generate({
+          type:    'scout_results',
+          title:   'Housing Scout Completed',
+          summary: listings.length + ' real listings · avg $' + avgRent + '/mo' +
+                   (cheapest ? ' · cheapest: ' + (cheapest.name || cheapest.addr) + ' ($' + cheapest.rent + ')' : '') +
+                   ' · Source: REAL SCOUT',
+        }, 'nova', 'housing');
+      }
+    })
+    .catch(function (err) {
+      clearInterval(stepTimer);
+      btn.textContent = '▸ RUN HOUSING SCOUT';
+      btn.disabled    = false;
+
+      var now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      var msg = err.message || '';
+      var isNetworkErr = !msg || msg.indexOf('fetch') >= 0 || msg.indexOf('Failed') >= 0 ||
+                         msg.indexOf('NetworkError') >= 0 || msg.indexOf('ECONNREFUSED') >= 0;
+
+      if (isNetworkErr) {
+        setScoutMode('offline', 'BACKEND OFFLINE',
+          'Housing Scout backend is not connected. Run: python server.py',
+          'Last attempt: ' + now
+        );
+      } else {
+        setScoutMode('offline', 'SCOUT ERROR', msg, 'Last attempt: ' + now);
+      }
+
+      runSearch();   // fall back to simulated results
+      COS.activity.log({
+        agent: 'Nova', dept: 'housing',
+        msg: 'Housing Scout backend offline — simulated fallback active',
+        source: 'fallback',
+      });
+    });
+  }
+
   // ── INIT ────────────────────────────────────────────────────
 
   document.addEventListener('DOMContentLoaded', function () {
     var searchBtn  = document.getElementById('sp-searchBtn');
     var profileBtn = document.getElementById('sp-loadZee');
+    var scoutBtn   = document.getElementById('sp-scoutBtn');
     var monitor    = document.getElementById('ah-monitor');
 
     if (searchBtn)  searchBtn.addEventListener('click', runSearch);
     if (profileBtn) profileBtn.addEventListener('click', loadZeeProfile);
+    if (scoutBtn)   scoutBtn.addEventListener('click', runScout);
 
     if (monitor) {
       monitor.title = 'Open Property Search';

@@ -20,6 +20,10 @@ import json
 from datetime import datetime
 from playwright.sync_api import sync_playwright
 
+# When launched via POST /api/housing/scout the server sets this env var.
+# Headless=True so no browser window opens during API calls.
+API_MODE = os.environ.get('SCOUT_API_MODE') == '1'
+
 # ── PATHS ────────────────────────────────────────────────────────────────────
 BASE_DIR       = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DATA_DIR       = os.path.join(BASE_DIR, "data")
@@ -505,7 +509,7 @@ def run_housing_scout():
 
     # ── Browser sources ──────────────────────────────────────
     with sync_playwright() as pw:
-        browser = pw.chromium.launch(headless=False, slow_mo=400)
+        browser = pw.chromium.launch(headless=API_MODE, slow_mo=100 if API_MODE else 400)
         context = browser.new_context(
             user_agent=(
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
