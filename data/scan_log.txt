@@ -18,3 +18,4 @@ Case #0009 | 2026-06-27 14:22:38 | 1.1.1.1 | Trusted DNS (Cloudflare DNS) | Low 
 Case #0010 | 2026-06-27 14:22:53 | 192.0.2.1 | Private IP | Low | Score: 5 | Alert: Low risk scan recorded | Status: Closed
 Case #0011 | 2026-06-27 14:23:07 | 203.0.113.5 | Private IP | Low | Score: 5 | Alert: Low risk scan recorded | Status: Closed
 Case #0012 | 2026-06-27 14:23:27 | 240.0.0.1 | Private IP | Low | Score: 5 | Alert: Low risk scan recorded | Status: Closed
+Case #0013 | 2026-06-28 13:20:24 | 8.8.8.8 | IPv4 | Trusted DNS (Google Public DNS) | Low | Score: 5 | Alert: Low risk scan recorded | Status: Closed

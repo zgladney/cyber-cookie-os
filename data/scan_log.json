@@ -142,5 +142,18 @@
         "status": "Closed",
         "agent": "Agent 001",
         "recommendation": "Internal/private IP detected; no external threat"
+    },
+    {
+        "case_id": 13,
+        "timestamp": "2026-06-28 13:20:24",
+        "ip": "8.8.8.8",
+        "ip_version": 4,
+        "type": "Trusted DNS (Google Public DNS)",
+        "threat": "Low",
+        "score": 5,
+        "alert": "Low risk scan recorded",
+        "status": "Closed",
+        "agent": "Agent 001",
+        "recommendation": "Known public DNS resolver (IPv4); no action required"
     }
 ]
