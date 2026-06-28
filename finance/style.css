@@ -9,7 +9,7 @@ body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
     background: radial-gradient(ellipse at top, #001a08 0%, #020a04 70%);
-    overflow: hidden;
+    overflow-x: hidden;
     color: white;
 }
 

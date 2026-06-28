@@ -119,6 +119,10 @@
                 <div class="fn-empStatus fn-s-idle">● IDLE</div>
             </div>
 
+            <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px">
+                <button id="fn-sidebarOpenBudget" class="fn-navLink" style="background:rgba(46,204,113,.08);border-color:rgba(46,204,113,.5);color:#2ecc71;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:1px;font-size:8px;padding:8px 10px;border-radius:4px;border:1px solid;text-align:center">OPEN BUDGET SETUP</button>
+            </div>
+
             <div class="fn-navLinks">
                 <a href="../hallway/index.html" class="fn-navLink">⬡ Hallway</a>
                 <a href="../ops_center/index.html" class="fn-navLink">⬡ Ops Center</a>
@@ -138,14 +142,17 @@
   <div class="ws-body" style="flex-direction:column">
 
     <!-- ══ PENNY BUDGET SYSTEM ══ -->
-    <div id="fn-budgetPanel" class="ws-panel ws-panel-full">
-      <div class="ws-pTitle" style="display:flex;align-items:center;justify-content:space-between">
-        <span>MONTHLY BUDGET — PENNY FINANCE SYSTEM</span>
-        <button class="ws-btn ws-btn-ghost" id="fn-toggleSetup" style="font-size:7px;padding:3px 10px">⚙ SETUP</button>
+    <div id="pennySetupPanel" class="ws-panel ws-panel-full" style="border-color:rgba(46,204,113,.4);border-top-color:#2ecc71">
+      <div class="ws-pTitle" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <span style="font-size:11px;letter-spacing:3px">PENNY BUDGET SETUP — MONTHLY BUDGET</span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="ws-btn" id="fn-editBudgetBtn" style="font-size:9px;padding:5px 16px;letter-spacing:1.5px;display:none">EDIT BUDGET</button>
+          <button class="ws-btn" id="fn-toggleSetup" style="font-size:9px;padding:5px 16px;letter-spacing:1.5px">⚙ SETUP BUDGET</button>
+        </div>
       </div>
 
-      <!-- SETUP FORM (shown when no budget or when editing) -->
-      <div id="fn-setupForm" style="display:none">
+      <!-- SETUP FORM — visible by default; JS hides it only when a saved budget exists -->
+      <div id="fn-setupForm">
         <div style="font-size:8px;color:rgba(200,160,255,.4);margin-bottom:12px;letter-spacing:.5px">
           Enter your monthly amounts. All values are stored locally — never sent anywhere.
         </div>
@@ -189,7 +196,10 @@
               <input class="ws-input" id="pb-currentSavings" type="number" min="0" step="50" placeholder="0" />
             </div>
           </div>
-          <button class="ws-btn ws-btn-full" id="fn-saveBudget">SAVE BUDGET</button>
+          <div style="display:flex;gap:8px;margin-top:4px">
+            <button class="ws-btn" style="flex:1" id="fn-saveBudget">SAVE BUDGET</button>
+            <button class="ws-btn ws-btn-ghost" id="fn-resetBudget" style="padding:6px 16px">RESET</button>
+          </div>
         </div>
       </div>
 

@@ -188,6 +188,7 @@
 ================================================================ */
 (function () {
   'use strict';
+  console.log('Penny workspace loaded');
 
   var BUDGET_KEY = 'penny.budget';
 
@@ -318,8 +319,30 @@
     }
   }
 
-  function showDash()  { document.getElementById('fn-budgetDash').style.display = ''; document.getElementById('fn-setupForm').style.display = 'none'; }
-  function showSetup() { document.getElementById('fn-setupForm').style.display = ''; document.getElementById('fn-budgetDash').style.display = 'none'; }
+  function showDash() {
+    document.getElementById('fn-budgetDash').style.display = '';
+    document.getElementById('fn-setupForm').style.display = 'none';
+    var toggleBtn = document.getElementById('fn-toggleSetup');
+    var editBtn   = document.getElementById('fn-editBudgetBtn');
+    var sideBtn   = document.getElementById('fn-sidebarOpenBudget');
+    if (toggleBtn) toggleBtn.textContent = '✕ CLOSE';
+    if (editBtn)   { editBtn.style.display = ''; editBtn.textContent = 'EDIT BUDGET'; }
+    if (sideBtn)   sideBtn.textContent = 'EDIT BUDGET';
+  }
+  function showSetup() {
+    document.getElementById('fn-setupForm').style.display = '';
+    document.getElementById('fn-budgetDash').style.display = 'none';
+    var toggleBtn = document.getElementById('fn-toggleSetup');
+    var editBtn   = document.getElementById('fn-editBudgetBtn');
+    var sideBtn   = document.getElementById('fn-sidebarOpenBudget');
+    if (toggleBtn) toggleBtn.textContent = loadBudget() ? '✕ CANCEL' : '⚙ SETUP BUDGET';
+    if (editBtn)   editBtn.style.display = 'none';
+    if (sideBtn)   sideBtn.textContent = 'OPEN BUDGET SETUP';
+  }
+  function scrollToBudget() {
+    var el = document.getElementById('pennySetupPanel');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 
   function initPennyBudget() {
     var data = loadBudget();
@@ -329,15 +352,23 @@
       showDash();
     } else {
       showSetup();
+      setTimeout(scrollToBudget, 400);
     }
 
     var saveBtn   = document.getElementById('fn-saveBudget');
     var toggleBtn = document.getElementById('fn-toggleSetup');
+    var editBtn   = document.getElementById('fn-editBudgetBtn');
+    var sideBtn   = document.getElementById('fn-sidebarOpenBudget');
 
     if (saveBtn) {
       saveBtn.addEventListener('click', function () {
         var data = readForm();
-        if (!data.income) { alert('Please enter your monthly income.'); return; }
+        if (!data.income) {
+          var el = document.getElementById('pb-income');
+          if (el) { el.focus(); el.style.outline = '2px solid #ff5050'; setTimeout(function(){ el.style.outline=''; }, 2000); }
+          alert('Please enter your monthly income first.');
+          return;
+        }
         saveBudget(data);
         renderDash(data);
         showDash();
@@ -359,7 +390,38 @@
         } else {
           var d = loadBudget();
           if (d) { renderDash(d); showDash(); }
+          else { showSetup(); }
         }
+      });
+    }
+
+    if (editBtn) {
+      editBtn.addEventListener('click', function () {
+        var d = loadBudget();
+        if (d) fillForm(d);
+        showSetup();
+        scrollToBudget();
+      });
+    }
+
+    if (sideBtn) {
+      sideBtn.addEventListener('click', function () {
+        var d = loadBudget();
+        if (d) { fillForm(d); showSetup(); } else { showSetup(); }
+        scrollToBudget();
+      });
+    }
+
+    var resetBtn = document.getElementById('fn-resetBudget');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', function () {
+        if (!confirm('Clear all budget data and start over?')) return;
+        COS.state.remove(BUDGET_KEY);
+        FIELDS.forEach(function (f) { var el = document.getElementById(f.id); if (el) el.value = ''; });
+        ['pb-income','pb-savingsGoalPct','pb-emergencyGoal','pb-currentSavings'].forEach(function (id) {
+          var el = document.getElementById(id); if (el) el.value = '';
+        });
+        showSetup();
       });
     }
   }
