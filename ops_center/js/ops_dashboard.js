@@ -584,6 +584,13 @@ function simTick() {
   sim.cpu = clamp(sim.cpu + (Math.random() - 0.48) * 7, 8, 88);
   sim.ram = clamp(sim.ram + (Math.random() - 0.5)  * 3, 25, 75);
 
+  // Boost when ART departments are running
+  if (typeof ART !== 'undefined' && ART.isAnyRunning()) {
+    var artRunDepts = ART.DEPTS.filter(function (d) { return ART.getDeptState(d) === 'running'; }).length;
+    sim.cpu = clamp(sim.cpu + artRunDepts * 5, 8, 94);
+    sim.ram = clamp(sim.ram + artRunDepts * 2, 25, 86);
+  }
+
   graphHistory.push(sim.cpu);
   if (graphHistory.length > 50) graphHistory.shift();
   drawGraph();
@@ -650,6 +657,11 @@ function driftEmpCards() {
     var id = profileBtn.dataset.id;
     var s  = empStates[id];
     if (!s) return;
+    // ART controls this employee's card — skip sim drift
+    if (typeof ART !== 'undefined' && COS.employees[id]) {
+      var dSt = ART.getDeptState(COS.employees[id].dept);
+      if (dSt === 'running' || dSt === 'paused') return;
+    }
     var dot    = card.querySelector('.oc-empDot');
     var status = card.querySelector('.oc-empStatus');
     var task   = card.querySelector('.oc-empTask');
@@ -708,6 +720,96 @@ function agentIdToEmpId(agentId) {
     savings_tracker:    'vault',
   };
   return map[agentId] || null;
+}
+
+// ── AGENT RUNTIME ENGINE INTEGRATION ─────────────────────────────
+
+function wireARTEvents() {
+  if (typeof ART === 'undefined') return;
+
+  var runBtn   = document.getElementById('btn-runHQ');
+  var pauseBtn = document.getElementById('btn-pauseAll');
+  var stopBtn  = document.getElementById('btn-stopAll');
+  if (runBtn)   runBtn.addEventListener('click',   function () { ART.runAll();   updateARTStatus(); });
+  if (pauseBtn) pauseBtn.addEventListener('click', function () { ART.pauseAll(); updateARTStatus(); });
+  if (stopBtn)  stopBtn.addEventListener('click',  function () { ART.stopAll();  updateARTStatus(); });
+
+  COS.events.on('agent:stateChange', function (e) { artUpdateEmpCard(e.id, e.s); });
+  COS.events.on('runtime:metrics',   function ()  { updateARTStatus(); });
+  COS.events.on('dept:stateChange',  function ()  { updateARTStatus(); });
+  COS.events.on('dept:complete',     function ()  { updateARTStatus(); });
+}
+
+function updateARTStatus() {
+  if (typeof ART === 'undefined') return;
+  var metrics  = ART.getMetrics();
+  var running  = ART.DEPTS.filter(function (d) { return ART.getDeptState(d) === 'running'; }).length;
+  var paused   = ART.DEPTS.filter(function (d) { return ART.getDeptState(d) === 'paused'; }).length;
+  var active   = running + paused;
+
+  var stateEl = document.getElementById('oc-rt-state');
+  if (stateEl) {
+    if (running === 5)      { stateEl.textContent = '● ALL SYSTEMS GO'; stateEl.style.color = '#2ecc71'; }
+    else if (running > 0)   { stateEl.textContent = '● RUNNING';        stateEl.style.color = '#ffdc32'; }
+    else if (paused  > 0)   { stateEl.textContent = '⏸ PAUSED';         stateEl.style.color = '#9cf6ff'; }
+    else                    { stateEl.textContent = '● STANDBY';         stateEl.style.color = 'rgba(200,160,255,.4)'; }
+  }
+  setText('oc-rt-depts', active > 0 ? active + ' dept' + (active !== 1 ? 's' : '') + ' active' : 'All departments idle');
+  setText('oc-rt-tasks', metrics.totalCompleted + ' task' + (metrics.totalCompleted !== 1 ? 's' : '') + ' completed');
+  setText('oc-rt-errors', metrics.totalErrors + ' error' + (metrics.totalErrors !== 1 ? 's' : ''));
+
+  var runBtn   = document.getElementById('btn-runHQ');
+  var pauseBtn = document.getElementById('btn-pauseAll');
+  var stopBtn  = document.getElementById('btn-stopAll');
+  if (runBtn)   runBtn.disabled   = (running === 5);
+  if (pauseBtn) pauseBtn.disabled = (running === 0);
+  if (stopBtn)  stopBtn.disabled  = (active  === 0);
+
+  // Keep task counter in sync
+  if (metrics.totalCompleted > 0) {
+    var newTotal = 317 + metrics.totalCompleted;
+    if (newTotal > sim.tasks) {
+      sim.tasks = newTotal;
+      var el = document.getElementById('stat-tasks');
+      if (el) el.textContent = sim.tasks.toLocaleString();
+    }
+  }
+
+  // Reflect ART running count in big stats
+  if (active > 0) {
+    var artRunning = 0;
+    Object.keys(COS.employees).forEach(function (id) {
+      var st = ART.getEmpState(id).state;
+      if (st === 'running') artRunning++;
+    });
+    setText('stat-running', artRunning);
+  }
+}
+
+function artUpdateEmpCard(empId, s) {
+  document.querySelectorAll('.oc-empCard').forEach(function (card) {
+    var profileBtn = card.querySelector('.oc-profileBtn');
+    if (!profileBtn || profileBtn.dataset.id !== empId) return;
+    var dot    = card.querySelector('.oc-empDot');
+    var status = card.querySelector('.oc-empStatus');
+    var task   = card.querySelector('.oc-empTask');
+    var meta   = card.querySelector('.oc-empMeta');
+    var st     = s.state || 'idle';
+    var sc     = st === 'running' ? 'running' : (st === 'error' ? 'blocked' : 'idle');
+    if (dot)    { dot.className = 'oc-empDot ' + sc; }
+    if (status) { status.className = 'oc-empStatus ' + sc; status.textContent = st.toUpperCase(); }
+    if (task)   {
+      task.textContent = s.task
+        ? (s.step || s.task) + (s.progress > 0 && s.progress < 100 ? ' (' + s.progress + '%)' : '')
+        : (st === 'completed' ? 'Task complete ✓' : 'Waiting for task');
+    }
+    if (meta) {
+      var spans = meta.querySelectorAll('span');
+      var est   = empStates[empId];
+      if (spans[0]) spans[0].textContent = est ? 'CPU ' + Math.round(est.cpu) + '%' : 'CPU —';
+      if (spans[1]) spans[1].textContent = st === 'running' ? '▶ ART ACTIVE' : formatRuntime(est ? est.runtime : 0);
+    }
+  });
 }
 
 // ── HELPERS ───────────────────────────────────────────────────────
@@ -778,6 +880,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Wire live events AFTER initial render (prevents duplication on seed)
   wireActivityEvents();
+
+  // Wire ART command buttons and live employee card updates
+  wireARTEvents();
 
   // Uptime
   setInterval(updateUptime, 1000);

@@ -92,6 +92,24 @@
     <!-- MAIN CONTENT -->
     <main id="oc-main">
 
+      <!-- COMMAND CENTER -->
+      <div id="oc-cmdPanel">
+        <div class="oc-cmdLeft">
+          <div class="oc-cmdTitle">COMMAND CENTER</div>
+          <div class="oc-cmdBtns">
+            <button id="btn-runHQ">&#9654; RUN HEADQUARTERS</button>
+            <button id="btn-pauseAll" disabled>&#9208; PAUSE ALL</button>
+            <button id="btn-stopAll"  disabled>&#9209; STOP ALL</button>
+          </div>
+        </div>
+        <div id="oc-runtimeStatus">
+          <span id="oc-rt-state">&#9679; STANDBY</span>
+          <span id="oc-rt-depts">All departments idle</span>
+          <span id="oc-rt-tasks">0 tasks completed</span>
+          <span id="oc-rt-errors">0 errors</span>
+        </div>
+      </div>
+
       <div id="oc-topRow">
 
         <!-- OPERATIONS CENTER PANEL -->
@@ -209,6 +227,7 @@
 
 </div>
 <script src="../js/cybercookieos.js"></script>
+<script src="../js/agent_runtime.js"></script>
 <script src="js/ops_dashboard.js" defer></script>
 </body>
 </html>

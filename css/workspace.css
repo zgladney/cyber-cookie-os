@@ -460,6 +460,157 @@ select.ws-input option { background: #0d0020; color: rgba(240,220,255,.8); }
   cursor: not-allowed;
 }
 
+/* ── EXECUTION PANEL (ART room UI) ──────────────────────────────── */
+
+.ws-exec-panel {
+  --exec-color: #9b6bff;
+  background: color-mix(in srgb, var(--exec-color) 4%, transparent);
+  border: 1px solid color-mix(in srgb, var(--exec-color) 20%, transparent);
+  border-top: 2px solid var(--exec-color);
+  border-radius: 6px;
+  padding: 14px 16px 12px;
+  margin-bottom: 18px;
+  width: 100%;
+}
+
+.ws-exec-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  gap: 12px;
+}
+
+.ws-exec-title {
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: var(--exec-color);
+  text-shadow: 0 0 10px var(--exec-color);
+  font-weight: 700;
+}
+
+.ws-exec-ctrlBtns { display: flex; gap: 6px; }
+
+.ws-exec-ctrlBtns .ws-btn {
+  font-size: 7px;
+  letter-spacing: 1.5px;
+  padding: 5px 12px;
+  background: rgba(255,255,255,.03);
+}
+
+.ws-exec-run   { border-color: color-mix(in srgb, var(--exec-color) 50%, transparent) !important; }
+.ws-exec-pause { border-color: rgba(156,246,255,.25) !important; }
+.ws-exec-stop  { border-color: rgba(255,80,80,.2) !important; }
+
+.ws-exec-run:not(:disabled):hover   { background: color-mix(in srgb, var(--exec-color) 12%, transparent) !important; }
+.ws-exec-pause:not(:disabled):hover { background: rgba(156,246,255,.06) !important; }
+.ws-exec-stop:not(:disabled):hover  { background: rgba(255,80,80,.08) !important; }
+
+.ws-exec-statusRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.ws-exec-stateBadge {
+  font-size: 7px;
+  letter-spacing: 2px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+.ws-exec-state-idle     { color: rgba(200,160,255,.5);  border-color: rgba(200,160,255,.15); background: rgba(200,160,255,.04); }
+.ws-exec-state-running  { color: #ffdc32;                border-color: rgba(255,220,50,.3);  background: rgba(255,220,50,.06);  }
+.ws-exec-state-paused   { color: #9cf6ff;                border-color: rgba(156,246,255,.3); background: rgba(156,246,255,.06); }
+
+.ws-exec-metaText {
+  font-size: 8px;
+  color: rgba(200,160,255,.4);
+  letter-spacing: .5px;
+}
+
+/* Agent rows */
+.ws-exec-agentList { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+
+.ws-exec-agentRow {
+  display: grid;
+  grid-template-columns: 10px 1fr 1.8fr 1fr 32px;
+  align-items: center;
+  gap: 8px;
+  font-size: 8px;
+}
+
+.ws-exec-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.ws-exec-dot-idle      { background: rgba(200,160,255,.2); }
+.ws-exec-dot-running   { background: #ffdc32; box-shadow: 0 0 6px #ffdc32; animation: art-pulse .9s ease-in-out infinite alternate; }
+.ws-exec-dot-paused    { background: #9cf6ff; opacity: .6; }
+.ws-exec-dot-completed { background: #2ecc71; box-shadow: 0 0 6px #2ecc71; }
+.ws-exec-dot-error     { background: #ff5050; box-shadow: 0 0 6px #ff5050; animation: art-pulse .4s ease-in-out infinite alternate; }
+.ws-exec-dot-waiting   { background: rgba(255,220,50,.4); }
+
+@keyframes art-pulse {
+  from { opacity: .7; }
+  to   { opacity: 1; }
+}
+
+.ws-exec-agentName { color: rgba(200,160,255,.7); white-space: nowrap; letter-spacing: .5px; }
+
+.ws-exec-taskText {
+  color: rgba(240,220,255,.55);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-style: italic;
+}
+
+.ws-exec-barWrap {
+  background: rgba(255,255,255,.04);
+  border-radius: 2px;
+  height: 4px;
+  overflow: hidden;
+}
+.ws-exec-bar {
+  height: 100%;
+  background: var(--exec-color);
+  border-radius: 2px;
+  transition: width .4s ease;
+  box-shadow: 0 0 6px var(--exec-color);
+}
+
+.ws-exec-pct {
+  color: rgba(200,160,255,.4);
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Stats row */
+.ws-exec-statsRow {
+  display: flex;
+  gap: 12px;
+  border-top: 1px solid rgba(255,255,255,.04);
+  padding-top: 10px;
+}
+
+.ws-exec-statBox {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  font-size: 9px;
+  color: rgba(200,160,255,.7);
+}
+
+.ws-exec-statLabel {
+  font-size: 6px;
+  letter-spacing: 1.5px;
+  color: rgba(200,160,255,.3);
+}
+
 /* ── RESPONSIVE ──────────────────────────────────────────────────── */
 
 @media (max-width: 900px) {

@@ -1310,6 +1310,112 @@ button { cursor: pointer; font-family: inherit; }
    PROFILE BUTTON (now active)
 ================================================================ */
 
+/* ================================================================
+   COMMAND CENTER PANEL (ART controls)
+================================================================ */
+
+#oc-cmdPanel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: linear-gradient(90deg, rgba(10,2,26,.95) 0%, rgba(6,0,18,.95) 100%);
+  border: 1px solid rgba(150,80,255,.18);
+  border-bottom: 2px solid rgba(255,220,50,.25);
+  border-radius: 8px;
+  padding: 14px 20px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.oc-cmdLeft { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+.oc-cmdTitle {
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: rgba(255,220,50,.6);
+  text-shadow: 0 0 12px rgba(255,220,50,.3);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.oc-cmdBtns { display: flex; gap: 8px; }
+
+.oc-cmdBtns button {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  padding: 7px 16px;
+  border-radius: 5px;
+  border: 1px solid;
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+}
+
+#btn-runHQ {
+  background: rgba(255,220,50,.08);
+  border-color: rgba(255,220,50,.4);
+  color: #ffdc32;
+  text-shadow: 0 0 10px rgba(255,220,50,.5);
+}
+#btn-runHQ:not(:disabled):hover {
+  background: rgba(255,220,50,.15);
+  border-color: rgba(255,220,50,.7);
+  box-shadow: 0 0 14px rgba(255,220,50,.25);
+}
+
+#btn-pauseAll {
+  background: rgba(156,246,255,.04);
+  border-color: rgba(156,246,255,.2);
+  color: #9cf6ff;
+}
+#btn-pauseAll:not(:disabled):hover {
+  background: rgba(156,246,255,.1);
+  border-color: rgba(156,246,255,.45);
+}
+
+#btn-stopAll {
+  background: rgba(255,80,80,.04);
+  border-color: rgba(255,80,80,.2);
+  color: rgba(255,80,80,.8);
+}
+#btn-stopAll:not(:disabled):hover {
+  background: rgba(255,80,80,.1);
+  border-color: rgba(255,80,80,.45);
+}
+
+.oc-cmdBtns button:disabled {
+  opacity: .28;
+  cursor: not-allowed;
+}
+
+#oc-runtimeStatus {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 8px;
+  letter-spacing: 1px;
+  flex-wrap: wrap;
+}
+
+#oc-rt-state {
+  color: rgba(200,160,255,.4);
+  font-weight: 700;
+  letter-spacing: 2px;
+  transition: color .4s;
+}
+
+#oc-rt-depts, #oc-rt-tasks, #oc-rt-errors {
+  color: rgba(200,160,255,.35);
+  white-space: nowrap;
+}
+
+/* ================================================================
+   PROFILE BUTTON (now active)
+================================================================ */
+
 .oc-profileBtn:not([disabled]) {
   color: rgba(156,246,255,.5) !important;
   border-color: rgba(156,246,255,.2) !important;
