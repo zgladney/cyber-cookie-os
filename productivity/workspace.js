@@ -1,5 +1,5 @@
 /* CyberCookieOS — Productivity Workspace
-   Task Board: To Do / In Progress / Done, assign to any employee */
+   Task Board: To Do / In Progress / Done, assign to any employee, edit tasks */
 
 (function () {
   'use strict';
@@ -28,12 +28,12 @@
   ];
 
   var DEFAULTS = [
-    { id: 'pt1', title: 'Complete IPv6 threat sweep', assignee: 'athena',       dept: 'security',     dueDate: '', status: 'inprogress', ts: Date.now() - 3600000 },
-    { id: 'pt2', title: 'Find 5 new rental listings', assignee: 'nova',         dept: 'housing',      dueDate: '', status: 'inprogress', ts: Date.now() - 7200000 },
-    { id: 'pt3', title: 'Research holographic stickers', assignee: 'pixel',     dept: 'commerce',     dueDate: '', status: 'done',       ts: Date.now() - 86400000 },
-    { id: 'pt4', title: 'Sync weekly calendar',         assignee: 'calypso',    dept: 'productivity', dueDate: '', status: 'done',       ts: Date.now() - 86400000 },
-    { id: 'pt5', title: 'Generate monthly budget report', assignee: 'greenbean', dept: 'finance',     dueDate: '', status: 'todo',       ts: Date.now() - 1800000 },
-    { id: 'pt6', title: 'Audit subscription costs',    assignee: 'ledger',      dept: 'finance',      dueDate: '', status: 'todo',       ts: Date.now() - 3600000 },
+    { id: 'pt1', title: 'Complete IPv6 threat sweep',      assignee: 'athena',       dept: 'security',     dueDate: '', status: 'inprogress', ts: Date.now() - 3600000 },
+    { id: 'pt2', title: 'Find 5 new rental listings',      assignee: 'nova',         dept: 'housing',      dueDate: '', status: 'inprogress', ts: Date.now() - 7200000 },
+    { id: 'pt3', title: 'Research holographic stickers',   assignee: 'pixel',        dept: 'commerce',     dueDate: '', status: 'done',       ts: Date.now() - 86400000 },
+    { id: 'pt4', title: 'Sync weekly calendar',            assignee: 'calypso',      dept: 'productivity', dueDate: '', status: 'done',       ts: Date.now() - 86400000 },
+    { id: 'pt5', title: 'Generate monthly budget report',  assignee: 'greenbean',    dept: 'finance',      dueDate: '', status: 'todo',       ts: Date.now() - 1800000 },
+    { id: 'pt6', title: 'Audit subscription costs',        assignee: 'ledger',       dept: 'finance',      dueDate: '', status: 'todo',       ts: Date.now() - 3600000 },
   ];
 
   var COLS = [
@@ -41,6 +41,8 @@
     { id: 'inprogress', label: 'IN PROGRESS' },
     { id: 'done',       label: 'DONE' },
   ];
+
+  var _editingId = null;
 
   function load()     { return COS.state.get(STORE) || DEFAULTS.map(function (t) { return Object.assign({}, t); }); }
   function save(list) { COS.state.set(STORE, list); }
@@ -69,27 +71,28 @@
         var empName = emp ? emp.name : (t.assignee || 'Unassigned');
         var due     = t.dueDate ? 'Due ' + t.dueDate : '';
         var overdue = isOverdue(t);
+        var isEditing = (_editingId === t.id);
 
         var div = document.createElement('div');
-        div.className = 'ws-taskItem';
+        div.className = 'ws-taskItem' + (isEditing ? ' ws-taskItem-editing' : '');
         div.innerHTML =
           '<div class="ws-taskName">' + esc(t.title) + '</div>' +
           '<div class="ws-taskAssignee">👤 ' + esc(empName) + '</div>' +
-          (due ? '<div class="ws-taskDue' + (overdue ? ' overdue' : '') + '">' + (overdue ? '⚠ OVERDUE — ' : '') + due + '</div>' : '') +
+          (due ? '<div class="ws-taskDue' + (overdue ? ' overdue' : '') + '">' + (overdue ? '⚠ ' : '') + due + '</div>' : '') +
           '<div class="ws-taskItemActions">' +
-            (t.status !== 'done'       ? '<button class="ws-btn ws-btn-sm ws-btn-success" data-action="advance" data-id="' + t.id + '">' + (t.status === 'todo' ? '▶' : '✓') + '</button>' : '') +
-            (t.status !== 'todo'       ? '<button class="ws-btn ws-btn-sm ws-btn-ghost"   data-action="back"    data-id="' + t.id + '">◀</button>' : '') +
-            '<button class="ws-btn ws-btn-sm ws-btn-danger" data-action="delete" data-id="' + t.id + '">✕</button>' +
+            (t.status !== 'done' ? '<button class="ws-btn ws-btn-sm ws-btn-success" data-action="advance" data-id="' + t.id + '">' + (t.status === 'todo' ? '▶' : '✓') + '</button>' : '') +
+            (t.status !== 'todo' ? '<button class="ws-btn ws-btn-sm ws-btn-ghost"   data-action="back"    data-id="' + t.id + '">◀</button>' : '') +
+            '<button class="ws-btn ws-btn-sm ws-btn-ghost"   data-action="edit"   data-id="' + t.id + '">✏</button>' +
+            '<button class="ws-btn ws-btn-sm ws-btn-danger"  data-action="delete" data-id="' + t.id + '">✕</button>' +
           '</div>';
         colEl.appendChild(div);
       });
     });
 
-    // Update task count summary
-    var total    = list.length;
-    var done     = list.filter(function (t) { return t.status === 'done'; }).length;
-    var overdue  = list.filter(function (t) { return isOverdue(t); }).length;
-    var countEl  = document.getElementById('pd-taskCount');
+    var total   = list.length;
+    var done    = list.filter(function (t) { return t.status === 'done'; }).length;
+    var overdue = list.filter(function (t) { return isOverdue(t); }).length;
+    var countEl = document.getElementById('pd-taskCount');
     if (countEl) countEl.textContent = done + '/' + total + ' done' + (overdue ? ' · ⚠ ' + overdue + ' overdue' : '');
   }
 
@@ -117,8 +120,14 @@
         else if (task.status === 'inprogress') task.status = 'todo';
         save(list);
         render();
+      } else if (action === 'edit') {
+        _editingId = id;
+        populateEditForm(task);
+        render();
       } else if (action === 'delete') {
+        if (_editingId === id) clearForm();
         save(list.filter(function (t) { return t.id !== id; }));
+        COS.activity.log({ agent: 'Atlas Planner', dept: 'productivity', msg: 'Task deleted: ' + task.title, source: 'user' });
         render();
       }
     });
@@ -136,41 +145,80 @@
     });
   }
 
+  function populateEditForm(task) {
+    setValue('pd-newTitle',    task.title    || '');
+    setValue('pd-newAssignee', task.assignee || '');
+    setValue('pd-newDue',      task.dueDate  || '');
+    setValue('pd-newStatus',   task.status   || 'todo');
+    var btn = document.getElementById('pd-addTask');
+    if (btn) btn.textContent = '✓ UPDATE TASK';
+    document.getElementById('pd-formPanel').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function clearForm() {
+    setValue('pd-newTitle', '');
+    setValue('pd-newDue', '');
+    setValue('pd-newAssignee', '');
+    setValue('pd-newStatus', 'todo');
+    _editingId = null;
+    var btn = document.getElementById('pd-addTask');
+    if (btn) btn.textContent = '+ ADD TASK';
+  }
+
   function wireForm() {
     var btn = document.getElementById('pd-addTask');
     if (!btn) return;
     btn.addEventListener('click', function () {
       var title = (document.getElementById('pd-newTitle').value || '').trim();
-      if (!title) { document.getElementById('pd-newTitle').focus(); return; }
+      if (!title) {
+        var el = document.getElementById('pd-newTitle');
+        el.focus();
+        el.classList.add('ws-input-error');
+        setTimeout(function () { el.classList.remove('ws-input-error'); }, 1000);
+        return;
+      }
 
       var assigneeId  = document.getElementById('pd-newAssignee').value;
       var assigneeEmp = ALL_EMPLOYEES.find(function (e) { return e.id === assigneeId; });
+      var list        = load();
 
-      var task = {
-        id:       'pt' + Date.now(),
-        title:    title,
-        assignee: assigneeId || '',
-        dept:     (assigneeEmp || {}).dept || 'productivity',
-        dueDate:  document.getElementById('pd-newDue').value || '',
-        status:   document.getElementById('pd-newStatus').value || 'todo',
-        ts:       Date.now(),
-      };
+      if (_editingId) {
+        var task = list.find(function (t) { return t.id === _editingId; });
+        if (task) {
+          task.title    = title;
+          task.assignee = assigneeId || '';
+          task.dept     = (assigneeEmp || {}).dept || task.dept || 'productivity';
+          task.dueDate  = document.getElementById('pd-newDue').value || '';
+          task.status   = document.getElementById('pd-newStatus').value || task.status;
+          save(list);
+          COS.activity.log({ agent: (assigneeEmp || {}).name || 'Atlas Planner', dept: task.dept, msg: 'Task updated: ' + title, source: 'user' });
+        }
+      } else {
+        var newTask = {
+          id:       'pt' + Date.now(),
+          title:    title,
+          assignee: assigneeId || '',
+          dept:     (assigneeEmp || {}).dept || 'productivity',
+          dueDate:  document.getElementById('pd-newDue').value || '',
+          status:   document.getElementById('pd-newStatus').value || 'todo',
+          ts:       Date.now(),
+        };
+        list.unshift(newTask);
+        save(list);
+        var empName = (assigneeEmp || {}).name || 'System';
+        COS.activity.log({ agent: empName, dept: newTask.dept, msg: 'Task added: ' + title, source: 'user' });
+        COS.notifications.add('New task: ' + title + (assigneeEmp ? ' → ' + assigneeEmp.name : ''), 'normal');
+      }
 
-      var list = load();
-      list.unshift(task);
-      save(list);
-
-      var empName = (assigneeEmp || {}).name || 'System';
-      COS.activity.log({ agent: empName, dept: task.dept, msg: 'Task added: ' + title, source: 'user' });
-      COS.notifications.add('New task assigned: ' + title + (assigneeEmp ? ' → ' + assigneeEmp.name : ''), 'normal');
-
-      document.getElementById('pd-newTitle').value  = '';
-      document.getElementById('pd-newDue').value    = '';
-      document.getElementById('pd-newAssignee').value = '';
-      document.getElementById('pd-newStatus').value = 'todo';
+      clearForm();
       render();
     });
+
+    var cancelBtn = document.getElementById('pd-cancelEdit');
+    if (cancelBtn) cancelBtn.addEventListener('click', function () { clearForm(); render(); });
   }
+
+  function setValue(id, val) { var el = document.getElementById(id); if (el) el.value = val; }
 
   document.addEventListener('DOMContentLoaded', function () {
     buildEmployeeOptions();

@@ -168,9 +168,9 @@
       </div>
     </div>
 
-    <!-- Add Task Form -->
-    <div class="ws-panel ws-panel-full">
-      <div class="ws-pTitle">ADD NEW TASK</div>
+    <!-- Add / Edit Task Form -->
+    <div class="ws-panel ws-panel-full" id="pd-formPanel">
+      <div class="ws-pTitle">ADD / EDIT TASK</div>
       <div class="ws-form">
         <div class="ws-form-row">
           <div class="ws-field">
@@ -188,7 +188,7 @@
             <input class="ws-input" id="pd-newDue" type="date" />
           </div>
           <div class="ws-field">
-            <label class="ws-label">INITIAL STATUS</label>
+            <label class="ws-label">STATUS</label>
             <select class="ws-input" id="pd-newStatus">
               <option value="todo">To Do</option>
               <option value="inprogress">In Progress</option>
@@ -196,7 +196,10 @@
             </select>
           </div>
         </div>
-        <button class="ws-btn ws-btn-full" id="pd-addTask">+ ADD TASK</button>
+        <div style="display:flex;gap:8px">
+          <button class="ws-btn" style="flex:1" id="pd-addTask">+ ADD TASK</button>
+          <button class="ws-btn ws-btn-ghost" id="pd-cancelEdit">CANCEL</button>
+        </div>
       </div>
     </div>
 

@@ -592,10 +592,9 @@ body {
     overflow: hidden;
 }
 
-#hw-room {
-    flex-shrink: 0;
-    height: 220px;
-}
+#hw-room     { flex-shrink: 0; height: 310px; width: 100%; }
+#hw-floor    { height: 90px; }
+#hw-backWall { height: 220px; width: 100%; }
 
 /* =============================================
    DEPARTMENT GRID

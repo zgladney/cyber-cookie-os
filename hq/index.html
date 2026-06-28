@@ -251,12 +251,12 @@
       </div>
     </div>
 
-    <!-- Add Security Note -->
-    <div class="ws-panel ws-panel-narrow">
-      <div class="ws-pTitle">ADD SECURITY NOTE</div>
+    <!-- Add / Edit Security Note -->
+    <div class="ws-panel ws-panel-narrow" id="hq-formPanel">
+      <div class="ws-pTitle">ADD / EDIT NOTE</div>
       <div class="ws-form">
         <div class="ws-field">
-          <label class="ws-label">EVENT DESCRIPTION</label>
+          <label class="ws-label">EVENT DESCRIPTION *</label>
           <textarea class="ws-input" id="hq-noteEvent" placeholder="Describe the event or threat..." rows="3"></textarea>
         </div>
         <div class="ws-field">
@@ -273,7 +273,10 @@
           <label class="ws-label">SOURCE / SYSTEM</label>
           <input class="ws-input" id="hq-noteSource" placeholder="IP address, system, agent..." type="text" />
         </div>
-        <button class="ws-btn ws-btn-full" id="hq-addNote">+ ADD ENTRY</button>
+        <div style="display:flex;gap:8px">
+          <button class="ws-btn" style="flex:1" id="hq-addNote">+ ADD ENTRY</button>
+          <button class="ws-btn ws-btn-ghost" id="hq-cancelEdit">CANCEL</button>
+        </div>
       </div>
     </div>
 

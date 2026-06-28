@@ -1,5 +1,5 @@
 /* CyberCookieOS — Security Workspace
-   Threat / Event Log with severity filter, manual notes, mark reviewed */
+   Threat / Event Log with severity filter, manual notes, mark reviewed, edit */
 
 (function () {
   'use strict';
@@ -14,7 +14,8 @@
     { id: 'th5', event: 'SOC sweep completed — no active incidents',                  severity: 'info',   source: 'Sentinel / SOC Ops',     status: 'reviewed', ts: Date.now() - 300000  },
   ];
 
-  var _filter = 'all';
+  var _filter    = 'all';
+  var _editingId = null;
 
   function load()      { return COS.state.get(STORE) || DEFAULTS.map(function (t) { return Object.assign({}, t); }); }
   function save(list)  { COS.state.set(STORE, list); }
@@ -42,15 +43,16 @@
     filtered.forEach(function (t) {
       var tr = document.createElement('tr');
       var reviewBtn = t.status !== 'reviewed'
-        ? '<button class="ws-btn ws-btn-sm" data-action="review" data-id="' + t.id + '" title="Mark Reviewed">✓ REVIEW</button>'
+        ? '<button class="ws-btn ws-btn-sm ws-btn-success" data-action="review" data-id="' + t.id + '" title="Mark Reviewed">✓</button>'
         : '';
       tr.innerHTML =
         '<td style="white-space:nowrap;font-size:7px;color:rgba(200,160,255,.3)">' + fmtTime(t.ts) + '</td>' +
-        '<td style="max-width:260px">' + esc(t.event) + '</td>' +
+        '<td style="max-width:240px">' + esc(t.event) + '</td>' +
         '<td><span class="ws-sev ws-sev-' + t.severity + '">' + t.severity.toUpperCase() + '</span></td>' +
         '<td style="font-size:7px;color:rgba(200,160,255,.4)">' + esc(t.source) + '</td>' +
         '<td><span class="ws-badge ws-badge-' + t.status + '">' + t.status.toUpperCase() + '</span></td>' +
         '<td><div style="display:flex;gap:4px">' + reviewBtn +
+          '<button class="ws-btn ws-btn-sm ws-btn-ghost" data-action="edit" data-id="' + t.id + '" title="Edit">✏</button>' +
           '<button class="ws-btn ws-btn-sm ws-btn-danger" data-action="delete" data-id="' + t.id + '" title="Delete">✕</button>' +
         '</div></td>';
       tbody.appendChild(tr);
@@ -68,35 +70,71 @@
     });
   }
 
+  function populateForm(item) {
+    setValue('hq-noteEvent',  item.event    || '');
+    setValue('hq-noteSev',    item.severity || 'medium');
+    setValue('hq-noteSource', item.source   || '');
+    var btn = document.getElementById('hq-addNote');
+    if (btn) btn.textContent = '✓ UPDATE ENTRY';
+    document.getElementById('hq-formPanel').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function clearForm() {
+    setValue('hq-noteEvent', '');
+    setValue('hq-noteSource', '');
+    setValue('hq-noteSev', 'medium');
+    _editingId = null;
+    var btn = document.getElementById('hq-addNote');
+    if (btn) btn.textContent = '+ ADD ENTRY';
+  }
+
   function wireAddForm() {
     var addBtn = document.getElementById('hq-addNote');
     if (!addBtn) return;
     addBtn.addEventListener('click', function () {
-      var eventEl  = document.getElementById('hq-noteEvent');
-      var sevEl    = document.getElementById('hq-noteSev');
-      var sourceEl = document.getElementById('hq-noteSource');
+      var eventEl   = document.getElementById('hq-noteEvent');
+      var sevEl     = document.getElementById('hq-noteSev');
+      var sourceEl  = document.getElementById('hq-noteSource');
       var eventText = (eventEl.value || '').trim();
-      if (!eventText) { eventEl.focus(); return; }
-
-      var entry = {
-        id:       'th' + Date.now(),
-        event:    eventText,
-        severity: sevEl.value,
-        source:   (sourceEl.value || '').trim() || 'Manual Entry',
-        status:   'new',
-        ts:       Date.now(),
-      };
+      if (!eventText) {
+        eventEl.focus();
+        eventEl.classList.add('ws-input-error');
+        setTimeout(function () { eventEl.classList.remove('ws-input-error'); }, 1000);
+        return;
+      }
 
       var list = load();
-      list.unshift(entry);
-      save(list);
-      COS.activity.log({ agent: 'Sentinel', dept: 'security', msg: 'Security note added: ' + eventText.slice(0, 60), source: 'user' });
-      COS.notifications.add('New security note: ' + eventText.slice(0, 50), 'normal');
 
-      eventEl.value  = '';
-      sourceEl.value = '';
+      if (_editingId) {
+        var entry = list.find(function (t) { return t.id === _editingId; });
+        if (entry) {
+          entry.event    = eventText;
+          entry.severity = sevEl.value;
+          entry.source   = (sourceEl.value || '').trim() || 'Manual Entry';
+          save(list);
+          COS.activity.log({ agent: 'Sentinel', dept: 'security', msg: 'Security entry updated: ' + eventText.slice(0, 60), source: 'user' });
+        }
+      } else {
+        var newEntry = {
+          id:       'th' + Date.now(),
+          event:    eventText,
+          severity: sevEl.value,
+          source:   (sourceEl.value || '').trim() || 'Manual Entry',
+          status:   'new',
+          ts:       Date.now(),
+        };
+        list.unshift(newEntry);
+        save(list);
+        COS.activity.log({ agent: 'Sentinel', dept: 'security', msg: 'Security note added: ' + eventText.slice(0, 60), source: 'user' });
+        COS.notifications.add('New security note: ' + eventText.slice(0, 50), 'normal');
+      }
+
+      clearForm();
       render();
     });
+
+    var cancelBtn = document.getElementById('hq-cancelEdit');
+    if (cancelBtn) cancelBtn.addEventListener('click', clearForm);
   }
 
   function wireTable() {
@@ -117,13 +155,22 @@
           COS.activity.log({ agent: 'Sentinel', dept: 'security', msg: 'Threat marked reviewed: ' + entry.event.slice(0, 50), source: 'user' });
           render();
         }
+      } else if (action === 'edit') {
+        var item = list.find(function (t) { return t.id === id; });
+        if (item) {
+          _editingId = id;
+          populateForm(item);
+        }
       } else if (action === 'delete') {
         list = list.filter(function (t) { return t.id !== id; });
         save(list);
+        COS.activity.log({ agent: 'Sentinel', dept: 'security', msg: 'Security entry deleted.', source: 'user' });
         render();
       }
     });
   }
+
+  function setValue(id, val) { var el = document.getElementById(id); if (el) el.value = val; }
 
   document.addEventListener('DOMContentLoaded', function () {
     render();

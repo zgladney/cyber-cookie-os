@@ -8,12 +8,24 @@
   var SEARCH_KEY   = 'ws.housing.search';
 
   var DEFAULT_LISTINGS = [
-    { id: 'l1', name: '2BR on Maple Ave',     rent: 1400, location: 'Burlington City, NJ',    link: '',                     pets: true,  voucher: true,  status: 'interested', notes: 'Close to bus route 409', ts: Date.now() - 86400000 },
-    { id: 'l2', name: 'Cornerstone Apts 1BR', rent: 1200, location: 'Cinnaminson, NJ',        link: '',                     pets: false, voucher: true,  status: 'applied',    notes: 'Applied online, waiting for callback', ts: Date.now() - 43200000 },
-    { id: 'l3', name: 'Riverside Townhome',   rent: 1650, location: 'Mount Holly, NJ',        link: '',                     pets: true,  voucher: false, status: 'interested', notes: 'Over budget but nice area', ts: Date.now() - 21600000 },
-  ];
+    { id: 'l1', name: 'Mount Laurel Colonial 3BR', rent: 2050, location: 'Mount Laurel, NJ',    type: 'house',     link: '', pets: true,  voucher: true,  family: true,  status: 'interested', notes: '3BR colonial, attached garage, near Route 38' },
+    { id: 'l2', name: 'Willingboro Townhouse 2BR', rent: 1850, location: 'Willingboro, NJ',      type: 'townhouse', link: '', pets: true,  voucher: true,  family: true,  status: 'applied',    notes: 'Applied online. Awaiting callback.' },
+    { id: 'l3', name: 'Marlton Oaks 2BR House',   rent: 1950, location: 'Marlton, NJ',           type: 'house',     link: '', pets: false, voucher: true,  family: true,  status: 'interested', notes: 'Nice neighborhood, near good schools' },
+    { id: 'l4', name: 'Southampton Ridge 2BR',     rent: 1750, location: 'Southampton, NJ',       type: 'townhouse', link: '', pets: true,  voucher: true,  family: true,  status: 'interested', notes: 'Community pool, quiet area' },
+    { id: 'l5', name: 'Mt Laurel Crossing Condo',  rent: 2000, location: 'Mount Laurel, NJ',     type: 'condo',     link: '', pets: false, voucher: false, family: true,  status: 'interested', notes: 'No pet policy, no voucher — check landlord' },
+    { id: 'l6', name: 'Willingboro Park Condo',    rent: 1700, location: 'Willingboro, NJ',      type: 'condo',     link: '', pets: true,  voucher: true,  family: true,  status: 'interested', notes: 'Small HOA fee, good location' },
+    { id: 'l7', name: 'Southampton Gardens House', rent: 1800, location: 'Southampton, NJ',       type: 'house',     link: '', pets: true,  voucher: true,  family: true,  status: 'interested', notes: 'Backyard, close to bus stop' },
+  ].map(function (l) { return Object.assign({ ts: Date.now() - Math.floor(Math.random() * 86400000) }, l); });
 
-  var DEFAULT_SEARCH = { location: 'Burlington County, NJ', maxRent: 1500, pets: true, voucher: true };
+  var DEFAULT_SEARCH = {
+    neighborhoods: 'Willingboro NJ\nMount Laurel NJ\nMarlton NJ\nSouthampton NJ',
+    maxRent:  2100,
+    bedrooms: 2,
+    types:    'house, townhouse, condo',
+    pets:     true,
+    voucher:  true,
+    family:   true,
+  };
 
   var _editingId = null;
 
@@ -24,16 +36,17 @@
 
   function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
-  var STATUS_OPTIONS = ['interested', 'applied', 'rejected', 'tour', 'moved-in'];
-
   // ── SEARCH CRITERIA ──────────────────────────────────────────────
 
   function renderSearch() {
     var s = loadSearch();
-    var el = document.getElementById('hs-searchLocation'); if (el) el.value = s.location || '';
-    var mr = document.getElementById('hs-searchMaxRent');  if (mr) mr.value = s.maxRent || '';
-    var pt = document.getElementById('hs-searchPets');     if (pt) pt.checked = !!s.pets;
-    var vr = document.getElementById('hs-searchVoucher');  if (vr) vr.checked = !!s.voucher;
+    var nb = document.getElementById('hs-searchNeighborhoods'); if (nb) nb.value = s.neighborhoods || '';
+    var mr = document.getElementById('hs-searchMaxRent');       if (mr) mr.value = s.maxRent || '';
+    var bd = document.getElementById('hs-searchBedrooms');      if (bd) bd.value = s.bedrooms || '';
+    var tp = document.getElementById('hs-searchTypes');         if (tp) tp.value = s.types || '';
+    var pt = document.getElementById('hs-searchPets');          if (pt) pt.checked = !!s.pets;
+    var vr = document.getElementById('hs-searchVoucher');       if (vr) vr.checked = !!s.voucher;
+    var fm = document.getElementById('hs-searchFamily');        if (fm) fm.checked = !!s.family;
   }
 
   function wireSearch() {
@@ -41,15 +54,17 @@
     if (!saveBtn) return;
     saveBtn.addEventListener('click', function () {
       var s = {
-        location: (document.getElementById('hs-searchLocation').value || '').trim(),
+        neighborhoods: (document.getElementById('hs-searchNeighborhoods').value || '').trim(),
         maxRent:  parseInt(document.getElementById('hs-searchMaxRent').value, 10) || 0,
+        bedrooms: parseInt(document.getElementById('hs-searchBedrooms').value, 10) || 0,
+        types:    (document.getElementById('hs-searchTypes').value || '').trim(),
         pets:     document.getElementById('hs-searchPets').checked,
         voucher:  document.getElementById('hs-searchVoucher').checked,
+        family:   document.getElementById('hs-searchFamily').checked,
       };
       saveSearch(s);
-      COS.activity.log({ agent: 'Nova', dept: 'housing', msg: 'Search criteria updated: ' + (s.location || 'all areas'), source: 'user' });
+      COS.activity.log({ agent: 'Nova', dept: 'housing', msg: 'Search criteria saved — max rent $' + s.maxRent + ', ' + s.bedrooms + 'BR', source: 'user' });
       showHsToast('Search criteria saved!');
-      renderSearch();
     });
   }
 
@@ -69,9 +84,12 @@
     list.forEach(function (l) {
       var card = document.createElement('div');
       card.className = 'ws-listingCard';
-      var petPill  = l.pets    ? '<span class="ws-badge ws-badge-new">🐾 PETS OK</span>'   : '<span class="ws-badge">NO PETS</span>';
-      var vouPill  = l.voucher ? '<span class="ws-badge ws-badge-done">🏷 VOUCHER OK</span>' : '<span class="ws-badge ws-badge-dropped">NO VOUCHER</span>';
-      var linkHtml = l.link    ? '<a href="' + esc(l.link) + '" target="_blank" rel="noopener" style="font-size:8px;color:rgba(156,246,255,.5);text-decoration:none">🔗 VIEW LISTING</a>' : '';
+
+      var petPill  = l.pets    ? '<span class="ws-badge ws-badge-new">🐾 PETS OK</span>'     : '<span class="ws-badge">NO PETS</span>';
+      var vouPill  = l.voucher ? '<span class="ws-badge ws-badge-done">🏷 VOUCHER OK</span>'  : '<span class="ws-badge ws-badge-dropped">NO VOUCHER</span>';
+      var famPill  = l.family  ? '<span class="ws-badge ws-badge-new">👨‍👩‍👧 FAMILY OK</span>' : '';
+      var typePill = l.type    ? '<span class="ws-badge">' + l.type.toUpperCase() + '</span>' : '';
+      var linkHtml = l.link    ? '<a href="' + esc(l.link) + '" target="_blank" rel="noopener" style="font-size:8px;color:rgba(156,246,255,.5);text-decoration:none">🔗 VIEW</a>' : '';
 
       card.innerHTML =
         '<div class="ws-listingHeader">' +
@@ -80,13 +98,13 @@
         '</div>' +
         '<div class="ws-listingMeta">' +
           '<span>📍 ' + esc(l.location) + '</span>' +
-          petPill + vouPill +
+          typePill + petPill + vouPill + famPill +
           '<span class="ws-badge ws-badge-' + l.status + '">' + l.status.toUpperCase() + '</span>' +
           linkHtml +
         '</div>' +
         (l.notes ? '<div style="font-size:8px;color:rgba(200,160,255,.35);font-style:italic;margin:4px 0">' + esc(l.notes) + '</div>' : '') +
         '<div class="ws-listingActions">' +
-          '<button class="ws-btn ws-btn-sm ws-btn-ghost" data-action="edit" data-id="' + l.id + '">EDIT</button>' +
+          '<button class="ws-btn ws-btn-sm ws-btn-ghost" data-action="edit"   data-id="' + l.id + '">EDIT</button>' +
           '<button class="ws-btn ws-btn-sm ws-btn-danger" data-action="delete" data-id="' + l.id + '">DELETE</button>' +
         '</div>';
       container.appendChild(card);
@@ -122,11 +140,13 @@
     setValue('hs-newName',     item.name     || '');
     setValue('hs-newRent',     item.rent     || '');
     setValue('hs-newLocation', item.location || '');
+    setValue('hs-newType',     item.type     || 'house');
     setValue('hs-newLink',     item.link     || '');
     setValue('hs-newStatus',   item.status   || 'interested');
     setValue('hs-newNotes',    item.notes    || '');
     setChecked('hs-newPets',    !!item.pets);
     setChecked('hs-newVoucher', !!item.voucher);
+    setChecked('hs-newFamily',  !!item.family);
 
     var addBtn = document.getElementById('hs-submitListing');
     if (addBtn) addBtn.textContent = '✓ UPDATE LISTING';
@@ -134,9 +154,11 @@
 
   function clearForm() {
     ['hs-newName','hs-newRent','hs-newLocation','hs-newLink','hs-newNotes'].forEach(function (id) { setValue(id, ''); });
+    setValue('hs-newType',   'house');
     setValue('hs-newStatus', 'interested');
     setChecked('hs-newPets',    false);
     setChecked('hs-newVoucher', true);
+    setChecked('hs-newFamily',  true);
     _editingId = null;
     var addBtn = document.getElementById('hs-submitListing');
     if (addBtn) addBtn.textContent = '+ ADD LISTING';
@@ -147,16 +169,24 @@
     if (!btn) return;
     btn.addEventListener('click', function () {
       var name = (document.getElementById('hs-newName').value || '').trim();
-      if (!name) { document.getElementById('hs-newName').focus(); return; }
+      if (!name) {
+        var el = document.getElementById('hs-newName');
+        el.focus();
+        el.classList.add('ws-input-error');
+        setTimeout(function () { el.classList.remove('ws-input-error'); }, 1000);
+        return;
+      }
 
       var item = {
         id:      _editingId || 'l' + Date.now(),
         name:    name,
         rent:    parseInt(document.getElementById('hs-newRent').value, 10) || 0,
         location:(document.getElementById('hs-newLocation').value || '').trim(),
+        type:    document.getElementById('hs-newType').value || 'house',
         link:    (document.getElementById('hs-newLink').value || '').trim(),
         pets:    document.getElementById('hs-newPets').checked,
         voucher: document.getElementById('hs-newVoucher').checked,
+        family:  document.getElementById('hs-newFamily').checked,
         status:  document.getElementById('hs-newStatus').value || 'interested',
         notes:   (document.getElementById('hs-newNotes').value || '').trim(),
         ts:      Date.now(),
@@ -170,14 +200,15 @@
         list.unshift(item);
       }
       saveListings(list);
-      COS.activity.log({ agent: 'Nova', dept: 'housing', msg: (_editingId ? 'Listing updated: ' : 'Listing added: ') + name, source: 'user' });
+      COS.activity.log({ agent: 'Nova', dept: 'housing', msg: (_editingId ? 'Listing updated: ' : 'Listing added: ') + name + ' ($' + item.rent + '/mo)', source: 'user' });
       if (!_editingId) COS.notifications.add('New listing tracked: ' + name, 'normal');
       clearForm();
       renderListings();
+      showHsToast(_editingId ? 'Listing updated!' : 'Listing added!');
     });
 
     var cancelBtn = document.getElementById('hs-cancelEdit');
-    if (cancelBtn) cancelBtn.addEventListener('click', clearForm);
+    if (cancelBtn) cancelBtn.addEventListener('click', function () { clearForm(); showHsToast('Edit cancelled.'); });
   }
 
   // ── HELPERS ──────────────────────────────────────────────────────
@@ -198,6 +229,7 @@
     renderListings();
     wireListingActions();
     wireAddForm();
+    COS.activity.log({ agent: 'Nova', dept: 'housing', msg: 'Housing workspace loaded — tracking ' + loadListings().length + ' listings.', source: 'system' });
   });
 
 })();
