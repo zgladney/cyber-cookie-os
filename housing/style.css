@@ -9,7 +9,7 @@ body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
     background: radial-gradient(ellipse at top, #1e0545 0%, #050010 70%);
-    overflow: hidden;
+    overflow-x: hidden;
     color: white;
 }
 
@@ -1313,3 +1313,76 @@ body {
 .sp-btnSave.sp-saved { border-color: rgba(196,120,74,.6); color: rgba(196,120,74,1); background: rgba(196,120,74,.08); }
 .sp-btnHide          { border-color: rgba(255,255,255,.08); color: rgba(200,160,255,.3); }
 .sp-btnHide:hover    { background: rgba(255,80,80,.05); color: rgba(255,120,120,.5); border-color: rgba(255,80,80,.2); }
+
+/* ── Nova Enhanced Card Elements ─────────────────────────── */
+.sp-family    { background: rgba(46,204,113,.06) !important; border-color: rgba(46,204,113,.2) !important; color: rgba(100,220,130,.7) !important; }
+
+.sp-cardStatus {
+  font-size: 6px; letter-spacing: 1.5px; padding: 2px 7px;
+  border-radius: 2px; border: 1px solid; display: inline-block;
+  white-space: nowrap; flex-shrink: 0;
+}
+.sp-status-new       { color: rgba(156,246,255,.6);  border-color: rgba(156,246,255,.2); }
+.sp-status-saved     { color: rgba(196,120,74,.9);   border-color: rgba(196,120,74,.4);  background: rgba(196,120,74,.06); }
+.sp-status-contacted { color: rgba(255,220,50,.8);   border-color: rgba(255,220,50,.3);  background: rgba(255,220,50,.05); }
+.sp-status-scheduled { color: rgba(46,204,113,.85);  border-color: rgba(46,204,113,.35); background: rgba(46,204,113,.05); }
+
+.sp-cardNotes {
+  width: 100%; margin: 6px 0 8px;
+  padding: 5px 8px; background: rgba(255,255,255,.02);
+  border: 1px solid rgba(196,120,74,.1); border-radius: 3px;
+  color: rgba(200,170,150,.6); font-size: 7px; font-family: inherit;
+  resize: none; outline: none; box-sizing: border-box; line-height: 1.4;
+}
+.sp-cardNotes:focus { border-color: rgba(196,120,74,.28); }
+.sp-cardNotes::placeholder { color: rgba(196,120,74,.2); }
+
+.sp-btnSm {
+  font-size: 7px; letter-spacing: .5px; padding: 3px 9px;
+  border-radius: 3px; border: 1px solid rgba(196,120,74,.2);
+  color: rgba(196,120,74,.6); background: transparent;
+  cursor: pointer; transition: all .15s; font-family: inherit; white-space: nowrap;
+}
+.sp-btnSm:hover     { background: rgba(196,120,74,.07); border-color: rgba(196,120,74,.4); }
+.sp-btnContact      { border-color: rgba(255,220,50,.2);   color: rgba(255,220,50,.6); }
+.sp-btnContact:hover  { background: rgba(255,220,50,.07); border-color: rgba(255,220,50,.4); }
+.sp-btnSchedule     { border-color: rgba(46,204,113,.2);   color: rgba(46,204,113,.65); }
+.sp-btnSchedule:hover { background: rgba(46,204,113,.07); border-color: rgba(46,204,113,.4); }
+.sp-btnCopy         { border-color: rgba(156,246,255,.18); color: rgba(156,246,255,.5); }
+.sp-btnCopy:hover   { background: rgba(156,246,255,.05);  border-color: rgba(156,246,255,.35); }
+.sp-btnOpen         { border-color: rgba(150,80,255,.2);   color: rgba(170,110,255,.65); text-decoration: none; display: inline-block; }
+.sp-btnOpen:hover   { background: rgba(150,80,255,.07);   border-color: rgba(150,80,255,.4); }
+.sp-btnDanger       { border-color: rgba(255,80,80,.18);   color: rgba(255,120,120,.5); }
+.sp-btnDanger:hover { background: rgba(255,80,80,.06);    border-color: rgba(255,80,80,.35); }
+
+/* ── Search Summary Bar ──────────────────────────────────── */
+.sp-summary {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  padding: 8px 12px; margin-bottom: 10px;
+  background: rgba(196,120,74,.03); border: 1px solid rgba(196,120,74,.1);
+  border-radius: 4px; font-size: 8px;
+}
+.sp-summaryItem  { color: rgba(220,190,160,.45); }
+.sp-summaryItem strong { color: rgba(196,120,74,.9); font-weight: 700; }
+
+/* ── Hidden Bar ──────────────────────────────────────────── */
+.sp-hiddenBar {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 8px; min-height: 18px;
+  font-size: 7px; color: rgba(200,160,255,.3); letter-spacing: .5px;
+}
+
+/* ── Saved Section ───────────────────────────────────────── */
+.sp-savedSection {
+  margin-top: 28px; padding-top: 20px;
+  border-top: 1px solid rgba(196,120,74,.14);
+}
+.sp-savedTitle {
+  font-size: 9px; letter-spacing: 2.5px; font-weight: 700;
+  color: rgba(196,120,74,.75); text-shadow: 0 0 10px rgba(196,120,74,.25);
+  margin-bottom: 14px;
+}
+
+/* Make desk monitor clickable */
+#ah-monitor { cursor: pointer; transition: transform .15s, filter .15s; }
+#ah-monitor:hover { transform: scale(1.15); filter: drop-shadow(0 0 8px rgba(196,120,74,.6)); }

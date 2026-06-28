@@ -252,11 +252,11 @@
 
 </div>
 
-<!-- ════════════════════════ HOUSING WORKSPACE ════════════════════════ -->
+<!-- ════════════════════ APARTMENT & HOUSING HUNTER ════════════════════ -->
 <section class="ws-section" id="hs-workspace" style="--ws-color:#c4784a">
   <div class="ws-header">
-    <h2 class="ws-title">HOUSING WORKSPACE</h2>
-    <span class="ws-sub">// Listing Tracker · Search Criteria · Application Status</span>
+    <h2 class="ws-title">APARTMENT &amp; HOUSING HUNTER</h2>
+    <span class="ws-sub">// Nova Property Search · Burlington County, NJ · Save · Track · Contact</span>
   </div>
   <div class="ws-body" style="flex-direction:column">
 
@@ -383,56 +383,80 @@
 
     <!-- ══ NOVA PROPERTY SEARCH ══ -->
     <div class="ws-panel ws-panel-full" id="hs-searchPanel">
-      <div class="ws-pTitle" style="display:flex;align-items:center;gap:10px">
-        <span>🏠 NOVA — PROPERTY SEARCH</span>
-        <span style="font-size:7px;color:rgba(196,120,74,.6);letter-spacing:1px">Burlington County, NJ · Simulated Results</span>
+      <div class="ws-pTitle" style="display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+        <span style="font-size:11px;letter-spacing:3px">🏠 NOVA PROPERTY SEARCH — APARTMENT &amp; HOUSING HUNTER</span>
+        <span style="font-size:7px;color:rgba(196,120,74,.5);letter-spacing:1px">Burlington County, NJ · Simulated · Scraper-Ready</span>
       </div>
-      <!-- Filter bar -->
-      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;padding:10px;background:rgba(255,255,255,.02);border-radius:4px;border:1px solid rgba(196,120,74,.1)">
-        <div class="ws-field" style="flex:1 1 140px">
-          <label class="ws-label">CITY</label>
-          <select class="ws-input" id="sp-city">
-            <option value="all">All Areas</option>
-            <option value="Willingboro">Willingboro</option>
-            <option value="Mount Laurel">Mount Laurel</option>
-            <option value="Marlton">Marlton</option>
-            <option value="Southampton">Southampton</option>
-            <option value="Burlington">Burlington</option>
-            <option value="Lumberton">Lumberton</option>
-          </select>
+
+      <!-- ── Filter bar ── -->
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;padding:12px;background:rgba(255,255,255,.02);border-radius:4px;border:1px solid rgba(196,120,74,.1)">
+        <!-- Row 1: dropdowns + number fields -->
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <div class="ws-field" style="flex:1 1 150px">
+            <label class="ws-label">CITY / AREA</label>
+            <select class="ws-input" id="sp-city">
+              <option value="all">All Areas</option>
+              <option value="zee-cities">Zee's Cities (W · ML · M · S)</option>
+              <option value="Willingboro">Willingboro</option>
+              <option value="Mount Laurel">Mount Laurel</option>
+              <option value="Marlton">Marlton</option>
+              <option value="Southampton">Southampton</option>
+              <option value="Burlington">Burlington</option>
+              <option value="Lumberton">Lumberton</option>
+            </select>
+          </div>
+          <div class="ws-field" style="flex:1 1 110px">
+            <label class="ws-label">MAX RENT ($)</label>
+            <input class="ws-input" id="sp-maxRent" type="number" value="2100" min="0" />
+          </div>
+          <div class="ws-field" style="flex:0 0 90px">
+            <label class="ws-label">MIN BEDS</label>
+            <input class="ws-input" id="sp-beds" type="number" value="2" min="0" max="10" />
+          </div>
+          <div class="ws-field" style="flex:0 0 90px">
+            <label class="ws-label">MIN BATHS</label>
+            <input class="ws-input" id="sp-baths" type="number" value="0" min="0" max="5" step="0.5" />
+          </div>
+          <div class="ws-field" style="flex:1 1 120px">
+            <label class="ws-label">PROPERTY TYPE</label>
+            <select class="ws-input" id="sp-type">
+              <option value="all">Any Type</option>
+              <option value="house">House</option>
+              <option value="townhouse">Townhouse</option>
+              <option value="condo">Condo</option>
+              <option value="apartment">Apartment</option>
+            </select>
+          </div>
         </div>
-        <div class="ws-field" style="flex:1 1 120px">
-          <label class="ws-label">MAX RENT ($)</label>
-          <input class="ws-input" id="sp-maxRent" type="number" value="2100" min="0" />
+        <!-- Row 2: checkboxes + keyword -->
+        <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end">
+          <label style="display:flex;align-items:center;gap:6px;font-size:7px;color:rgba(200,160,255,.5);cursor:pointer;white-space:nowrap"><input type="checkbox" id="sp-pets" /> Pets OK</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:7px;color:rgba(200,160,255,.5);cursor:pointer;white-space:nowrap"><input type="checkbox" id="sp-voucher" checked /> Voucher</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:7px;color:rgba(200,160,255,.5);cursor:pointer;white-space:nowrap"><input type="checkbox" id="sp-family" /> Family Friendly</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:7px;color:rgba(200,160,255,.5);cursor:pointer;white-space:nowrap"><input type="checkbox" id="sp-hasLink" /> Has Direct Link</label>
+          <div class="ws-field" style="flex:1 1 200px">
+            <label class="ws-label">KEYWORD SEARCH</label>
+            <input class="ws-input" id="sp-keyword" type="text" placeholder="e.g. backyard, garage, colonial, fenced..." />
+          </div>
         </div>
-        <div class="ws-field" style="flex:1 1 100px">
-          <label class="ws-label">MIN BEDS</label>
-          <input class="ws-input" id="sp-beds" type="number" value="2" min="1" max="5" />
-        </div>
-        <div class="ws-field" style="flex:1 1 100px">
-          <label class="ws-label">TYPE</label>
-          <select class="ws-input" id="sp-type">
-            <option value="all">Any</option>
-            <option value="house">House</option>
-            <option value="townhouse">Townhouse</option>
-            <option value="condo">Condo</option>
-            <option value="apartment">Apartment</option>
-          </select>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:5px;justify-content:flex-end">
-          <label style="display:flex;align-items:center;gap:6px;font-size:7px;color:rgba(200,160,255,.5);cursor:pointer">
-            <input type="checkbox" id="sp-pets" />Pets OK
-          </label>
-          <label style="display:flex;align-items:center;gap:6px;font-size:7px;color:rgba(200,160,255,.5);cursor:pointer">
-            <input type="checkbox" id="sp-voucher" checked />Voucher
-          </label>
-        </div>
-        <div style="display:flex;align-items:flex-end">
-          <button class="ws-btn" id="sp-searchBtn" style="background:rgba(196,120,74,.08);border-color:rgba(196,120,74,.3);color:rgba(196,120,74,.8)">🔍 SEARCH</button>
+        <!-- Row 3: action buttons -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:4px">
+          <button class="ws-btn" id="sp-searchBtn" style="background:rgba(196,120,74,.08);border-color:rgba(196,120,74,.35);color:rgba(196,120,74,.85)">🔍 SEARCH</button>
+          <button class="ws-btn" id="sp-loadZee" style="background:rgba(150,80,255,.06);border-color:rgba(150,80,255,.3);color:rgba(180,130,255,.85)">★ LOAD ZEE'S SEARCH PROFILE</button>
         </div>
       </div>
-      <div id="sp-status" style="font-size:8px;color:rgba(200,160,255,.3);margin-bottom:10px"></div>
-      <div id="sp-results" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px"></div>
+
+      <!-- Search summary -->
+      <div class="sp-summary" id="sp-summary"></div>
+
+      <!-- Hidden count bar -->
+      <div class="sp-hiddenBar" id="sp-hiddenBar"></div>
+
+      <!-- Results grid -->
+      <div id="sp-results" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px"></div>
+
+      <!-- Saved properties section -->
+      <div class="sp-savedSection" id="sp-savedSection"></div>
     </div>
 
   </div>

@@ -235,128 +235,409 @@
 })();
 
 /* ================================================================
-   NOVA PROPERTY SEARCH — Burlington County, NJ Simulated Results
+   NOVA PROPERTY SEARCH — Apartment & Housing Hunter
+   Burlington County, NJ — Simulated Data / Scraper-Ready
 ================================================================ */
 (function () {
   'use strict';
 
   var SAVED_KEY   = 'hs.search.saved';
   var HIDDEN_KEY  = 'hs.search.hidden';
+  var STATUS_KEY  = 'hs.search.statuses';
+  var NOTES_KEY   = 'hs.search.notes';
 
+  // Landlord inquiry message template
+  var CONTACT_MSG =
+    'Hello,\n\n' +
+    'I am interested in this property and would love to schedule a viewing. ' +
+    'I am searching for a 2-bedroom, pet-friendly home and I do have a housing voucher. ' +
+    'Could you please let me know if the unit is still available and the best way to apply?\n\n' +
+    'Thank you for your time — I look forward to hearing from you!';
+
+  // ── PROPERTY DATABASE ───────────────────────────────────────
+  // Replace PROPERTIES with live data from fetchHousingListings() when scraper is connected.
   var PROPERTIES = [
-    { id:'p1',  addr:'412 Levitt Pkwy',     city:'Willingboro',  rent:1350, beds:3, baths:1.5, type:'house',     pets:true,  voucher:true,  desc:'Spacious 3BR in Rancocas Woods area. Large yard, central AC. Pets welcome.' },
-    { id:'p2',  addr:'88 Garfield Dr',      city:'Willingboro',  rent:1200, beds:2, baths:1,   type:'house',     pets:false, voucher:true,  desc:'Well-maintained 2BR. Updated kitchen. Close to schools and bus routes.' },
-    { id:'p3',  addr:'223 Birch Ave',       city:'Willingboro',  rent:1450, beds:3, baths:2,   type:'house',     pets:true,  voucher:true,  desc:'3BR corner lot. Renovated bathrooms. Quiet neighborhood.' },
-    { id:'p4',  addr:'1001 Lincoln Dr',     city:'Mount Laurel', rent:1750, beds:2, baths:2,   type:'condo',     pets:false, voucher:false, desc:'Modern condo in gated community. Gym, pool included. 20 min to Philly.' },
-    { id:'p5',  addr:'55 Heritage Blvd',    city:'Mount Laurel', rent:2050, beds:3, baths:2,   type:'townhouse', pets:true,  voucher:false, desc:'End-unit townhouse. Attached garage. Top-rated school district.' },
-    { id:'p6',  addr:'734 E Main St',       city:'Marlton',      rent:1600, beds:2, baths:1,   type:'apartment', pets:false, voucher:true,  desc:'Updated apartment, first floor. Parking included. Near shops.' },
-    { id:'p7',  addr:'18 Oak Valley Rd',    city:'Marlton',      rent:1900, beds:3, baths:2,   type:'house',     pets:true,  voucher:true,  desc:'Ranch-style 3BR. New flooring. Fenced backyard, ideal for pets.' },
-    { id:'p8',  addr:'290 Southampton Rd',  city:'Southampton',  rent:1400, beds:3, baths:1.5, type:'house',     pets:true,  voucher:true,  desc:'Rural setting. Large lot. 2-car driveway. Quiet community.' },
-    { id:'p9',  addr:'47 Creek View Ln',    city:'Burlington',   rent:1250, beds:2, baths:1,   type:'apartment', pets:false, voucher:true,  desc:'Ground-floor apartment. Walk to Delaware River path. Utilities included.' },
-    { id:'p10', addr:'612 Lumberton Rd',    city:'Lumberton',    rent:1500, beds:3, baths:2,   type:'house',     pets:true,  voucher:false, desc:'Spacious split-level. Finished basement. 2 miles to Route 38.' },
-    { id:'p11', addr:'101 Township Line Rd',city:'Mount Laurel', rent:1850, beds:2, baths:2,   type:'condo',     pets:true,  voucher:true,  desc:'Pet-friendly condo. Accepts Section 8. Walk-in closets, balcony.' },
-    { id:'p12', addr:'320 John F Kennedy Way',city:'Willingboro',rent:1100, beds:2, baths:1,   type:'house',     pets:false, voucher:true,  desc:'Budget-friendly 2BR. Corner property. Quick access to Route 130.' },
-    { id:'p13', addr:'5 Plantation Dr',     city:'Marlton',      rent:2100, beds:4, baths:2.5, type:'house',     pets:true,  voucher:false, desc:'4BR colonial. Updated kitchen. Near Evesham Township schools.' },
-    { id:'p14', addr:'88 Larchmont Dr',     city:'Southampton',  rent:1650, beds:3, baths:2,   type:'townhouse', pets:false, voucher:true,  desc:'New construction townhouse. Energy-efficient. Vouchers accepted.' },
-    { id:'p15', addr:'202 Church St',       city:'Burlington',   rent:1300, beds:2, baths:1,   type:'house',     pets:true,  voucher:true,  desc:'Historic neighborhood 2BR. Hardwood floors. 5 min to train station.' },
+    { id:'p1',  name:'Rancocas Woods 3BR w/ Yard',       addr:'412 Levitt Pkwy',        city:'Willingboro',  rent:1350, beds:3, baths:1.5, type:'house',     pets:true,  voucher:true,  family:true,  source:'AffordableHousing.com', link:'https://example.com/listing/p1',  desc:'Spacious 3BR in Rancocas Woods area. Large yard, central AC. Pets welcome.' },
+    { id:'p2',  name:'Updated 2BR Near Schools',          addr:'88 Garfield Dr',         city:'Willingboro',  rent:1200, beds:2, baths:1,   type:'house',     pets:false, voucher:true,  family:true,  source:'Craigslist',             link:'https://example.com/listing/p2',  desc:'Well-maintained 2BR. Updated kitchen. Close to schools and bus routes.' },
+    { id:'p3',  name:'Renovated Corner Lot 3BR',          addr:'223 Birch Ave',          city:'Willingboro',  rent:1450, beds:3, baths:2,   type:'house',     pets:true,  voucher:true,  family:true,  source:'AffordableHousing.com', link:'https://example.com/listing/p3',  desc:'3BR corner lot. Renovated bathrooms. Quiet neighborhood.' },
+    { id:'p4',  name:'Modern Condo w/ Pool & Gym',        addr:'1001 Lincoln Dr',        city:'Mount Laurel', rent:1750, beds:2, baths:2,   type:'condo',     pets:false, voucher:false, family:true,  source:'Craigslist',             link:'https://example.com/listing/p4',  desc:'Modern condo in gated community. Gym, pool included. 20 min to Philly.' },
+    { id:'p5',  name:'End-Unit Townhouse w/ Garage',      addr:'55 Heritage Blvd',       city:'Mount Laurel', rent:2050, beds:3, baths:2,   type:'townhouse', pets:true,  voucher:false, family:true,  source:'AffordableHousing.com', link:'https://example.com/listing/p5',  desc:'End-unit townhouse. Attached garage. Top-rated school district.' },
+    { id:'p6',  name:'1st Floor Apt w/ Parking',          addr:'734 E Main St',          city:'Marlton',      rent:1600, beds:2, baths:1,   type:'apartment', pets:false, voucher:true,  family:true,  source:'Craigslist',             link:'https://example.com/listing/p6',  desc:'Updated apartment, first floor. Parking included. Near shops.' },
+    { id:'p7',  name:'Pet-Friendly Ranch 3BR',            addr:'18 Oak Valley Rd',       city:'Marlton',      rent:1900, beds:3, baths:2,   type:'house',     pets:true,  voucher:true,  family:true,  source:'AffordableHousing.com', link:'https://example.com/listing/p7',  desc:'Ranch-style 3BR. New flooring. Fenced backyard, ideal for pets.' },
+    { id:'p8',  name:'Quiet Rural 3BR Large Lot',         addr:'290 Southampton Rd',     city:'Southampton',  rent:1400, beds:3, baths:1.5, type:'house',     pets:true,  voucher:true,  family:true,  source:'AffordableHousing.com', link:'https://example.com/listing/p8',  desc:'Rural setting. Large lot. 2-car driveway. Quiet community.' },
+    { id:'p9',  name:'Ground Floor w/ Utilities Included',addr:'47 Creek View Ln',       city:'Burlington',   rent:1250, beds:2, baths:1,   type:'apartment', pets:false, voucher:true,  family:false, source:'Craigslist',             link:'https://example.com/listing/p9',  desc:'Ground-floor apartment. Walk to Delaware River path. Utilities included.' },
+    { id:'p10', name:'Split-Level w/ Finished Basement',  addr:'612 Lumberton Rd',       city:'Lumberton',    rent:1500, beds:3, baths:2,   type:'house',     pets:true,  voucher:false, family:true,  source:'Craigslist',             link:'https://example.com/listing/p10', desc:'Spacious split-level. Finished basement. 2 miles to Route 38.' },
+    { id:'p11', name:'Pet-Friendly Condo w/ Balcony',     addr:'101 Township Line Rd',   city:'Mount Laurel', rent:1850, beds:2, baths:2,   type:'condo',     pets:true,  voucher:true,  family:true,  source:'AffordableHousing.com', link:'https://example.com/listing/p11', desc:'Pet-friendly condo. Accepts Section 8. Walk-in closets, balcony.' },
+    { id:'p12', name:'Budget 2BR Corner House',           addr:'320 John F Kennedy Way', city:'Willingboro',  rent:1100, beds:2, baths:1,   type:'house',     pets:false, voucher:true,  family:true,  source:'Craigslist',             link:'https://example.com/listing/p12', desc:'Budget-friendly 2BR. Corner property. Quick access to Route 130.' },
+    { id:'p13', name:'4BR Colonial Near Schools',         addr:'5 Plantation Dr',        city:'Marlton',      rent:2100, beds:4, baths:2.5, type:'house',     pets:true,  voucher:false, family:true,  source:'AffordableHousing.com', link:'https://example.com/listing/p13', desc:'4BR colonial. Updated kitchen. Near Evesham Township schools.' },
+    { id:'p14', name:'New Construction Townhouse',        addr:'88 Larchmont Dr',        city:'Southampton',  rent:1650, beds:3, baths:2,   type:'townhouse', pets:false, voucher:true,  family:true,  source:'AffordableHousing.com', link:'https://example.com/listing/p14', desc:'New construction townhouse. Energy-efficient. Vouchers accepted.' },
+    { id:'p15', name:'Historic Neighborhood 2BR',         addr:'202 Church St',          city:'Burlington',   rent:1300, beds:2, baths:1,   type:'house',     pets:true,  voucher:true,  family:false, source:'Craigslist',             link:'https://example.com/listing/p15', desc:'Historic neighborhood 2BR. Hardwood floors. 5 min to train station.' },
   ];
 
-  function getSaved()  { return COS.state.get(SAVED_KEY)  || []; }
-  function getHidden() { return COS.state.get(HIDDEN_KEY) || []; }
+  // ── STATE HELPERS ───────────────────────────────────────────
+
+  function getSaved()    { return COS.state.get(SAVED_KEY)  || []; }
+  function getHidden()   { return COS.state.get(HIDDEN_KEY) || []; }
+  function getStatuses() { return COS.state.get(STATUS_KEY) || {}; }
+  function getNotes()    { return COS.state.get(NOTES_KEY)  || {}; }
+
   function toggleSave(id) {
     var s = getSaved();
     var i = s.indexOf(id);
     if (i >= 0) s.splice(i, 1); else s.push(id);
     COS.state.set(SAVED_KEY, s);
   }
-  function hideProperty(id) {
-    var h = getHidden(); h.push(id); COS.state.set(HIDDEN_KEY, h);
+  function hideProp(id) {
+    var h = getHidden();
+    if (h.indexOf(id) < 0) h.push(id);
+    COS.state.set(HIDDEN_KEY, h);
+  }
+  function clearHidden() { COS.state.set(HIDDEN_KEY, []); }
+  function setStatus(id, status) {
+    var st = getStatuses(); st[id] = status; COS.state.set(STATUS_KEY, st);
+  }
+  function saveNote(id, text) {
+    var n = getNotes(); n[id] = text; COS.state.set(NOTES_KEY, n);
   }
 
-  function filterProperties(filters) {
-    var hidden = getHidden();
-    return PROPERTIES.filter(function (p) {
+  // ── SCRAPER FRAMEWORK STUBS ─────────────────────────────────
+  // Connect a real scraper by replacing the body of fetchHousingListings.
+  // Expected sources: AffordableHousing.com city pages, Craigslist Philadelphia housing,
+  // or any CSV/JSON export from agents/housing_scout_v2/housing_scout_browser.py
+
+  function fetchHousingListings(filters) {
+    // TODO: Replace with real async fetch, e.g.:
+    //   return fetch('/api/housing?city=' + filters.city + '&maxRent=' + filters.maxRent)
+    //     .then(function(r) { return r.json(); })
+    //     .then(function(raw) { return raw.map(normalizeListing); });
+    return PROPERTIES; // currently returns simulated data
+  }
+
+  function normalizeListing(raw) {
+    // TODO: Normalize scraper output to standard shape:
+    // { id, name, addr, city, rent, beds, baths, type, pets, voucher, family, source, link, desc }
+    return raw;
+  }
+
+  function renderHousingResults(listings) {
+    // Entry point for live scraper pipeline.
+    // Currently called directly by runSearch() with filtered PROPERTIES.
+    renderProperties(listings);
+  }
+
+  function saveProperty(propertyId)              { toggleSave(propertyId); runSearch(); }
+  function hideProperty(propertyId)              { hideProp(propertyId);   runSearch(); }
+  function markPropertyStatus(propertyId, status){ setStatus(propertyId, status); runSearch(); }
+
+  // ── ZEE'S CITIES ────────────────────────────────────────────
+
+  var ZEE_CITIES = ['Willingboro', 'Mount Laurel', 'Marlton', 'Southampton'];
+
+  // ── FILTER ──────────────────────────────────────────────────
+
+  function filterProperties(filters, source) {
+    var list    = source || PROPERTIES;
+    var hidden  = getHidden();
+    var keyword = (filters.keyword || '').toLowerCase().trim();
+    return list.filter(function (p) {
       if (hidden.indexOf(p.id) >= 0) return false;
-      if (filters.city !== 'all' && p.city !== filters.city) return false;
-      if (p.rent > filters.maxRent) return false;
-      if (p.beds < filters.minBeds) return false;
+      if (filters.city === 'zee-cities') {
+        if (ZEE_CITIES.indexOf(p.city) < 0) return false;
+      } else if (filters.city !== 'all') {
+        if (p.city !== filters.city) return false;
+      }
+      if (p.rent     > filters.maxRent)  return false;
+      if (p.beds     < filters.minBeds)  return false;
+      if (p.baths    < filters.minBaths) return false;
       if (filters.type !== 'all' && p.type !== filters.type) return false;
       if (filters.voucher && !p.voucher) return false;
-      if (filters.pets && !p.pets) return false;
+      if (filters.pets    && !p.pets)    return false;
+      if (filters.family  && !p.family)  return false;
+      if (filters.hasLink && !p.link)    return false;
+      if (keyword && !(
+        (p.name || '').toLowerCase().indexOf(keyword) >= 0 ||
+        (p.addr || '').toLowerCase().indexOf(keyword) >= 0 ||
+        (p.city || '').toLowerCase().indexOf(keyword) >= 0 ||
+        (p.desc || '').toLowerCase().indexOf(keyword) >= 0 ||
+        (p.type || '').toLowerCase().indexOf(keyword) >= 0
+      )) return false;
       return true;
     });
   }
 
-  function renderProperties(props) {
-    var el     = document.getElementById('sp-results');
-    var statEl = document.getElementById('sp-status');
-    if (!el) return;
-    var saved  = getSaved();
-    if (statEl) statEl.textContent = props.length + ' properties found in Burlington County, NJ';
-    if (!props.length) {
-      el.innerHTML = '<div style="font-size:9px;color:rgba(200,160,255,.3);padding:16px;font-style:italic">No properties match your filters. Try adjusting the criteria.</div>';
-      return;
-    }
-    el.innerHTML = props.map(function (p) {
-      var isSaved = saved.indexOf(p.id) >= 0;
-      var typeIcon = { house:'🏡', townhouse:'🏘', condo:'🏢', apartment:'🏠' }[p.type] || '🏠';
-      return '<div class="sp-propCard" id="sp-card-' + p.id + '">' +
-        '<div class="sp-propHeader">' +
-          '<div class="sp-propAddr">' + typeIcon + ' ' + p.addr + '</div>' +
-          '<div class="sp-propCity">' + p.city + ', NJ</div>' +
+  // ── CARD BUILD ──────────────────────────────────────────────
+
+  function cardStatusInfo(p) {
+    var saved    = getSaved();
+    var statuses = getStatuses();
+    var st = statuses[p.id];
+    if (st === 'scheduled') return { cls: 'sp-status-scheduled', txt: '📅 SCHEDULED' };
+    if (st === 'contacted') return { cls: 'sp-status-contacted', txt: '📞 CONTACTED' };
+    if (saved.indexOf(p.id) >= 0) return { cls: 'sp-status-saved', txt: '★ SAVED' };
+    return { cls: 'sp-status-new', txt: '● NEW' };
+  }
+
+  function buildCard(p, inSavedSection) {
+    var saved   = getSaved();
+    var notes   = getNotes();
+    var isSaved = saved.indexOf(p.id) >= 0;
+    var note    = notes[p.id] || '';
+    var si      = cardStatusInfo(p);
+    var typeIcon = { house:'🏡', townhouse:'🏘', condo:'🏢', apartment:'🏠' }[p.type] || '🏠';
+    var typeLbl  = p.type.charAt(0).toUpperCase() + p.type.slice(1);
+
+    return (
+      '<div class="sp-propCard" id="sp-card-' + p.id + '" data-id="' + p.id + '">' +
+        '<div class="sp-propHeader" style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">' +
+          '<div style="min-width:0">' +
+            '<div class="sp-propAddr">' + typeIcon + ' ' + (p.name || p.addr) + '</div>' +
+            '<div style="font-size:7px;color:rgba(196,120,74,.4);margin-top:2px;letter-spacing:.3px">📍 ' + p.addr + ', ' + p.city + ' NJ</div>' +
+          '</div>' +
+          '<span class="sp-cardStatus ' + si.cls + '" style="flex-shrink:0">' + si.txt + '</span>' +
         '</div>' +
         '<div class="sp-propRent">$' + p.rent.toLocaleString() + '<span>/mo</span></div>' +
         '<div class="sp-propMeta">' +
           '<span>' + p.beds + ' BD</span>' +
           '<span>' + p.baths + ' BA</span>' +
-          '<span>' + p.type.charAt(0).toUpperCase() + p.type.slice(1) + '</span>' +
-          (p.pets    ? '<span class="sp-badge sp-pet">🐾 Pets</span>'     : '') +
-          (p.voucher ? '<span class="sp-badge sp-voucher">🏷 Voucher</span>' : '') +
+          '<span>' + typeLbl + '</span>' +
+          (p.pets    ? '<span class="sp-badge sp-pet">🐾 Pets OK</span>'      : '<span class="sp-badge" style="opacity:.25">No Pets</span>') +
+          (p.voucher ? '<span class="sp-badge sp-voucher">🏷 Voucher</span>'  : '<span class="sp-badge" style="opacity:.25">No Voucher</span>') +
+          (p.family  ? '<span class="sp-badge sp-family">👨‍👩‍👧 Family</span>' : '') +
         '</div>' +
-        '<div class="sp-propDesc">' + p.desc + '</div>' +
-        '<div class="sp-propBtns">' +
-          '<button class="sp-btnSave ' + (isSaved ? 'sp-saved' : '') + '" data-id="' + p.id + '">' + (isSaved ? '★ SAVED' : '☆ SAVE') + '</button>' +
-          '<button class="sp-btnHide" data-id="' + p.id + '">✕ HIDE</button>' +
+        '<div class="sp-propDesc">' + (p.desc || '') + '</div>' +
+        '<div style="font-size:7px;color:rgba(196,120,74,.3);letter-spacing:.3px;margin-bottom:8px">Source: ' + (p.source || 'Unknown') + '</div>' +
+        '<textarea class="sp-cardNotes" rows="2" placeholder="Notes..." data-id="' + p.id + '">' + (note ? note.replace(/</g,'&lt;') : '') + '</textarea>' +
+        '<div class="sp-propBtns" style="flex-wrap:wrap;gap:5px;margin-top:2px">' +
+          '<button class="sp-btnSave sp-btnSm ' + (isSaved ? 'sp-saved' : '') + '" data-action="save" data-id="' + p.id + '">' + (isSaved ? '★ SAVED' : '☆ SAVE') + '</button>' +
+          (inSavedSection ? '' : '<button class="sp-btnSm sp-btnDanger" data-action="hide" data-id="' + p.id + '">✕ HIDE</button>') +
+          '<button class="sp-btnSm sp-btnContact"  data-action="contact"  data-id="' + p.id + '">📞 CONTACTED</button>' +
+          '<button class="sp-btnSm sp-btnSchedule" data-action="schedule" data-id="' + p.id + '">📅 SCHEDULED</button>' +
+          '<button class="sp-btnSm sp-btnCopy"     data-action="copy"     data-id="' + p.id + '">📋 COPY MSG</button>' +
+          (p.link ? '<a href="' + p.link + '" target="_blank" rel="noopener" class="sp-btnSm sp-btnOpen">🔗 OPEN LISTING</a>' : '') +
         '</div>' +
-      '</div>';
-    }).join('');
+      '</div>'
+    );
+  }
 
-    // Wire buttons
-    el.querySelectorAll('.sp-btnSave').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        toggleSave(this.getAttribute('data-id'));
-        runSearch();
-      }.bind(btn));
+  // ── RENDER ──────────────────────────────────────────────────
+
+  function renderProperties(props) {
+    var el = document.getElementById('sp-results');
+    if (!el) return;
+
+    if (!props.length) {
+      el.innerHTML = '<div style="font-size:9px;color:rgba(200,160,255,.3);padding:16px;font-style:italic;grid-column:1/-1">No properties match your filters. Try adjusting the criteria or loading Zee\'s profile.</div>';
+    } else {
+      el.innerHTML = props.map(function (p) { return buildCard(p, false); }).join('');
+      wireCards(el);
+    }
+
+    updateSummary(props);
+    updateHiddenBar();
+    renderSavedSection();
+  }
+
+  function updateSummary(props) {
+    var sumEl = document.getElementById('sp-summary');
+    if (!sumEl) return;
+    if (!props.length) { sumEl.innerHTML = ''; return; }
+
+    var saved      = getSaved();
+    var hidden     = getHidden();
+    var rents      = props.map(function (p) { return p.rent; });
+    var total      = rents.reduce(function (s, r) { return s + r; }, 0);
+    var avgRent    = Math.round(total / rents.length);
+    var minRent    = Math.min.apply(null, rents);
+    var savedCount = saved.filter(function (id) {
+      return props.some(function (p) { return p.id === id; });
+    }).length;
+
+    // unique cities without Set
+    var citySeen = {};
+    var cities   = [];
+    props.forEach(function (p) { if (!citySeen[p.city]) { citySeen[p.city] = 1; cities.push(p.city); } });
+
+    sumEl.innerHTML =
+      '<span class="sp-summaryItem"><strong>' + props.length + '</strong> matches</span>' +
+      '<span class="sp-summaryItem"><strong>' + savedCount + '</strong> saved</span>' +
+      '<span class="sp-summaryItem"><strong>' + hidden.length + '</strong> hidden</span>' +
+      '<span class="sp-summaryItem">Avg: <strong>$' + avgRent.toLocaleString() + '/mo</strong></span>' +
+      '<span class="sp-summaryItem">Cheapest: <strong>$' + minRent.toLocaleString() + '/mo</strong></span>' +
+      '<span class="sp-summaryItem">Cities: <strong>' + cities.join(', ') + '</strong></span>';
+  }
+
+  function updateHiddenBar() {
+    var bar = document.getElementById('sp-hiddenBar');
+    if (!bar) return;
+    var hidden = getHidden();
+    if (!hidden.length) { bar.innerHTML = ''; return; }
+    bar.innerHTML =
+      '<span>' + hidden.length + ' listing' + (hidden.length !== 1 ? 's' : '') + ' hidden</span>' +
+      '<button class="sp-btnSm" id="sp-clearHidden" style="font-size:6px;padding:2px 9px;letter-spacing:.5px">Clear Hidden</button>';
+    var cb = document.getElementById('sp-clearHidden');
+    if (cb) cb.addEventListener('click', function () { clearHidden(); runSearch(); });
+  }
+
+  function renderSavedSection() {
+    var sec = document.getElementById('sp-savedSection');
+    if (!sec) return;
+    var saved = getSaved();
+    if (!saved.length) {
+      sec.innerHTML =
+        '<div class="sp-savedTitle">★ SAVED PROPERTIES</div>' +
+        '<div style="font-size:8px;color:rgba(200,160,255,.22);font-style:italic;padding:10px 0">No saved properties yet. Click ☆ SAVE on any listing above.</div>';
+      return;
+    }
+    var savedProps = PROPERTIES.filter(function (p) { return saved.indexOf(p.id) >= 0; });
+    sec.innerHTML =
+      '<div class="sp-savedTitle">★ SAVED PROPERTIES (' + savedProps.length + ')</div>' +
+      '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px">' +
+      savedProps.map(function (p) { return buildCard(p, true); }).join('') +
+      '</div>';
+    wireCards(sec);
+  }
+
+  function wireCards(container) {
+    container.querySelectorAll('[data-action]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        var id     = this.getAttribute('data-id');
+        var action = this.getAttribute('data-action');
+        if (action === 'save')     { toggleSave(id);              runSearch(); }
+        if (action === 'hide')     { hideProp(id);                runSearch(); }
+        if (action === 'contact')  { setStatus(id, 'contacted');  runSearch(); }
+        if (action === 'schedule') { setStatus(id, 'scheduled');  runSearch(); }
+        if (action === 'copy')     { copyContactMsg(); }
+      }.bind(el));
     });
-    el.querySelectorAll('.sp-btnHide').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        hideProperty(this.getAttribute('data-id'));
-        runSearch();
-      }.bind(btn));
+
+    container.querySelectorAll('.sp-cardNotes').forEach(function (ta) {
+      ta.addEventListener('blur', function () {
+        saveNote(this.getAttribute('data-id'), this.value);
+      }.bind(ta));
     });
   }
 
-  function runSearch() {
-    var filters = {
-      city:     (document.getElementById('sp-city')    || {}).value || 'all',
-      maxRent:  parseFloat((document.getElementById('sp-maxRent') || {}).value) || 9999,
-      minBeds:  parseInt((document.getElementById('sp-beds')      || {}).value, 10) || 1,
-      type:     (document.getElementById('sp-type')    || {}).value || 'all',
-      pets:     (document.getElementById('sp-pets')    || {}).checked || false,
-      voucher:  (document.getElementById('sp-voucher') || {}).checked || false,
-    };
-    var results = filterProperties(filters);
-    renderProperties(results);
-    COS.activity.log({ agent: 'Nova', dept: 'housing', msg: 'Property search: ' + results.length + ' results (' + filters.city + ', max $' + filters.maxRent + ')', source: 'search' });
-    if (typeof OE !== 'undefined') {
-      OE.generate({ type: 'search_listings', title: 'Property Search Results' }, 'nova', 'housing');
+  function copyContactMsg() {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(CONTACT_MSG).then(function () {
+        showToast('Landlord message copied to clipboard!');
+      }).catch(fallbackCopy);
+    } else {
+      fallbackCopy();
     }
   }
 
+  function fallbackCopy() {
+    var ta = document.createElement('textarea');
+    ta.value = CONTACT_MSG;
+    ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); showToast('Message copied!'); } catch (e) { showToast('Copy failed — check browser permissions.'); }
+    document.body.removeChild(ta);
+  }
+
+  function showToast(msg) {
+    // Re-use the COS notification system if available
+    if (COS && COS.notifications) { COS.notifications.add(msg, 'success'); return; }
+    // Fallback: brief overlay
+    var t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;background:rgba(196,120,74,.15);border:1px solid rgba(196,120,74,.5);color:rgba(240,210,180,.9);font-size:10px;letter-spacing:1px;padding:8px 16px;border-radius:4px;pointer-events:none;transition:opacity .4s';
+    document.body.appendChild(t);
+    setTimeout(function () { t.style.opacity = '0'; }, 2200);
+    setTimeout(function () { document.body.removeChild(t); }, 2700);
+  }
+
+  // ── SEARCH ──────────────────────────────────────────────────
+
+  function getFilters() {
+    var g = function (id) { return document.getElementById(id) || {}; };
+    return {
+      city:     g('sp-city').value    || 'all',
+      maxRent:  parseFloat(g('sp-maxRent').value) || 9999,
+      minBeds:  parseInt(g('sp-beds').value, 10)  || 0,
+      minBaths: parseFloat(g('sp-baths').value)   || 0,
+      type:     g('sp-type').value    || 'all',
+      pets:     !!g('sp-pets').checked,
+      voucher:  !!g('sp-voucher').checked,
+      family:   !!g('sp-family').checked,
+      hasLink:  !!g('sp-hasLink').checked,
+      keyword:  g('sp-keyword').value || '',
+    };
+  }
+
+  function runSearch() {
+    var filters = getFilters();
+    // fetchHousingListings() is the scraper entry point.
+    // When live data is available, replace PROPERTIES with its output:
+    //   fetchHousingListings(filters).then(function(raw) { renderHousingResults(raw.map(normalizeListing)); });
+    var raw     = fetchHousingListings(filters);
+    var results = filterProperties(filters, raw);
+    renderHousingResults(results);
+
+    var cheapest = null;
+    var avgRent  = 0;
+    if (results.length) {
+      results.forEach(function (p) { if (!cheapest || p.rent < cheapest.rent) cheapest = p; });
+      avgRent = Math.round(results.reduce(function (s, p) { return s + p.rent; }, 0) / results.length);
+    }
+
+    COS.activity.log({
+      agent: 'Nova', dept: 'housing',
+      msg: 'Housing search: ' + results.length + ' match' + (results.length !== 1 ? 'es' : '') +
+           ' — avg $' + avgRent + '/mo' + (cheapest ? ', cheapest: ' + cheapest.name + ' ($' + cheapest.rent + ')' : ''),
+      source: 'search',
+    });
+
+    if (typeof OE !== 'undefined') {
+      OE.generate({
+        type:    'search_results',
+        title:   'Housing Search Completed',
+        summary: results.length + ' listings matched — avg $' + avgRent + '/mo, cheapest $' +
+                 (cheapest ? cheapest.rent : 0) + '/mo (' + (cheapest ? cheapest.city : 'N/A') + ')',
+      }, 'nova', 'housing');
+    }
+  }
+
+  // ── ZEE'S PROFILE ───────────────────────────────────────────
+
+  function loadZeeProfile() {
+    var set = function (id, val) { var el = document.getElementById(id); if (el) el.value = val; };
+    var chk = function (id, val) { var el = document.getElementById(id); if (el) el.checked = val; };
+    set('sp-city',    'zee-cities');
+    set('sp-maxRent', '2100');
+    set('sp-beds',    '2');
+    set('sp-baths',   '0');
+    set('sp-type',    'all');
+    set('sp-keyword', '');
+    chk('sp-pets',    true);
+    chk('sp-voucher', true);
+    chk('sp-family',  true);
+    chk('sp-hasLink', false);
+    showToast("Zee's search profile loaded!");
+    runSearch();
+  }
+
+  // ── INIT ────────────────────────────────────────────────────
+
   document.addEventListener('DOMContentLoaded', function () {
-    var btn = document.getElementById('sp-searchBtn');
-    if (btn) btn.addEventListener('click', runSearch);
-    // Auto-run initial search
+    var searchBtn  = document.getElementById('sp-searchBtn');
+    var profileBtn = document.getElementById('sp-loadZee');
+    var monitor    = document.getElementById('ah-monitor');
+
+    if (searchBtn)  searchBtn.addEventListener('click', runSearch);
+    if (profileBtn) profileBtn.addEventListener('click', loadZeeProfile);
+
+    if (monitor) {
+      monitor.title = 'Open Property Search';
+      monitor.addEventListener('click', function () {
+        var panel = document.getElementById('hs-searchPanel');
+        if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+
+    // Auto-run with default filters on load
     runSearch();
   });
 
