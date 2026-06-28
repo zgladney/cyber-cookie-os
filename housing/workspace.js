@@ -407,7 +407,11 @@
           (p.family  ? '<span class="sp-badge sp-family">👨‍👩‍👧 Family</span>' : '') +
         '</div>' +
         '<div class="sp-propDesc">' + (p.desc || '') + '</div>' +
-        '<div style="font-size:7px;color:rgba(196,120,74,.3);letter-spacing:.3px;margin-bottom:8px">Source: ' + (p.source || 'Unknown') + '</div>' +
+        '<div style="font-size:7px;color:rgba(196,120,74,.3);letter-spacing:.3px;margin-bottom:8px">Source: ' +
+          (p.sourceUrl
+            ? '<a href="' + p.sourceUrl + '" target="_blank" rel="noopener noreferrer" style="color:rgba(196,120,74,.45);text-decoration:none">' + (p.source || 'Unknown') + ' ↗</a>'
+            : (p.source || 'Unknown')) +
+        '</div>' +
         '<textarea class="sp-cardNotes" rows="2" placeholder="Notes..." data-id="' + p.id + '">' + (note ? note.replace(/</g,'&lt;') : '') + '</textarea>' +
         '<div class="sp-propBtns" style="flex-wrap:wrap;gap:5px;margin-top:2px">' +
           '<button class="sp-btnSave sp-btnSm ' + (isSaved ? 'sp-saved' : '') + '" data-action="save" data-id="' + p.id + '">' + (isSaved ? '★ SAVED' : '☆ SAVE') + '</button>' +
@@ -415,7 +419,9 @@
           '<button class="sp-btnSm sp-btnContact"  data-action="contact"  data-id="' + p.id + '">📞 CONTACTED</button>' +
           '<button class="sp-btnSm sp-btnSchedule" data-action="schedule" data-id="' + p.id + '">📅 SCHEDULED</button>' +
           '<button class="sp-btnSm sp-btnCopy"     data-action="copy"     data-id="' + p.id + '">📋 COPY MSG</button>' +
-          (p.link ? '<a href="' + p.link + '" target="_blank" rel="noopener" class="sp-btnSm sp-btnOpen">🔗 OPEN LISTING</a>' : '') +
+          (p.link
+            ? '<a href="' + p.link + '" target="_blank" rel="noopener noreferrer" class="sp-btnSm sp-btnOpen">🔗 OPEN LISTING</a>'
+            : '<span class="sp-btnSm" style="opacity:.28;cursor:not-allowed" title="No listing URL available">NO LINK</span>') +
         '</div>' +
       '</div>'
     );
@@ -742,9 +748,10 @@
           pets:    !!l.pets,
           voucher: !!l.voucher,
           family:  !!l.family,
-          source:  l.source  || 'housing scout',
-          link:    l.link    || '',
-          desc:    l.desc    || '',
+          source:    l.source    || 'housing scout',
+          sourceUrl: l.sourceUrl || '',
+          link:      l.link      || '',
+          desc:      l.desc      || '',
         };
       });
 

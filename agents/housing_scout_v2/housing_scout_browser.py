@@ -205,7 +205,15 @@ def scrape_affordablehousing(page, source):
 
         for card in cards:
             try:
-                href = card.get_attribute("href") or ""
+                # If the card element is not itself an anchor, find the primary
+                # listing link inside it (AffordableHousing uses div/article cards).
+                raw_href = card.get_attribute("href")
+                if raw_href is None:
+                    inner_anchor = card.query_selector("a[href]")
+                    href = (inner_anchor.get_attribute("href") or "") if inner_anchor else ""
+                else:
+                    href = raw_href or ""
+
                 # Only include links that look like individual listing pages
                 if classify_url(href) != "VERIFIED":
                     continue
@@ -565,11 +573,12 @@ def run_housing_scout():
                 elif scraper == "craigslist":
                     raw_listings = scrape_craigslist(page, source)
 
-                # Apply filters to each listing
+                # Apply filters to each listing and stamp source URL
                 for listing in raw_listings:
                     ok, fail_reason = passes_filters(listing)
                     listing["passes_filters"] = ok
                     listing["filter_failure"] = fail_reason
+                    listing["source_url"]     = source["url"]   # search page this came from
 
                 # Classify the source status based on what was extracted
                 if not raw_listings:

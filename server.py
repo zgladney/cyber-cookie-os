@@ -195,9 +195,10 @@ def _normalize_listings(raw_listings):
             'pets':    False,
             'voucher': False,
             'family':  False,
-            'source':  raw.get('source_site', 'housing scout'),
-            'link':    raw.get('listing_url', ''),
-            'desc':    text[:250] or 'No description extracted.',
+            'source':    raw.get('source_site', 'housing scout'),
+            'sourceUrl': raw.get('source_url', ''),
+            'link':      raw.get('listing_url', ''),
+            'desc':      text[:250] or 'No description extracted.',
         })
     return out
 
