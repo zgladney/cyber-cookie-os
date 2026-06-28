@@ -75,6 +75,12 @@
         <canvas id="oc-sysGraph" width="172" height="46"></canvas>
       </div>
 
+      <!-- INTEGRATIONS -->
+      <div id="oc-integrations">
+        <div class="oc-sysTitle">INTEGRATIONS</div>
+        <div id="oc-intList"></div>
+      </div>
+
       <div id="oc-sideFooter">CyberCookieOS v0.3.0</div>
 
     </aside>
@@ -167,8 +173,27 @@
 
       <!-- EMPLOYEE DIRECTORY -->
       <section id="oc-empDir" class="oc-panel">
-        <div class="oc-panelTitle">EMPLOYEE DIRECTORY</div>
+        <div id="oc-empDirHeader">
+          <span class="oc-panelTitle" style="margin-bottom:0">EMPLOYEE DIRECTORY</span>
+          <div id="oc-empSearch">
+            <input type="text" id="empSearchInput" placeholder="Search employees, roles..." autocomplete="off" />
+            <div id="empDeptFilters">
+              <button class="empFilter empFilterActive" data-dept="all">ALL</button>
+              <button class="empFilter" data-dept="security"    title="Security Ops">🛡</button>
+              <button class="empFilter" data-dept="housing"     title="Housing">🏠</button>
+              <button class="empFilter" data-dept="commerce"    title="Commerce">🛍</button>
+              <button class="empFilter" data-dept="productivity" title="Productivity">📅</button>
+              <button class="empFilter" data-dept="finance"     title="Finance">💰</button>
+            </div>
+            <select id="empSortSelect">
+              <option value="dept">Sort: Dept</option>
+              <option value="name">Sort: A–Z</option>
+              <option value="status">Sort: Status</option>
+            </select>
+          </div>
+        </div>
         <div id="oc-empGrid"></div>
+        <div id="oc-empNoResults" style="display:none">No employees match your search.</div>
       </section>
 
       <footer id="oc-footer">
@@ -179,6 +204,7 @@
   </div>
 
 </div>
+<script src="../js/cybercookieos.js"></script>
 <script src="js/ops_dashboard.js" defer></script>
 </body>
 </html>

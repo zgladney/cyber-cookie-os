@@ -1,170 +1,85 @@
-/* CyberCookieOS — Operations Center v3 Dashboard */
+/* CyberCookieOS — Operations Center Dashboard v3.1
+   Powered by COS core module (../js/cybercookieos.js).
+   This file is the controller/renderer only — all data lives in COS. */
 
-// ── DATA ─────────────────────────────────────────────────────────
+// ── CONSTANTS ────────────────────────────────────────────────────
 
-const DEPARTMENTS = [
-  {
-    id: 'security', name: 'SECURITY OPS', desc: 'Protect & Monitor',
-    color: '#9b6bff', rgb: '155,107,255', icon: '🛡',
-    room: '../hq/index.html',
-    employees: [
-      { id: 'threat_hunter', name: 'Athena',   title: 'Senior Threat Hunter',       img: '../assets/employees/athena/Athena (agent 001).png' },
-      { id: 'cloud_monitor', name: 'Nimbus',   title: 'Cloud Monitor',               img: '../assets/employees/nimbus/Nimbus (agent 003).png' },
-      { id: 'soc_analyst',   name: 'Sentinel', title: 'SOC Analyst',                 img: '../assets/employees/sentinel/Sentinel (agent 004).png' },
-    ]
-  },
-  {
-    id: 'housing', name: 'HOUSING', desc: 'Find Your Next Home',
-    color: '#c4784a', rgb: '196,120,74', icon: '🏠',
-    room: '../housing/index.html',
-    employees: [
-      { id: 'housing_scout',    name: 'Nova',   title: 'Housing Scout',            img: '../assets/employees/nova/Housing Scout Nova (agent 002).png' },
-      { id: 'rental_assistant', name: 'Beacon', title: 'Rental Assistant',         img: null },
-      { id: 'landlord_contact', name: 'Atlas',  title: 'Landlord Contact Specialist', img: '../assets/employees/atlas/Atlas (agent 005).png' },
-    ]
-  },
-  {
-    id: 'commerce', name: 'COMMERCE', desc: 'Create & Profit',
-    color: '#ff69b4', rgb: '255,105,180', icon: '🛍',
-    room: '../commerce/index.html',
-    employees: [
-      { id: 'trend_hunter',      name: 'Pixel',   title: 'Trend Hunter',        img: null },
-      { id: 'etsy_manager',      name: 'EtsyBot', title: 'Etsy Manager',         img: null },
-      { id: 'tiktok_researcher', name: 'Spark',   title: 'TikTok Researcher',    img: null },
-      { id: 'pod_manager',       name: 'Forge',   title: 'POD Manager',          img: null },
-    ]
-  },
-  {
-    id: 'productivity', name: 'PRODUCTIVITY', desc: 'Plan & Organize',
-    color: '#3aa8c8', rgb: '58,168,200', icon: '📅',
-    room: '../productivity/index.html',
-    employees: [
-      { id: 'calendar_assistant', name: 'Calypso',      title: 'Calendar Assistant', img: null },
-      { id: 'email_assistant',    name: 'Echo',          title: 'Email Assistant',    img: null },
-      { id: 'task_manager',       name: 'Atlas Planner', title: 'Task Manager',       img: null },
-      { id: 'reminder_assistant', name: 'Memo',          title: 'Reminder Assistant', img: null },
-    ]
-  },
-  {
-    id: 'finance', name: 'FINANCE', desc: 'Manage & Grow',
-    color: '#2ecc71', rgb: '46,204,113', icon: '💰',
-    room: '../finance/index.html',
-    employees: [
-      { id: 'finance_manager', name: 'Greenbean', title: 'Finance Manager', img: null },
-      { id: 'bill_tracker',    name: 'Ledger',    title: 'Bill Tracker',    img: null },
-      { id: 'budget_planner',  name: 'Penny',     title: 'Budget Planner',  img: null },
-      { id: 'savings_tracker', name: 'Vault',     title: 'Savings Tracker', img: null },
-    ]
-  },
+var DEPT_ORDER    = ['security', 'housing', 'commerce', 'productivity', 'finance'];
+var STATUS_URL    = '../data/agent_status.json';
+var POLL_MS       = 5000;
+var TOTAL_EMPLOYEES = 18;
+
+// Department room configs for the 6-card grid
+var ROOM_CONFIGS = [
+  { id: 'security',    name: 'SECURITY OPS', desc: '// Protect & Monitor', color: '#9b6bff', room: '../hq/index.html' },
+  { id: 'commerce',    name: 'COMMERCE',     desc: '// Create & Profit',   color: '#ff69b4', room: '../commerce/index.html' },
+  { id: 'housing',     name: 'HOUSING',      desc: '// Find Your Home',    color: '#c4784a', room: '../housing/index.html' },
+  { id: 'productivity',name: 'PRODUCTIVITY', desc: '// Plan & Organize',   color: '#3aa8c8', room: '../productivity/index.html' },
+  { id: 'finance',     name: 'FINANCE',      desc: '// Manage & Grow',     color: '#2ecc71', room: '../finance/index.html' },
+  { id: 'ops',         name: 'OPS CENTER',   desc: '// Mission Control',   color: '#9cf6ff', room: './index.html' },
 ];
 
-const DEPT_HEALTH = {
-  security: { pct: 100, label: 'HEALTHY' },
-  housing:  { pct: 95,  label: 'HEALTHY' },
-  commerce: { pct: 92,  label: 'HEALTHY' },
-  productivity: { pct: 98, label: 'HEALTHY' },
-  finance:  { pct: 97,  label: 'HEALTHY' },
+// ── SIMULATION STATE ─────────────────────────────────────────────
+
+var sim = {
+  cpu:       28,
+  ram:       44,
+  tasks:     317,
+  alerts:    2,
+  running:   9,
+  idle:      7,
+  blocked:   2,
+  startTime: Date.now(),
 };
 
-const NOTIFICATIONS = [
-  'Athena detected a suspicious IP — 203.45.12.8 flagged.',
-  'Nova found 3 new rental listings in Burlington County.',
-  'Pixel discovered a trending Etsy niche: holographic stickers.',
-  'Calypso synchronized the calendar for the week.',
-  'Greenbean updated the monthly budget overview.',
-  'Ledger flagged a subscription renewal due in 3 days.',
-  '2 Cloud monitor alerts resolved by Nimbus.',
-  'Sentinel completed overnight SOC sweep — all clear.',
-];
+var deptHealth = { security: 100, housing: 95, commerce: 92, productivity: 98, finance: 97 };
 
-const ACTIVITY_POOL = [
-  { agent: 'Athena',    dept: 'security',    msg: 'Completed #IPv6 Traffic Sweep' },
-  { agent: 'Nova',      dept: 'housing',     msg: 'Found 3 new rental listings' },
-  { agent: 'Pixel',     dept: 'commerce',    msg: 'TikTok trend report generated' },
-  { agent: 'Calypso',   dept: 'productivity',msg: 'Calendar synced successfully' },
-  { agent: 'Greenbean', dept: 'finance',     msg: 'Budget report updated' },
-  { agent: 'Nimbus',    dept: 'security',    msg: 'Cloud logs scan complete' },
-  { agent: 'EtsyBot',   dept: 'commerce',    msg: 'New Etsy listings discovered' },
-  { agent: 'Ledger',    dept: 'finance',     msg: 'Bill payment scheduled' },
-  { agent: 'Echo',      dept: 'productivity',msg: 'Email inbox processed' },
-  { agent: 'Beacon',    dept: 'housing',     msg: 'Rental comparison updated' },
-  { agent: 'Sentinel',  dept: 'security',    msg: 'SOC sweep — no anomalies' },
-  { agent: 'Spark',     dept: 'commerce',    msg: 'TikTok viral clip identified' },
-  { agent: 'Atlas',     dept: 'housing',     msg: 'Landlord contact drafted' },
-  { agent: 'Penny',     dept: 'finance',     msg: 'Budget category flagged' },
-  { agent: 'Memo',      dept: 'productivity',msg: 'Reminder queued for 9 AM' },
-];
+// Per-employee simulated states
+var empStates = {};
 
-// ── SIM STATE ────────────────────────────────────────────────────
-
-const sim = {
-  cpu:        28,
-  ram:        44,
-  tasks:      317,
-  alerts:     2,
-  running:    9,
-  idle:       4,
-  blocked:    2,
-  startTime:  Date.now(),
-};
-
-const TOTAL_EMP = DEPARTMENTS.reduce(function(s, d) { return s + d.employees.length; }, 0);
-
-// Graph history — 50 CPU samples
-const graphHistory = [];
-for (var i = 0; i < 50; i++) graphHistory.push(20 + Math.random() * 25);
-
-// Activity feed (most recent 5)
-const activityLog = [];
-(function seedActivity() {
-  var now = Date.now();
-  var copy = ACTIVITY_POOL.slice();
-  for (var i = copy.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var tmp = copy[i]; copy[i] = copy[j]; copy[j] = tmp;
-  }
-  for (var k = 0; k < 5; k++) {
-    var item = copy[k];
-    var dt = new Date(now - (5 - k) * 60000 * (Math.random() * 3 + 1));
-    activityLog.push({ agent: item.agent, dept: item.dept, msg: item.msg, time: dt });
-  }
-})();
-
-// ── COLOR MAP ────────────────────────────────────────────────────
-
-var deptColorMap = {};
-DEPARTMENTS.forEach(function(d) { deptColorMap[d.id] = d.color; });
-
-// ── CLOCK ────────────────────────────────────────────────────────
-
-function startClock() {
-  function tick() {
-    var el = document.getElementById('oc-topClock');
-    if (!el) return;
-    el.textContent = new Date().toLocaleString([], {
-      weekday: 'short', month: 'short', day: 'numeric',
-      hour: '2-digit', minute: '2-digit', second: '2-digit'
-    });
-  }
-  tick();
-  setInterval(tick, 1000);
+function initEmpStates() {
+  var statusPool = ['running','running','running','running','idle','idle','idle','blocked'];
+  var taskPool = {
+    athena:       ['Scanning IPv6 threats', 'Classifying suspicious IPs', 'Generating report'],
+    nimbus:       ['Monitoring cloud logs', 'Checking service uptime', 'Reviewing metrics'],
+    sentinel:     ['Triaging alert queue', 'Coordinating SOC', 'Reviewing incidents'],
+    nova:         ['Searching listings', 'Filtering voucher homes', 'Ranking matches'],
+    beacon:       ['Comparing prices', 'Monitoring availability', 'Tracking history'],
+    atlas:        ['Drafting inquiries', 'Tracking responses', 'Updating contacts'],
+    pixel:        ['Analyzing TikTok trends', 'Researching niches', 'Generating report'],
+    etsybot:      ['Optimizing listings', 'Writing descriptions', 'Analyzing store'],
+    spark:        ['Researching viral clips', 'Tracking hashtags', 'Writing briefs'],
+    forge:        ['Managing inventory', 'Tracking production', 'Reviewing orders'],
+    calypso:      ['Syncing calendar', 'Scheduling meetings', 'Setting reminders'],
+    echo:         ['Processing inbox', 'Drafting replies', 'Summarizing threads'],
+    atlas_planner:['Updating timelines', 'Assigning tasks', 'Reviewing blockers'],
+    memo:         ['Queuing reminders', 'Tracking follow-ups', 'Sending alerts'],
+    greenbean:    ['Generating budget report', 'Reviewing income', 'Analyzing trends'],
+    ledger:       ['Tracking bills', 'Auditing subscriptions', 'Confirming payments'],
+    penny:        ['Analyzing spending', 'Updating budgets', 'Flagging overages'],
+    vault:        ['Tracking savings', 'Projecting goals', 'Reporting milestones'],
+  };
+  Object.keys(COS.employees).forEach(function (id, i) {
+    var status = statusPool[i % statusPool.length];
+    var tasks  = taskPool[id] || ['Working'];
+    empStates[id] = {
+      status:    status,
+      task:      tasks[Math.floor(Math.random() * tasks.length)],
+      cpu:       5  + Math.random() * 40,
+      mem:       64 + Math.random() * 192,
+      runtime:   Math.floor(Math.random() * 7200),
+      lastActive: new Date(),
+      _tasks:    tasks,
+    };
+    // Persist status so profile pages can read it
+    COS.state.set('emp.' + id + '.status', status);
+  });
 }
 
-// ── UPTIME ───────────────────────────────────────────────────────
+// ── GRAPH (canvas) ────────────────────────────────────────────────
 
-function updateUptime() {
-  var el = document.getElementById('sys-uptime');
-  if (!el) return;
-  var secs = Math.floor((Date.now() - sim.startTime) / 1000);
-  var h = Math.floor(secs / 3600);
-  var m = Math.floor((secs % 3600) / 60);
-  var s = secs % 60;
-  el.textContent = h + ':' + pad2(m) + ':' + pad2(s);
-}
-
-function pad2(n) { return n < 10 ? '0' + n : '' + n; }
-
-// ── SYSTEM GRAPH ─────────────────────────────────────────────────
+var graphHistory = [];
+for (var _g = 0; _g < 50; _g++) graphHistory.push(18 + Math.random() * 28);
 
 function drawGraph() {
   var canvas = document.getElementById('oc-sysGraph');
@@ -173,8 +88,8 @@ function drawGraph() {
   var W = canvas.width, H = canvas.height;
   ctx.clearRect(0, 0, W, H);
 
-  // Subtle grid
-  ctx.strokeStyle = 'rgba(150,80,255,.08)';
+  // Grid
+  ctx.strokeStyle = 'rgba(150,80,255,.07)';
   ctx.lineWidth = 1;
   for (var y = 0; y < H; y += H / 4) {
     ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
@@ -183,184 +98,228 @@ function drawGraph() {
   // Line
   var step = W / (graphHistory.length - 1);
   ctx.beginPath();
-  graphHistory.forEach(function(v, i) {
-    var x = i * step;
-    var yp = H - (v / 100) * H;
-    if (i === 0) ctx.moveTo(x, yp); else ctx.lineTo(x, yp);
+  graphHistory.forEach(function (v, i) {
+    var x = i * step, yp = H - (v / 100) * H;
+    i === 0 ? ctx.moveTo(x, yp) : ctx.lineTo(x, yp);
   });
   ctx.strokeStyle = '#2ecc71';
   ctx.lineWidth = 1.5;
   ctx.shadowColor = '#2ecc71';
-  ctx.shadowBlur = 5;
+  ctx.shadowBlur = 4;
   ctx.stroke();
   ctx.shadowBlur = 0;
 
-  // Fill
-  var lastX = (graphHistory.length - 1) * step;
-  var lastY = H - (graphHistory[graphHistory.length - 1] / 100) * H;
-  ctx.lineTo(lastX, H); ctx.lineTo(0, H); ctx.closePath();
-  ctx.fillStyle = 'rgba(46,204,113,.07)';
+  // Fill under line
+  var lastPt = graphHistory.length - 1;
+  ctx.lineTo(lastPt * step, H); ctx.lineTo(0, H); ctx.closePath();
+  ctx.fillStyle = 'rgba(46,204,113,.06)';
   ctx.fill();
 }
 
-// ── SIM TICK (every 3s) ──────────────────────────────────────────
+// ── CLOCK ─────────────────────────────────────────────────────────
 
-function simTick() {
-  // CPU drift
-  sim.cpu = clamp(sim.cpu + (Math.random() - 0.48) * 7, 8, 88);
-  sim.ram = clamp(sim.ram + (Math.random() - 0.5)  * 3, 25, 75);
-
-  // Push graph
-  graphHistory.push(sim.cpu);
-  if (graphHistory.length > 50) graphHistory.shift();
-  drawGraph();
-
-  // Update bars
-  var cpuEl = document.getElementById('sys-cpu');
-  var ramEl = document.getElementById('sys-ram');
-  var cpuBar = document.getElementById('sysbar-cpu');
-  var ramBar = document.getElementById('sysbar-ram');
-  if (cpuEl)  cpuEl.textContent  = Math.round(sim.cpu) + '%';
-  if (ramEl)  ramEl.textContent  = Math.round(sim.ram) + '%';
-  if (cpuBar) cpuBar.style.width = Math.round(sim.cpu) + '%';
-  if (ramBar) ramBar.style.width = Math.round(sim.ram) + '%';
-
-  // Drift tasks
-  if (Math.random() < 0.7) {
-    sim.tasks += Math.floor(Math.random() * 3);
-    setText('stat-tasks', sim.tasks.toLocaleString());
+function startClock() {
+  function tick() {
+    var el = document.getElementById('oc-topClock');
+    if (el) el.textContent = new Date().toLocaleString([], {
+      weekday: 'short', month: 'short', day: 'numeric',
+      hour: '2-digit', minute: '2-digit', second: '2-digit',
+    });
   }
-
-  // Drift running/idle
-  var total = sim.running + sim.idle + sim.blocked;
-  if (Math.random() < 0.35 && sim.idle > 0) {
-    sim.running++; sim.idle--;
-  } else if (Math.random() < 0.25 && sim.running > 0) {
-    sim.idle++; sim.running--;
-  }
-  setText('stat-running', sim.running);
-  setText('stat-idle',    sim.idle);
-  setText('stat-blocked', sim.blocked);
-
-  // Health drift
-  Object.keys(DEPT_HEALTH).forEach(function(k) {
-    DEPT_HEALTH[k].pct = clamp(DEPT_HEALTH[k].pct + (Math.random() - 0.5) * 2, 85, 100);
-  });
-  renderDeptHealth();
-
-  // Occasionally inject new activity
-  if (Math.random() < 0.4) injectActivity();
-
-  // Update last-updated time
-  setText('stat-time', new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
-  setText('stat-date', new Date().toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }));
+  tick(); setInterval(tick, 1000);
 }
 
-function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+// ── UPTIME ────────────────────────────────────────────────────────
 
-// ── ACTIVITY FEED ────────────────────────────────────────────────
-
-function injectActivity() {
-  var item = ACTIVITY_POOL[Math.floor(Math.random() * ACTIVITY_POOL.length)];
-  activityLog.push({ agent: item.agent, dept: item.dept, msg: item.msg, time: new Date() });
-  if (activityLog.length > 8) activityLog.shift();
-  renderActivityFeed();
+function updateUptime() {
+  var el = document.getElementById('sys-uptime');
+  if (!el) return;
+  var secs = Math.floor((Date.now() - sim.startTime) / 1000);
+  el.textContent = Math.floor(secs / 3600) + ':' + p2(Math.floor((secs % 3600) / 60)) + ':' + p2(secs % 60);
 }
 
-function renderActivityFeed() {
-  var feed = document.getElementById('oc-activityFeed');
-  if (!feed) return;
-  feed.innerHTML = '';
-  var items = activityLog.slice(-5).reverse();
-  items.forEach(function(item) {
-    var color = deptColorMap[item.dept] || '#9b6bff';
+// ── ANIMATED COUNTER ──────────────────────────────────────────────
+
+function countUp(el, from, to, ms) {
+  if (!el) return;
+  var start = Date.now();
+  var ease  = function (t) { return t < .5 ? 2 * t * t : -1 + (4 - 2 * t) * t; };
+  var step  = function () {
+    var p = Math.min((Date.now() - start) / ms, 1);
+    el.textContent = Math.round(from + (to - from) * ease(p)).toLocaleString();
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+// ── TOAST ──────────────────────────────────────────────────────────
+
+var _toastTimer = null;
+function showToast(msg, colorVar) {
+  var t = document.getElementById('oc-toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.style.borderLeftColor = colorVar || '#ff69b4';
+  t.classList.add('oc-toast-visible');
+  if (_toastTimer) clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(function () { t.classList.remove('oc-toast-visible'); }, 2800);
+}
+
+// ── INTEGRATIONS PANEL ────────────────────────────────────────────
+
+function buildIntegrations() {
+  var list = document.getElementById('oc-intList');
+  if (!list) return;
+  var labels = { active: 'ACTIVE', disconnected: 'DISCONNECTED', not_configured: 'NOT CONFIGURED', auth_required: 'NEEDS AUTH' };
+  var cls    = { active: 'oc-int-active', disconnected: 'oc-int-disconnected', not_configured: 'oc-int-none', auth_required: 'oc-int-auth' };
+  COS.integrations.forEach(function (intg) {
     var row = document.createElement('div');
-    row.className = 'oc-actRow';
-    row.style.setProperty('--act-color', color);
-    var t = item.time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    row.className = 'oc-intRow';
     row.innerHTML =
-      '<span class="oc-actTime">' + t + '</span>' +
-      '<span class="oc-actAgent">' + item.agent + '</span>' +
-      '<span class="oc-actMsg">' + item.msg + '</span>';
-    feed.appendChild(row);
+      '<span class="oc-intName">' + intg.name + '</span>' +
+      '<span class="oc-intStatus ' + (cls[intg.status] || 'oc-int-none') + '">' + (labels[intg.status] || intg.status.toUpperCase()) + '</span>';
+    list.appendChild(row);
   });
 }
 
-// ── DEPT HEALTH ──────────────────────────────────────────────────
+// ── DEPT HEALTH ───────────────────────────────────────────────────
 
 function renderDeptHealth() {
   var list = document.getElementById('oc-healthList');
   if (!list) return;
   list.innerHTML = '';
-  DEPARTMENTS.forEach(function(d) {
-    var h = DEPT_HEALTH[d.id] || { pct: 100, label: 'HEALTHY' };
-    var pct = Math.round(h.pct);
-    var isAlert = pct < 90;
+  DEPT_ORDER.forEach(function (deptId) {
+    var d   = COS.departments[deptId] || {};
+    var pct = Math.round(deptHealth[deptId] || 100);
+    var ok  = pct >= 90;
     var row = document.createElement('div');
     row.className = 'oc-healthRow';
     row.innerHTML =
-      '<span class="oc-healthIcon">' + d.icon + '</span>' +
-      '<span class="oc-healthName">' + d.name + '</span>' +
+      '<span class="oc-healthIcon">' + (d.icon || '') + '</span>' +
+      '<span class="oc-healthName">' + (d.short || deptId.toUpperCase()) + '</span>' +
       '<div class="oc-healthPctWrap">' +
-        '<span class="oc-healthPct" style="color:' + (isAlert ? '#ffdc32' : '#2ecc71') + '">' + pct + '%</span>' +
-        '<span class="oc-healthTag' + (isAlert ? ' alert' : '') + '">' + (isAlert ? 'ATTENTION' : 'HEALTHY') + '</span>' +
+        '<span class="oc-healthPct" style="color:' + (ok ? '#2ecc71' : '#ffdc32') + '">' + pct + '%</span>' +
+        '<span class="oc-healthTag' + (ok ? '' : ' alert') + '">' + (ok ? 'HEALTHY' : 'ATTENTION') + '</span>' +
       '</div>';
     list.appendChild(row);
   });
 }
 
-// ── NOTIFICATIONS ────────────────────────────────────────────────
+// ── NOTIFICATIONS ─────────────────────────────────────────────────
 
-var notifCount = 0;
+var _notifExpanded = false;
 
 function renderNotifications() {
   var list = document.getElementById('oc-notifList');
   if (!list) return;
+  var all = COS.notifications.get(false);
+  var shown = _notifExpanded ? all : all.slice(0, 3);
   list.innerHTML = '';
-  var shown = NOTIFICATIONS.slice(notifCount, notifCount + 3);
-  if (shown.length === 0) { notifCount = 0; shown = NOTIFICATIONS.slice(0, 3); }
-  shown.forEach(function(txt) {
+  if (!shown.length) {
+    list.innerHTML = '<div style="font-size:8px;color:rgba(200,150,255,.3);padding:6px 0">No new notifications.</div>';
+    return;
+  }
+  shown.forEach(function (n) {
     var row = document.createElement('div');
     row.className = 'oc-notifRow';
-    row.innerHTML = '<div class="oc-notifDot"></div><span class="oc-notifText">' + txt + '</span>';
+    row.innerHTML =
+      '<div class="oc-notifDot"></div>' +
+      '<span class="oc-notifText">' + n.text + '</span>' +
+      '<button class="oc-notifDismiss" data-id="' + n.id + '" title="Dismiss">&times;</button>';
     list.appendChild(row);
+  });
+
+  // Dismiss handlers
+  list.querySelectorAll('.oc-notifDismiss').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var id = this.dataset.id;
+      COS.notifications.dismiss(id);
+      COS.activity.log({ agent: 'System', dept: 'ops', msg: 'Notification dismissed.', source: 'user' });
+      renderNotifications();
+      showToast('Notification dismissed.', '#9b6bff');
+    });
   });
 }
 
-function rotateNotifications() {
-  notifCount = (notifCount + 1) % NOTIFICATIONS.length;
-  renderNotifications();
+// ── ACTIVITY FEED ─────────────────────────────────────────────────
+
+var _activityItems = [];  // in-memory for current session
+
+function seedActivity() {
+  var pool = [
+    { agent: 'Athena',    dept: 'security',    msg: 'Completed #IPv6 Traffic Sweep' },
+    { agent: 'Nova',      dept: 'housing',     msg: 'Found 3 new rental listings' },
+    { agent: 'Pixel',     dept: 'commerce',    msg: 'TikTok trend report generated' },
+    { agent: 'Calypso',   dept: 'productivity',msg: 'Calendar synced successfully' },
+    { agent: 'Greenbean', dept: 'finance',     msg: 'Budget report updated' },
+  ];
+  var now = Date.now();
+  pool.forEach(function (item, i) {
+    _activityItems.push({ agent: item.agent, dept: item.dept, msg: item.msg, ts: now - (5 - i) * 90000, source: 'sim' });
+    COS.activity.log(item);
+  });
 }
 
-// ── DEPARTMENT ROOMS ─────────────────────────────────────────────
+function addActivityEntry(item, animate) {
+  var feed = document.getElementById('oc-activityFeed');
+  if (!feed) return;
 
-var ROOMS = [
-  { id: 'security',    name: 'SECURITY OPS', desc: '// Protect & Monitor', color: '#9b6bff', room: '../hq/index.html',           char: '🕵' },
-  { id: 'commerce',    name: 'COMMERCE',     desc: '// Create & Profit',   color: '#ff69b4', room: '../commerce/index.html',    char: '🛍' },
-  { id: 'housing',     name: 'HOUSING',      desc: '// Find Your Home',    color: '#c4784a', room: '../housing/index.html',     char: '🏠' },
-  { id: 'productivity',name: 'PRODUCTIVITY', desc: '// Plan & Organize',   color: '#3aa8c8', room: '../productivity/index.html',char: '📅' },
-  { id: 'finance',     name: 'FINANCE',      desc: '// Manage & Grow',     color: '#2ecc71', room: '../finance/index.html',     char: '💰' },
-  { id: 'ops',         name: 'OPS CENTER',   desc: '// Mission Control',   color: '#9cf6ff', room: './index.html',              char: '🏛' },
-];
+  var color = (COS.departments[item.dept] || {}).color || '#9b6bff';
+  var row = document.createElement('div');
+  row.className = 'oc-actRow' + (animate ? ' oc-actRow-new' : '');
+  row.style.setProperty('--act-color', color);
+  var t = new Date(item.ts || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  row.innerHTML =
+    '<span class="oc-actTime">' + t + '</span>' +
+    '<span class="oc-actAgent">' + (item.agent || 'System') + '</span>' +
+    '<span class="oc-actMsg">' + item.msg + '</span>';
+
+  feed.insertBefore(row, feed.firstChild);
+  while (feed.children.length > 6) feed.removeChild(feed.lastChild);
+}
+
+function refreshActivityFeed() {
+  var feed = document.getElementById('oc-activityFeed');
+  if (!feed) return;
+  feed.innerHTML = '';
+  _activityItems.slice(-6).reverse().forEach(function (item) { addActivityEntry(item, false); });
+}
+
+// Listen for real events from COS
+function wireActivityEvents() {
+  COS.events.on('activity:new', function (item) {
+    _activityItems.push(item);
+    if (_activityItems.length > 50) _activityItems.shift();
+    addActivityEntry(item, true);
+    // update time display
+    var now = new Date();
+    setText('stat-time', now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+    setText('stat-date', now.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }));
+  });
+  COS.events.on('notifications:changed', function () { renderNotifications(); });
+}
+
+// ── DEPARTMENT ROOMS ──────────────────────────────────────────────
 
 function buildRooms() {
   var grid = document.getElementById('oc-roomGrid');
   if (!grid) return;
   grid.innerHTML = '';
-  ROOMS.forEach(function(r) {
+  ROOM_CONFIGS.forEach(function (r) {
     var card = document.createElement('div');
     card.className = 'oc-roomCard oc-room-' + r.id;
     card.style.setProperty('--rc-color', r.color);
-    card.onclick = function() { window.location.href = r.room; };
+    card.addEventListener('click', function () {
+      COS.activity.log({ agent: 'System', dept: r.id === 'ops' ? 'ops' : r.id, msg: r.name + ' room opened.', source: 'user' });
+      window.location.href = r.room;
+    });
     card.innerHTML =
-      '<div class="oc-roomArt">' +
-        '<div class="oc-roomFloor"></div>' +
-        '<div class="oc-roomChar">' + r.char + '</div>' +
-      '</div>' +
+      '<div class="oc-roomArt"><div class="oc-roomFloor"></div></div>' +
       '<div class="oc-roomInfo">' +
         '<span class="oc-roomName">' + r.name + '</span>' +
         '<span class="oc-roomDesc">' + r.desc + '</span>' +
-        '<a class="oc-enterBtn" href="' + r.room + '">ENTER ROOM</a>' +
+        '<a class="oc-enterBtn" href="' + r.room + '" onclick="event.stopPropagation()">ENTER ROOM</a>' +
       '</div>';
     grid.appendChild(card);
   });
@@ -368,77 +327,158 @@ function buildRooms() {
 
 // ── EMPLOYEE DIRECTORY ────────────────────────────────────────────
 
-var EMP_STATUS_POOL = ['running', 'running', 'running', 'idle', 'idle', 'idle', 'running', 'idle', 'running', 'idle'];
-var empStatusMap = {};
-
-function initEmpStatuses() {
-  DEPARTMENTS.forEach(function(d) {
-    d.employees.forEach(function(e, i) {
-      empStatusMap[e.id] = EMP_STATUS_POOL[(d.employees.indexOf(e) + d.id.length) % EMP_STATUS_POOL.length];
-    });
-  });
-}
+var _empFilter = { query: '', dept: 'all', sort: 'dept' };
 
 function buildEmployeeDirectory() {
   var grid = document.getElementById('oc-empGrid');
   if (!grid) return;
-  grid.innerHTML = '';
-  DEPARTMENTS.forEach(function(d) {
-    var col = document.createElement('div');
-    col.className = 'oc-empDept';
 
-    var header = document.createElement('div');
-    header.className = 'oc-empDeptHeader';
-    header.style.setProperty('--dept-color', d.color);
-    header.style.setProperty('color', d.color);
-    header.innerHTML = d.icon + ' ' + d.name;
-    col.appendChild(header);
-
-    d.employees.forEach(function(emp) {
-      var status = empStatusMap[emp.id] || 'idle';
-      var card = document.createElement('div');
-      card.className = 'oc-empCard';
-      card.style.setProperty('--dept-color', d.color);
-
-      var avatarWrap = document.createElement('div');
-      avatarWrap.className = 'oc-empAvatarWrap';
-
-      if (emp.img) {
-        var img = document.createElement('img');
-        img.className = 'oc-empImg';
-        img.src = emp.img;
-        img.alt = emp.name;
-        img.onerror = function() {
-          this.style.display = 'none';
-          avatarWrap.appendChild(makePlaceholder(emp.name, d.color));
-        };
-        avatarWrap.appendChild(img);
-      } else {
-        avatarWrap.appendChild(makePlaceholder(emp.name, d.color));
-      }
-
-      card.appendChild(avatarWrap);
-
-      var info = document.createElement('div');
-      info.className = 'oc-empInfo';
-      info.innerHTML =
-        '<div class="oc-empName">' + emp.name + '</div>' +
-        '<div class="oc-empTitle">' + emp.title + '</div>' +
-        '<div class="oc-empStatusRow">' +
-          '<div class="oc-empDot ' + status + '"></div>' +
-          '<span class="oc-empStatus ' + status + '">' + status.toUpperCase() + '</span>' +
-        '</div>' +
-        '<div class="oc-empBtns">' +
-          '<button class="oc-dlBtn" onclick="downloadAvatar(\'' + (emp.img || '') + '\', \'' + emp.name + '\')">DOWNLOAD &#8595;</button>' +
-          '<button class="oc-profileBtn" disabled title="Coming soon">PROFILE</button>' +
-        '</div>';
-      card.appendChild(info);
-
-      col.appendChild(card);
+  // Gather all employees respecting filter
+  var allEmps = [];
+  DEPT_ORDER.forEach(function (deptId) {
+    var ids = COS.deptEmployees[deptId] || [];
+    ids.forEach(function (id) {
+      var emp  = COS.employees[id];
+      var dept = COS.departments[deptId];
+      if (!emp) return;
+      var q = _empFilter.query.toLowerCase();
+      if (q && !emp.name.toLowerCase().includes(q) && !emp.title.toLowerCase().includes(q)) return;
+      if (_empFilter.dept !== 'all' && deptId !== _empFilter.dept) return;
+      allEmps.push({ id: id, emp: emp, dept: dept, deptId: deptId });
     });
-
-    grid.appendChild(col);
   });
+
+  // Sort
+  if (_empFilter.sort === 'name') {
+    allEmps.sort(function (a, b) { return a.emp.name.localeCompare(b.emp.name); });
+  } else if (_empFilter.sort === 'status') {
+    var order = { running: 0, blocked: 1, idle: 2 };
+    allEmps.sort(function (a, b) {
+      return (order[(empStates[a.id] || {}).status] || 2) - (order[(empStates[b.id] || {}).status] || 2);
+    });
+  }
+  // 'dept' sort is already in dept order
+
+  var noResults = document.getElementById('oc-empNoResults');
+
+  if (!allEmps.length) {
+    grid.innerHTML = '';
+    if (noResults) noResults.style.display = 'block';
+    return;
+  }
+  if (noResults) noResults.style.display = 'none';
+
+  if (_empFilter.dept !== 'all' || _empFilter.sort !== 'dept') {
+    // Flat grid when filtering
+    grid.style.display = 'flex';
+    grid.style.flexWrap = 'wrap';
+    grid.style.gap = '10px';
+    grid.innerHTML = '';
+    allEmps.forEach(function (item) {
+      var card = buildEmpCard(item.id, item.emp, item.dept);
+      card.style.width = '160px';
+      grid.appendChild(card);
+    });
+  } else {
+    // Default: department columns
+    grid.style.display = 'grid';
+    grid.style.gridTemplateColumns = 'repeat(5, 1fr)';
+    grid.style.gap = '14px';
+    grid.innerHTML = '';
+    DEPT_ORDER.forEach(function (deptId) {
+      var dept = COS.departments[deptId];
+      var ids  = COS.deptEmployees[deptId] || [];
+      var col = document.createElement('div');
+      col.className = 'oc-empDept';
+
+      var header = document.createElement('div');
+      header.className = 'oc-empDeptHeader';
+      header.style.setProperty('--dept-color', dept.color);
+      header.style.color = dept.color;
+      header.innerHTML = dept.icon + ' ' + dept.short;
+      col.appendChild(header);
+
+      ids.forEach(function (id) {
+        var emp = COS.employees[id];
+        if (emp) col.appendChild(buildEmpCard(id, emp, dept));
+      });
+      grid.appendChild(col);
+    });
+  }
+}
+
+function buildEmpCard(id, emp, dept) {
+  var st    = empStates[id] || { status: 'idle', task: '—', cpu: 0, mem: 64, runtime: 0 };
+  var color = dept ? dept.color : '#9b6bff';
+
+  var card = document.createElement('div');
+  card.className = 'oc-empCard';
+  card.style.setProperty('--dept-color', color);
+
+  // Avatar
+  var avatarWrap = document.createElement('div');
+  avatarWrap.className = 'oc-empAvatarWrap';
+
+  if (emp.hasArt && emp.imgSrc) {
+    var img = document.createElement('img');
+    img.className = 'oc-empImg';
+    img.src = emp.imgSrc;
+    img.alt = emp.name;
+    img.loading = 'lazy';
+    img.onerror = function () {
+      this.style.display = 'none';
+      avatarWrap.appendChild(makePlaceholder(emp.name, color));
+    };
+    avatarWrap.appendChild(img);
+  } else {
+    avatarWrap.appendChild(makePlaceholder(emp.name, color));
+  }
+  card.appendChild(avatarWrap);
+
+  // Info
+  var info = document.createElement('div');
+  info.className = 'oc-empInfo';
+
+  var statusClass = st.status === 'running' ? 'running' : (st.status === 'blocked' ? 'blocked' : 'idle');
+  var taskText    = st.status === 'idle' ? 'Waiting for task' : st.task;
+  var runtime     = formatRuntime(st.runtime);
+  var cpu         = Math.round(st.cpu || 0);
+
+  info.innerHTML =
+    '<div class="oc-empName">' + emp.name + '</div>' +
+    '<div class="oc-empTitle">' + emp.title + '</div>' +
+    '<div class="oc-empStatusRow">' +
+      '<div class="oc-empDot ' + statusClass + '"></div>' +
+      '<span class="oc-empStatus ' + statusClass + '">' + st.status.toUpperCase() + '</span>' +
+    '</div>' +
+    '<div class="oc-empTask">' + taskText + '</div>' +
+    '<div class="oc-empMeta"><span>CPU ' + cpu + '%</span><span>' + runtime + '</span></div>' +
+    '<div class="oc-empBtns">' +
+      buildDlBtn(emp, color) +
+      '<button class="oc-profileBtn" data-id="' + id + '">PROFILE</button>' +
+    '</div>';
+
+  card.appendChild(info);
+
+  // Wire profile button
+  var profileBtn = info.querySelector('.oc-profileBtn');
+  if (profileBtn) {
+    profileBtn.removeAttribute('disabled');
+    profileBtn.addEventListener('click', function () {
+      COS.activity.log({ agent: emp.name, dept: emp.dept, msg: 'Profile viewed from Ops Center.', source: 'user' });
+      showToast('Opening ' + emp.name + '\'s profile…', color);
+      setTimeout(function () { window.location.href = '../employees/profile.html?id=' + id; }, 300);
+    });
+  }
+
+  return card;
+}
+
+function buildDlBtn(emp, color) {
+  if (!emp.hasArt || !emp.imgSrc) {
+    return '<button class="oc-dlBtn" style="opacity:.35;cursor:default;border-color:rgba(255,255,255,.08);color:rgba(255,255,255,.2)" disabled>ARTWORK PENDING</button>';
+  }
+  return '<button class="oc-dlBtn" data-src="' + emp.imgSrc + '" data-name="' + emp.name + '">DOWNLOAD &#8595;</button>';
 }
 
 function makePlaceholder(name, color) {
@@ -449,96 +489,312 @@ function makePlaceholder(name, color) {
   return ph;
 }
 
-function downloadAvatar(src, name) {
-  if (!src) { alert(name + '\'s avatar artwork is coming soon!'); return; }
-  var a = document.createElement('a');
-  a.href = src;
-  a.download = name.replace(/\s+/g, '_') + '_avatar.png';
-  a.click();
+function formatRuntime(secs) {
+  if (!secs) return '0:00';
+  var h = Math.floor(secs / 3600), m = Math.floor((secs % 3600) / 60), s = secs % 60;
+  return h ? h + ':' + p2(m) + ':' + p2(s) : m + ':' + p2(s);
 }
 
-function driftEmpStatuses() {
-  DEPARTMENTS.forEach(function(d) {
-    d.employees.forEach(function(e) {
-      if (Math.random() < 0.15) {
-        var states = ['running', 'idle'];
-        empStatusMap[e.id] = states[Math.floor(Math.random() * states.length)];
-      }
+// Wire download buttons (event delegation)
+function wireDownloads() {
+  var grid = document.getElementById('oc-empGrid');
+  if (!grid) return;
+  grid.addEventListener('click', function (e) {
+    var btn = e.target.closest('.oc-dlBtn');
+    if (!btn || btn.disabled) return;
+    var src  = btn.dataset.src;
+    var name = btn.dataset.name;
+    if (!src) { showToast('Artwork coming soon for ' + (name || 'this employee') + '.', '#ffdc32'); return; }
+    var a = document.createElement('a');
+    a.href = src; a.download = name.replace(/\s+/g, '_') + '_avatar.png';
+    a.click();
+    COS.activity.log({ agent: name, dept: 'ops', msg: 'Avatar downloaded.', source: 'user' });
+    showToast(name + ' avatar downloaded!', '#2ecc71');
+  });
+}
+
+// ── EMPLOYEE SEARCH & FILTER ──────────────────────────────────────
+
+function wireSearch() {
+  var input   = document.getElementById('empSearchInput');
+  var filters = document.querySelectorAll('.empFilter');
+  var sortSel = document.getElementById('empSortSelect');
+
+  if (input) {
+    input.addEventListener('input', function () {
+      _empFilter.query = this.value.trim();
+      buildEmployeeDirectory();
+    });
+  }
+
+  filters.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      filters.forEach(function (b) { b.classList.remove('empFilterActive'); });
+      this.classList.add('empFilterActive');
+      _empFilter.dept = this.dataset.dept;
+      buildEmployeeDirectory();
     });
   });
-  // Re-render employee status dots without full rebuild
-  var dots  = document.querySelectorAll('.oc-empDot');
-  var texts = document.querySelectorAll('.oc-empStatus');
-  var allEmps = [];
-  DEPARTMENTS.forEach(function(d) { d.employees.forEach(function(e) { allEmps.push(e); }); });
-  allEmps.forEach(function(e, idx) {
-    var s = empStatusMap[e.id] || 'idle';
-    if (dots[idx])  { dots[idx].className  = 'oc-empDot ' + s; }
-    if (texts[idx]) { texts[idx].className = 'oc-empStatus ' + s; texts[idx].textContent = s.toUpperCase(); }
+
+  if (sortSel) {
+    sortSel.addEventListener('change', function () {
+      _empFilter.sort = this.value;
+      buildEmployeeDirectory();
+    });
+  }
+}
+
+// ── VIEW ALL NOTIFICATIONS ────────────────────────────────────────
+
+function wireViewAll() {
+  var btn = document.querySelector('.oc-viewAllBtn');
+  if (!btn) return;
+  btn.addEventListener('click', function () {
+    _notifExpanded = !_notifExpanded;
+    this.textContent = _notifExpanded ? 'SHOW LESS' : 'VIEW ALL';
+    renderNotifications();
   });
 }
 
-// ── HELPERS ──────────────────────────────────────────────────────
+// ── SIMULATION TICK (every 3s) ────────────────────────────────────
 
-function setText(id, val) {
-  var el = document.getElementById(id);
-  if (el) el.textContent = val;
+var _actPool = [
+  { agent: 'Athena',    dept: 'security',     msg: 'Completed #IPv6 Traffic Sweep' },
+  { agent: 'Nova',      dept: 'housing',      msg: 'Found 3 new rental listings' },
+  { agent: 'Pixel',     dept: 'commerce',     msg: 'TikTok trend report generated' },
+  { agent: 'Calypso',   dept: 'productivity', msg: 'Calendar synced successfully' },
+  { agent: 'Greenbean', dept: 'finance',      msg: 'Budget report updated' },
+  { agent: 'Nimbus',    dept: 'security',     msg: 'Cloud logs scan complete' },
+  { agent: 'EtsyBot',   dept: 'commerce',     msg: 'New Etsy listings discovered' },
+  { agent: 'Ledger',    dept: 'finance',      msg: 'Bill payment scheduled' },
+  { agent: 'Echo',      dept: 'productivity', msg: 'Email inbox processed' },
+  { agent: 'Beacon',    dept: 'housing',      msg: 'Rental comparison updated' },
+  { agent: 'Sentinel',  dept: 'security',     msg: 'SOC sweep — no anomalies' },
+  { agent: 'Spark',     dept: 'commerce',     msg: 'TikTok viral clip identified' },
+  { agent: 'Atlas',     dept: 'housing',      msg: 'Landlord contact drafted' },
+  { agent: 'Penny',     dept: 'finance',      msg: 'Budget category flagged' },
+  { agent: 'Memo',      dept: 'productivity', msg: 'Reminder queued for 9 AM' },
+  { agent: 'Forge',     dept: 'commerce',     msg: 'Production timeline updated' },
+  { agent: 'Vault',     dept: 'finance',      msg: 'Savings goal progress logged' },
+  { agent: 'Atlas Planner', dept: 'productivity', msg: 'Project timeline updated' },
+];
+
+function simTick() {
+  // CPU / RAM drift
+  sim.cpu = clamp(sim.cpu + (Math.random() - 0.48) * 7, 8, 88);
+  sim.ram = clamp(sim.ram + (Math.random() - 0.5)  * 3, 25, 75);
+
+  graphHistory.push(sim.cpu);
+  if (graphHistory.length > 50) graphHistory.shift();
+  drawGraph();
+
+  var cpuEl  = document.getElementById('sys-cpu');
+  var ramEl  = document.getElementById('sys-ram');
+  var cpuBar = document.getElementById('sysbar-cpu');
+  var ramBar = document.getElementById('sysbar-ram');
+  if (cpuEl)  cpuEl.textContent  = Math.round(sim.cpu) + '%';
+  if (ramEl)  ramEl.textContent  = Math.round(sim.ram) + '%';
+  if (cpuBar) cpuBar.style.width = Math.round(sim.cpu) + '%';
+  if (ramBar) ramBar.style.width = Math.round(sim.ram) + '%';
+
+  // Tasks counter
+  if (Math.random() < 0.7) {
+    sim.tasks += Math.floor(Math.random() * 3);
+    var tasksEl = document.getElementById('stat-tasks');
+    if (tasksEl) tasksEl.textContent = sim.tasks.toLocaleString();
+  }
+
+  // Running/idle drift
+  if (Math.random() < 0.3 && sim.idle > 0)   { sim.running++; sim.idle--; }
+  else if (Math.random() < 0.2 && sim.running > 0) { sim.idle++; sim.running--; }
+  setText('stat-running', sim.running);
+  setText('stat-idle',    sim.idle);
+  setText('stat-blocked', sim.blocked);
+
+  // Health drift
+  DEPT_ORDER.forEach(function (k) {
+    deptHealth[k] = clamp(deptHealth[k] + (Math.random() - 0.5) * 2, 85, 100);
+  });
+  renderDeptHealth();
+
+  // Employee state drift
+  Object.keys(empStates).forEach(function (id) {
+    var s = empStates[id];
+    s.runtime += 3;
+    s.cpu = clamp(s.cpu + (Math.random() - 0.5) * 4, 2, 90);
+    if (Math.random() < 0.1) {
+      var pool = ['running', 'running', 'idle'];
+      s.status = pool[Math.floor(Math.random() * pool.length)];
+      COS.state.set('emp.' + id + '.status', s.status);
+    }
+    if (Math.random() < 0.08) {
+      s.task = s._tasks[Math.floor(Math.random() * s._tasks.length)];
+    }
+    s.lastActive = new Date();
+  });
+
+  // Inject activity entry ~40% of ticks
+  if (Math.random() < 0.4) {
+    var item = _actPool[Math.floor(Math.random() * _actPool.length)];
+    COS.activity.log({ agent: item.agent, dept: item.dept, msg: item.msg, source: 'sim' });
+  }
 }
 
-// ── INIT ─────────────────────────────────────────────────────────
+// ── PERIODIC UI REFRESHES ─────────────────────────────────────────
+
+function driftEmpCards() {
+  // Update only status dots and task text — avoid full rebuild
+  document.querySelectorAll('.oc-empCard').forEach(function (card) {
+    var profileBtn = card.querySelector('.oc-profileBtn');
+    if (!profileBtn) return;
+    var id = profileBtn.dataset.id;
+    var s  = empStates[id];
+    if (!s) return;
+    var dot    = card.querySelector('.oc-empDot');
+    var status = card.querySelector('.oc-empStatus');
+    var task   = card.querySelector('.oc-empTask');
+    var meta   = card.querySelector('.oc-empMeta');
+    var sc     = s.status === 'running' ? 'running' : (s.status === 'blocked' ? 'blocked' : 'idle');
+    if (dot)    { dot.className    = 'oc-empDot ' + sc; }
+    if (status) { status.className = 'oc-empStatus ' + sc; status.textContent = s.status.toUpperCase(); }
+    if (task)   { task.textContent = s.status === 'idle' ? 'Waiting for task' : s.task; }
+    if (meta) {
+      var spans = meta.querySelectorAll('span');
+      if (spans[0]) spans[0].textContent = 'CPU ' + Math.round(s.cpu) + '%';
+      if (spans[1]) spans[1].textContent = formatRuntime(s.runtime);
+    }
+  });
+}
+
+// ── AGENT STATUS POLL (real JSON if available) ────────────────────
+
+async function pollAgentStatus() {
+  try {
+    var res  = await fetch(STATUS_URL + '?t=' + Date.now());
+    var data = await res.json();
+    var agents = data.agents || {};
+    Object.keys(agents).forEach(function (agentId) {
+      // Try to find matching employee by agent id (field names match)
+      var s = agents[agentId];
+      // Map agent_id → employee id
+      var empId = agentIdToEmpId(agentId);
+      if (empId && empStates[empId]) {
+        empStates[empId].status = s.status || 'idle';
+        empStates[empId].task   = s.current_task || empStates[empId].task;
+      }
+    });
+  } catch (_) { /* no status file — sim data only */ }
+}
+
+function agentIdToEmpId(agentId) {
+  var map = {
+    threat_hunter:      'athena',
+    cloud_monitor:      'nimbus',
+    soc_analyst:        'sentinel',
+    housing_scout:      'nova',
+    rental_assistant:   'beacon',
+    landlord_contact:   'atlas',
+    trend_hunter:       'pixel',
+    etsy_manager:       'etsybot',
+    tiktok_researcher:  'spark',
+    pod_manager:        'forge',
+    calendar_assistant: 'calypso',
+    email_assistant:    'echo',
+    task_manager:       'atlas_planner',
+    reminder_assistant: 'memo',
+    finance_manager:    'greenbean',
+    bill_tracker:       'ledger',
+    budget_planner:     'penny',
+    savings_tracker:    'vault',
+  };
+  return map[agentId] || null;
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────
+
+function setText(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; }
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+function p2(n) { return n < 10 ? '0' + n : '' + n; }
+
+// ── INIT ──────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', function () {
-  startClock();
-  initEmpStatuses();
 
-  // Static renders
+  // Add toast element
+  var toast = document.createElement('div');
+  toast.id = 'oc-toast';
+  document.body.appendChild(toast);
+
+  // Restore localStorage preferences
+  var lastDept = COS.state.get('pref.lastDept');
+  if (lastDept) {
+    var f = document.querySelector('.empFilter[data-dept="' + lastDept + '"]');
+    if (f) f.click();
+  }
+
+  // Wire events before any renders
+  wireActivityEvents();
+
+  // Initial data seed
+  initEmpStates();
+  seedActivity();
+
+  // Build static sections
+  startClock();
+  buildIntegrations();
   buildRooms();
   buildEmployeeDirectory();
-  renderActivityFeed();
   renderDeptHealth();
   renderNotifications();
   drawGraph();
 
-  // Initial stat display
-  setText('stat-total',   TOTAL_EMP);
-  setText('stat-running', sim.running);
-  setText('stat-idle',    sim.idle);
-  setText('stat-blocked', sim.blocked);
-  setText('stat-tasks',   sim.tasks.toLocaleString());
-  setText('stat-alerts',  sim.alerts);
-  setText('stat-time',    new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
-  setText('stat-date',    new Date().toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }));
+  // Initial stats (animate counters from 0)
+  var totalEl   = document.getElementById('stat-total');
+  var runningEl = document.getElementById('stat-running');
+  var idleEl    = document.getElementById('stat-idle');
+  var blockedEl = document.getElementById('stat-blocked');
+  var tasksEl   = document.getElementById('stat-tasks');
 
-  // Uptime tick
+  if (totalEl)   countUp(totalEl,   0, TOTAL_EMPLOYEES, 800);
+  if (runningEl) countUp(runningEl, 0, sim.running, 600);
+  if (idleEl)    countUp(idleEl,    0, sim.idle,    700);
+  if (blockedEl) countUp(blockedEl, 0, sim.blocked, 500);
+  if (tasksEl)   countUp(tasksEl,   0, sim.tasks,  1200);
+
+  setText('stat-alerts', sim.alerts);
+  var now = new Date();
+  setText('stat-time', now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+  setText('stat-date', now.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }));
+
+  // Seed activity feed with existing log entries
+  var logEntries = COS.activity.get(6);
+  logEntries.reverse().forEach(function (e) { _activityItems.push(e); addActivityEntry(e, false); });
+
+  // Wire interactions
+  wireDownloads();
+  wireSearch();
+  wireViewAll();
+
+  // Uptime
   setInterval(updateUptime, 1000);
   updateUptime();
 
   // Sim ticks
   setInterval(simTick, 3000);
-  setInterval(rotateNotifications, 10000);
-  setInterval(driftEmpStatuses, 8000);
+  setInterval(driftEmpCards, 5000);
+  setInterval(pollAgentStatus, POLL_MS);
 
-  // View All button toggle
-  var viewAllBtn = document.querySelector('.oc-viewAllBtn');
-  if (viewAllBtn) {
-    viewAllBtn.addEventListener('click', function() {
-      var list = document.getElementById('oc-notifList');
-      if (!list) return;
-      if (this.dataset.expanded === '1') {
-        this.dataset.expanded = '';
-        this.textContent = 'VIEW ALL';
-        renderNotifications();
-      } else {
-        this.dataset.expanded = '1';
-        this.textContent = 'SHOW LESS';
-        list.innerHTML = '';
-        NOTIFICATIONS.forEach(function(txt) {
-          var row = document.createElement('div');
-          row.className = 'oc-notifRow';
-          row.innerHTML = '<div class="oc-notifDot"></div><span class="oc-notifText">' + txt + '</span>';
-          list.appendChild(row);
-        });
-      }
+  // Save last-used department filter on nav
+  document.querySelectorAll('.empFilter').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      COS.state.set('pref.lastDept', this.dataset.dept);
     });
-  }
+  });
+
+  // Track room opens
+  document.querySelectorAll('.oc-enterBtn').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      COS.state.set('pref.lastRoomOpened', this.href);
+    });
+  });
 });

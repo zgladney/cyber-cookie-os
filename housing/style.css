@@ -1235,3 +1235,47 @@ body {
     text-align: center;
     letter-spacing: .5px;
 }
+
+/* ================================================================
+   HOUSING — HOUSING SCOUT ROOM ANIMATIONS
+================================================================ */
+
+@keyframes hs-cozyPulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(196,120,74,.2), 0 0 30px rgba(150,80,255,.1); }
+  50%       { box-shadow: 0 0 20px rgba(196,120,74,.4), 0 0 60px rgba(150,80,255,.15); }
+}
+@keyframes hs-slideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes hs-listingFade {
+  0%   { opacity: .3; border-color: rgba(150,80,255,.1); }
+  50%  { opacity: 1;  border-color: rgba(150,80,255,.4); }
+  100% { opacity: .3; border-color: rgba(150,80,255,.1); }
+}
+@keyframes hs-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+/* Animate listing cards appearing */
+.listing, .ah-listing, [class*="listing-card"], .resultCard {
+  animation: hs-slideIn .4s ease-out both;
+}
+
+/* Header cozy glow */
+.roomHeader, .ah-header, #hs-header {
+  animation: hs-cozyPulse 4s ease-in-out infinite;
+}
+
+/* Active / highlighted listing pulse */
+.listing.active, .ah-listing:hover, .resultCard:hover {
+  animation: hs-listingFade 2s ease-in-out infinite;
+}
+
+/* Loading shimmer on skeleton cards */
+.loading, .skeleton, [class*="loading"] {
+  background: linear-gradient(90deg, rgba(150,80,255,.05) 25%, rgba(196,120,74,.12) 50%, rgba(150,80,255,.05) 75%);
+  background-size: 200% 100%;
+  animation: hs-shimmer 1.8s linear infinite;
+}

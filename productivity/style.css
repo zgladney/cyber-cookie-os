@@ -255,3 +255,54 @@ body {
     border-radius: 4px; transition: all .2s; text-align: center;
 }
 .pd-navLink:hover { color: #7EC8E3; border-color: rgba(58,168,200,.5); background: rgba(58,168,200,.05); }
+
+/* ================================================================
+   PRODUCTIVITY — PLANNER WALL ANIMATIONS
+================================================================ */
+
+@keyframes pd-progressFill {
+  from { width: 0; }
+}
+@keyframes pd-tickIn {
+  0%   { opacity: 0; transform: scale(0) rotate(-20deg); }
+  70%  { transform: scale(1.2) rotate(5deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+@keyframes pd-cardSlide {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes pd-calPulse {
+  0%, 100% { border-color: rgba(58,168,200,.15); }
+  50%       { border-color: rgba(58,168,200,.4); }
+}
+
+/* Task cards slide in */
+.pd-task, .taskCard, .calEvent, .eventCard {
+  animation: pd-cardSlide .3s ease-out both;
+}
+.pd-task:nth-child(2n) { animation-delay: .04s; }
+.pd-task:nth-child(3n) { animation-delay: .08s; }
+
+/* Progress bars animate from 0 on load */
+.pd-progress, .progressBar, [class*="progress-bar"] {
+  animation: pd-progressFill .8s ease-out both;
+}
+
+/* Completed task tick-mark pop */
+.pd-done::before, .taskDone::before {
+  display: inline-block;
+  animation: pd-tickIn .3s ease-out both;
+}
+
+/* Calendar panel gentle pulse */
+.pd-calendar, .calPanel, [class*="calendar"] {
+  animation: pd-calPulse 3s ease-in-out infinite;
+}
+
+/* Hover highlight on task rows */
+.pd-task:hover, .taskCard:hover {
+  background: rgba(58,168,200,.06) !important;
+  border-color: rgba(58,168,200,.35) !important;
+  transition: all .2s;
+}

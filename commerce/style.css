@@ -421,3 +421,53 @@ body {
     border-color: rgba(255,105,180,.5);
     background: rgba(255,105,180,.05);
 }
+
+/* ================================================================
+   COMMERCE — PINK NEON STUDIO ANIMATIONS
+================================================================ */
+
+@keyframes cm-neonFlicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    text-shadow: 0 0 4px #fff, 0 0 11px #fff, 0 0 19px #fff,
+                 0 0 40px #ff69b4, 0 0 80px #ff69b4, 0 0 90px #ff69b4;
+  }
+  20%, 24%, 55% {
+    text-shadow: none;
+  }
+}
+@keyframes cm-cardPop {
+  from { opacity: 0; transform: scale(.95) translateY(6px); }
+  to   { opacity: 1; transform: scale(1)   translateY(0);   }
+}
+@keyframes cm-borderGlow {
+  0%, 100% { border-color: rgba(255,105,180,.2); }
+  50%       { border-color: rgba(255,105,180,.6); }
+}
+@keyframes cm-sparkle {
+  0%   { opacity: 0; transform: scale(0) rotate(0deg); }
+  50%  { opacity: 1; }
+  100% { opacity: 0; transform: scale(1.5) rotate(180deg); }
+}
+
+/* Logo / title neon flicker */
+.cm-title, .cm-logo, .shopTitle, [class*="cm-header"] h1 {
+  animation: cm-neonFlicker 5s linear infinite;
+}
+
+/* Product / listing cards pop in */
+.cm-card, .productCard, .listingCard, .cm-product {
+  animation: cm-cardPop .35s ease-out both;
+}
+.cm-card:nth-child(2n)  { animation-delay: .05s; }
+.cm-card:nth-child(3n)  { animation-delay: .1s; }
+.cm-card:nth-child(4n)  { animation-delay: .15s; }
+
+/* Pulsing border on hovered cards */
+.cm-card:hover, .productCard:hover {
+  animation: cm-borderGlow 1.5s ease-in-out infinite;
+}
+
+/* Active status indicators */
+.cm-status-active, .onlineIndicator {
+  box-shadow: 0 0 8px #ff69b4, 0 0 16px rgba(255,105,180,.4);
+}

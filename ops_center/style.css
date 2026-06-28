@@ -1082,3 +1082,242 @@ button { cursor: pointer; font-family: inherit; }
   #oc-roomGrid { grid-template-columns: repeat(3, 1fr); }
   #oc-empGrid { grid-template-columns: repeat(3, 1fr); }
 }
+
+/* ================================================================
+   INTEGRATIONS SIDEBAR PANEL
+================================================================ */
+
+#oc-integrations {
+  margin: 4px 12px 12px;
+  padding: 12px 12px 8px;
+  background: rgba(8,2,22,.6);
+  border: 1px solid var(--border-dim);
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.oc-intRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255,255,255,.03);
+}
+.oc-intRow:last-child { border-bottom: none; }
+
+.oc-intName {
+  font-size: 8px;
+  letter-spacing: .5px;
+  color: var(--text-mid);
+}
+
+.oc-intStatus {
+  font-size: 6px;
+  letter-spacing: 1px;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+.oc-int-active       { color: rgba(46,204,113,.9);  background: rgba(46,204,113,.1);  }
+.oc-int-disconnected { color: rgba(255,80,80,.8);   background: rgba(255,80,80,.08); }
+.oc-int-none         { color: rgba(200,150,255,.3); background: rgba(150,80,255,.04); }
+.oc-int-auth         { color: rgba(255,220,50,.8);  background: rgba(255,220,50,.08); }
+
+/* ================================================================
+   EMPLOYEE DIRECTORY — SEARCH & FILTER
+================================================================ */
+
+#oc-empDirHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+#oc-empSearch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+#empSearchInput {
+  flex: 1;
+  min-width: 160px;
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--border-dim);
+  border-radius: 4px;
+  padding: 6px 12px;
+  color: var(--text-bright, rgba(240,220,255,.85));
+  font-size: 9px;
+  letter-spacing: 1px;
+  outline: none;
+  transition: border-color .2s;
+  font-family: inherit;
+}
+#empSearchInput:focus { border-color: rgba(150,80,255,.4); }
+#empSearchInput::placeholder { color: var(--text-dim); }
+
+#empDeptFilters {
+  display: flex;
+  gap: 4px;
+}
+
+.empFilter {
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--border-dim);
+  border-radius: 4px;
+  padding: 5px 9px;
+  color: var(--text-dim);
+  font-size: 8px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all .18s;
+}
+.empFilter:hover { border-color: rgba(150,80,255,.3); color: var(--text-mid); }
+.empFilterActive {
+  border-color: rgba(255,105,180,.4) !important;
+  color: rgba(255,105,180,.9) !important;
+  background: rgba(255,105,180,.06) !important;
+}
+
+#empSortSelect {
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--border-dim);
+  border-radius: 4px;
+  padding: 5px 8px;
+  color: var(--text-dim);
+  font-size: 8px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  outline: none;
+  font-family: inherit;
+}
+
+#oc-empNoResults {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-dim);
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+/* ================================================================
+   ENHANCED EMPLOYEE CARDS (30% bigger portrait)
+================================================================ */
+
+/* Portrait grows from 100px → 130px */
+.oc-empAvatarWrap { height: 130px; }
+.oc-empImg        { max-height: 126px; }
+
+/* Extra info rows inside card */
+.oc-empTask {
+  font-size: 7px;
+  color: rgba(200,150,255,.45);
+  letter-spacing: .5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  margin-top: 2px;
+  font-style: italic;
+}
+
+.oc-empMeta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 6px;
+  color: var(--text-dim);
+  letter-spacing: .5px;
+  margin-top: 2px;
+  width: 100%;
+}
+
+/* ================================================================
+   COUNTER ANIMATION
+================================================================ */
+
+.oc-countAnim {
+  transition: none;
+  display: inline-block;
+}
+
+/* ================================================================
+   ACTIVITY FEED SLIDE-IN
+================================================================ */
+
+@keyframes actSlideIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.oc-actRow-new { animation: actSlideIn .35s ease-out forwards; }
+
+/* ================================================================
+   NOTIFICATION DISMISS
+================================================================ */
+
+.oc-notifRow {
+  position: relative;
+  padding-right: 24px; /* room for X button */
+}
+
+.oc-notifDismiss {
+  position: absolute;
+  right: 4px; top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: rgba(255,255,255,.2);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 2px 4px;
+  line-height: 1;
+  transition: color .15s;
+}
+.oc-notifDismiss:hover { color: rgba(255,80,80,.7); }
+
+/* ================================================================
+   TOAST NOTIFICATION
+================================================================ */
+
+#oc-toast {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  background: rgba(8,2,22,.95);
+  border: 1px solid rgba(150,80,255,.3);
+  border-left: 3px solid var(--pink, #ff69b4);
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: rgba(240,220,255,.8);
+  z-index: 999;
+  max-width: 280px;
+  box-shadow: 0 4px 24px rgba(0,0,0,.5);
+  transform: translateY(60px);
+  opacity: 0;
+  transition: transform .3s ease, opacity .3s ease;
+  pointer-events: none;
+}
+#oc-toast.oc-toast-visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ================================================================
+   PROFILE BUTTON (now active)
+================================================================ */
+
+.oc-profileBtn:not([disabled]) {
+  color: rgba(156,246,255,.5) !important;
+  border-color: rgba(156,246,255,.2) !important;
+  cursor: pointer !important;
+  opacity: 1 !important;
+}
+.oc-profileBtn:not([disabled]):hover {
+  color: rgba(156,246,255,.9) !important;
+  border-color: rgba(156,246,255,.5) !important;
+  background: rgba(156,246,255,.04) !important;
+}

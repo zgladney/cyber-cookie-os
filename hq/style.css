@@ -1714,3 +1714,71 @@ body {
     color: white !important;
     text-shadow: 0 0 10px #9b59b6, 0 0 20px rgba(150,80,255,.5);
 }
+
+/* ================================================================
+   HQ — SECURITY OPS ROOM ANIMATIONS
+================================================================ */
+
+@keyframes hq-scan {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+@keyframes hq-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(155,107,255,.3), 0 0 24px rgba(155,107,255,.1); }
+  50%       { box-shadow: 0 0 16px rgba(155,107,255,.6), 0 0 48px rgba(155,107,255,.2); }
+}
+@keyframes hq-flicker {
+  0%, 95%, 100% { opacity: 1; }
+  96%           { opacity: .85; }
+  97%           { opacity: 1; }
+  98%           { opacity: .9; }
+}
+@keyframes hq-termBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+@keyframes hq-radar {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Scan-line overlay on the main room body */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(0,0,0,.06) 3px,
+    rgba(0,0,0,.06) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+  animation: hq-flicker 8s ease-in-out infinite;
+}
+
+/* Animate the HQ header glow */
+.roomHeader, #hq-header, .hq-header {
+  animation: hq-pulse 3s ease-in-out infinite;
+}
+
+/* Employee cards — glow on hover */
+.empCard, .employeeCard, [class*="emp-card"] {
+  transition: box-shadow .3s, border-color .3s;
+}
+.empCard:hover, .employeeCard:hover, [class*="emp-card"]:hover {
+  box-shadow: 0 0 20px rgba(155,107,255,.35), 0 0 40px rgba(155,107,255,.1);
+  border-color: rgba(155,107,255,.5) !important;
+}
+
+/* Terminal cursor blink on any .cursor element */
+.cursor::after {
+  content: '█';
+  animation: hq-termBlink 1s step-end infinite;
+}
+
+/* Status dot pulse */
+.statusDot.running, .status-dot.active {
+  animation: hq-pulse 1.5s ease-in-out infinite;
+}

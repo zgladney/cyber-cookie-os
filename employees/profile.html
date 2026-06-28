@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Profile — CyberCookieOS</title>
+<link rel="stylesheet" href="profile.css">
+</head>
+<body>
+<div id="ep-app">
+
+  <header id="ep-topBar">
+    <a id="ep-backBtn" href="../ops_center/index.html">&#8592; OPS CENTER</a>
+    <div id="ep-titleBlock">
+      <span id="ep-logo">CyberC<span class="ep-accent">&#9670;</span>okieOS</span>
+      <span id="ep-subtitle">// EMPLOYEE PROFILE</span>
+    </div>
+    <div id="ep-clock"></div>
+  </header>
+
+  <div id="ep-body">
+
+    <!-- PROFILE HEADER -->
+    <section id="ep-hero">
+      <div id="ep-avatarWrap">
+        <div id="ep-avatarInner">
+          <img id="ep-avatar" src="" alt="" />
+          <div id="ep-avatarPlaceholder">
+            <span id="ep-avatarInitial"></span>
+            <div class="ep-artPending">ARTWORK<br>PENDING</div>
+          </div>
+        </div>
+        <div id="ep-statusBadge"><span id="ep-statusDot"></span><span id="ep-statusLabel"></span></div>
+      </div>
+
+      <div id="ep-heroInfo">
+        <div id="ep-deptTag"><span id="ep-deptIcon"></span><span id="ep-deptName"></span></div>
+        <h1 id="ep-name"></h1>
+        <div id="ep-title"></div>
+        <p id="ep-bio"></p>
+        <div id="ep-specs">
+          <div class="ep-specGroup">
+            <div class="ep-specTitle">SPECIALIZATION</div>
+            <div id="ep-specTags"></div>
+          </div>
+        </div>
+        <div id="ep-taskRow">
+          <span class="ep-taskLabel">CURRENT TASK</span>
+          <span id="ep-currentTask">—</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS + ACTIVITY -->
+    <div id="ep-midRow">
+
+      <section class="ep-panel" id="ep-statsPanel">
+        <div class="ep-panelTitle">LIVE METRICS</div>
+        <div id="ep-statGrid">
+          <div class="ep-stat"><div class="ep-statVal" id="met-cpu">—</div><div class="ep-statLabel">CPU USAGE</div></div>
+          <div class="ep-stat"><div class="ep-statVal" id="met-mem">—</div><div class="ep-statLabel">MEMORY</div></div>
+          <div class="ep-stat"><div class="ep-statVal" id="met-runtime">—</div><div class="ep-statLabel">RUNTIME</div></div>
+          <div class="ep-stat"><div class="ep-statVal" id="met-tasks">—</div><div class="ep-statLabel">TASKS DONE</div></div>
+          <div class="ep-stat"><div class="ep-statVal" id="met-uptime">—</div><div class="ep-statLabel">UPTIME</div></div>
+          <div class="ep-stat"><div class="ep-statVal" id="met-last">—</div><div class="ep-statLabel">LAST ACTIVE</div></div>
+        </div>
+      </section>
+
+      <section class="ep-panel" id="ep-actPanel">
+        <div class="ep-panelTitle">RECENT ACTIVITY</div>
+        <div id="ep-actFeed"></div>
+        <div id="ep-noActivity" style="display:none">No activity logged yet.</div>
+      </section>
+
+      <section class="ep-panel" id="ep-agentPanel">
+        <div class="ep-panelTitle">AGENT INFO</div>
+        <div class="ep-agentRow"><span class="ep-agentKey">Script</span><span class="ep-agentVal" id="ag-script">—</span></div>
+        <div class="ep-agentRow"><span class="ep-agentKey">Results</span><span class="ep-agentVal" id="ag-results">—</span></div>
+        <div class="ep-agentRow"><span class="ep-agentKey">Department</span><span class="ep-agentVal" id="ag-dept">—</span></div>
+        <div class="ep-agentRow"><span class="ep-agentKey">Agent ID</span><span class="ep-agentVal" id="ag-id">—</span></div>
+        <div class="ep-agentRow"><span class="ep-agentKey">Version</span><span class="ep-agentVal">0.1.0</span></div>
+      </section>
+
+    </div>
+
+    <!-- CAPABILITIES + PROJECTS -->
+    <div id="ep-botRow">
+
+      <section class="ep-panel" id="ep-capPanel">
+        <div class="ep-panelTitle">CURRENT CAPABILITIES</div>
+        <ul id="ep-capList"></ul>
+      </section>
+
+      <section class="ep-panel" id="ep-futurePanel">
+        <div class="ep-panelTitle">PLANNED CAPABILITIES</div>
+        <ul id="ep-futureList"></ul>
+      </section>
+
+      <section class="ep-panel" id="ep-actionPanel">
+        <div class="ep-panelTitle">ACTIONS</div>
+        <button class="ep-actionBtn" id="ep-dlBtn">DOWNLOAD AVATAR &#8595;</button>
+        <button class="ep-actionBtn ep-actionSecondary" id="ep-deptBtn">VIEW DEPARTMENT &#8594;</button>
+        <button class="ep-actionBtn ep-actionSecondary" id="ep-opsBtn">OPS CENTER &#8594;</button>
+        <div id="ep-artMsg" style="display:none">
+          <span>&#127912; Artwork for this employee is coming soon.</span>
+        </div>
+      </section>
+
+    </div>
+
+  </div>
+
+  <footer id="ep-footer">
+    // &nbsp; CyberCookieOS v0.3.0 &nbsp; // &nbsp; Run Your World. Automate Everything. &nbsp; //
+  </footer>
+
+</div>
+
+<script src="../js/cybercookieos.js"></script>
+<script>
+// ── PROFILE PAGE CONTROLLER ──────────────────────────────────
+
+(function () {
+  var empId = new URLSearchParams(location.search).get('id') || '';
+  var emp   = empId && COS.employees[empId];
+
+  if (!emp) {
+    document.getElementById('ep-name').textContent = 'Employee Not Found';
+    document.getElementById('ep-bio').textContent  = 'No employee with ID "' + empId + '" exists.';
+    return;
+  }
+
+  var dept = COS.departments[emp.dept] || {};
+
+  // Log this profile view
+  COS.activity.log({ agent: emp.name, dept: emp.dept, msg: 'Profile viewed.', source: 'user' });
+  var viewed = COS.state.get('viewed.profiles') || [];
+  if (!viewed.includes(empId)) { viewed.unshift(empId); COS.state.set('viewed.profiles', viewed.slice(0, 20)); }
+
+  // ── POPULATE HERO ────────────────────────────────────────────
+
+  document.title = emp.name + ' — CyberCookieOS';
+
+  var root = document.documentElement;
+  root.style.setProperty('--dept-color', dept.color || '#9b6bff');
+
+  var avatar    = document.getElementById('ep-avatar');
+  var placeholder = document.getElementById('ep-avatarPlaceholder');
+
+  if (emp.hasArt && emp.imgSrc) {
+    avatar.src = emp.imgSrc;
+    avatar.alt = emp.name;
+    avatar.style.display = 'block';
+    placeholder.style.display = 'none';
+    avatar.onerror = function () {
+      avatar.style.display = 'none';
+      placeholder.style.display = 'flex';
+    };
+  } else {
+    avatar.style.display = 'none';
+    placeholder.style.display = 'flex';
+    document.getElementById('ep-avatarInitial').textContent = emp.name.charAt(0);
+    document.getElementById('ep-artMsg').style.display = 'block';
+    document.getElementById('ep-dlBtn').textContent = 'ARTWORK PENDING';
+    document.getElementById('ep-dlBtn').disabled = true;
+    document.getElementById('ep-dlBtn').style.opacity = '.4';
+    document.getElementById('ep-dlBtn').style.cursor = 'not-allowed';
+  }
+
+  setText('ep-deptIcon', dept.icon || '');
+  setText('ep-deptName', dept.short || dept.name || '');
+  setText('ep-name',     emp.name);
+  setText('ep-title',    emp.title);
+  setText('ep-bio',      emp.bio);
+
+  // Specialization tags
+  var tagsEl = document.getElementById('ep-specTags');
+  (emp.specialization || []).forEach(function (s) {
+    var t = document.createElement('span');
+    t.className = 'ep-specTag';
+    t.textContent = s;
+    tagsEl.appendChild(t);
+  });
+
+  // Status
+  var simStatus = COS.state.get('emp.' + empId + '.status') || 'idle';
+  setText('ep-statusLabel', simStatus.toUpperCase());
+  var dot = document.getElementById('ep-statusDot');
+  dot.className = 'ep-dot ep-dot-' + simStatus;
+
+  // Current task (random from pool)
+  var tasks = emp.sampleTasks || [];
+  var task = simStatus === 'idle' ? 'Waiting for next task' : (tasks[Math.floor(Math.random() * tasks.length)] || '—');
+  setText('ep-currentTask', task);
+
+  // Agent info
+  setText('ag-script',  emp.agentScript  || '—');
+  setText('ag-results', emp.resultsPath  || '—');
+  setText('ag-dept',    dept.name        || '—');
+  setText('ag-id',      empId);
+
+  // ── LIVE METRICS (simulated) ─────────────────────────────────
+
+  var cpu  = 5  + Math.random() * 45;
+  var mem  = 64 + Math.random() * 192;
+  var done = 30 + Math.floor(Math.random() * 120);
+  var start = Date.now() - Math.floor(Math.random() * 7200000);
+
+  function updateMetrics() {
+    cpu = Math.max(2, Math.min(90, cpu + (Math.random() - 0.5) * 6));
+    mem = Math.max(40, Math.min(512, mem + (Math.random() - 0.5) * 8));
+    setText('met-cpu', Math.round(cpu) + '%');
+    setText('met-mem', Math.round(mem) + ' MB');
+    setText('met-tasks', done);
+    setText('met-last', new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+
+    var secs   = Math.floor((Date.now() - start) / 1000);
+    var h = Math.floor(secs / 3600), m = Math.floor((secs % 3600) / 60), s = secs % 60;
+    setText('met-runtime', h + ':' + p2(m) + ':' + p2(s));
+    setText('met-uptime',  h + 'h ' + m + 'm');
+  }
+  updateMetrics();
+  setInterval(function () { updateMetrics(); if (Math.random() < .3) done++; }, 3000);
+
+  // ── RECENT ACTIVITY ───────────────────────────────────────────
+
+  function renderActivity() {
+    var log  = COS.activity.getForEmployee(empId, 10);
+    var feed = document.getElementById('ep-actFeed');
+    var none = document.getElementById('ep-noActivity');
+    feed.innerHTML = '';
+    if (!log.length) { none.style.display = 'block'; return; }
+    none.style.display = 'none';
+    log.forEach(function (e) {
+      var row = document.createElement('div');
+      row.className = 'ep-actRow';
+      row.innerHTML =
+        '<span class="ep-actTime">' + COS.util.formatRelTime(e.ts) + '</span>' +
+        '<span class="ep-actMsg">' + (e.msg || '—') + '</span>';
+      feed.appendChild(row);
+    });
+  }
+  renderActivity();
+  COS.events.on('activity:new', function () { renderActivity(); });
+
+  // Simulate occasional activity entries
+  setInterval(function () {
+    if (Math.random() < 0.25) {
+      var tasks2 = emp.sampleTasks || ['Working'];
+      COS.activity.log({ agent: emp.name, dept: emp.dept, msg: tasks2[Math.floor(Math.random() * tasks2.length)], source: 'sim' });
+    }
+  }, 15000);
+
+  // ── CAPABILITIES ──────────────────────────────────────────────
+
+  function buildList(listEl, items) {
+    (items || []).forEach(function (item) {
+      var li = document.createElement('li');
+      li.textContent = item;
+      listEl.appendChild(li);
+    });
+  }
+  buildList(document.getElementById('ep-capList'),    emp.capabilities);
+  buildList(document.getElementById('ep-futureList'), emp.futureCapabilities);
+
+  // ── ACTION BUTTONS ───────────────────────────────────────────
+
+  document.getElementById('ep-dlBtn').addEventListener('click', function () {
+    if (!emp.hasArt || !emp.imgSrc) return;
+    var a = document.createElement('a');
+    a.href = emp.imgSrc;
+    a.download = emp.name.replace(/\s+/g, '_') + '_avatar.png';
+    a.click();
+    COS.activity.log({ agent: emp.name, dept: emp.dept, msg: 'Avatar downloaded.', source: 'user' });
+  });
+
+  var deptBtn = document.getElementById('ep-deptBtn');
+  deptBtn.textContent = 'VIEW ' + (dept.short || 'DEPARTMENT') + ' →';
+  deptBtn.addEventListener('click', function () {
+    COS.activity.log({ agent: emp.name, dept: emp.dept, msg: dept.name + ' room opened from profile.', source: 'user' });
+    window.location.href = dept.room || '../ops_center/index.html';
+  });
+
+  document.getElementById('ep-opsBtn').addEventListener('click', function () {
+    window.location.href = '../ops_center/index.html';
+  });
+
+  // ── CLOCK ─────────────────────────────────────────────────────
+
+  function tick() {
+    var el = document.getElementById('ep-clock');
+    if (el) el.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  }
+  tick(); setInterval(tick, 1000);
+
+  // ── HELPERS ───────────────────────────────────────────────────
+
+  function setText(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; }
+  function p2(n) { return n < 10 ? '0' + n : '' + n; }
+
+})();
+</script>
+</body>
+</html>
