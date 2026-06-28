@@ -6,7 +6,6 @@
 <title>HQ Hallway — CyberCookieOS</title>
 <link rel="stylesheet" href="style.css">
 </head>
-<script src="js/agent_status.js" defer></script>
 
 <body>
 
@@ -15,10 +14,10 @@
     <header id="hw-topBar">
         <div id="hw-logo">
             <div id="hw-logoText">CyberCookieOS</div>
-            <div id="hw-logoSub">// HEADQUARTERS — DEPARTMENT DIRECTORY</div>
+            <div id="hw-logoSub">// HEADQUARTERS — COMMAND NEXUS</div>
         </div>
-        <div id="hw-opsBtn" onclick="window.location.href='../ops_center/index.html'" role="button" tabindex="0">
-            <span class="hw-opsIcon">⬡</span> OPS CENTER
+        <div id="hw-opsBtn" role="button" tabindex="0">
+            <span>⬡</span> OPS CENTER
         </div>
     </header>
 
@@ -39,32 +38,32 @@
             <div id="hw-backWall">
 
                 <div id="hw-agentBoard">
-                    <div class="hw-boardTitle">// EMPLOYEE STATUS</div>
+                    <div class="hw-boardTitle">// DEPARTMENT LEADS — LIVE STATUS</div>
                     <div id="hw-agentRows">
                         <div class="hw-agentRow">
                             <span class="hw-aIcon">🛡</span>
                             <span class="hw-aName">ATHENA</span>
-                            <span class="hw-aStatus hw-s-idle">● IDLE</span>
+                            <span class="hw-aStatus hw-s-idle" id="hw-status-athena">● IDLE</span>
                         </div>
                         <div class="hw-agentRow">
                             <span class="hw-aIcon">🏠</span>
                             <span class="hw-aName">NOVA</span>
-                            <span class="hw-aStatus hw-s-idle">● IDLE</span>
+                            <span class="hw-aStatus hw-s-idle" id="hw-status-nova">● IDLE</span>
                         </div>
                         <div class="hw-agentRow">
                             <span class="hw-aIcon">📈</span>
                             <span class="hw-aName">PIXEL</span>
-                            <span class="hw-aStatus hw-s-idle">● IDLE</span>
+                            <span class="hw-aStatus hw-s-idle" id="hw-status-pixel">● IDLE</span>
                         </div>
                         <div class="hw-agentRow">
                             <span class="hw-aIcon">📅</span>
                             <span class="hw-aName">CALYPSO</span>
-                            <span class="hw-aStatus hw-s-idle">● IDLE</span>
+                            <span class="hw-aStatus hw-s-idle" id="hw-status-calypso">● IDLE</span>
                         </div>
                         <div class="hw-agentRow">
                             <span class="hw-aIcon">💰</span>
                             <span class="hw-aName">GREENBEAN</span>
-                            <span class="hw-aStatus hw-s-idle">● IDLE</span>
+                            <span class="hw-aStatus hw-s-idle" id="hw-status-greenbean">● IDLE</span>
                         </div>
                     </div>
                 </div>
@@ -107,6 +106,35 @@
 
         </div><!-- /hw-room -->
 
+        <!-- ═══════════ COMMAND STRIP ═══════════ -->
+        <div id="hw-cmdStrip">
+            <div id="hw-hqStatusRow">
+                <div id="hw-hqState" class="hw-hqState">● HQ STANDBY</div>
+                <div id="hw-hqMeta">All departments idle · 0 tasks completed · 0 reports today</div>
+            </div>
+            <div id="hw-cmdBtns">
+                <button id="hw-btnRunHQ">&#9654; RUN HEADQUARTERS</button>
+                <a href="../reports/index.html"     class="hw-quickLink">&#128202; REPORTS</a>
+                <a href="../connections/index.html" class="hw-quickLink">&#128268; CONNECTIONS</a>
+                <a href="../ops_center/index.html"  class="hw-quickLink">&#9651; OPS CENTER</a>
+                <a href="../employees/profile.html" class="hw-quickLink">&#128100; PROFILES</a>
+            </div>
+            <div id="hw-hqCountRow">
+                <div class="hw-hqCount">
+                    <div class="hw-hqCountNum" id="hw-cntAgents">0</div>
+                    <div class="hw-hqCountLabel">ACTIVE</div>
+                </div>
+                <div class="hw-hqCount">
+                    <div class="hw-hqCountNum" id="hw-cntTasks">0</div>
+                    <div class="hw-hqCountLabel">TASKS</div>
+                </div>
+                <div class="hw-hqCount">
+                    <div class="hw-hqCountNum" id="hw-cntRpts">0</div>
+                    <div class="hw-hqCountLabel">REPORTS</div>
+                </div>
+            </div>
+        </div>
+
         <!-- ═══════════ DEPARTMENT CARDS ═══════════ -->
         <div id="hw-deptGrid">
 
@@ -114,7 +142,13 @@
                 <div class="hw-deptIcon">🛡</div>
                 <div class="hw-deptName">SECURITY OPS</div>
                 <div class="hw-deptSub">Athena · Nimbus · Sentinel</div>
-                <div class="hw-deptBadge">● WING A</div>
+                <div class="hw-deptBadge" id="hw-badge-security">● WING A</div>
+                <div class="hw-deptLive">
+                    <span id="hw-active-security" class="hw-liveCount">0 active</span>
+                    <span class="hw-liveSep">·</span>
+                    <span id="hw-queue-security" class="hw-liveQueue">0 queued</span>
+                </div>
+                <div class="hw-deptDeliverable" id="hw-dlv-security">— No deliverables yet</div>
                 <div class="hw-deptEnter">ENTER ROOM →</div>
             </div>
 
@@ -122,7 +156,13 @@
                 <div class="hw-deptIcon">🏠</div>
                 <div class="hw-deptName">HOUSING</div>
                 <div class="hw-deptSub">Nova · Beacon · Atlas</div>
-                <div class="hw-deptBadge">● WING B</div>
+                <div class="hw-deptBadge" id="hw-badge-housing">● WING B</div>
+                <div class="hw-deptLive">
+                    <span id="hw-active-housing" class="hw-liveCount">0 active</span>
+                    <span class="hw-liveSep">·</span>
+                    <span id="hw-queue-housing" class="hw-liveQueue">0 queued</span>
+                </div>
+                <div class="hw-deptDeliverable" id="hw-dlv-housing">— No deliverables yet</div>
                 <div class="hw-deptEnter">ENTER ROOM →</div>
             </div>
 
@@ -130,7 +170,13 @@
                 <div class="hw-deptIcon">🛍</div>
                 <div class="hw-deptName">COMMERCE</div>
                 <div class="hw-deptSub">Pixel · EtsyBot · Spark · Forge</div>
-                <div class="hw-deptBadge">● WING C</div>
+                <div class="hw-deptBadge" id="hw-badge-commerce">● WING C</div>
+                <div class="hw-deptLive">
+                    <span id="hw-active-commerce" class="hw-liveCount">0 active</span>
+                    <span class="hw-liveSep">·</span>
+                    <span id="hw-queue-commerce" class="hw-liveQueue">0 queued</span>
+                </div>
+                <div class="hw-deptDeliverable" id="hw-dlv-commerce">— No deliverables yet</div>
                 <div class="hw-deptEnter">ENTER ROOM →</div>
             </div>
 
@@ -138,7 +184,13 @@
                 <div class="hw-deptIcon">📅</div>
                 <div class="hw-deptName">PRODUCTIVITY</div>
                 <div class="hw-deptSub">Calypso · Echo · Atlas P. · Memo</div>
-                <div class="hw-deptBadge">● WING D</div>
+                <div class="hw-deptBadge" id="hw-badge-productivity">● WING D</div>
+                <div class="hw-deptLive">
+                    <span id="hw-active-productivity" class="hw-liveCount">0 active</span>
+                    <span class="hw-liveSep">·</span>
+                    <span id="hw-queue-productivity" class="hw-liveQueue">0 queued</span>
+                </div>
+                <div class="hw-deptDeliverable" id="hw-dlv-productivity">— No deliverables yet</div>
                 <div class="hw-deptEnter">ENTER ROOM →</div>
             </div>
 
@@ -146,7 +198,13 @@
                 <div class="hw-deptIcon">💰</div>
                 <div class="hw-deptName">FINANCE</div>
                 <div class="hw-deptSub">Greenbean · Ledger · Penny · Vault</div>
-                <div class="hw-deptBadge">● WING E</div>
+                <div class="hw-deptBadge" id="hw-badge-finance">● WING E</div>
+                <div class="hw-deptLive">
+                    <span id="hw-active-finance" class="hw-liveCount">0 active</span>
+                    <span class="hw-liveSep">·</span>
+                    <span id="hw-queue-finance" class="hw-liveQueue">0 queued</span>
+                </div>
+                <div class="hw-deptDeliverable" id="hw-dlv-finance">— No deliverables yet</div>
                 <div class="hw-deptEnter">ENTER ROOM →</div>
             </div>
 
@@ -155,14 +213,30 @@
                 <div class="hw-deptName">OPS CENTER</div>
                 <div class="hw-deptSub">Mission Control · HQ</div>
                 <div class="hw-deptBadge">● COMMAND</div>
+                <div class="hw-deptLive">
+                    <span class="hw-liveCount">MASTER CONTROL</span>
+                </div>
+                <div class="hw-deptDeliverable">Full directory &amp; dashboards</div>
                 <div class="hw-deptEnter">ENTER HQ →</div>
             </div>
 
         </div><!-- /hw-deptGrid -->
 
+        <!-- ═══════════ ACTIVITY TICKER ═══════════ -->
+        <div id="hw-ticker">
+            <span class="hw-tickerLabel">// LIVE FEED //</span>
+            <div id="hw-tickerWindow">
+                <div id="hw-tickerTrack">CyberCookieOS HQ online ◆ All systems nominal ◆ Awaiting run command ◆ </div>
+            </div>
+        </div>
+
     </main>
 
 </div>
 
+<script src="../js/cybercookieos.js"></script>
+<script src="../js/agent_runtime.js"></script>
+<script src="../js/output_engine.js"></script>
+<script src="js/hallway_hub.js" defer></script>
 </body>
 </html>

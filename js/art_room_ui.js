@@ -261,10 +261,10 @@
     wrapper.innerHTML = buildPanelHTML();
     wsBody.insertBefore(wrapper.firstElementChild, wsBody.firstChild);
 
-    // Deliverables panel (after execution panel)
+    // Deliverables panel (appended last, after workspace tools and agent presence)
     var dlvWrapper = document.createElement('div');
     dlvWrapper.innerHTML = buildDeliverablesPanel();
-    wsBody.insertBefore(dlvWrapper.firstElementChild, wsBody.children[1] || null);
+    wsBody.appendChild(dlvWrapper.firstElementChild);
 
     buildAgentRows();
     updatePanel();
