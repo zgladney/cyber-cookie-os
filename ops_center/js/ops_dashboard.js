@@ -738,6 +738,7 @@ function wireARTEvents() {
   COS.events.on('runtime:metrics',   function ()  { updateARTStatus(); });
   COS.events.on('dept:stateChange',  function ()  { updateARTStatus(); });
   COS.events.on('dept:complete',     function ()  { updateARTStatus(); });
+  COS.events.on('output:created',    function ()  { updateDeliverablesFeed(); updateReportStats(); });
 }
 
 function updateARTStatus() {
@@ -812,6 +813,41 @@ function artUpdateEmpCard(empId, s) {
   });
 }
 
+// ── DELIVERABLES FEED (Ops Center overview panel) ────────────────
+
+function updateDeliverablesFeed() {
+  if (typeof OE === 'undefined') return;
+  var feedEl = document.getElementById('oc-delivFeed');
+  if (!feedEl) return;
+  var recent = OE.getRecent(5);
+  if (!recent.length) {
+    feedEl.innerHTML = '<div style="font-size:8px;color:rgba(200,160,255,.2);text-align:center;padding:12px">No deliverables yet — run agents to generate outputs.</div>';
+    return;
+  }
+  feedEl.innerHTML = recent.map(function (o) {
+    var DEPT_COLORS = { security:'#9b6bff', housing:'#c4784a', commerce:'#ff69b4', productivity:'#3aa8c8', finance:'#2ecc71' };
+    var color = DEPT_COLORS[o.dept] || '#9b6bff';
+    var diff  = Math.floor((Date.now() - o.ts) / 1000);
+    var ago   = diff < 60 ? diff + 's' : diff < 3600 ? Math.floor(diff/60) + 'm' : Math.floor(diff/3600) + 'h';
+    return (
+      '<div class="oc-delivRow">' +
+        '<span class="oc-delivDot" style="background:' + color + ';box-shadow:0 0 5px ' + color + '"></span>' +
+        '<span class="oc-delivAgent">' + o.agentName + '</span>' +
+        '<span class="oc-delivSummary">' + o.summary + '</span>' +
+        '<span class="oc-delivTime">' + ago + '</span>' +
+      '</div>'
+    );
+  }).join('');
+}
+
+function updateReportStats() {
+  if (typeof OE === 'undefined') return;
+  var count    = OE.getTodayCount();
+  var topAgent = OE.getTopAgent();
+  setText('stat-reports', count);
+  setText('stat-topAgent', topAgent ? topAgent.name + ' ×' + topAgent.count : '—');
+}
+
 // ── HELPERS ───────────────────────────────────────────────────────
 
 function setText(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; }
@@ -883,6 +919,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Wire ART command buttons and live employee card updates
   wireARTEvents();
+
+  // Initial deliverables feed and report stats (populated from stored OE data)
+  updateDeliverablesFeed();
+  updateReportStats();
 
   // Uptime
   setInterval(updateUptime, 1000);

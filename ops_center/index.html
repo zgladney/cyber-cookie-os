@@ -54,6 +54,10 @@
           <span class="oc-navIcon">&#128268;</span>
           <span class="oc-navLabel">Connections</span>
         </a>
+        <a class="oc-navItem" href="../reports/index.html" style="--nav-color:#ffdc32">
+          <span class="oc-navIcon">&#128202;</span>
+          <span class="oc-navLabel">Reports</span>
+        </a>
       </nav>
 
       <div id="oc-sysStatus">
@@ -161,7 +165,17 @@
               <div class="oc-taskDesc">LAST UPDATED</div>
               <div class="oc-taskSub" id="stat-date">--</div>
             </div>
+            <div class="oc-taskBlock">
+              <div class="oc-taskNum" id="stat-reports" style="color:#ffdc32;text-shadow:0 0 12px rgba(255,220,50,.4)">0</div>
+              <div class="oc-taskDesc">REPORTS TODAY</div>
+              <div class="oc-taskSub oc-sub-online" id="stat-topAgent">—</div>
+            </div>
           </div>
+
+          <div class="oc-panelDivider"></div>
+
+          <div class="oc-actLabel">RECENT DELIVERABLES</div>
+          <div id="oc-delivFeed"></div>
 
           <div class="oc-panelDivider"></div>
 
@@ -228,6 +242,7 @@
 </div>
 <script src="../js/cybercookieos.js"></script>
 <script src="../js/agent_runtime.js"></script>
+<script src="../js/output_engine.js"></script>
 <script src="js/ops_dashboard.js" defer></script>
 </body>
 </html>

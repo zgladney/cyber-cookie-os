@@ -181,6 +181,74 @@
     COS.events.on('runtime:metrics', function () {
       updatePanel();
     });
+    // Deliverables panel: re-render when new output arrives for this dept
+    COS.events.on('output:created', function (e) {
+      if (e.output && e.output.dept === deptId) renderDeliverables();
+    });
+  }
+
+  // ── DELIVERABLES PANEL ───────────────────────────────────────────
+  var TYPE_LABELS = {
+    property_recommendations: 'Property Recs',  rent_comparison: 'Rent Analysis',
+    pet_friendly_shortlist:   'Pet Shortlist',   voucher_eligible_list: 'Voucher List',
+    ranked_shortlist:         'Ranked List',     recommendation: 'Recommendation',
+    tracker_update:           'Tracker Update',  threat_report: 'Threat Report',
+    log_review_report:        'Log Review',      cloud_health_report: 'Cloud Health',
+    incident_report:          'Incident',        security_summary: 'Sec Summary',
+    flagged_event:            'Flagged Event',   trend_report: 'Trend Report',
+    product_ideas:            'Product Ideas',   etsy_listing_draft: 'Etsy Draft',
+    tiktok_trend_report:      'TikTok Trends',   production_queue: 'Prod Queue',
+    calendar_summary:         'Calendar',        email_triage_report: 'Email Triage',
+    reminder_cards:           'Reminders',       task_list: 'Task List',
+    optimized_schedule:       'Schedule',        bill_review: 'Bill Review',
+    budget_report:            'Budget',          expense_report: 'Expenses',
+    savings_update:           'Savings',         financial_summary: 'Fin Summary',
+  };
+
+  function buildDeliverablesPanel() {
+    return (
+      '<div class="ws-deliverables" id="' + p + '-deliverables" style="--exec-color:' + deptColor + '">' +
+        '<div class="ws-dlv-header">' +
+          '<span class="ws-dlv-title">RECENT DELIVERABLES</span>' +
+          '<a href="../reports/index.html" class="ws-dlv-viewAll">VIEW ALL &#8594;</a>' +
+        '</div>' +
+        '<div id="' + p + '-dlvList" class="ws-dlv-list">' +
+          '<div class="ws-dlv-empty">No outputs yet — run agents to generate deliverables.</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function timeAgo(ts) {
+    var diff = Math.floor((Date.now() - ts) / 1000);
+    if (diff < 60)    return diff + 's ago';
+    if (diff < 3600)  return Math.floor(diff / 60) + 'm ago';
+    if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+    return new Date(ts).toLocaleDateString();
+  }
+
+  function renderDeliverables() {
+    if (typeof OE === 'undefined') return;
+    var listEl = document.getElementById(p + '-dlvList');
+    if (!listEl) return;
+    var outputs = OE.getByDept(deptId).slice(0, 6);
+    if (!outputs.length) {
+      listEl.innerHTML = '<div class="ws-dlv-empty">No outputs yet — run agents to generate deliverables.</div>';
+      return;
+    }
+    listEl.innerHTML = outputs.map(function (o) {
+      var typeLabel = TYPE_LABELS[o.outputType] || o.outputType;
+      return (
+        '<div class="ws-dlv-item">' +
+          '<div class="ws-dlv-itemTop">' +
+            '<span class="ws-dlv-agent">' + o.agentName + '</span>' +
+            '<span class="ws-dlv-type">' + typeLabel + '</span>' +
+            '<span class="ws-dlv-time">' + timeAgo(o.ts) + '</span>' +
+          '</div>' +
+          '<div class="ws-dlv-summary">' + o.summary + '</div>' +
+        '</div>'
+      );
+    }).join('');
   }
 
   // ── INIT ─────────────────────────────────────────────────────────
@@ -188,14 +256,21 @@
     var wsBody = document.querySelector('.ws-section .ws-body');
     if (!wsBody) return;
 
+    // Execution panel (top)
     var wrapper = document.createElement('div');
     wrapper.innerHTML = buildPanelHTML();
     wsBody.insertBefore(wrapper.firstElementChild, wsBody.firstChild);
+
+    // Deliverables panel (after execution panel)
+    var dlvWrapper = document.createElement('div');
+    dlvWrapper.innerHTML = buildDeliverablesPanel();
+    wsBody.insertBefore(dlvWrapper.firstElementChild, wsBody.children[1] || null);
 
     buildAgentRows();
     updatePanel();
     wirePanelButtons();
     wireEvents();
+    renderDeliverables();
   });
 
 })();

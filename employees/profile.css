@@ -448,6 +448,64 @@ button { cursor: pointer; font-family: inherit; border: none; }
   margin-top: 16px;
 }
 
+/* ── DELIVERABLES PANEL ─────────────────────────────────────────── */
+
+#ep-delivPanel {
+  margin: 16px 20px;
+}
+
+.ep-delivRow {
+  background: rgba(255,255,255,.02);
+  border: 1px solid rgba(150,80,255,.08);
+  border-radius: 5px;
+  padding: 9px 11px;
+  margin-bottom: 7px;
+}
+
+.ep-delivTop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.ep-delivDot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ep-delivType {
+  font-size: 7px;
+  letter-spacing: 1.5px;
+  color: rgba(200,160,255,.4);
+  border: 1px solid rgba(150,80,255,.12);
+  padding: 1px 6px;
+  border-radius: 2px;
+}
+
+.ep-delivTime {
+  font-size: 7px;
+  color: rgba(200,160,255,.25);
+  margin-left: auto;
+}
+
+.ep-delivSummary {
+  font-size: 8px;
+  color: rgba(220,190,255,.55);
+  line-height: 1.4;
+  margin-bottom: 5px;
+}
+
+.ep-delivLink {
+  font-size: 7px;
+  color: rgba(200,160,255,.3);
+  letter-spacing: .5px;
+  text-decoration: none;
+  transition: color .2s;
+}
+.ep-delivLink:hover { color: rgba(200,160,255,.7); }
+
 /* ── RESPONSIVE ────────────────────────────────────────────────── */
 
 @media (max-width: 900px) {

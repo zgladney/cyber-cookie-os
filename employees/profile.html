@@ -83,6 +83,14 @@
 
     </div>
 
+    <!-- DELIVERABLES -->
+    <section class="ep-panel" id="ep-delivPanel">
+      <div class="ep-panelTitle">RECENT DELIVERABLES</div>
+      <div id="ep-delivList">
+        <div style="font-size:8px;color:rgba(200,160,255,.2);padding:12px 0;text-align:center">No deliverables yet — run this agent to generate outputs.</div>
+      </div>
+    </section>
+
     <!-- CAPABILITIES + PROJECTS -->
     <div id="ep-botRow">
 
@@ -117,6 +125,8 @@
 </div>
 
 <script src="../js/cybercookieos.js"></script>
+<script src="../js/agent_runtime.js"></script>
+<script src="../js/output_engine.js"></script>
 <script>
 // ── PROFILE PAGE CONTROLLER ──────────────────────────────────
 
@@ -250,6 +260,54 @@
       COS.activity.log({ agent: emp.name, dept: emp.dept, msg: tasks2[Math.floor(Math.random() * tasks2.length)], source: 'sim' });
     }
   }, 15000);
+
+  // ── DELIVERABLES ──────────────────────────────────────────────
+
+  function renderDeliverables() {
+    if (typeof OE === 'undefined') return;
+    var list    = OE.getByAgent(empId).slice(0, 8);
+    var listEl  = document.getElementById('ep-delivList');
+    if (!listEl) return;
+    if (!list.length) {
+      listEl.innerHTML = '<div style="font-size:8px;color:rgba(200,160,255,.2);padding:12px 0;text-align:center">No deliverables yet — run this agent to generate outputs.</div>';
+      return;
+    }
+    var TYPE_LABELS = {
+      property_recommendations:'Property Recs', rent_comparison:'Rent Analysis',
+      pet_friendly_shortlist:'Pet Shortlist', voucher_eligible_list:'Voucher List',
+      ranked_shortlist:'Ranked List', recommendation:'Recommendation',
+      tracker_update:'Tracker Update', threat_report:'Threat Report',
+      log_review_report:'Log Review', cloud_health_report:'Cloud Health',
+      incident_report:'Incident Report', security_summary:'Sec Summary',
+      flagged_event:'Flagged Event', trend_report:'Trend Report',
+      product_ideas:'Product Ideas', etsy_listing_draft:'Etsy Draft',
+      tiktok_trend_report:'TikTok Trends', production_queue:'Prod Queue',
+      calendar_summary:'Calendar', email_triage_report:'Email Triage',
+      reminder_cards:'Reminders', task_list:'Task List',
+      optimized_schedule:'Schedule', bill_review:'Bill Review',
+      budget_report:'Budget', expense_report:'Expenses',
+      savings_update:'Savings', financial_summary:'Financial Summary',
+    };
+    var DEPT_COLORS = { security:'#9b6bff', housing:'#c4784a', commerce:'#ff69b4', productivity:'#3aa8c8', finance:'#2ecc71' };
+    listEl.innerHTML = list.map(function (o) {
+      var color = DEPT_COLORS[o.dept] || '#9b6bff';
+      var diff  = Math.floor((Date.now() - o.ts) / 1000);
+      var ago   = diff < 60 ? diff + 's ago' : diff < 3600 ? Math.floor(diff/60) + 'm ago' : Math.floor(diff/3600) + 'h ago';
+      var label = TYPE_LABELS[o.outputType] || o.outputType;
+      return '<div class="ep-delivRow">' +
+        '<div class="ep-delivTop">' +
+          '<span class="ep-delivDot" style="background:' + color + ';box-shadow:0 0 5px ' + color + '"></span>' +
+          '<span class="ep-delivType">' + label + '</span>' +
+          '<span class="ep-delivTime">' + ago + '</span>' +
+        '</div>' +
+        '<div class="ep-delivSummary">' + o.summary + '</div>' +
+        '<a href="../reports/index.html" class="ep-delivLink">View in Reports &#8594;</a>' +
+        '</div>';
+    }).join('');
+  }
+
+  renderDeliverables();
+  COS.events.on('output:created', function () { renderDeliverables(); });
 
   // ── CAPABILITIES ──────────────────────────────────────────────
 

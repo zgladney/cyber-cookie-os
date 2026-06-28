@@ -1311,6 +1311,45 @@ button { cursor: pointer; font-family: inherit; }
 ================================================================ */
 
 /* ================================================================
+   DELIVERABLES FEED
+================================================================ */
+
+.oc-delivRow {
+  display: grid;
+  grid-template-columns: 8px auto 1fr auto;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255,255,255,.03);
+  font-size: 8px;
+}
+
+.oc-delivDot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.oc-delivAgent {
+  color: rgba(220,190,255,.65);
+  font-weight: 600;
+  white-space: nowrap;
+  letter-spacing: .5px;
+}
+
+.oc-delivSummary {
+  color: rgba(200,160,255,.4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.oc-delivTime {
+  color: rgba(200,160,255,.25);
+  white-space: nowrap;
+}
+
+/* ================================================================
    COMMAND CENTER PANEL (ART controls)
 ================================================================ */
 

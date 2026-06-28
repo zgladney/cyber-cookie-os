@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Report Center — CyberCookieOS</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="rc-app">
+
+  <header id="rc-topBar">
+    <a href="../ops_center/index.html" id="rc-backBtn">&#8592; OPS CENTER</a>
+    <div id="rc-titleBlock">
+      <span id="rc-logo">CyberC<span class="rc-accent">&#9670;</span>okieOS</span>
+      <span id="rc-subtitle">// REPORT CENTER</span>
+    </div>
+    <div id="rc-clock"></div>
+  </header>
+
+  <div id="rc-body">
+
+    <!-- SUMMARY BAR -->
+    <div id="rc-summaryBar">
+      <div class="rc-sumBlock">
+        <div class="rc-sumNum" id="rc-totalCount">0</div>
+        <div class="rc-sumLabel">TOTAL REPORTS</div>
+      </div>
+      <div class="rc-sumBlock">
+        <div class="rc-sumNum" id="rc-todayCount">0</div>
+        <div class="rc-sumLabel">GENERATED TODAY</div>
+      </div>
+      <div class="rc-sumBlock">
+        <div class="rc-sumNum" id="rc-activeCount">0</div>
+        <div class="rc-sumLabel">ACTIVE</div>
+      </div>
+      <div class="rc-sumBlock">
+        <div class="rc-sumNum" id="rc-archCount">0</div>
+        <div class="rc-sumLabel">ARCHIVED</div>
+      </div>
+      <div class="rc-sumBlock" id="rc-topAgentBlock" style="display:none">
+        <div class="rc-sumNum" id="rc-topAgentName" style="font-size:14px">—</div>
+        <div class="rc-sumLabel">TOP AGENT TODAY</div>
+      </div>
+    </div>
+
+    <!-- CONTROLS -->
+    <div id="rc-controls">
+      <div id="rc-deptTabs">
+        <button class="rc-tab rc-tabActive" data-dept="all">ALL</button>
+        <button class="rc-tab" data-dept="security"    style="--tc:#9b6bff">&#128737; SECURITY</button>
+        <button class="rc-tab" data-dept="housing"     style="--tc:#c4784a">&#127968; HOUSING</button>
+        <button class="rc-tab" data-dept="commerce"    style="--tc:#ff69b4">&#128717; COMMERCE</button>
+        <button class="rc-tab" data-dept="productivity" style="--tc:#3aa8c8">&#128197; PRODUCTIVITY</button>
+        <button class="rc-tab" data-dept="finance"     style="--tc:#2ecc71">&#128176; FINANCE</button>
+      </div>
+      <div id="rc-statusTabs">
+        <button class="rc-stab rc-stabActive" data-status="active">ACTIVE</button>
+        <button class="rc-stab" data-status="archived">ARCHIVED</button>
+        <button class="rc-stab" data-status="all">ALL</button>
+      </div>
+      <button id="rc-clearAll" class="rc-dangerBtn">CLEAR ALL</button>
+    </div>
+
+    <!-- MAIN LAYOUT -->
+    <div id="rc-layout">
+
+      <!-- REPORT LIST -->
+      <div id="rc-list">
+        <div id="rc-emptyState">
+          <div class="rc-emptyIcon">&#128202;</div>
+          <div class="rc-emptyTitle">NO REPORTS YET</div>
+          <div class="rc-emptySub">Run Headquarters to generate deliverables from your agents.</div>
+          <a href="../ops_center/index.html" class="rc-emptyLink">&#8594; GO TO OPS CENTER</a>
+        </div>
+        <div id="rc-cards"></div>
+      </div>
+
+      <!-- DETAIL PANEL -->
+      <div id="rc-detail">
+        <div id="rc-detailEmpty">
+          <div class="rc-emptyIcon" style="font-size:28px">&#8594;</div>
+          <div class="rc-emptySub">Select a report to view details</div>
+        </div>
+        <div id="rc-detailContent" style="display:none">
+          <div id="rc-detailHeader">
+            <div id="rc-detailDeptBadge"></div>
+            <div id="rc-detailTypeBadge"></div>
+          </div>
+          <h2 id="rc-detailTitle"></h2>
+          <div id="rc-detailMeta"></div>
+          <div id="rc-detailSummary"></div>
+          <div id="rc-detailBody"></div>
+          <div id="rc-detailActions">
+            <button id="rc-archiveBtn" class="rc-actionBtn">&#128451; ARCHIVE</button>
+            <button id="rc-deleteBtn"  class="rc-actionBtn rc-deleteBtn">&#128465; DELETE</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <footer id="rc-footer">
+    // &nbsp; CyberCookieOS v0.3.0 &nbsp; // &nbsp; Report Center &nbsp; //
+  </footer>
+
+</div>
+
+<script src="../js/cybercookieos.js"></script>
+<script src="../js/agent_runtime.js"></script>
+<script src="../js/output_engine.js"></script>
+<script src="reports.js"></script>
+</body>
+</html>
