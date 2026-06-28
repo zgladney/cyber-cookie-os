@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CyberCookieOS</title>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="../css/workspace.css">
 </head>
 
 <body>
@@ -212,6 +213,73 @@
 
 </div>
 
+<!-- ════════════════════════ SECURITY WORKSPACE ════════════════════════ -->
+<section class="ws-section" id="hq-workspace" style="--ws-color:#9b6bff">
+  <div class="ws-header">
+    <h2 class="ws-title">SECURITY WORKSPACE</h2>
+    <span class="ws-sub">// Threat Log · Security Notes · Event Review</span>
+  </div>
+  <div class="ws-body">
+
+    <!-- Threat / Event Log -->
+    <div class="ws-panel ws-panel-wide">
+      <div class="ws-pTitle">
+        THREAT / EVENT LOG
+        <div class="ws-filterBar">
+          <button class="ws-filter ws-filterActive" data-sev="all">ALL</button>
+          <button class="ws-filter" data-sev="critical">CRITICAL</button>
+          <button class="ws-filter" data-sev="high">HIGH</button>
+          <button class="ws-filter" data-sev="medium">MEDIUM</button>
+          <button class="ws-filter" data-sev="low">LOW</button>
+          <button class="ws-filter" data-sev="info">INFO</button>
+        </div>
+      </div>
+      <div class="ws-tableWrap">
+        <table class="ws-table">
+          <thead>
+            <tr>
+              <th>TIME</th>
+              <th>EVENT</th>
+              <th>SEVERITY</th>
+              <th>SOURCE</th>
+              <th>STATUS</th>
+              <th>ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody id="hq-threatBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Add Security Note -->
+    <div class="ws-panel ws-panel-narrow">
+      <div class="ws-pTitle">ADD SECURITY NOTE</div>
+      <div class="ws-form">
+        <div class="ws-field">
+          <label class="ws-label">EVENT DESCRIPTION</label>
+          <textarea class="ws-input" id="hq-noteEvent" placeholder="Describe the event or threat..." rows="3"></textarea>
+        </div>
+        <div class="ws-field">
+          <label class="ws-label">SEVERITY</label>
+          <select class="ws-input" id="hq-noteSev">
+            <option value="critical">CRITICAL</option>
+            <option value="high">HIGH</option>
+            <option value="medium" selected>MEDIUM</option>
+            <option value="low">LOW</option>
+            <option value="info">INFO</option>
+          </select>
+        </div>
+        <div class="ws-field">
+          <label class="ws-label">SOURCE / SYSTEM</label>
+          <input class="ws-input" id="hq-noteSource" placeholder="IP address, system, agent..." type="text" />
+        </div>
+        <button class="ws-btn ws-btn-full" id="hq-addNote">+ ADD ENTRY</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <!-- ═══════════════════════════ POPUP (unchanged) ═══════════════════════════ -->
 <div id="popup" class="hidden">
 
@@ -280,6 +348,8 @@
 <script src="js/threathunter.js"></script>
 <script src="js/ambience.js"></script>
 <script src="script.js"></script>
+<script src="../js/cybercookieos.js"></script>
+<script src="workspace.js"></script>
 
 </body>
 </html>

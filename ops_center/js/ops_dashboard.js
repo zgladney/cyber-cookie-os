@@ -247,17 +247,17 @@ function renderNotifications() {
 var _activityItems = [];  // in-memory for current session
 
 function seedActivity() {
+  // Only seed if the activity log is empty (first run / cleared storage)
+  if (COS.activity.get(1).length > 0) return;
   var pool = [
-    { agent: 'Athena',    dept: 'security',    msg: 'Completed #IPv6 Traffic Sweep' },
-    { agent: 'Nova',      dept: 'housing',     msg: 'Found 3 new rental listings' },
-    { agent: 'Pixel',     dept: 'commerce',    msg: 'TikTok trend report generated' },
-    { agent: 'Calypso',   dept: 'productivity',msg: 'Calendar synced successfully' },
-    { agent: 'Greenbean', dept: 'finance',     msg: 'Budget report updated' },
+    { agent: 'Athena',    dept: 'security',     msg: 'Completed #IPv6 Traffic Sweep' },
+    { agent: 'Nova',      dept: 'housing',      msg: 'Found 3 new rental listings' },
+    { agent: 'Pixel',     dept: 'commerce',     msg: 'TikTok trend report generated' },
+    { agent: 'Calypso',   dept: 'productivity', msg: 'Calendar synced successfully' },
+    { agent: 'Greenbean', dept: 'finance',      msg: 'Budget report updated' },
   ];
-  var now = Date.now();
-  pool.forEach(function (item, i) {
-    _activityItems.push({ agent: item.agent, dept: item.dept, msg: item.msg, ts: now - (5 - i) * 90000, source: 'sim' });
-    COS.activity.log(item);
+  pool.forEach(function (item) {
+    COS.activity.log({ agent: item.agent, dept: item.dept, msg: item.msg, source: 'sim' });
   });
 }
 
@@ -725,21 +725,13 @@ document.addEventListener('DOMContentLoaded', function () {
   toast.id = 'oc-toast';
   document.body.appendChild(toast);
 
-  // Restore localStorage preferences
-  var lastDept = COS.state.get('pref.lastDept');
-  if (lastDept) {
-    var f = document.querySelector('.empFilter[data-dept="' + lastDept + '"]');
-    if (f) f.click();
-  }
-
-  // Wire events before any renders
-  wireActivityEvents();
-
-  // Initial data seed
+  // Initialize employee simulation states
   initEmpStates();
+
+  // Seed activity log only if empty (no events wired yet — no duplicates)
   seedActivity();
 
-  // Build static sections
+  // Build all static sections
   startClock();
   buildIntegrations();
   buildRooms();
@@ -766,14 +758,26 @@ document.addEventListener('DOMContentLoaded', function () {
   setText('stat-time', now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
   setText('stat-date', now.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }));
 
-  // Seed activity feed with existing log entries
-  var logEntries = COS.activity.get(6);
-  logEntries.reverse().forEach(function (e) { _activityItems.push(e); addActivityEntry(e, false); });
+  // Populate activity feed from storage (single pass, no duplication)
+  COS.activity.get(6).slice().reverse().forEach(function (e) {
+    _activityItems.push(e);
+    addActivityEntry(e, false);
+  });
 
   // Wire interactions
   wireDownloads();
   wireSearch();
   wireViewAll();
+
+  // Restore last-used department filter (must be after wireSearch registers handlers)
+  var lastDept = COS.state.get('pref.lastDept');
+  if (lastDept && lastDept !== 'all') {
+    var f = document.querySelector('.empFilter[data-dept="' + lastDept + '"]');
+    if (f) f.click();
+  }
+
+  // Wire live events AFTER initial render (prevents duplication on seed)
+  wireActivityEvents();
 
   // Uptime
   setInterval(updateUptime, 1000);

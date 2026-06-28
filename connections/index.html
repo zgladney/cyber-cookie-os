@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connection Manager — CyberCookieOS</title>
+<link rel="stylesheet" href="../css/workspace.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:    #03000e;
+  --panel: rgba(8,2,22,.88);
+  --pink:  #ff69b4;
+  --cyan:  #9cf6ff;
+  --purple:#9b6bff;
+  --green: #2ecc71;
+  --red:   #ff5050;
+  --yellow:#ffdc32;
+  --border:rgba(150,80,255,.12);
+  --text-dim: rgba(200,160,255,.35);
+  --text-mid: rgba(220,190,255,.55);
+  --text-hi:  rgba(240,220,255,.85);
+}
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: radial-gradient(ellipse at 50% 0%, #100028 0%, var(--bg) 70%);
+  min-height: 100vh;
+  color: white;
+  font-size: 13px;
+}
+a { color: inherit; text-decoration: none; }
+
+/* TOP BAR */
+#cn-topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px 10px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(12,0,28,.95) 0%, transparent 100%);
+  position: sticky; top: 0; z-index: 200;
+  backdrop-filter: blur(8px);
+}
+.cn-backBtn {
+  font-size: 9px; letter-spacing: 2px;
+  color: rgba(156,246,255,.5);
+  padding: 5px 12px;
+  border: 1px solid rgba(156,246,255,.2);
+  border-radius: 4px;
+  transition: all .2s;
+}
+.cn-backBtn:hover { color: var(--cyan); border-color: rgba(156,246,255,.5); background: rgba(156,246,255,.05); }
+#cn-titleBlock { text-align: center; flex: 1; }
+#cn-logo {
+  font-size: 20px; font-weight: 900; letter-spacing: 5px;
+  color: var(--pink);
+  text-shadow: 0 0 24px var(--pink), 0 0 60px rgba(255,105,180,.3);
+}
+.cn-accent { color: var(--cyan); text-shadow: 0 0 14px var(--cyan); }
+#cn-subtitle { display: block; font-size: 8px; letter-spacing: 4px; color: rgba(156,246,255,.4); margin-top: 2px; }
+
+/* BODY */
+#cn-body {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px 60px;
+}
+
+.cn-section {
+  margin-bottom: 32px;
+}
+
+.cn-sectionTitle {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--pink);
+  text-shadow: 0 0 12px rgba(255,105,180,.3);
+  margin-bottom: 6px;
+}
+.cn-sectionSub {
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+}
+
+/* INTEGRATION TABLE */
+.cn-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.cn-table th {
+  font-size: 7px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  background: rgba(150,80,255,.05);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+}
+.cn-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255,255,255,.025);
+  vertical-align: middle;
+  font-size: 9px;
+  color: var(--text-mid);
+}
+.cn-table tr:last-child td { border-bottom: none; }
+.cn-table tr:hover td      { background: rgba(150,80,255,.04); }
+
+.cn-intName { font-size: 10px; font-weight: 600; color: var(--text-hi); }
+.cn-intDesc { font-size: 8px; color: var(--text-dim); margin-top: 2px; }
+
+.cn-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  display: inline-block; margin-right: 6px; vertical-align: middle;
+}
+.cn-dot-active       { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.cn-dot-disconnected { background: var(--red);   box-shadow: 0 0 4px var(--red); }
+.cn-dot-none         { background: rgba(200,160,255,.2); }
+
+.cn-status-active       { color: rgba(46,204,113,.8);  }
+.cn-status-disconnected { color: rgba(255,80,80,.7);   }
+.cn-status-none         { color: rgba(200,160,255,.3); }
+
+.cn-agents { display: flex; flex-wrap: wrap; gap: 4px; }
+.cn-agentTag {
+  font-size: 7px; letter-spacing: .5px;
+  padding: 2px 8px;
+  border: 1px solid rgba(150,80,255,.15);
+  color: rgba(200,160,255,.5);
+  border-radius: 10px;
+}
+
+.cn-btnRow  { display: flex; gap: 6px; }
+.cn-btnDisabled {
+  font-size: 7px; letter-spacing: 1px;
+  padding: 4px 12px;
+  border-radius: 3px;
+  border: 1px solid rgba(150,80,255,.1);
+  color: rgba(200,160,255,.2);
+  background: transparent;
+  cursor: not-allowed;
+  font-family: inherit;
+}
+.cn-btnComingSoon {
+  font-size: 7px; letter-spacing: 1px;
+  padding: 4px 12px;
+  border-radius: 3px;
+  border: 1px solid rgba(255,220,50,.15);
+  color: rgba(255,220,50,.3);
+  background: transparent;
+  cursor: not-allowed;
+  font-family: inherit;
+}
+
+/* SECURITY NOTE */
+.cn-secNote {
+  background: rgba(255,220,50,.04);
+  border: 1px solid rgba(255,220,50,.15);
+  border-left: 3px solid var(--yellow);
+  border-radius: 6px;
+  padding: 14px 18px;
+  font-size: 9px;
+  color: rgba(255,220,50,.65);
+  letter-spacing: .5px;
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+.cn-secNote strong { color: rgba(255,220,50,.9); }
+
+/* PERMISSION TABLE */
+.cn-permTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 8px;
+}
+.cn-permTable th {
+  font-size: 7px; letter-spacing: 1.5px; color: var(--text-dim);
+  padding: 6px 10px; text-align: left; font-weight: 600;
+  border-bottom: 1px solid var(--border);
+}
+.cn-permTable td {
+  padding: 8px 10px;
+  color: var(--text-mid);
+  border-bottom: 1px solid rgba(255,255,255,.02);
+}
+.cn-permOk   { color: rgba(46,204,113,.7);  }
+.cn-permWait { color: rgba(255,220,50,.5);  }
+.cn-permNo   { color: rgba(255,80,80,.5);   }
+
+/* DEPT COLORS */
+.cn-dept-security    { color: rgba(155,107,255,.7); }
+.cn-dept-housing     { color: rgba(196,120,74,.7);  }
+.cn-dept-commerce    { color: rgba(255,105,180,.7); }
+.cn-dept-productivity{ color: rgba(58,168,200,.7);  }
+.cn-dept-finance     { color: rgba(46,204,113,.7);  }
+
+#cn-footer {
+  text-align: center;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: rgba(150,80,255,.2);
+  padding: 20px;
+  margin-top: 24px;
+  border-top: 1px solid var(--border);
+}
+</style>
+</head>
+<body>
+
+<header id="cn-topBar">
+  <a href="../ops_center/index.html" class="cn-backBtn">← OPS CENTER</a>
+  <div id="cn-titleBlock">
+    <span id="cn-logo">CyberC<span class="cn-accent">◆</span>okieOS</span>
+    <span id="cn-subtitle">// CONNECTION MANAGER</span>
+  </div>
+  <a href="../hallway/index.html" class="cn-backBtn">HALLWAY →</a>
+</header>
+
+<div id="cn-body">
+
+  <div class="cn-secNote">
+    <strong>SECURITY POLICY:</strong> Never hardcode passwords, cookies, session tokens, OAuth tokens, apartment logins, Etsy credentials, banking information, or social media credentials.
+    All future integrations must use: <strong>OAuth</strong> · <strong>Environment Variables</strong> · <strong>Secure Backend APIs</strong> · <strong>Encrypted Secret Storage</strong>.
+    No credentials are stored here. Connection buttons are disabled until proper auth flows are implemented.
+  </div>
+
+  <!-- INTEGRATION STATUS -->
+  <div class="cn-section">
+    <div class="cn-sectionTitle">INTEGRATION STATUS</div>
+    <div class="cn-sectionSub">// All planned service connections — status, assigned agents, permissions</div>
+    <table class="cn-table" id="cn-intTable">
+      <thead>
+        <tr>
+          <th>SERVICE</th>
+          <th>DEPARTMENT</th>
+          <th>STATUS</th>
+          <th>ASSIGNED AGENTS</th>
+          <th>REQUIRED PERMISSIONS</th>
+          <th>LAST SYNC</th>
+          <th>ACTIONS</th>
+        </tr>
+      </thead>
+      <tbody id="cn-intBody"></tbody>
+    </table>
+  </div>
+
+  <!-- PLANNED INTEGRATIONS -->
+  <div class="cn-section">
+    <div class="cn-sectionTitle">PLANNED INTEGRATIONS</div>
+    <div class="cn-sectionSub">// Future connections on the roadmap</div>
+    <table class="cn-table">
+      <thead>
+        <tr><th>SERVICE</th><th>DEPARTMENT</th><th>USE CASE</th><th>AUTH METHOD</th><th>STATUS</th></tr>
+      </thead>
+      <tbody id="cn-plannedBody"></tbody>
+    </table>
+  </div>
+
+  <!-- AUTH REQUIREMENTS -->
+  <div class="cn-section">
+    <div class="cn-sectionTitle">AUTHENTICATION REQUIREMENTS</div>
+    <div class="cn-sectionSub">// How each integration will authenticate — no credentials stored here</div>
+    <table class="cn-permTable">
+      <thead>
+        <tr><th>SERVICE</th><th>AUTH METHOD</th><th>SCOPE</th><th>STORE AS</th><th>READY</th></tr>
+      </thead>
+      <tbody id="cn-authBody"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<footer id="cn-footer">
+  // CyberCookieOS v0.3.0 // Connection Manager // No credentials stored //
+</footer>
+
+<script src="../js/cybercookieos.js"></script>
+<script>
+(function () {
+
+  var INTEGRATIONS = [
+    {
+      id: 'housing_scout', name: 'Apartment Scout (Local)',
+      dept: 'housing', deptLabel: 'Housing',
+      status: 'active',
+      agents: ['Nova', 'Beacon'],
+      permissions: ['Read listings', 'Write results JSON'],
+      lastSync: '2 hours ago',
+      description: 'Local Python scraper for Burlington County rentals',
+    },
+    {
+      id: 'etsy', name: 'Etsy Shop API',
+      dept: 'commerce', deptLabel: 'Commerce',
+      status: 'disconnected',
+      agents: ['EtsyBot', 'Forge'],
+      permissions: ['Read shop listings', 'Write listings', 'Read orders'],
+      lastSync: 'Never',
+      description: 'Etsy seller API for shop management',
+    },
+    {
+      id: 'google_cal', name: 'Google Calendar',
+      dept: 'productivity', deptLabel: 'Productivity',
+      status: 'not_configured',
+      agents: ['Calypso'],
+      permissions: ['Read events', 'Write events', 'Read calendars'],
+      lastSync: 'Never',
+      description: 'Calendar sync and scheduling integration',
+    },
+    {
+      id: 'email', name: 'Email (IMAP/SMTP)',
+      dept: 'productivity', deptLabel: 'Productivity',
+      status: 'not_configured',
+      agents: ['Echo'],
+      permissions: ['Read inbox', 'Send emails', 'Manage labels'],
+      lastSync: 'Never',
+      description: 'Email processing for inbox management',
+    },
+    {
+      id: 'tiktok', name: 'TikTok Research API',
+      dept: 'commerce', deptLabel: 'Commerce',
+      status: 'not_configured',
+      agents: ['Spark', 'Pixel'],
+      permissions: ['Read public video data', 'Read trending hashtags'],
+      lastSync: 'Never',
+      description: 'Trend research and viral content analysis',
+    },
+    {
+      id: 'github', name: 'GitHub',
+      dept: 'security', deptLabel: 'Security',
+      status: 'not_configured',
+      agents: ['Nimbus', 'Athena'],
+      permissions: ['Read repos', 'Read security alerts', 'Write issues'],
+      lastSync: 'Never',
+      description: 'Code repository monitoring and security alerts',
+    },
+    {
+      id: 'weather', name: 'OpenWeather API',
+      dept: 'productivity', deptLabel: 'Productivity',
+      status: 'not_configured',
+      agents: ['Calypso', 'Memo'],
+      permissions: ['Read weather data'],
+      lastSync: 'Never',
+      description: 'Weather data for location-aware scheduling',
+    },
+    {
+      id: 'maps', name: 'Google Maps / Geo API',
+      dept: 'housing', deptLabel: 'Housing',
+      status: 'not_configured',
+      agents: ['Nova', 'Atlas'],
+      permissions: ['Read geocoding', 'Read distance matrix'],
+      lastSync: 'Never',
+      description: 'Location services for rental proximity analysis',
+    },
+  ];
+
+  var PLANNED = [
+    { name: 'Plaid (Banking)',     dept: 'Finance',      use: 'Read transactions, balances',      auth: 'OAuth 2.0 + Plaid Link',    status: 'Planned' },
+    { name: 'Notion API',          dept: 'Productivity',  use: 'Sync notes and project databases', auth: 'OAuth 2.0',                 status: 'Planned' },
+    { name: 'Twilio SMS',          dept: 'Productivity',  use: 'Send reminders and alerts via SMS', auth: 'API Key (env var)',        status: 'Planned' },
+    { name: 'Amazon Seller API',   dept: 'Commerce',      use: 'Manage Amazon Handmade listings',  auth: 'OAuth 2.0 via MWS',        status: 'Planned' },
+    { name: 'Zillow / RentBerry',  dept: 'Housing',       use: 'Additional rental listing sources', auth: 'API Key (env var)',        status: 'Planned' },
+    { name: 'Slack / Discord',     dept: 'Productivity',  use: 'Notification delivery channel',    auth: 'OAuth 2.0 / Bot Token (env)', status: 'Planned' },
+  ];
+
+  var AUTH_TABLE = [
+    { name: 'Etsy',           method: 'OAuth 2.0',             scope: 'listings_r, listings_w, transactions_r', store: 'Encrypted env var', ready: false },
+    { name: 'Google Calendar', method: 'OAuth 2.0 (Google)',   scope: 'calendar.events, calendar.readonly',     store: 'Encrypted env var', ready: false },
+    { name: 'Email (IMAP)',   method: 'App Password / OAuth',  scope: 'IMAP read, SMTP send',                   store: 'Encrypted env var', ready: false },
+    { name: 'TikTok',         method: 'OAuth 2.0',             scope: 'video.list, hashtag.search',             store: 'Encrypted env var', ready: false },
+    { name: 'GitHub',         method: 'Personal Access Token', scope: 'repo, security_events',                  store: 'Encrypted env var', ready: false },
+    { name: 'OpenWeather',    method: 'API Key',               scope: 'Read-only weather data',                 store: 'Environment variable', ready: false },
+    { name: 'Google Maps',    method: 'API Key',               scope: 'Geocoding, Distance Matrix',             store: 'Environment variable', ready: false },
+    { name: 'Plaid',          method: 'OAuth 2.0 + Plaid Link','scope': 'transactions, balances',               store: 'Encrypted env var', ready: false },
+    { name: 'Apartment Scout', method: 'Local agent (no auth)', scope: 'Local filesystem access',               store: 'None needed',       ready: true  },
+  ];
+
+  function statusDot(s) {
+    var cls = s === 'active' ? 'active' : (s === 'disconnected' ? 'disconnected' : 'none');
+    return '<span class="cn-dot cn-dot-' + cls + '"></span>';
+  }
+
+  function statusLabel(s) {
+    var labels = { active: 'ACTIVE', disconnected: 'DISCONNECTED', not_configured: 'NOT CONFIGURED' };
+    var cls    = { active: 'active', disconnected: 'disconnected', not_configured: 'none' };
+    return '<span class="cn-status-' + (cls[s] || 'none') + '">' + (labels[s] || s.toUpperCase()) + '</span>';
+  }
+
+  function deptClass(dept) {
+    return 'cn-dept-' + dept.toLowerCase().replace(/\s+/g, '');
+  }
+
+  function buildIntTable() {
+    var tbody = document.getElementById('cn-intBody');
+    if (!tbody) return;
+    INTEGRATIONS.forEach(function (intg) {
+      var tr = document.createElement('tr');
+      var agentTags = intg.agents.map(function (a) { return '<span class="cn-agentTag">' + a + '</span>'; }).join('');
+      var perms = intg.permissions.map(function (p) { return '<div style="font-size:7px;color:rgba(200,160,255,.35);margin-bottom:2px">· ' + p + '</div>'; }).join('');
+      tr.innerHTML =
+        '<td>' +
+          '<div class="cn-intName">' + intg.name + '</div>' +
+          '<div class="cn-intDesc">' + intg.description + '</div>' +
+        '</td>' +
+        '<td class="' + deptClass(intg.dept) + '">' + intg.deptLabel + '</td>' +
+        '<td>' + statusDot(intg.status) + statusLabel(intg.status) + '</td>' +
+        '<td><div class="cn-agents">' + agentTags + '</div></td>' +
+        '<td>' + perms + '</td>' +
+        '<td style="font-size:8px;color:rgba(200,160,255,.3)">' + intg.lastSync + '</td>' +
+        '<td><div class="cn-btnRow">' +
+          '<button class="cn-btnDisabled" disabled title="Auth not configured">CONNECT</button>' +
+          '<button class="cn-btnComingSoon" disabled title="Implementation pending">TEST</button>' +
+        '</div></td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  function buildPlannedTable() {
+    var tbody = document.getElementById('cn-plannedBody');
+    if (!tbody) return;
+    PLANNED.forEach(function (p) {
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td style="font-weight:600;color:rgba(240,220,255,.8)">' + p.name + '</td>' +
+        '<td style="color:rgba(200,160,255,.5)">' + p.dept + '</td>' +
+        '<td style="font-size:8px;color:rgba(200,160,255,.4)">' + p.use + '</td>' +
+        '<td style="font-size:8px;color:rgba(156,246,255,.4)">' + p.auth + '</td>' +
+        '<td><span style="font-size:7px;padding:2px 8px;border-radius:3px;border:1px solid rgba(255,220,50,.2);color:rgba(255,220,50,.5)">' + p.status.toUpperCase() + '</span></td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  function buildAuthTable() {
+    var tbody = document.getElementById('cn-authBody');
+    if (!tbody) return;
+    AUTH_TABLE.forEach(function (a) {
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td style="font-weight:600;color:rgba(240,220,255,.8)">' + a.name + '</td>' +
+        '<td style="color:rgba(156,246,255,.5)">' + a.method + '</td>' +
+        '<td style="font-size:8px;color:rgba(200,160,255,.4)">' + a.scope + '</td>' +
+        '<td style="font-size:8px;color:rgba(200,160,255,.4)">' + a.store + '</td>' +
+        '<td class="' + (a.ready ? 'cn-permOk' : 'cn-permWait') + '">' + (a.ready ? '✓ READY' : '○ PENDING') + '</td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    buildIntTable();
+    buildPlannedTable();
+    buildAuthTable();
+    COS.activity.log({ agent: 'System', dept: 'ops', msg: 'Connection Manager viewed.', source: 'user' });
+  });
+
+})();
+</script>
+</body>
+</html>

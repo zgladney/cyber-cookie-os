@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Productivity Department — CyberCookieOS</title>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="../css/workspace.css">
 </head>
 
 <body>
@@ -136,6 +137,74 @@
     </main>
 
 </div>
+
+<!-- ════════════════════════ PRODUCTIVITY WORKSPACE ════════════════════════ -->
+<section class="ws-section" id="pd-workspace" style="--ws-color:#3aa8c8">
+  <div class="ws-header">
+    <h2 class="ws-title">PRODUCTIVITY WORKSPACE</h2>
+    <span class="ws-sub">// Task Board · Assign · Track · Complete</span>
+  </div>
+  <div class="ws-body" style="flex-direction:column">
+
+    <!-- Task Board -->
+    <div class="ws-panel ws-panel-full">
+      <div class="ws-pTitle">
+        TASK BOARD
+        <span id="pd-taskCount" style="font-size:8px;color:rgba(58,168,200,.5);letter-spacing:.5px;font-weight:400"></span>
+      </div>
+      <div class="ws-taskBoard" id="pd-taskBoard">
+        <div class="ws-taskCol">
+          <div class="ws-taskColTitle">TO DO</div>
+          <div id="pd-col-todo"></div>
+        </div>
+        <div class="ws-taskCol">
+          <div class="ws-taskColTitle">IN PROGRESS</div>
+          <div id="pd-col-inprogress"></div>
+        </div>
+        <div class="ws-taskCol">
+          <div class="ws-taskColTitle">DONE</div>
+          <div id="pd-col-done"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Task Form -->
+    <div class="ws-panel ws-panel-full">
+      <div class="ws-pTitle">ADD NEW TASK</div>
+      <div class="ws-form">
+        <div class="ws-form-row">
+          <div class="ws-field">
+            <label class="ws-label">TASK TITLE *</label>
+            <input class="ws-input" id="pd-newTitle" placeholder="What needs to be done?" type="text" />
+          </div>
+          <div class="ws-field">
+            <label class="ws-label">ASSIGN TO</label>
+            <select class="ws-input" id="pd-newAssignee"></select>
+          </div>
+        </div>
+        <div class="ws-form-row">
+          <div class="ws-field">
+            <label class="ws-label">DUE DATE</label>
+            <input class="ws-input" id="pd-newDue" type="date" />
+          </div>
+          <div class="ws-field">
+            <label class="ws-label">INITIAL STATUS</label>
+            <select class="ws-input" id="pd-newStatus">
+              <option value="todo">To Do</option>
+              <option value="inprogress">In Progress</option>
+              <option value="done">Done</option>
+            </select>
+          </div>
+        </div>
+        <button class="ws-btn ws-btn-full" id="pd-addTask">+ ADD TASK</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script src="../js/cybercookieos.js"></script>
+<script src="workspace.js"></script>
 
 </body>
 </html>

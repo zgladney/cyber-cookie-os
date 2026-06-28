@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Commerce Department — CyberCookieOS</title>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="../css/workspace.css">
 </head>
 
 <body>
@@ -113,6 +114,85 @@
     </main>
 
 </div>
+
+<!-- ════════════════════════ COMMERCE WORKSPACE ════════════════════════ -->
+<section class="ws-section" id="cm-workspace" style="--ws-color:#ff69b4">
+  <div class="ws-header">
+    <h2 class="ws-title">COMMERCE WORKSPACE</h2>
+    <span class="ws-sub">// Product &amp; Trend Idea Board</span>
+  </div>
+  <div class="ws-body" style="flex-direction:column">
+
+    <!-- Idea Board -->
+    <div class="ws-panel ws-panel-full">
+      <div class="ws-pTitle">
+        IDEA BOARD
+        <div class="ws-filterBar">
+          <button class="ws-filter ws-filterActive" data-status="all">ALL</button>
+          <button class="ws-filter" data-status="idea">IDEA</button>
+          <button class="ws-filter" data-status="researching">RESEARCHING</button>
+          <button class="ws-filter" data-status="testing">TESTING</button>
+          <button class="ws-filter" data-status="active">ACTIVE</button>
+          <button class="ws-filter" data-status="dropped">DROPPED</button>
+        </div>
+      </div>
+      <div class="ws-cards" id="cm-ideaBoard"></div>
+    </div>
+
+    <!-- Add Idea Form -->
+    <div class="ws-panel ws-panel-full" id="cm-formPanel">
+      <div class="ws-pTitle">ADD / EDIT IDEA</div>
+      <div class="ws-form">
+        <div class="ws-form-row">
+          <div class="ws-field">
+            <label class="ws-label">PRODUCT / TREND IDEA *</label>
+            <input class="ws-input" id="cm-newIdea" placeholder="e.g. Holographic Sticker Sheets" type="text" />
+          </div>
+          <div class="ws-field">
+            <label class="ws-label">PLATFORM</label>
+            <select class="ws-input" id="cm-newPlatform">
+              <option>Etsy</option>
+              <option>TikTok Shop</option>
+              <option>Gumroad</option>
+              <option>Amazon Handmade</option>
+              <option>Shopify</option>
+              <option>Instagram</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="ws-form-row">
+          <div class="ws-field">
+            <label class="ws-label">TREND SOURCE</label>
+            <input class="ws-input" id="cm-newTrend" placeholder="e.g. Pixel / TikTok Research" type="text" />
+          </div>
+          <div class="ws-field">
+            <label class="ws-label">STATUS</label>
+            <select class="ws-input" id="cm-newStatus">
+              <option value="idea">Idea</option>
+              <option value="researching">Researching</option>
+              <option value="testing">Testing</option>
+              <option value="active">Active</option>
+              <option value="dropped">Dropped</option>
+            </select>
+          </div>
+        </div>
+        <div class="ws-field">
+          <label class="ws-label">NOTES</label>
+          <textarea class="ws-input" id="cm-newNotes" placeholder="Research notes, initial findings..." rows="2"></textarea>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="ws-btn" style="flex:1" id="cm-submitIdea">+ ADD IDEA</button>
+          <button class="ws-btn ws-btn-ghost" id="cm-cancelEdit">CANCEL</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script src="../js/cybercookieos.js"></script>
+<script src="workspace.js"></script>
 
 </body>
 </html>

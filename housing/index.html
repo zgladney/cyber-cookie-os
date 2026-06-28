@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Housing Scout — CyberCookieOS</title>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="../css/workspace.css">
 </head>
 
 <body>
@@ -251,7 +252,115 @@
 
 </div>
 
+<!-- ════════════════════════ HOUSING WORKSPACE ════════════════════════ -->
+<section class="ws-section" id="hs-workspace" style="--ws-color:#c4784a">
+  <div class="ws-header">
+    <h2 class="ws-title">HOUSING WORKSPACE</h2>
+    <span class="ws-sub">// Listing Tracker · Search Criteria · Application Status</span>
+  </div>
+  <div class="ws-body" style="flex-direction:column">
+
+    <!-- Row 1: Search Criteria + Summary -->
+    <div style="display:flex;gap:18px;flex-wrap:wrap">
+
+      <div class="ws-panel ws-panel-narrow">
+        <div class="ws-pTitle">SAVED SEARCH CRITERIA</div>
+        <div class="ws-form">
+          <div class="ws-field">
+            <label class="ws-label">LOCATION / AREA</label>
+            <input class="ws-input" id="hs-searchLocation" placeholder="e.g. Burlington County, NJ" type="text" />
+          </div>
+          <div class="ws-field">
+            <label class="ws-label">MAX MONTHLY RENT ($)</label>
+            <input class="ws-input" id="hs-searchMaxRent" placeholder="e.g. 1500" type="number" min="0" />
+          </div>
+          <div style="display:flex;gap:18px;align-items:center;padding:4px 0">
+            <label style="display:flex;align-items:center;gap:8px;font-size:8px;color:rgba(200,160,255,.5);cursor:pointer">
+              <input type="checkbox" id="hs-searchPets" />
+              <span>Pets Allowed</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:8px;color:rgba(200,160,255,.5);cursor:pointer">
+              <input type="checkbox" id="hs-searchVoucher" checked />
+              <span>Voucher Friendly</span>
+            </label>
+          </div>
+          <button class="ws-btn ws-btn-full" id="hs-saveSearch">SAVE CRITERIA</button>
+        </div>
+      </div>
+
+      <!-- Listing tracker -->
+      <div class="ws-panel" style="flex:2 1 400px">
+        <div class="ws-pTitle">LISTING TRACKER</div>
+        <div id="hs-listingContainer" class="ws-listings"></div>
+      </div>
+
+    </div>
+
+    <!-- Row 2: Add / Edit Listing -->
+    <div class="ws-panel ws-panel-full" id="hs-addPanel">
+      <div class="ws-pTitle">ADD / EDIT LISTING</div>
+      <div class="ws-form">
+        <div class="ws-form-row">
+          <div class="ws-field">
+            <label class="ws-label">LISTING NAME *</label>
+            <input class="ws-input" id="hs-newName" placeholder="e.g. 2BR on Maple Ave" type="text" />
+          </div>
+          <div class="ws-field">
+            <label class="ws-label">MONTHLY RENT ($)</label>
+            <input class="ws-input" id="hs-newRent" placeholder="e.g. 1400" type="number" min="0" />
+          </div>
+        </div>
+        <div class="ws-form-row">
+          <div class="ws-field">
+            <label class="ws-label">LOCATION</label>
+            <input class="ws-input" id="hs-newLocation" placeholder="City, State" type="text" />
+          </div>
+          <div class="ws-field">
+            <label class="ws-label">LISTING URL</label>
+            <input class="ws-input" id="hs-newLink" placeholder="https://..." type="url" />
+          </div>
+        </div>
+        <div class="ws-form-row">
+          <div class="ws-field">
+            <label class="ws-label">STATUS</label>
+            <select class="ws-input" id="hs-newStatus">
+              <option value="interested">Interested</option>
+              <option value="applied">Applied</option>
+              <option value="tour">Tour Scheduled</option>
+              <option value="rejected">Rejected</option>
+              <option value="moved-in">Moved In</option>
+            </select>
+          </div>
+          <div style="display:flex;gap:18px;align-items:flex-end;padding-bottom:2px">
+            <label style="display:flex;align-items:center;gap:8px;font-size:8px;color:rgba(200,160,255,.5);cursor:pointer">
+              <input type="checkbox" id="hs-newPets" />
+              <span>Pets OK</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:8px;color:rgba(200,160,255,.5);cursor:pointer">
+              <input type="checkbox" id="hs-newVoucher" checked />
+              <span>Voucher OK</span>
+            </label>
+          </div>
+        </div>
+        <div class="ws-field">
+          <label class="ws-label">NOTES</label>
+          <textarea class="ws-input" id="hs-newNotes" placeholder="Anything notable about this listing..." rows="2"></textarea>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="ws-btn" style="flex:1" id="hs-submitListing">+ ADD LISTING</button>
+          <button class="ws-btn ws-btn-ghost" id="hs-cancelEdit">CANCEL</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<!-- toast -->
+<div id="hs-toast" style="position:fixed;bottom:20px;right:20px;background:rgba(8,2,22,.95);border:1px solid rgba(196,120,74,.4);border-radius:6px;padding:10px 16px;font-size:9px;color:rgba(240,220,255,.8);letter-spacing:1px;opacity:0;transition:opacity .3s;z-index:999;pointer-events:none"></div>
+
 <script src="js/housing_scout.js"></script>
+<script src="../js/cybercookieos.js"></script>
+<script src="workspace.js"></script>
 
 </body>
 </html>

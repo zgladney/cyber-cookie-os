@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Finance Department — CyberCookieOS</title>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="../css/workspace.css">
 </head>
 
 <body>
@@ -127,6 +128,114 @@
     </main>
 
 </div>
+
+<!-- ════════════════════════ FINANCE WORKSPACE ════════════════════════ -->
+<section class="ws-section" id="fn-workspace" style="--ws-color:#2ecc71">
+  <div class="ws-header">
+    <h2 class="ws-title">FINANCE WORKSPACE</h2>
+    <span class="ws-sub">// Bills · Income · Budget Tracker</span>
+  </div>
+  <div class="ws-body" style="flex-direction:column">
+
+    <!-- Summary Bar -->
+    <div class="ws-summaryBar">
+      <div class="ws-summaryBlock">
+        <div class="ws-summaryNum" id="fn-totalIncome">$0</div>
+        <div class="ws-summaryLabel">TOTAL INCOME</div>
+      </div>
+      <div class="ws-summaryBlock">
+        <div class="ws-summaryNum" id="fn-totalBills">$0</div>
+        <div class="ws-summaryLabel">TOTAL BILLS</div>
+      </div>
+      <div class="ws-summaryBlock">
+        <div class="ws-summaryNum" id="fn-netBalance">$0</div>
+        <div class="ws-summaryLabel">NET BALANCE</div>
+      </div>
+    </div>
+
+    <!-- Entry Table -->
+    <div class="ws-panel ws-panel-full">
+      <div class="ws-pTitle">
+        BILL / INCOME TRACKER
+        <div class="ws-filterBar">
+          <button class="ws-filter ws-filterActive" data-type="all">ALL</button>
+          <button class="ws-filter" data-type="bill">BILLS</button>
+          <button class="ws-filter" data-type="income">INCOME</button>
+        </div>
+      </div>
+      <div style="font-size:8px;color:rgba(200,160,255,.35);margin-bottom:10px">
+        Pending bills: <span id="fn-pendingBills" style="color:rgba(255,220,50,.6)">$0</span>
+      </div>
+      <div class="ws-tableWrap">
+        <table class="ws-table">
+          <thead>
+            <tr>
+              <th>TYPE</th>
+              <th>NAME</th>
+              <th>AMOUNT</th>
+              <th>DUE DATE</th>
+              <th>STATUS</th>
+              <th>ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody id="fn-entryBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Add Entry Form -->
+    <div class="ws-panel ws-panel-full" id="fn-formPanel">
+      <div class="ws-pTitle">ADD / EDIT ENTRY</div>
+      <div class="ws-form">
+        <div class="ws-form-row">
+          <div class="ws-field">
+            <label class="ws-label">NAME *</label>
+            <input class="ws-input" id="fn-newName" placeholder="e.g. Rent, Netflix, Freelance Pay" type="text" />
+          </div>
+          <div class="ws-field">
+            <label class="ws-label">TYPE</label>
+            <select class="ws-input" id="fn-newType">
+              <option value="bill">Bill</option>
+              <option value="income">Income</option>
+            </select>
+          </div>
+        </div>
+        <div class="ws-form-row">
+          <div class="ws-field">
+            <label class="ws-label">AMOUNT ($)</label>
+            <input class="ws-input" id="fn-newAmount" placeholder="0.00" type="number" min="0" step="0.01" />
+          </div>
+          <div class="ws-field">
+            <label class="ws-label">DUE DATE</label>
+            <input class="ws-input" id="fn-newDue" type="date" />
+          </div>
+        </div>
+        <div class="ws-form-row">
+          <div class="ws-field">
+            <label class="ws-label">STATUS</label>
+            <select class="ws-input" id="fn-newStatus">
+              <option value="pending">Pending</option>
+              <option value="paid">Paid</option>
+              <option value="overdue">Overdue</option>
+            </select>
+          </div>
+          <div class="ws-field">
+            <label class="ws-label">NOTES</label>
+            <input class="ws-input" id="fn-newNotes" placeholder="Optional notes..." type="text" />
+          </div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="ws-btn" style="flex:1" id="fn-submitEntry">+ ADD ENTRY</button>
+          <button class="ws-btn ws-btn-ghost" id="fn-cancelEdit">CANCEL</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script src="../js/cybercookieos.js"></script>
+<script src="workspace.js"></script>
 
 </body>
 </html>
