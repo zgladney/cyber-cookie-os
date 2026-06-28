@@ -265,6 +265,31 @@
     }
   }
 
+  // ── CLOCK + STATS BAR ───────────────────────────────────────────
+
+  var _startTime = Date.now();
+
+  function updateClock() {
+    var now    = new Date();
+    var h      = String(now.getHours()).padStart(2, '0');
+    var m      = String(now.getMinutes()).padStart(2, '0');
+    var s      = String(now.getSeconds()).padStart(2, '0');
+    var el     = document.getElementById('hw-clock');
+    if (el) el.textContent = h + ':' + m + ':' + s;
+
+    // Uptime
+    var secs   = Math.floor((Date.now() - _startTime) / 1000);
+    var uMins  = Math.floor(secs / 60);
+    var uHrs   = Math.floor(uMins / 60);
+    uMins      = uMins % 60;
+    var upEl   = document.getElementById('hw-uptimeStat');
+    if (upEl) upEl.textContent = (uHrs > 0 ? uHrs + 'h ' : '') + uMins + ':' + String(secs % 60).padStart(2, '0');
+
+    // Reports count
+    var rptEl  = document.getElementById('hw-reportsStat');
+    if (rptEl && typeof OE !== 'undefined') rptEl.textContent = OE.getTodayCount();
+  }
+
   // ── INIT ────────────────────────────────────────────────────────
 
   document.addEventListener('DOMContentLoaded', function () {
@@ -274,6 +299,10 @@
     seedTicker();
     wireEvents();
     wireRunBtn();
+
+    // Clock ticks every second
+    updateClock();
+    setInterval(updateClock, 1000);
 
     // Refresh all every 10 seconds
     setInterval(function () {

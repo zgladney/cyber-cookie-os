@@ -137,6 +137,80 @@
   </div>
   <div class="ws-body" style="flex-direction:column">
 
+    <!-- ══ PENNY BUDGET SYSTEM ══ -->
+    <div id="fn-budgetPanel" class="ws-panel ws-panel-full">
+      <div class="ws-pTitle" style="display:flex;align-items:center;justify-content:space-between">
+        <span>MONTHLY BUDGET — PENNY FINANCE SYSTEM</span>
+        <button class="ws-btn ws-btn-ghost" id="fn-toggleSetup" style="font-size:7px;padding:3px 10px">⚙ SETUP</button>
+      </div>
+
+      <!-- SETUP FORM (shown when no budget or when editing) -->
+      <div id="fn-setupForm" style="display:none">
+        <div style="font-size:8px;color:rgba(200,160,255,.4);margin-bottom:12px;letter-spacing:.5px">
+          Enter your monthly amounts. All values are stored locally — never sent anywhere.
+        </div>
+        <div class="ws-form">
+          <div class="ws-form-row">
+            <div class="ws-field">
+              <label class="ws-label">💰 MONTHLY INCOME (AFTER TAX)</label>
+              <input class="ws-input" id="pb-income" type="number" min="0" step="10" placeholder="0" />
+            </div>
+            <div class="ws-field">
+              <label class="ws-label">🏠 RENT / MORTGAGE</label>
+              <input class="ws-input" id="pb-rent" type="number" min="0" step="10" placeholder="0" />
+            </div>
+          </div>
+          <div class="ws-form-row">
+            <div class="ws-field"><label class="ws-label">⚡ UTILITIES</label><input class="ws-input" id="pb-utilities" type="number" min="0" placeholder="0" /></div>
+            <div class="ws-field"><label class="ws-label">🌐 INTERNET</label><input class="ws-input" id="pb-internet" type="number" min="0" placeholder="0" /></div>
+            <div class="ws-field"><label class="ws-label">📱 PHONE</label><input class="ws-input" id="pb-phone" type="number" min="0" placeholder="0" /></div>
+          </div>
+          <div class="ws-form-row">
+            <div class="ws-field"><label class="ws-label">🛡 INSURANCE</label><input class="ws-input" id="pb-insurance" type="number" min="0" placeholder="0" /></div>
+            <div class="ws-field"><label class="ws-label">📺 SUBSCRIPTIONS</label><input class="ws-input" id="pb-subs" type="number" min="0" placeholder="0" /></div>
+            <div class="ws-field"><label class="ws-label">🚗 TRANSPORTATION</label><input class="ws-input" id="pb-transport" type="number" min="0" placeholder="0" /></div>
+          </div>
+          <div class="ws-form-row">
+            <div class="ws-field"><label class="ws-label">🛒 FOOD / GROCERIES</label><input class="ws-input" id="pb-food" type="number" min="0" placeholder="0" /></div>
+            <div class="ws-field"><label class="ws-label">💳 DEBT PAYMENTS</label><input class="ws-input" id="pb-debt" type="number" min="0" placeholder="0" /></div>
+            <div class="ws-field"><label class="ws-label">🎯 MISC / PERSONAL</label><input class="ws-input" id="pb-misc" type="number" min="0" placeholder="0" /></div>
+          </div>
+          <div class="ws-form-row">
+            <div class="ws-field">
+              <label class="ws-label">💾 SAVINGS GOAL (% of income)</label>
+              <input class="ws-input" id="pb-savingsGoalPct" type="number" min="0" max="100" step="1" placeholder="10" />
+            </div>
+            <div class="ws-field">
+              <label class="ws-label">🚨 EMERGENCY FUND GOAL ($)</label>
+              <input class="ws-input" id="pb-emergencyGoal" type="number" min="0" step="100" placeholder="5000" />
+            </div>
+            <div class="ws-field">
+              <label class="ws-label">📊 CURRENT SAVINGS ($)</label>
+              <input class="ws-input" id="pb-currentSavings" type="number" min="0" step="50" placeholder="0" />
+            </div>
+          </div>
+          <button class="ws-btn ws-btn-full" id="fn-saveBudget">SAVE BUDGET</button>
+        </div>
+      </div>
+
+      <!-- BUDGET DASHBOARD (shown when data exists) -->
+      <div id="fn-budgetDash" style="display:none">
+        <div id="fn-bdSummary" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div>
+            <div style="font-size:7px;letter-spacing:2px;color:rgba(46,204,113,.5);margin-bottom:8px">EXPENSE BREAKDOWN</div>
+            <div id="fn-bdCategories"></div>
+          </div>
+          <div>
+            <div style="font-size:7px;letter-spacing:2px;color:rgba(255,220,50,.5);margin-bottom:8px">SAVINGS PROGRESS</div>
+            <div id="fn-bdSavings"></div>
+            <div style="font-size:7px;letter-spacing:2px;color:rgba(200,160,255,.4);margin:12px 0 8px">RECOMMENDATIONS</div>
+            <div id="fn-bdRecs"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Summary Bar -->
     <div class="ws-summaryBar">
       <div class="ws-summaryBlock">

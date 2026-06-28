@@ -57,6 +57,8 @@ a { color: inherit; text-decoration: none; }
   text-shadow: 0 0 24px var(--pink), 0 0 60px rgba(255,105,180,.3);
 }
 .cn-accent { color: var(--cyan); text-shadow: 0 0 14px var(--cyan); }
+.cos-cookie { display:inline-block; vertical-align:-1px; width:.82em; height:.82em; animation: cookieRock 4s ease-in-out infinite alternate; filter: drop-shadow(0 0 3px rgba(200,120,60,.5)); }
+@keyframes cookieRock { from { transform:rotate(-10deg); filter:drop-shadow(0 0 3px rgba(200,120,60,.4)); } to { transform:rotate(10deg); filter:drop-shadow(0 0 8px rgba(200,120,60,.9)); } }
 #cn-subtitle { display: block; font-size: 8px; letter-spacing: 4px; color: rgba(156,246,255,.4); margin-top: 2px; }
 
 /* BODY */
@@ -218,7 +220,7 @@ a { color: inherit; text-decoration: none; }
 <header id="cn-topBar">
   <a href="../ops_center/index.html" class="cn-backBtn">← OPS CENTER</a>
   <div id="cn-titleBlock">
-    <span id="cn-logo">CyberC<span class="cn-accent">◆</span>okieOS</span>
+    <span id="cn-logo">CyberC<svg class="cos-cookie" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" aria-hidden="true"><defs><mask id="cmask"><rect width="20" height="20" fill="white"/><circle cx="17" cy="3" r="5" fill="black"/></mask></defs><circle cx="10" cy="10" r="9" fill="#c87941" mask="url(#cmask)"/><circle cx="7" cy="8" r="1.9" fill="#3c1c0c" mask="url(#cmask)"/><circle cx="13" cy="8" r="1.6" fill="#3c1c0c" mask="url(#cmask)"/><circle cx="9" cy="13" r="1.8" fill="#3c1c0c" mask="url(#cmask)"/><circle cx="13" cy="13" r="1.5" fill="#3c1c0c" mask="url(#cmask)"/><circle cx="6" cy="13" r="1.3" fill="#3c1c0c" mask="url(#cmask)"/></svg>okieOS</span>
     <span id="cn-subtitle">// CONNECTION MANAGER</span>
   </div>
   <a href="../hallway/index.html" class="cn-backBtn">HALLWAY →</a>

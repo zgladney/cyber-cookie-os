@@ -3,6 +3,19 @@
    Design: Dark Cyberpunk | Mission Control | Management Sim
 ================================================================ */
 
+/* ── COOKIE LOGO ─────────────────────────────────────────────── */
+.cos-cookie {
+  display: inline-block;
+  vertical-align: -1px;
+  width: 0.82em; height: 0.82em;
+  animation: cookieRock 4s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 3px rgba(200,120,60,.5));
+}
+@keyframes cookieRock {
+  from { transform: rotate(-10deg); filter: drop-shadow(0 0 3px rgba(200,120,60,.4)); }
+  to   { transform: rotate(10deg);  filter: drop-shadow(0 0 8px rgba(200,120,60,.9)); }
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
