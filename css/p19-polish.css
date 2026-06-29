@@ -1,0 +1,293 @@
+/* ================================================================
+   p19-polish.css — Phase 19 Global UI Polish
+   Loaded LAST on every page. Overrides department-specific
+   micro-text and low-contrast styles from earlier phases.
+   DO NOT edit individual department CSS for these changes —
+   update this file instead.
+================================================================ */
+
+/* ── PAGE TITLES ─────────────────────────────────────────────── */
+
+#fn-title h1, #hw-topBar h1, #topBar h1,
+#ah-topBar h1, #oc-logoText, #prod-topBar h1 {
+    font-size: 36px !important;
+    letter-spacing: 5px !important;
+}
+
+#fn-title p, #hw-topBar p, #topBar p,
+#ah-topBar p, #prod-topBar p {
+    font-size: 13px !important;
+    letter-spacing: 2.5px !important;
+    color: rgba(156,246,255,.75) !important;
+}
+
+/* Nav links in top bar */
+.ah-navLink, .fn-back {
+    font-size: 11px !important;
+    padding: 6px 14px !important;
+}
+
+/* ── RIGHT PANEL — Career Intelligence ───────────────────────── */
+
+#cic-panel { max-width: 230px !important; }
+
+.cic-cardTitle {
+    font-size: 10px !important;
+    letter-spacing: 1.8px !important;
+    color: rgba(180,160,255,.8) !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 12px !important;
+}
+
+.cic-statRow {
+    font-size: 11px !important;
+    padding: 5px 0 !important;
+    letter-spacing: .3px !important;
+}
+.cic-statRow span:first-child { color: rgba(200,160,255,.65) !important; }
+.cic-statRow span:last-child  { color: rgba(230,210,255,.88) !important; }
+
+.cic-cardBtn {
+    font-size: 10px !important;
+    padding: 8px !important;
+    margin-top: 10px !important;
+    letter-spacing: .8px !important;
+}
+
+/* Best match card */
+.cic-bestTitle   { font-size: 13px !important; color: rgba(220,200,255,.95) !important; }
+.cic-bestCompany { font-size: 11px !important; color: rgba(200,160,255,.6) !important; margin-bottom: 5px !important; }
+.cic-bestSalary  { font-size: 16px !important; }
+.cic-bestMatch   { font-size: 11px !important; }
+
+/* Mission board */
+.cic-mItem { font-size: 11px !important; padding: 4px 0 !important; }
+
+/* Agent badges in top nav */
+.cic-agentBadge { font-size: 10px !important; padding: 4px 12px !important; }
+.cic-navWing    { font-size: 10px !important; }
+
+/* ── AGENT NAMEPLATES (station labels in room scene) ─────────── */
+
+.cic-nm-name { font-size: 10px !important; letter-spacing: 1.5px !important; }
+.cic-nm-role { font-size: 8px !important; letter-spacing: .8px !important; }
+.cic-nm-task { font-size: 7.5px !important; letter-spacing: .3px !important; }
+
+/* Agent sprite: 20% larger */
+.cic-sprite {
+    width: 34px !important;
+    height: 41px !important;
+    font-size: 10px !important;
+    border-radius: 17px 17px 6px 6px !important;
+}
+
+/* ── ACTIVITY LOG ─────────────────────────────────────────────── */
+
+.al-ts  { font-size: 9px !important; color: rgba(150,100,255,.55) !important; }
+.al-msg { font-size: 11px !important; color: rgba(200,160,255,.75) !important; line-height: 1.5 !important; }
+.al-idm .al-msg { color: rgba(255,210,80,.65) !important; }
+.al-empty { font-size: 11px !important; }
+
+/* ── SKILL PILLS ─────────────────────────────────────────────── */
+
+.cic-skillPill { font-size: 11px !important; padding: 3px 10px !important; }
+.sp-skillPill  { font-size: 10px !important; padding: 2px 8px !important; }
+
+/* ── APPLICATION TRACKER CARDS ───────────────────────────────── */
+
+.cic-appTitle   { font-size: 14px !important; font-weight: 700 !important; }
+.cic-appCompany { font-size: 12px !important; color: rgba(200,160,255,.65) !important; }
+.cic-appSalary  { font-size: 16px !important; font-weight: 800 !important; }
+.cic-appStatus  { font-size: 10px !important; padding: 3px 10px !important; }
+
+.cic-appCard {
+    padding: 16px 18px !important;
+    margin-bottom: 12px !important;
+}
+
+/* ── SCOUT-X TABLE ───────────────────────────────────────────── */
+
+.cic-scoutxTable    { font-size: 12px !important; }
+.cic-scoutxTable th { font-size: 10px !important; padding: 8px 12px !important; color: rgba(200,160,255,.7) !important; }
+.cic-scoutxTable td { padding: 9px 12px !important; color: rgba(200,160,255,.75) !important; }
+.cic-scoutxHint     { font-size: 12px !important; }
+.cic-scoutxTable tr:nth-child(even) td { background: rgba(123,107,255,.03); }
+.cic-scoutxTable tr:hover td { background: rgba(123,107,255,.08) !important; }
+
+/* ── SKILL GAP ANALYZER ──────────────────────────────────────── */
+
+.cic-matchPct { font-size: 48px !important; }
+.cic-sgaLabel { font-size: 11px !important; letter-spacing: 1.2px !important; color: rgba(200,160,255,.6) !important; }
+
+/* ── JOB CARD BUTTONS ────────────────────────────────────────── */
+
+.sp-btnSm {
+    font-size: 10px !important;
+    padding: 5px 11px !important;
+    letter-spacing: .4px !important;
+}
+.sp-btnSave, .sp-btnHide {
+    font-size: 10px !important;
+    padding: 5px 12px !important;
+}
+
+/* ── JOB CARD DETAILS ────────────────────────────────────────── */
+
+.sp-propAddr  { font-size: 14px !important; }
+.sp-propCity  { font-size: 11px !important; }
+.sp-propRent  { font-size: 24px !important; }
+.sp-propMeta span { font-size: 10px !important; padding: 3px 9px !important; }
+.sp-propDesc  { font-size: 12px !important; line-height: 1.55 !important; }
+
+/* ── NOVA JOB SEARCH CARDS ───────────────────────────────────── */
+
+/* Job title */
+.sp-cardTitle    { font-size: 14px !important; font-weight: 700 !important; color: rgba(240,220,255,.95) !important; }
+.sp-cardCompany  { font-size: 12px !important; color: rgba(200,170,255,.7) !important; margin: 4px 0 !important; }
+.sp-cardSalary   { font-size: 18px !important; font-weight: 800 !important; }
+.sp-cardLocation { font-size: 11px !important; }
+.sp-cardStatus   { font-size: 10px !important; padding: 3px 10px !important; }
+.sp-cardNotes    { font-size: 12px !important; }
+
+/* Remote badge emphasis */
+.sp-badge-remote {
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    background: rgba(58,168,200,.15) !important;
+    border-color: rgba(58,168,200,.5) !important;
+    color: rgba(58,168,200,1) !important;
+}
+
+/* ATS score badge emphasis */
+.sp-cardMatch {
+    font-size: 13px !important;
+    font-weight: 800 !important;
+}
+
+/* ── KNOWLEDGE BASE CARDS ────────────────────────────────────── */
+
+.cic-kbDoc  { font-size: 11px !important; margin-bottom: 7px !important; }
+.cic-kbName { font-size: 11px !important; color: rgba(200,160,255,.85) !important; }
+.cic-kbMeta { font-size: 10px !important; }
+
+/* KB workspace panel */
+.cic-kbRowIcon { font-size: 24px !important; }
+
+.cic-kbRowName {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: rgba(220,200,255,.92) !important;
+    margin-bottom: 5px !important;
+}
+
+.cic-kbRowMeta {
+    font-size: 11px !important;
+    color: rgba(180,150,255,.65) !important;
+    line-height: 1.5 !important;
+}
+
+.cic-kbStatusPill {
+    font-size: 10px !important;
+    padding: 3px 10px !important;
+}
+
+.cic-kbRowDate {
+    font-size: 10px !important;
+    color: rgba(200,160,255,.5) !important;
+}
+
+.cic-kbStat {
+    font-size: 12px !important;
+    padding: 7px 0 !important;
+}
+
+.cic-kbRow {
+    padding: 14px 16px !important;
+    gap: 14px !important;
+    border-radius: 6px !important;
+    border-bottom: 1px solid rgba(123,107,255,.1) !important;
+}
+
+/* ── EXECUTIVE RECOMMENDATIONS ───────────────────────────────── */
+
+/* Right-panel mini card */
+.cic-recRole    { font-size: 15px !important; font-weight: 700 !important; color: rgba(230,210,255,.95) !important; margin-bottom: 4px !important; }
+.cic-recCompany { font-size: 12px !important; color: rgba(200,160,255,.65) !important; margin-bottom: 10px !important; }
+
+.cic-recVerdict {
+    font-size: 18px !important;
+    font-weight: 900 !important;
+    letter-spacing: 3px !important;
+    padding: 8px 12px !important;
+    border-radius: 4px !important;
+    margin: 10px 0 !important;
+}
+
+.cic-recOrion {
+    font-size: 11px !important;
+    color: rgba(200,160,255,.7) !important;
+    line-height: 1.6 !important;
+}
+
+.cic-btn-approve, .cic-btn-reject {
+    font-size: 11px !important;
+    padding: 9px 14px !important;
+    font-weight: 700 !important;
+}
+
+/* Recommendation list rows */
+.cic-recRow {
+    padding: 20px 22px !important;
+    gap: 14px !important;
+    border-radius: 8px !important;
+    margin-bottom: 14px !important;
+}
+
+.cic-recRowTitle   { font-size: 16px !important; font-weight: 700 !important; color: rgba(235,215,255,.95) !important; margin-bottom: 5px !important; }
+.cic-recRowCompany { font-size: 13px !important; color: rgba(200,160,255,.7) !important; margin-bottom: 8px !important; }
+.cic-recRowMeta    { font-size: 12px !important; color: rgba(180,150,255,.75) !important; margin-bottom: 8px !important; line-height: 1.6 !important; }
+.cic-recRowNotes   { font-size: 11px !important; line-height: 1.6 !important; color: rgba(180,150,255,.65) !important; }
+
+.cic-verdictPill   { font-size: 11px !important; padding: 4px 14px !important; font-weight: 700 !important; }
+.cic-recStatus     { font-size: 10px !important; }
+
+/* ── FINANCE PAGE ELEMENTS ───────────────────────────────────── */
+
+.fn-wallTitle { font-size: 10px !important; letter-spacing: 1.5px !important; }
+
+/* Panel inside tabs */
+#fn-panel {
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+}
+
+/* ── HALLWAY LABELS ──────────────────────────────────────────── */
+
+.hw-roomLabel    { font-size: 11px !important; }
+.hw-roomSub      { font-size: 9px !important; }
+.hw-doorBtn span { font-size: 10px !important; }
+
+/* ── HQ OPS CENTER ───────────────────────────────────────────── */
+
+:root {
+    --text-dim:    rgba(200,160,255,.5) !important;
+    --text-mid:    rgba(220,190,255,.72) !important;
+    --text-bright: rgba(245,235,255,.93) !important;
+}
+
+/* ── LISTING CARDS (housing search) ─────────────────────────── */
+
+.ws-listingName { font-size: 14px !important; font-weight: 700 !important; }
+.ws-listingMeta { font-size: 11px !important; color: rgba(200,160,255,.6) !important; }
+
+/* ── CONNECTION TABLE (security, etc) ───────────────────────── */
+
+.cn-btnDisabled { font-size: 10px !important; padding: 5px 14px !important; }
+
+/* ── DATA MODE ROW LABELS ────────────────────────────────────── */
+
+.dmr-label, .data-mode-row .dmr-label { font-size: 10px !important; }
+
+/* ── TOOLTIP / SPRITE LABEL ──────────────────────────────────── */
+
+.cic-spritelbl { font-size: 10px !important; padding: 4px 10px !important; }

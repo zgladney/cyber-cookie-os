@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="../css/workspace.css">
 <link rel="stylesheet" href="../css/cos_ui.css">
+<link rel="stylesheet" href="../css/p19-polish.css">
 </head>
 
 <body>
@@ -932,24 +933,40 @@ function _renderRecs(recs) {
     return;
   }
   recList.innerHTML = recs.map(function (r, i) {
-    var vcls = r.recommendation === 'apply' ? 'cic-verdict-apply' : (r.recommendation === 'skip' ? 'cic-verdict-skip' : 'cic-verdict-review');
+    var verdict = r.recommendation || 'review';
+    var vcls = verdict === 'apply' ? 'cic-verdict-apply' : (verdict === 'skip' ? 'cic-verdict-skip' : 'cic-verdict-review');
     var scls = r.status === 'awaiting_approval' ? 'cic-warn' : (r.status === 'approved' ? 'cic-ok' : '');
-    return '<div class="cic-recRow">' +
-      '<div class="cic-recRowLeft">' +
-        '<div class="cic-recRowTitle">' + (r.title || '—') + '</div>' +
-        '<div class="cic-recRowCompany">' + (r.company || '—') + '</div>' +
-        '<div class="cic-recRowMeta">ATS: ' + (r.ats_match || 0) + '% · ' + (r.salary || 'salary unknown') + ' · ' + (r.location || '—') + '</div>' +
-        (r.orion_notes ? '<div class="cic-recRowNotes">' + r.orion_notes + '</div>' : '') +
+    var ats = r.ats_match || 0;
+    var atsCls = ats >= 70 ? 'cic-bv-green' : (ats >= 40 ? 'cic-bv-yellow' : 'cic-bv-red');
+    var finCls = r.financial_impact === 'positive' ? 'cic-bv-green' : (r.financial_impact === 'below_target' ? 'cic-bv-red' : 'cic-bv-yellow');
+    var locCls = r.location_match ? 'cic-bv-green' : 'cic-bv-yellow';
+    var conf   = ats >= 70 ? '88%' : (ats >= 40 ? '62%' : '34%');
+    return '<div class="cic-recRow" data-verdict="' + verdict + '">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">' +
+        '<div>' +
+          '<div class="cic-recRowTitle">' + (r.title || '—') + '</div>' +
+          '<div class="cic-recRowCompany">' + (r.company || '—') + '</div>' +
+        '</div>' +
+        '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">' +
+          '<span class="cic-verdictPill ' + vcls + '">' + verdict.toUpperCase() + '</span>' +
+          '<span class="cic-recConf">' + conf + ' confidence</span>' +
+        '</div>' +
       '</div>' +
-      '<div class="cic-recRowRight">' +
-        '<span class="cic-verdictPill ' + vcls + '">' + (r.recommendation || 'review').toUpperCase() + '</span>' +
-        '<span class="cic-recStatus ' + scls + '">' + (r.status || '').replace(/_/g, ' ').toUpperCase() + '</span>' +
-        (r.status === 'awaiting_approval' ?
-          '<div style="display:flex;gap:4px;margin-top:6px">' +
-            '<button class="ws-btn ws-btn-sm cic-btn-approve" data-id="' + r.id + '">✓</button>' +
-            '<button class="ws-btn ws-btn-sm cic-btn-reject" data-id="' + r.id + '">✗</button>' +
-          '</div>' : '') +
+      '<div class="cic-recBriefGrid">' +
+        '<div class="cic-briefItem"><div class="cic-briefLabel">ATS SCORE</div><div class="cic-briefVal ' + atsCls + '">' + ats + '%</div></div>' +
+        '<div class="cic-briefItem"><div class="cic-briefLabel">SALARY</div><div class="cic-briefVal">' + (r.salary || 'N/A') + '</div></div>' +
+        '<div class="cic-briefItem"><div class="cic-briefLabel">FINANCE</div><div class="cic-briefVal ' + finCls + '">' + (r.financial_impact || '—').replace(/_/g,' ').toUpperCase() + '</div></div>' +
+        '<div class="cic-briefItem"><div class="cic-briefLabel">LOCATION</div><div class="cic-briefVal ' + locCls + '">' + (r.location_match ? '✓ MATCH' : '⚠ OUTSIDE') + '</div></div>' +
       '</div>' +
+      (r.orion_notes ? '<div class="cic-recRowNotes">' + r.orion_notes + '</div>' : '') +
+      (r.missing_keywords && r.missing_keywords.length ?
+        '<div style="margin-top:8px;font-size:11px;color:rgba(255,200,60,.6)">⚠ Missing: ' + r.missing_keywords.slice(0,4).join(', ') + '</div>' : '') +
+      (r.status === 'awaiting_approval' ?
+        '<div class="cic-recBriefActions">' +
+          '<button class="ws-btn ws-btn-sm cic-btn-approve" data-id="' + r.id + '">✓ APPROVE</button>' +
+          '<button class="ws-btn ws-btn-sm cic-btn-reject" data-id="' + r.id + '">✗ DECLINE</button>' +
+        '</div>' :
+        '<div style="margin-top:10px"><span class="cic-recStatus ' + scls + '">' + (r.status || '').replace(/_/g,' ').toUpperCase() + '</span></div>') +
     '</div>';
   }).join('');
 
