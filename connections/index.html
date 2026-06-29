@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Connection Manager — CyberCookieOS</title>
+<title>Account Connections — CyberCookieOS</title>
 <link rel="stylesheet" href="../css/workspace.css">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -30,11 +30,9 @@ body {
 }
 a { color: inherit; text-decoration: none; }
 
-/* TOP BAR */
+/* ── TOP BAR ──────────────────────────────────────────── */
 #cn-topBar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between;
   padding: 12px 24px 10px;
   border-bottom: 1px solid var(--border);
   background: linear-gradient(180deg, rgba(12,0,28,.95) 0%, transparent 100%);
@@ -42,175 +40,147 @@ a { color: inherit; text-decoration: none; }
   backdrop-filter: blur(8px);
 }
 .cn-backBtn {
-  font-size: 9px; letter-spacing: 2px;
-  color: rgba(156,246,255,.5);
-  padding: 5px 12px;
-  border: 1px solid rgba(156,246,255,.2);
-  border-radius: 4px;
+  font-size: 9px; letter-spacing: 2px; color: rgba(156,246,255,.5);
+  padding: 5px 12px; border: 1px solid rgba(156,246,255,.2); border-radius: 4px;
   transition: all .2s;
 }
 .cn-backBtn:hover { color: var(--cyan); border-color: rgba(156,246,255,.5); background: rgba(156,246,255,.05); }
 #cn-titleBlock { text-align: center; flex: 1; }
 #cn-logo {
-  font-size: 20px; font-weight: 900; letter-spacing: 5px;
-  color: var(--pink);
+  font-size: 20px; font-weight: 900; letter-spacing: 5px; color: var(--pink);
   text-shadow: 0 0 24px var(--pink), 0 0 60px rgba(255,105,180,.3);
 }
-.cn-accent { color: var(--cyan); text-shadow: 0 0 14px var(--cyan); }
 .cos-cookie { display:inline-block; vertical-align:-1px; width:.82em; height:.82em; animation: cookieRock 4s ease-in-out infinite alternate; filter: drop-shadow(0 0 3px rgba(200,120,60,.5)); }
-@keyframes cookieRock { from { transform:rotate(-10deg); filter:drop-shadow(0 0 3px rgba(200,120,60,.4)); } to { transform:rotate(10deg); filter:drop-shadow(0 0 8px rgba(200,120,60,.9)); } }
+@keyframes cookieRock { from { transform:rotate(-10deg); } to { transform:rotate(10deg); } }
 #cn-subtitle { display: block; font-size: 8px; letter-spacing: 4px; color: rgba(156,246,255,.4); margin-top: 2px; }
 
-/* BODY */
-#cn-body {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 32px 24px 60px;
-}
-
-.cn-section {
-  margin-bottom: 32px;
-}
-
+/* ── BODY ─────────────────────────────────────────────── */
+#cn-body { max-width: 1100px; margin: 0 auto; padding: 32px 24px 60px; }
+.cn-section { margin-bottom: 36px; }
 .cn-sectionTitle {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  color: var(--pink);
-  text-shadow: 0 0 12px rgba(255,105,180,.3);
-  margin-bottom: 6px;
+  font-size: 10px; font-weight: 700; letter-spacing: 3px; color: var(--pink);
+  text-shadow: 0 0 12px rgba(255,105,180,.3); margin-bottom: 6px;
 }
-.cn-sectionSub {
-  font-size: 8px;
-  letter-spacing: 1px;
-  color: var(--text-dim);
-  margin-bottom: 16px;
+.cn-sectionSub { font-size: 8px; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 16px; }
+
+/* ── SECURITY NOTE ────────────────────────────────────── */
+.cn-secNote {
+  background: rgba(255,220,50,.04); border: 1px solid rgba(255,220,50,.15);
+  border-left: 3px solid var(--yellow); border-radius: 6px;
+  padding: 14px 18px; font-size: 9px; color: rgba(255,220,50,.65);
+  letter-spacing: .5px; line-height: 1.7; margin-bottom: 24px;
+}
+.cn-secNote strong { color: rgba(255,220,50,.9); }
+.cn-secNote code   { color: rgba(156,246,255,.55); font-size: 8.5px; }
+
+/* ── FETCH STATUS BAR ─────────────────────────────────── */
+#ac-fetchBar {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  font-size: 9px; letter-spacing: .5px; color: var(--text-dim);
+  padding-bottom: 18px;
+}
+.ac-refreshBtn {
+  background: transparent; border: 1px solid rgba(156,246,255,.2);
+  color: rgba(156,246,255,.5); font-size: 8px; font-family: inherit;
+  padding: 3px 10px; border-radius: 3px; cursor: pointer;
+  letter-spacing: 1px; transition: all .2s;
+}
+.ac-refreshBtn:hover { border-color: rgba(156,246,255,.5); color: rgba(156,246,255,.85); }
+
+/* ── CARD GRID ────────────────────────────────────────── */
+#ac-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
 }
 
-/* INTEGRATION TABLE */
+/* ── SERVICE CARD ─────────────────────────────────────── */
+.ac-card {
+  background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+  padding: 18px; display: flex; flex-direction: column; gap: 10px;
+  transition: border-color .2s;
+}
+.ac-card:hover { border-color: rgba(150,80,255,.28); }
+.ac-card-header { display: flex; align-items: flex-start; gap: 10px; }
+.ac-icon { font-size: 22px; line-height: 1; flex-shrink: 0; padding-top: 2px; }
+.ac-card-title { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.ac-service-name { font-size: 13px; font-weight: 700; color: var(--text-hi); letter-spacing: .5px; }
+.ac-dept { font-size: 8px; letter-spacing: 2px; }
+
+/* Status badges */
+.ac-status-badge {
+  font-size: 7.5px; letter-spacing: 1.5px; padding: 3px 9px;
+  border-radius: 3px; font-weight: 700; white-space: nowrap; flex-shrink: 0;
+}
+.ac-status-connected     { color: rgba(46,204,113,.9);   background: rgba(46,204,113,.08);  border: 1px solid rgba(46,204,113,.3); }
+.ac-status-not-connected { color: rgba(200,160,255,.4);  background: rgba(150,80,255,.04);  border: 1px solid rgba(150,80,255,.12); }
+.ac-status-configured    { color: rgba(156,246,255,.8);  background: rgba(156,246,255,.05); border: 1px solid rgba(156,246,255,.25); }
+.ac-status-error         { color: rgba(255,80,80,.85);   background: rgba(255,80,80,.06);   border: 1px solid rgba(255,80,80,.25); }
+
+.ac-account { font-size: 8px; color: rgba(46,204,113,.65); letter-spacing: .3px; }
+.ac-desc    { font-size: 9px; color: var(--text-mid); line-height: 1.65; }
+.ac-meta    { display: flex; flex-direction: column; gap: 4px; }
+.ac-meta div { font-size: 8px; color: var(--text-dim); line-height: 1.5; }
+.ac-label   { color: rgba(200,160,255,.55); font-weight: 600; letter-spacing: .5px; margin-right: 4px; }
+.ac-date    { font-size: 8px; color: rgba(200,160,255,.22); letter-spacing: .2px; margin-top: auto; }
+
+.ac-btn-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+.ac-btn {
+  font-size: 7px; letter-spacing: 1.5px; font-family: inherit; font-weight: 700;
+  padding: 6px 14px; border-radius: 3px; cursor: pointer;
+  border: 1px solid transparent; transition: all .2s;
+}
+.ac-btn-connect    { background: rgba(156,246,255,.05); border-color: rgba(156,246,255,.3);  color: rgba(156,246,255,.8); }
+.ac-btn-connect:hover { background: rgba(156,246,255,.1); border-color: rgba(156,246,255,.65); color: rgba(156,246,255,1); }
+.ac-btn-disconnect { background: rgba(255,80,80,.05);   border-color: rgba(255,80,80,.3);    color: rgba(255,80,80,.75); }
+.ac-btn-disconnect:hover { background: rgba(255,80,80,.1); border-color: rgba(255,80,80,.6); color: rgba(255,80,80,.95); }
+.ac-btn-disabled   { background: transparent; border-color: rgba(150,80,255,.1);  color: rgba(200,160,255,.2);  cursor: not-allowed; }
+.ac-btn-soon       { background: transparent; border-color: rgba(255,220,50,.15); color: rgba(255,220,50,.3);   cursor: not-allowed; }
+
+/* ── EXISTING TABLE STYLES ────────────────────────────── */
 .cn-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
+  width: 100%; border-collapse: collapse; background: var(--panel);
+  border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
 }
 .cn-table th {
-  font-size: 7px;
-  letter-spacing: 2px;
-  color: var(--text-dim);
-  background: rgba(150,80,255,.05);
-  border-bottom: 1px solid var(--border);
-  padding: 10px 14px;
-  text-align: left;
-  font-weight: 600;
+  font-size: 7px; letter-spacing: 2px; color: var(--text-dim);
+  background: rgba(150,80,255,.05); border-bottom: 1px solid var(--border);
+  padding: 10px 14px; text-align: left; font-weight: 600;
 }
 .cn-table td {
-  padding: 12px 14px;
-  border-bottom: 1px solid rgba(255,255,255,.025);
-  vertical-align: middle;
-  font-size: 9px;
-  color: var(--text-mid);
+  padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,.025);
+  vertical-align: middle; font-size: 9px; color: var(--text-mid);
 }
 .cn-table tr:last-child td { border-bottom: none; }
 .cn-table tr:hover td      { background: rgba(150,80,255,.04); }
-
-.cn-intName { font-size: 10px; font-weight: 600; color: var(--text-hi); }
-.cn-intDesc { font-size: 8px; color: var(--text-dim); margin-top: 2px; }
-
-.cn-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  display: inline-block; margin-right: 6px; vertical-align: middle;
-}
-.cn-dot-active       { background: var(--green); box-shadow: 0 0 6px var(--green); }
-.cn-dot-disconnected { background: var(--red);   box-shadow: 0 0 4px var(--red); }
-.cn-dot-none         { background: rgba(200,160,255,.2); }
-
-.cn-status-active       { color: rgba(46,204,113,.8);  }
-.cn-status-disconnected { color: rgba(255,80,80,.7);   }
-.cn-status-none         { color: rgba(200,160,255,.3); }
-
-.cn-agents { display: flex; flex-wrap: wrap; gap: 4px; }
-.cn-agentTag {
-  font-size: 7px; letter-spacing: .5px;
-  padding: 2px 8px;
-  border: 1px solid rgba(150,80,255,.15);
-  color: rgba(200,160,255,.5);
-  border-radius: 10px;
-}
-
-.cn-btnRow  { display: flex; gap: 6px; }
-.cn-btnDisabled {
-  font-size: 7px; letter-spacing: 1px;
-  padding: 4px 12px;
-  border-radius: 3px;
-  border: 1px solid rgba(150,80,255,.1);
-  color: rgba(200,160,255,.2);
-  background: transparent;
-  cursor: not-allowed;
-  font-family: inherit;
-}
-.cn-btnComingSoon {
-  font-size: 7px; letter-spacing: 1px;
-  padding: 4px 12px;
-  border-radius: 3px;
-  border: 1px solid rgba(255,220,50,.15);
-  color: rgba(255,220,50,.3);
-  background: transparent;
-  cursor: not-allowed;
-  font-family: inherit;
-}
-
-/* SECURITY NOTE */
-.cn-secNote {
-  background: rgba(255,220,50,.04);
-  border: 1px solid rgba(255,220,50,.15);
-  border-left: 3px solid var(--yellow);
-  border-radius: 6px;
-  padding: 14px 18px;
-  font-size: 9px;
-  color: rgba(255,220,50,.65);
-  letter-spacing: .5px;
-  line-height: 1.7;
-  margin-bottom: 24px;
-}
-.cn-secNote strong { color: rgba(255,220,50,.9); }
-
-/* PERMISSION TABLE */
-.cn-permTable {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 8px;
-}
+.cn-permTable { width: 100%; border-collapse: collapse; font-size: 8px; }
 .cn-permTable th {
   font-size: 7px; letter-spacing: 1.5px; color: var(--text-dim);
   padding: 6px 10px; text-align: left; font-weight: 600;
   border-bottom: 1px solid var(--border);
 }
-.cn-permTable td {
-  padding: 8px 10px;
-  color: var(--text-mid);
-  border-bottom: 1px solid rgba(255,255,255,.02);
+.cn-permTable td { padding: 8px 10px; color: var(--text-mid); border-bottom: 1px solid rgba(255,255,255,.02); }
+.cn-permOk   { color: rgba(46,204,113,.7); }
+.cn-permWait { color: rgba(255,220,50,.5); }
+
+/* ── TOAST ────────────────────────────────────────────── */
+#ac-toast {
+  display: none; position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: rgba(8,2,22,.98); border: 1px solid rgba(150,80,255,.3);
+  color: rgba(220,190,255,.85); padding: 10px 28px; border-radius: 6px;
+  font-size: 10px; letter-spacing: .5px; z-index: 9999;
+  max-width: 540px; text-align: center; line-height: 1.5;
 }
-.cn-permOk   { color: rgba(46,204,113,.7);  }
-.cn-permWait { color: rgba(255,220,50,.5);  }
-.cn-permNo   { color: rgba(255,80,80,.5);   }
+#ac-toast.ac-show          { display: block; }
+#ac-toast.ac-toast-success { border-color: rgba(46,204,113,.5); color: rgba(46,204,113,.95); }
+#ac-toast.ac-toast-error   { border-color: rgba(255,80,80,.5);  color: rgba(255,80,80,.95); }
+#ac-toast.ac-toast-warning { border-color: rgba(255,220,50,.5); color: rgba(255,220,50,.95); }
+#ac-toast.ac-toast-info    { border-color: rgba(156,246,255,.4);color: rgba(156,246,255,.85); }
 
-/* DEPT COLORS */
-.cn-dept-security    { color: rgba(155,107,255,.7); }
-.cn-dept-housing     { color: rgba(196,120,74,.7);  }
-.cn-dept-commerce    { color: rgba(255,105,180,.7); }
-.cn-dept-productivity{ color: rgba(58,168,200,.7);  }
-.cn-dept-finance     { color: rgba(46,204,113,.7);  }
-
+/* ── FOOTER ───────────────────────────────────────────── */
 #cn-footer {
-  text-align: center;
-  font-size: 8px;
-  letter-spacing: 2px;
-  color: rgba(150,80,255,.2);
-  padding: 20px;
-  margin-top: 24px;
+  text-align: center; font-size: 8px; letter-spacing: 2px;
+  color: rgba(150,80,255,.2); padding: 20px; margin-top: 24px;
   border-top: 1px solid var(--border);
 }
 </style>
@@ -221,7 +191,7 @@ a { color: inherit; text-decoration: none; }
   <a href="../ops_center/index.html" class="cn-backBtn">← OPS CENTER</a>
   <div id="cn-titleBlock">
     <span id="cn-logo">CyberC<svg class="cos-cookie" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" aria-hidden="true"><defs><mask id="cmask"><rect width="20" height="20" fill="white"/><circle cx="17" cy="3" r="5" fill="black"/></mask></defs><circle cx="10" cy="10" r="9" fill="#c87941" mask="url(#cmask)"/><circle cx="7" cy="8" r="1.9" fill="#3c1c0c" mask="url(#cmask)"/><circle cx="13" cy="8" r="1.6" fill="#3c1c0c" mask="url(#cmask)"/><circle cx="9" cy="13" r="1.8" fill="#3c1c0c" mask="url(#cmask)"/><circle cx="13" cy="13" r="1.5" fill="#3c1c0c" mask="url(#cmask)"/><circle cx="6" cy="13" r="1.3" fill="#3c1c0c" mask="url(#cmask)"/></svg>okieOS</span>
-    <span id="cn-subtitle">// CONNECTION MANAGER</span>
+    <span id="cn-subtitle">// ACCOUNT CONNECTIONS</span>
   </div>
   <a href="../hallway/index.html" class="cn-backBtn">HALLWAY →</a>
 </header>
@@ -229,35 +199,25 @@ a { color: inherit; text-decoration: none; }
 <div id="cn-body">
 
   <div class="cn-secNote">
-    <strong>SECURITY POLICY:</strong> Never hardcode passwords, cookies, session tokens, OAuth tokens, apartment logins, Etsy credentials, banking information, or social media credentials.
-    All future integrations must use: <strong>OAuth</strong> · <strong>Environment Variables</strong> · <strong>Secure Backend APIs</strong> · <strong>Encrypted Secret Storage</strong>.
-    No credentials are stored here. Connection buttons are disabled until proper auth flows are implemented.
+    <strong>SECURITY POLICY:</strong> OAuth tokens are stored exclusively on the backend in
+    <code>data/tokens/</code> (gitignored) and are <strong>never sent to this page</strong>.
+    This page only receives connection <em>status</em> (connected / not_connected / configured).<br>
+    Credentials live in <code>.env</code> (copied from <code>.env.example</code>) — also gitignored.
+    Client secrets <strong>never</strong> appear in browser JavaScript.
   </div>
 
-  <!-- INTEGRATION STATUS -->
+  <!-- ── ACCOUNT CONNECTIONS (live) ──────────────────────── -->
   <div class="cn-section">
-    <div class="cn-sectionTitle">INTEGRATION STATUS</div>
-    <div class="cn-sectionSub">// All planned service connections — status, assigned agents, permissions</div>
-    <table class="cn-table" id="cn-intTable">
-      <thead>
-        <tr>
-          <th>SERVICE</th>
-          <th>DEPARTMENT</th>
-          <th>STATUS</th>
-          <th>ASSIGNED AGENTS</th>
-          <th>REQUIRED PERMISSIONS</th>
-          <th>LAST SYNC</th>
-          <th>ACTIONS</th>
-        </tr>
-      </thead>
-      <tbody id="cn-intBody"></tbody>
-    </table>
+    <div class="cn-sectionTitle">ACCOUNT CONNECTIONS</div>
+    <div class="cn-sectionSub">// Live status — fetched from /api/auth/status each page load</div>
+    <div id="ac-fetchBar">Connecting to backend...</div>
+    <div id="ac-grid"></div>
   </div>
 
-  <!-- PLANNED INTEGRATIONS -->
+  <!-- ── PLANNED INTEGRATIONS ────────────────────────────── -->
   <div class="cn-section">
     <div class="cn-sectionTitle">PLANNED INTEGRATIONS</div>
-    <div class="cn-sectionSub">// Future connections on the roadmap</div>
+    <div class="cn-sectionSub">// Future connections on the roadmap — not yet implemented</div>
     <table class="cn-table">
       <thead>
         <tr><th>SERVICE</th><th>DEPARTMENT</th><th>USE CASE</th><th>AUTH METHOD</th><th>STATUS</th></tr>
@@ -266,13 +226,13 @@ a { color: inherit; text-decoration: none; }
     </table>
   </div>
 
-  <!-- AUTH REQUIREMENTS -->
+  <!-- ── AUTH REQUIREMENTS ───────────────────────────────── -->
   <div class="cn-section">
     <div class="cn-sectionTitle">AUTHENTICATION REQUIREMENTS</div>
-    <div class="cn-sectionSub">// How each integration will authenticate — no credentials stored here</div>
+    <div class="cn-sectionSub">// How each service authenticates — no credentials stored in this page</div>
     <table class="cn-permTable">
       <thead>
-        <tr><th>SERVICE</th><th>AUTH METHOD</th><th>SCOPE</th><th>STORE AS</th><th>READY</th></tr>
+        <tr><th>SERVICE</th><th>AUTH METHOD</th><th>SCOPE</th><th>TOKEN STORAGE</th><th>STATUS</th></tr>
       </thead>
       <tbody id="cn-authBody"></tbody>
     </table>
@@ -280,160 +240,374 @@ a { color: inherit; text-decoration: none; }
 
 </div>
 
+<div id="ac-toast"></div>
+
 <footer id="cn-footer">
-  // CyberCookieOS v0.3.0 // Connection Manager // No credentials stored //
+  // CyberCookieOS // Account Connections // Tokens: backend-only // Secrets: .env only //
 </footer>
 
 <script src="../js/cybercookieos.js"></script>
 <script>
 (function () {
+  'use strict';
 
-  var INTEGRATIONS = [
-    {
-      id: 'housing_scout', name: 'Apartment Scout (Local)',
-      dept: 'housing', deptLabel: 'Housing',
-      status: 'active',
-      agents: ['Nova', 'Beacon'],
-      permissions: ['Read listings', 'Write results JSON'],
-      lastSync: '2 hours ago',
-      description: 'Local Python scraper for Burlington County rentals',
+  // SECURITY NOTE:
+  // This script NEVER handles OAuth tokens, client secrets, or credentials.
+  // It only reads connection status from /api/auth/status.
+  // All token storage is backend-only in data/tokens/ (gitignored).
+  // Client secrets only exist in .env on the server — never in JS.
+
+  var SERVICE_DEFS = {
+    google_calendar: {
+      name: 'Google Calendar', icon: '📅', dept: 'Productivity',
+      deptColor: 'rgba(58,168,200,.75)',
+      purpose: 'Read calendar events so agents can schedule and coordinate tasks.',
+      dataAccess: 'Read-only: your events, calendars, and meeting details.',
+      authMethod: 'Google OAuth 2.0',
+      canConnect: true, localOnly: false,
     },
-    {
-      id: 'etsy', name: 'Etsy Shop API',
-      dept: 'commerce', deptLabel: 'Commerce',
-      status: 'disconnected',
-      agents: ['EtsyBot', 'Forge'],
-      permissions: ['Read shop listings', 'Write listings', 'Read orders'],
-      lastSync: 'Never',
-      description: 'Etsy seller API for shop management',
+    gmail: {
+      name: 'Gmail', icon: '📧', dept: 'Productivity',
+      deptColor: 'rgba(58,168,200,.75)',
+      purpose: 'Email assistant reads your inbox for scheduling and task extraction.',
+      dataAccess: 'Read-only: message subjects, senders, and body preview.',
+      authMethod: 'Google OAuth 2.0',
+      canConnect: true, localOnly: false,
     },
-    {
-      id: 'google_cal', name: 'Google Calendar',
-      dept: 'productivity', deptLabel: 'Productivity',
-      status: 'not_configured',
-      agents: ['Calypso'],
-      permissions: ['Read events', 'Write events', 'Read calendars'],
-      lastSync: 'Never',
-      description: 'Calendar sync and scheduling integration',
+    github: {
+      name: 'GitHub', icon: '🐙', dept: 'Security',
+      deptColor: 'rgba(155,107,255,.75)',
+      purpose: 'Monitor repositories, security alerts, and code activity.',
+      dataAccess: 'Read repos, security events, and issue tracking.',
+      authMethod: 'GitHub OAuth',
+      canConnect: false, localOnly: false,
     },
-    {
-      id: 'email', name: 'Email (IMAP/SMTP)',
-      dept: 'productivity', deptLabel: 'Productivity',
-      status: 'not_configured',
-      agents: ['Echo'],
-      permissions: ['Read inbox', 'Send emails', 'Manage labels'],
-      lastSync: 'Never',
-      description: 'Email processing for inbox management',
+    etsy: {
+      name: 'Etsy Shop', icon: '🛍️', dept: 'Commerce',
+      deptColor: 'rgba(255,105,180,.75)',
+      purpose: 'Manage shop listings and track order status automatically.',
+      dataAccess: 'Read and write shop listings; read orders.',
+      authMethod: 'Etsy OAuth 2.0',
+      canConnect: false, localOnly: false,
     },
-    {
-      id: 'tiktok', name: 'TikTok Research API',
-      dept: 'commerce', deptLabel: 'Commerce',
-      status: 'not_configured',
-      agents: ['Spark', 'Pixel'],
-      permissions: ['Read public video data', 'Read trending hashtags'],
-      lastSync: 'Never',
-      description: 'Trend research and viral content analysis',
+    tiktok: {
+      name: 'TikTok', icon: '🎵', dept: 'Commerce',
+      deptColor: 'rgba(255,105,180,.75)',
+      purpose: 'Research viral trends and hashtag performance for content strategy.',
+      dataAccess: 'Read public video data and trending hashtag data.',
+      authMethod: 'TikTok OAuth 2.0',
+      canConnect: false, localOnly: false,
     },
-    {
-      id: 'github', name: 'GitHub',
-      dept: 'security', deptLabel: 'Security',
-      status: 'not_configured',
-      agents: ['Nimbus', 'Athena'],
-      permissions: ['Read repos', 'Read security alerts', 'Write issues'],
-      lastSync: 'Never',
-      description: 'Code repository monitoring and security alerts',
+    google_drive: {
+      name: 'Google Drive', icon: '🗂️', dept: 'Productivity',
+      deptColor: 'rgba(58,168,200,.75)',
+      purpose: 'Access documents and files so agents can read and reference content.',
+      dataAccess: 'Read-only: file names, contents, and folder structure.',
+      authMethod: 'Google OAuth 2.0',
+      canConnect: true, localOnly: false,
     },
-    {
-      id: 'weather', name: 'OpenWeather API',
-      dept: 'productivity', deptLabel: 'Productivity',
-      status: 'not_configured',
-      agents: ['Calypso', 'Memo'],
-      permissions: ['Read weather data'],
-      lastSync: 'Never',
-      description: 'Weather data for location-aware scheduling',
+    housing_sources: {
+      name: 'Housing Sources', icon: '🏡', dept: 'Housing',
+      deptColor: 'rgba(196,120,74,.75)',
+      purpose: 'Local Python scraper — no external login or OAuth required.',
+      dataAccess: 'Reads AffordableHousing.com and Craigslist. No account needed.',
+      authMethod: 'None (local scraper)',
+      canConnect: true, localOnly: true,
     },
-    {
-      id: 'maps', name: 'Google Maps / Geo API',
-      dept: 'housing', deptLabel: 'Housing',
-      status: 'not_configured',
-      agents: ['Nova', 'Atlas'],
-      permissions: ['Read geocoding', 'Read distance matrix'],
-      lastSync: 'Never',
-      description: 'Location services for rental proximity analysis',
+    finance: {
+      name: 'Finance / Budget', icon: '💰', dept: 'Finance',
+      deptColor: 'rgba(46,204,113,.75)',
+      purpose: 'Budget tracker stores all data locally in your browser.',
+      dataAccess: 'Local browser storage only — never transmitted externally.',
+      authMethod: 'None (localStorage)',
+      canConnect: true, localOnly: true,
     },
+  };
+
+  var SERVICE_ORDER = [
+    'google_calendar', 'gmail', 'google_drive',
+    'github', 'etsy', 'tiktok',
+    'housing_sources', 'finance',
   ];
 
-  var PLANNED = [
-    { name: 'Plaid (Banking)',     dept: 'Finance',      use: 'Read transactions, balances',      auth: 'OAuth 2.0 + Plaid Link',    status: 'Planned' },
-    { name: 'Notion API',          dept: 'Productivity',  use: 'Sync notes and project databases', auth: 'OAuth 2.0',                 status: 'Planned' },
-    { name: 'Twilio SMS',          dept: 'Productivity',  use: 'Send reminders and alerts via SMS', auth: 'API Key (env var)',        status: 'Planned' },
-    { name: 'Amazon Seller API',   dept: 'Commerce',      use: 'Manage Amazon Handmade listings',  auth: 'OAuth 2.0 via MWS',        status: 'Planned' },
-    { name: 'Zillow / RentBerry',  dept: 'Housing',       use: 'Additional rental listing sources', auth: 'API Key (env var)',        status: 'Planned' },
-    { name: 'Slack / Discord',     dept: 'Productivity',  use: 'Notification delivery channel',    auth: 'OAuth 2.0 / Bot Token (env)', status: 'Planned' },
-  ];
+  var statusMap     = {};
+  var backendOnline = false;
+  var toastTimer    = null;
 
-  var AUTH_TABLE = [
-    { name: 'Etsy',           method: 'OAuth 2.0',             scope: 'listings_r, listings_w, transactions_r', store: 'Encrypted env var', ready: false },
-    { name: 'Google Calendar', method: 'OAuth 2.0 (Google)',   scope: 'calendar.events, calendar.readonly',     store: 'Encrypted env var', ready: false },
-    { name: 'Email (IMAP)',   method: 'App Password / OAuth',  scope: 'IMAP read, SMTP send',                   store: 'Encrypted env var', ready: false },
-    { name: 'TikTok',         method: 'OAuth 2.0',             scope: 'video.list, hashtag.search',             store: 'Encrypted env var', ready: false },
-    { name: 'GitHub',         method: 'Personal Access Token', scope: 'repo, security_events',                  store: 'Encrypted env var', ready: false },
-    { name: 'OpenWeather',    method: 'API Key',               scope: 'Read-only weather data',                 store: 'Environment variable', ready: false },
-    { name: 'Google Maps',    method: 'API Key',               scope: 'Geocoding, Distance Matrix',             store: 'Environment variable', ready: false },
-    { name: 'Plaid',          method: 'OAuth 2.0 + Plaid Link','scope': 'transactions, balances',               store: 'Encrypted env var', ready: false },
-    { name: 'Apartment Scout', method: 'Local agent (no auth)', scope: 'Local filesystem access',               store: 'None needed',       ready: true  },
-  ];
+  // ── Init ─────────────────────────────────────────────────
 
-  function statusDot(s) {
-    var cls = s === 'active' ? 'active' : (s === 'disconnected' ? 'disconnected' : 'none');
-    return '<span class="cn-dot cn-dot-' + cls + '"></span>';
+  function init() {
+    // Show toast if OAuth callback redirected us here with a result
+    var params = parseQS(window.location.search);
+    if (params.connected) {
+      var def = SERVICE_DEFS[params.connected];
+      showToast((def ? def.name : params.connected) + ' connected successfully!', 'success');
+      history.replaceState({}, '', window.location.pathname);
+    }
+    if (params.auth_error) {
+      showToast('Auth error: ' + decodeURIComponent(params.auth_error), 'error');
+      history.replaceState({}, '', window.location.pathname);
+    }
+
+    fetchStatus();
+
+    if (typeof COS !== 'undefined') {
+      COS.activity.log({ agent: 'System', dept: 'ops', msg: 'Account Connections viewed.', source: 'user' });
+    }
   }
 
-  function statusLabel(s) {
-    var labels = { active: 'ACTIVE', disconnected: 'DISCONNECTED', not_configured: 'NOT CONFIGURED' };
-    var cls    = { active: 'active', disconnected: 'disconnected', not_configured: 'none' };
-    return '<span class="cn-status-' + (cls[s] || 'none') + '">' + (labels[s] || s.toUpperCase()) + '</span>';
+  // ── Fetch connection status from backend ──────────────────
+
+  function fetchStatus() {
+    document.getElementById('ac-fetchBar').textContent = 'Fetching connection status...';
+
+    fetch('/api/auth/status')
+      .then(function (r) {
+        if (!r.ok) { throw new Error('HTTP ' + r.status); }
+        return r.json();
+      })
+      .then(function (data) {
+        backendOnline = true;
+        statusMap = {};
+        (data.connections || []).forEach(function (c) {
+          statusMap[c.service] = c;
+        });
+        renderGrid();
+        setFetchBar(true, data.checked_at);
+      })
+      .catch(function () {
+        backendOnline = false;
+        statusMap = {};
+        renderGrid();
+        setFetchBar(false, null);
+      });
   }
 
-  function deptClass(dept) {
-    return 'cn-dept-' + dept.toLowerCase().replace(/\s+/g, '');
+  function setFetchBar(online, checkedAt) {
+    var btn = '<button class="ac-refreshBtn" onclick="window._AC_REFRESH()">↻ Refresh</button>';
+    var bar = document.getElementById('ac-fetchBar');
+    if (online) {
+      var t = checkedAt ? new Date(checkedAt).toLocaleTimeString() : '';
+      bar.innerHTML =
+        '<span style="color:rgba(46,204,113,.75)">● BACKEND ONLINE</span>' +
+        (t ? ' — fetched at ' + t : '') + ' &nbsp; ' + btn;
+    } else {
+      bar.innerHTML =
+        '<span style="color:rgba(255,80,80,.7)">● BACKEND OFFLINE</span>' +
+        ' — start the server: <code style="color:rgba(156,246,255,.6);font-size:8.5px">python server.py</code>' +
+        ' &nbsp; ' + btn;
+    }
   }
 
-  function buildIntTable() {
-    var tbody = document.getElementById('cn-intBody');
-    if (!tbody) return;
-    INTEGRATIONS.forEach(function (intg) {
-      var tr = document.createElement('tr');
-      var agentTags = intg.agents.map(function (a) { return '<span class="cn-agentTag">' + a + '</span>'; }).join('');
-      var perms = intg.permissions.map(function (p) { return '<div style="font-size:7px;color:rgba(200,160,255,.35);margin-bottom:2px">· ' + p + '</div>'; }).join('');
-      tr.innerHTML =
-        '<td>' +
-          '<div class="cn-intName">' + intg.name + '</div>' +
-          '<div class="cn-intDesc">' + intg.description + '</div>' +
-        '</td>' +
-        '<td class="' + deptClass(intg.dept) + '">' + intg.deptLabel + '</td>' +
-        '<td>' + statusDot(intg.status) + statusLabel(intg.status) + '</td>' +
-        '<td><div class="cn-agents">' + agentTags + '</div></td>' +
-        '<td>' + perms + '</td>' +
-        '<td style="font-size:8px;color:rgba(200,160,255,.3)">' + intg.lastSync + '</td>' +
-        '<td><div class="cn-btnRow">' +
-          '<button class="cn-btnDisabled" disabled title="Auth not configured">CONNECT</button>' +
-          '<button class="cn-btnComingSoon" disabled title="Implementation pending">TEST</button>' +
-        '</div></td>';
-      tbody.appendChild(tr);
+  window._AC_REFRESH = function () { fetchStatus(); };
+
+  // ── Render card grid ──────────────────────────────────────
+
+  function renderGrid() {
+    var grid = document.getElementById('ac-grid');
+    grid.innerHTML = '';
+    SERVICE_ORDER.forEach(function (key) {
+      var def  = SERVICE_DEFS[key];
+      var conn = statusMap[key] || defaultConn(key);
+      grid.appendChild(buildCard(key, def, conn));
     });
   }
 
+  function defaultConn(key) {
+    var def    = SERVICE_DEFS[key];
+    var status = (def && def.localOnly) ? 'configured' : 'not_connected';
+    return { service: key, status: status, connected_at: null, last_checked: null, display_name: null };
+  }
+
+  // ── Build one service card ────────────────────────────────
+
+  function buildCard(key, def, conn) {
+    var div    = document.createElement('div');
+    div.className = 'ac-card';
+    var status = conn.status || 'not_connected';
+
+    var accountLine = '';
+    if (status === 'connected' && conn.display_name) {
+      accountLine = '<div class="ac-account">Account: ' + esc(conn.display_name) + '</div>';
+    }
+
+    var dateStr = '';
+    if (status === 'connected' && conn.connected_at) {
+      dateStr = 'Connected ' + fmtDate(conn.connected_at);
+      if (conn.last_checked) { dateStr += ' · Checked ' + timeAgo(conn.last_checked); }
+    } else if (backendOnline) {
+      dateStr = 'Last checked: ' + (conn.last_checked ? timeAgo(conn.last_checked) : 'Never');
+    } else {
+      dateStr = 'Backend offline — status may be stale';
+    }
+
+    div.innerHTML =
+      '<div class="ac-card-header">' +
+        '<span class="ac-icon">' + def.icon + '</span>' +
+        '<div class="ac-card-title">' +
+          '<span class="ac-service-name">' + def.name + '</span>' +
+          '<span class="ac-dept" style="color:' + def.deptColor + '">' + def.dept + '</span>' +
+        '</div>' +
+        statusBadge(status) +
+      '</div>' +
+      accountLine +
+      '<div class="ac-desc">' + esc(def.purpose) + '</div>' +
+      '<div class="ac-meta">' +
+        '<div><span class="ac-label">DATA</span>' + esc(def.dataAccess) + '</div>' +
+        '<div><span class="ac-label">AUTH</span>' + esc(def.authMethod) + '</div>' +
+      '</div>' +
+      '<div class="ac-date">' + dateStr + '</div>' +
+      '<div class="ac-btn-row">' + buildButtons(key, def, status) + '</div>';
+
+    return div;
+  }
+
+  function statusBadge(s) {
+    var map = {
+      connected:     ['ac-status-connected',     '● CONNECTED'],
+      not_connected: ['ac-status-not-connected',  '○ NOT CONNECTED'],
+      configured:    ['ac-status-configured',     '◆ CONFIGURED'],
+      error:         ['ac-status-error',           '✕ ERROR'],
+    };
+    var e = map[s] || map['not_connected'];
+    return '<span class="ac-status-badge ' + e[0] + '">' + e[1] + '</span>';
+  }
+
+  function buildButtons(key, def, status) {
+    if (!def.canConnect) {
+      return '<button class="ac-btn ac-btn-soon" disabled>COMING SOON</button>';
+    }
+    if (def.localOnly) {
+      return status === 'configured'
+        ? '<button class="ac-btn ac-btn-disabled" disabled>CONFIGURED</button>'
+        : '<button class="ac-btn ac-btn-connect" onclick="window._AC_CONNECT(\'' + key + '\')">CONFIGURE</button>';
+    }
+    if (status === 'connected') {
+      return '<button class="ac-btn ac-btn-disconnect" onclick="window._AC_DISCONNECT(\'' + key + '\')">DISCONNECT</button>';
+    }
+    var label = backendOnline ? 'CONNECT' : 'CONNECT (start server first)';
+    return '<button class="ac-btn ac-btn-connect" onclick="window._AC_CONNECT(\'' + key + '\')">' + label + '</button>';
+  }
+
+  // ── Connect / Disconnect ──────────────────────────────────
+
+  window._AC_CONNECT = function (service) {
+    if (!backendOnline) {
+      showToast('Backend is offline. Run: python server.py, then refresh.', 'warning');
+      return;
+    }
+    fetch('/api/auth/' + service + '/start')
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (data.status === 'redirect') {
+          // Navigate to Google (or other) consent screen.
+          // After approval the provider redirects to /api/auth/{service}/callback.
+          // The backend exchanges the code for a token (never exposed here),
+          // then redirects back to this page with ?connected={service}.
+          window.location.href = data.url;
+        } else if (data.status === 'credentials_missing') {
+          showToast(data.message, 'warning');
+        } else if (data.status === 'coming_soon') {
+          showToast(data.message, 'info');
+        } else if (data.status === 'configured') {
+          showToast(data.message, 'success');
+          fetchStatus();
+        } else {
+          showToast(data.message || 'Unexpected response from server.', 'info');
+        }
+      })
+      .catch(function (err) {
+        showToast('Network error: ' + err.message, 'error');
+      });
+  };
+
+  window._AC_DISCONNECT = function (service) {
+    var def  = SERVICE_DEFS[service];
+    var name = def ? def.name : service;
+    fetch('/api/auth/' + service + '/disconnect', { method: 'POST' })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        showToast(data.success ? (name + ' disconnected.') : (data.error || 'Disconnect failed.'),
+                  data.success ? 'success' : 'error');
+        if (data.success) { fetchStatus(); }
+      })
+      .catch(function (err) {
+        showToast('Error: ' + err.message, 'error');
+      });
+  };
+
+  // ── Toast ─────────────────────────────────────────────────
+
+  function showToast(msg, type) {
+    var el = document.getElementById('ac-toast');
+    el.textContent = msg;
+    el.className   = 'ac-show ac-toast-' + (type || 'info');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.className = ''; }, 6000);
+  }
+
+  // ── Utilities ─────────────────────────────────────────────
+
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function parseQS(search) {
+    var out = {};
+    search.replace(/^\?/, '').split('&').forEach(function (pair) {
+      var kv = pair.split('=');
+      if (kv[0]) { out[kv[0]] = kv[1] || ''; }
+    });
+    return out;
+  }
+
+  function fmtDate(iso) {
+    try { return new Date(iso).toLocaleDateString(); } catch (e) { return iso || ''; }
+  }
+
+  function timeAgo(iso) {
+    var diff = Math.floor((Date.now() - new Date(iso)) / 1000);
+    if (diff < 60)    { return diff + 's ago'; }
+    if (diff < 3600)  { return Math.floor(diff / 60) + 'm ago'; }
+    if (diff < 86400) { return Math.floor(diff / 3600) + 'h ago'; }
+    return Math.floor(diff / 86400) + 'd ago';
+  }
+
+  // ── Planned integrations table ────────────────────────────
+
+  var PLANNED = [
+    { name: 'Plaid (Banking)',    dept: 'Finance',      use: 'Read transactions and balances',      auth: 'OAuth 2.0 + Plaid Link',     status: 'Planned' },
+    { name: 'Notion API',         dept: 'Productivity', use: 'Sync notes and project databases',    auth: 'OAuth 2.0',                   status: 'Planned' },
+    { name: 'Twilio SMS',         dept: 'Productivity', use: 'Send reminders and alerts via SMS',   auth: 'API Key (env var)',            status: 'Planned' },
+    { name: 'Amazon Handmade',    dept: 'Commerce',     use: 'Manage Amazon Handmade listings',     auth: 'OAuth 2.0 via SP-API',        status: 'Planned' },
+    { name: 'Zillow / RentBerry', dept: 'Housing',      use: 'Additional rental listing sources',   auth: 'API Key (env var)',            status: 'Planned' },
+    { name: 'Slack / Discord',    dept: 'Productivity', use: 'Notification delivery channel',       auth: 'OAuth 2.0 / Bot Token (env)', status: 'Planned' },
+  ];
+
+  var AUTH_TABLE = [
+    { name: 'Google Calendar',  method: 'OAuth 2.0 (Google)',   scope: 'calendar.readonly',                    store: 'data/tokens/ (backend only)', ready: true  },
+    { name: 'Gmail',            method: 'OAuth 2.0 (Google)',   scope: 'gmail.readonly',                       store: 'data/tokens/ (backend only)', ready: true  },
+    { name: 'Google Drive',     method: 'OAuth 2.0 (Google)',   scope: 'drive.readonly',                       store: 'data/tokens/ (backend only)', ready: true  },
+    { name: 'GitHub',           method: 'OAuth 2.0 (GitHub)',   scope: 'repo, read:security_events',           store: 'data/tokens/ (backend only)', ready: false },
+    { name: 'Etsy',             method: 'OAuth 2.0 (Etsy)',     scope: 'listings_r, listings_w, transactions_r', store: 'data/tokens/ (backend only)', ready: false },
+    { name: 'TikTok',           method: 'OAuth 2.0 (TikTok)',   scope: 'video.list, hashtag.search',           store: 'data/tokens/ (backend only)', ready: false },
+    { name: 'Housing Sources',  method: 'None (local scraper)', scope: 'Public web pages only',                store: 'None needed',                 ready: true  },
+    { name: 'Finance / Budget', method: 'None (localStorage)',  scope: 'Local browser storage',                store: 'None needed',                 ready: true  },
+    { name: 'Plaid',            method: 'OAuth 2.0 + Plaid Link', scope: 'transactions, balances',             store: 'data/tokens/ (backend only)', ready: false },
+  ];
+
   function buildPlannedTable() {
     var tbody = document.getElementById('cn-plannedBody');
-    if (!tbody) return;
+    if (!tbody) { return; }
     PLANNED.forEach(function (p) {
       var tr = document.createElement('tr');
       tr.innerHTML =
-        '<td style="font-weight:600;color:rgba(240,220,255,.8)">' + p.name + '</td>' +
-        '<td style="color:rgba(200,160,255,.5)">' + p.dept + '</td>' +
-        '<td style="font-size:8px;color:rgba(200,160,255,.4)">' + p.use + '</td>' +
-        '<td style="font-size:8px;color:rgba(156,246,255,.4)">' + p.auth + '</td>' +
+        '<td style="font-weight:600;color:var(--text-hi)">' + p.name + '</td>' +
+        '<td style="color:var(--text-dim)">' + p.dept + '</td>' +
+        '<td style="font-size:8px;color:var(--text-dim)">' + p.use + '</td>' +
+        '<td style="font-size:8px;color:rgba(156,246,255,.45)">' + p.auth + '</td>' +
         '<td><span style="font-size:7px;padding:2px 8px;border-radius:3px;border:1px solid rgba(255,220,50,.2);color:rgba(255,220,50,.5)">' + p.status.toUpperCase() + '</span></td>';
       tbody.appendChild(tr);
     });
@@ -441,24 +615,25 @@ a { color: inherit; text-decoration: none; }
 
   function buildAuthTable() {
     var tbody = document.getElementById('cn-authBody');
-    if (!tbody) return;
+    if (!tbody) { return; }
     AUTH_TABLE.forEach(function (a) {
       var tr = document.createElement('tr');
       tr.innerHTML =
-        '<td style="font-weight:600;color:rgba(240,220,255,.8)">' + a.name + '</td>' +
+        '<td style="font-weight:600;color:var(--text-hi)">' + a.name + '</td>' +
         '<td style="color:rgba(156,246,255,.5)">' + a.method + '</td>' +
-        '<td style="font-size:8px;color:rgba(200,160,255,.4)">' + a.scope + '</td>' +
-        '<td style="font-size:8px;color:rgba(200,160,255,.4)">' + a.store + '</td>' +
+        '<td style="font-size:8px;color:var(--text-dim)">' + a.scope + '</td>' +
+        '<td style="font-size:8px;color:var(--text-dim)">' + a.store + '</td>' +
         '<td class="' + (a.ready ? 'cn-permOk' : 'cn-permWait') + '">' + (a.ready ? '✓ READY' : '○ PENDING') + '</td>';
       tbody.appendChild(tr);
     });
   }
 
+  // ── Boot ──────────────────────────────────────────────────
+
   document.addEventListener('DOMContentLoaded', function () {
-    buildIntTable();
+    init();
     buildPlannedTable();
     buildAuthTable();
-    COS.activity.log({ agent: 'System', dept: 'ops', msg: 'Connection Manager viewed.', source: 'user' });
   });
 
 })();

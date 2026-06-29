@@ -1,0 +1,66 @@
+[
+  {
+    "service": "google_calendar",
+    "status": "not_connected",
+    "connected_at": null,
+    "last_checked": null,
+    "scopes": ["https://www.googleapis.com/auth/calendar.readonly"],
+    "display_name": null
+  },
+  {
+    "service": "gmail",
+    "status": "not_connected",
+    "connected_at": null,
+    "last_checked": null,
+    "scopes": ["https://www.googleapis.com/auth/gmail.readonly"],
+    "display_name": null
+  },
+  {
+    "service": "github",
+    "status": "not_connected",
+    "connected_at": null,
+    "last_checked": null,
+    "scopes": ["repo", "read:security_events"],
+    "display_name": null
+  },
+  {
+    "service": "etsy",
+    "status": "not_connected",
+    "connected_at": null,
+    "last_checked": null,
+    "scopes": ["listings_r", "listings_w", "transactions_r"],
+    "display_name": null
+  },
+  {
+    "service": "tiktok",
+    "status": "not_connected",
+    "connected_at": null,
+    "last_checked": null,
+    "scopes": ["video.list", "hashtag.search"],
+    "display_name": null
+  },
+  {
+    "service": "google_drive",
+    "status": "not_connected",
+    "connected_at": null,
+    "last_checked": null,
+    "scopes": ["https://www.googleapis.com/auth/drive.readonly"],
+    "display_name": null
+  },
+  {
+    "service": "housing_sources",
+    "status": "configured",
+    "connected_at": null,
+    "last_checked": null,
+    "scopes": [],
+    "display_name": "Housing Scout (Local)"
+  },
+  {
+    "service": "finance",
+    "status": "configured",
+    "connected_at": null,
+    "last_checked": null,
+    "scopes": [],
+    "display_name": "Budget Tracker (Local)"
+  }
+]

@@ -15,13 +15,67 @@ The project is being built as my cybersecurity capstone and portfolio project. I
 # How to Run
 
 ```bash
-python launch.py
+python server.py
 ```
 
 This starts a local server on port 8080 and opens the dashboard automatically.
-Dashboard URL: http://localhost:8080/hq/index.html
+Dashboard URL: `http://localhost:8080/hq/index.html`
 
 Press Ctrl+C to stop the server.
+
+---
+
+# Account Connections Setup
+
+Account Connections lets CyberCookieOS agents connect to real external services (Google Calendar, Gmail, GitHub, etc.) using OAuth.
+
+## Step 1 — Copy the credentials template
+
+```bash
+cp .env.example .env
+```
+
+## Step 2 — Get Google OAuth credentials (for Calendar, Gmail, Drive)
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com)
+2. Create a project (or use an existing one)
+3. Enable the APIs you need: Google Calendar API, Gmail API, Google Drive API
+4. Go to **APIs & Services → Credentials → Create Credentials → OAuth 2.0 Client ID**
+5. Choose **Desktop app** or **Web application**
+6. Add these Authorized Redirect URIs:
+   - `http://localhost:8080/api/auth/google_calendar/callback`
+   - `http://localhost:8080/api/auth/gmail/callback`
+   - `http://localhost:8080/api/auth/google_drive/callback`
+7. Copy the **Client ID** and **Client Secret** into your `.env` file
+
+## Step 3 — Start the server and connect
+
+```bash
+python server.py
+```
+
+Open: `http://localhost:8080/connections/index.html`
+
+Click **CONNECT** on any Google service. If credentials are not yet in `.env`, you'll see a clear "credentials not configured" message explaining what to add.
+
+## Token storage security
+
+- Tokens are stored in `data/tokens/` (gitignored — never committed)
+- Tokens are **never** sent to the browser — the frontend only receives status (connected / not_connected)
+- Client secrets live only in `.env` — never in JavaScript
+
+## Implemented vs. placeholder
+
+| Service | Status |
+|---|---|
+| Google Calendar | Implemented — OAuth 2.0 flow ready (needs .env credentials) |
+| Gmail | Implemented — OAuth 2.0 flow ready (needs .env credentials) |
+| Google Drive | Implemented — OAuth 2.0 flow ready (needs .env credentials) |
+| GitHub | Placeholder — Coming Soon |
+| Etsy | Placeholder — Coming Soon |
+| TikTok | Placeholder — Coming Soon |
+| Housing Sources | Configured — local scraper, no auth needed |
+| Finance / Budget | Configured — localStorage, no auth needed |
 
 ---
 
