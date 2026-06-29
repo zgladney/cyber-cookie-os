@@ -6,6 +6,7 @@
 <title>Finance Department — CyberCookieOS</title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="../css/workspace.css">
+<link rel="stylesheet" href="../css/cos_ui.css">
 </head>
 
 <body>
@@ -209,6 +210,12 @@
                 <div class="fn-statRow"><span>BUDGET USED</span><span id="fn-stat-budget">62%</span></div>
                 <div class="fn-statRow"><span>SAVINGS RATE</span><span id="fn-stat-savings">12%</span></div>
                 <div class="fn-statRow"><span>EMERG. FUND</span><span id="fn-stat-emerg">32%</span></div>
+            </div>
+
+            <!-- Data Mode Badge -->
+            <div class="data-mode-row">
+                <span class="dmr-label">DATA</span>
+                <span class="data-status-badge" data-dept="finance" id="fn-dataBadge">● SIMULATED</span>
             </div>
 
             <div class="fn-card">
@@ -442,6 +449,7 @@
 <script src="../js/agent_presence.js"></script>
 <script src="workspace.js"></script>
 <script src="../js/company_life.js"></script>
+<script src="../js/cos_data_status.js"></script>
 
 <script>
 /* Phase 12: Page transition support */

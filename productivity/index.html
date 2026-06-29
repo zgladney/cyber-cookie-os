@@ -6,6 +6,7 @@
 <title>Productivity Department — CyberCookieOS</title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="../css/workspace.css">
+<link rel="stylesheet" href="../css/cos_ui.css">
 </head>
 
 <body>
@@ -200,6 +201,12 @@
                 <div class="pd-statRow"><span>CEO BRIEF</span><span id="pd-stat-brief" class="pd-ok">● SENT</span></div>
             </div>
 
+            <!-- Data Mode Badge -->
+            <div class="data-mode-row">
+                <span class="dmr-label">DATA</span>
+                <span class="data-status-badge" data-dept="productivity" id="pd-dataBadge">● SIMULATED</span>
+            </div>
+
             <div class="pd-card">
                 <div class="pd-cardTitle">// AGENT STATUS</div>
                 <div class="pd-agentRow"><span class="pd-agBadge pd-ag-calypso">● CALYPSO</span><span class="pd-agActivity">SCHEDULING</span></div>
@@ -310,6 +317,7 @@
 <script src="../js/agent_presence.js"></script>
 <script src="workspace.js"></script>
 <script src="../js/company_life.js"></script>
+<script src="../js/cos_data_status.js"></script>
 
 <script>
 /* Phase 12: Page transition support */

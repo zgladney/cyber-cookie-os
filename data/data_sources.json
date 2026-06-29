@@ -1,0 +1,230 @@
+{
+  "_version": "1.0",
+  "_updated": "2026-06-29",
+  "_note": "Tracks all data sources across every department. OAuth connections are managed in connections.json. Update 'status' here as you connect sources. Do not store credentials or tokens in this file.",
+
+  "sources": [
+
+    {
+      "source_id": "local_resume",
+      "label": "Resume File",
+      "department": "career",
+      "type": "file",
+      "status": "not_connected",
+      "file_path": "data/documents/resume.pdf",
+      "last_checked": null,
+      "notes": "Place your resume PDF at data/documents/resume.pdf, then register it via POST /api/documents/register.",
+      "requires_auth": false,
+      "approval_required": false
+    },
+    {
+      "source_id": "cover_letter_template",
+      "label": "Cover Letter Template",
+      "department": "career",
+      "type": "file",
+      "status": "not_connected",
+      "file_path": "data/documents/cover_letter_template.docx",
+      "last_checked": null,
+      "notes": "Place cover letter template at data/documents/. Resu-Mate uses this to generate tailored letters.",
+      "requires_auth": false,
+      "approval_required": false
+    },
+    {
+      "source_id": "linkedin_jobs",
+      "label": "LinkedIn Job Feed",
+      "department": "career",
+      "type": "api",
+      "status": "coming_soon",
+      "auth_ref": null,
+      "last_checked": null,
+      "notes": "LinkedIn API requires approval. Coming in future phase.",
+      "requires_auth": true,
+      "approval_required": true
+    },
+    {
+      "source_id": "dice_jobs",
+      "label": "Dice.com Job Feed",
+      "department": "career",
+      "type": "api",
+      "status": "coming_soon",
+      "auth_ref": null,
+      "last_checked": null,
+      "notes": "Dice API integration planned. Will require API key.",
+      "requires_auth": true,
+      "approval_required": false
+    },
+    {
+      "source_id": "indeed_jobs",
+      "label": "Indeed Job Feed",
+      "department": "career",
+      "type": "api",
+      "status": "coming_soon",
+      "auth_ref": null,
+      "last_checked": null,
+      "notes": "Indeed Publisher API planned. Requires publisher account.",
+      "requires_auth": true,
+      "approval_required": false
+    },
+
+    {
+      "source_id": "local_budget_file",
+      "label": "Budget File",
+      "department": "finance",
+      "type": "file",
+      "status": "not_connected",
+      "file_path": "data/documents/budget.json",
+      "last_checked": null,
+      "notes": "Export your budget spreadsheet to JSON or CSV and place at data/documents/budget.json.",
+      "requires_auth": false,
+      "approval_required": false
+    },
+    {
+      "source_id": "bank_account",
+      "label": "Bank Account (Plaid)",
+      "department": "finance",
+      "type": "api",
+      "status": "coming_soon",
+      "auth_ref": null,
+      "last_checked": null,
+      "notes": "Plaid integration planned for read-only bank data. Requires Plaid API key (backend only).",
+      "requires_auth": true,
+      "approval_required": true
+    },
+    {
+      "source_id": "bills_file",
+      "label": "Bills List",
+      "department": "finance",
+      "type": "file",
+      "status": "not_connected",
+      "file_path": "data/documents/bills.json",
+      "last_checked": null,
+      "notes": "Create data/documents/bills.json with your recurring bills list.",
+      "requires_auth": false,
+      "approval_required": false
+    },
+
+    {
+      "source_id": "google_calendar",
+      "label": "Google Calendar",
+      "department": "productivity",
+      "type": "oauth",
+      "status": "not_connected",
+      "auth_ref": "google_calendar",
+      "last_checked": null,
+      "notes": "OAuth connection. Run backend auth flow to connect. See connections.json for OAuth details.",
+      "requires_auth": true,
+      "approval_required": false
+    },
+    {
+      "source_id": "gmail",
+      "label": "Gmail Inbox",
+      "department": "productivity",
+      "type": "oauth",
+      "status": "not_connected",
+      "auth_ref": "gmail",
+      "last_checked": null,
+      "notes": "Read-only Gmail access. Token stored backend-only. Never exposed to frontend.",
+      "requires_auth": true,
+      "approval_required": false
+    },
+    {
+      "source_id": "local_task_file",
+      "label": "Task List (Local)",
+      "department": "productivity",
+      "type": "file",
+      "status": "not_connected",
+      "file_path": "data/documents/tasks.json",
+      "last_checked": null,
+      "notes": "Export tasks from any task manager or create manually.",
+      "requires_auth": false,
+      "approval_required": false
+    },
+
+    {
+      "source_id": "nmap",
+      "label": "Nmap (Local Tool)",
+      "department": "security",
+      "type": "local_tool",
+      "status": "not_connected",
+      "tool_path": null,
+      "last_checked": null,
+      "notes": "Set nmap_path in company_config.json. Safe mode restricts targets to lab ranges only.",
+      "requires_auth": false,
+      "approval_required": false
+    },
+    {
+      "source_id": "security_logs",
+      "label": "System Logs",
+      "department": "security",
+      "type": "file",
+      "status": "not_connected",
+      "file_path": null,
+      "last_checked": null,
+      "notes": "Set log_locations in company_config.json (security section) to point to local log files.",
+      "requires_auth": false,
+      "approval_required": false
+    },
+    {
+      "source_id": "github_security",
+      "label": "GitHub Security Events",
+      "department": "security",
+      "type": "oauth",
+      "status": "not_connected",
+      "auth_ref": "github",
+      "last_checked": null,
+      "notes": "Read-only security event monitoring for repositories.",
+      "requires_auth": true,
+      "approval_required": false
+    },
+
+    {
+      "source_id": "etsy",
+      "label": "Etsy Shop",
+      "department": "commerce",
+      "type": "oauth",
+      "status": "not_connected",
+      "auth_ref": "etsy",
+      "last_checked": null,
+      "notes": "Etsy API v3. OAuth token stored backend-only. Provides listings, orders, stats.",
+      "requires_auth": true,
+      "approval_required": false
+    },
+    {
+      "source_id": "tiktok",
+      "label": "TikTok Creator",
+      "department": "commerce",
+      "type": "oauth",
+      "status": "not_connected",
+      "auth_ref": "tiktok",
+      "last_checked": null,
+      "notes": "TikTok API for hashtag research and content performance. Token backend-only.",
+      "requires_auth": true,
+      "approval_required": false
+    },
+    {
+      "source_id": "product_catalog",
+      "label": "Product Catalog (Local)",
+      "department": "commerce",
+      "type": "file",
+      "status": "not_connected",
+      "file_path": "data/documents/product_catalog.json",
+      "last_checked": null,
+      "notes": "Maintain a local product catalog file for Pixel and Forge to reference.",
+      "requires_auth": false,
+      "approval_required": false
+    },
+
+    {
+      "source_id": "google_drive",
+      "label": "Google Drive",
+      "department": "global",
+      "type": "oauth",
+      "status": "not_connected",
+      "auth_ref": "google_drive",
+      "last_checked": null,
+      "notes": "Read-only access to Drive documents. Token backend-only.",
+      "requires_auth": true,
+      "approval_required": false
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "_version": "1.0",
+  "_updated": "2026-06-29",
+  "_note": "Edit this file to configure CyberCookieOS for your real preferences. Reload any department page to pick up changes.",
+
+  "career": {
+    "target_roles": [
+      "Service Desk Analyst",
+      "Help Desk Technician",
+      "IT Support Specialist",
+      "SOC Analyst Tier 1",
+      "Desktop Support Technician"
+    ],
+    "target_locations": [
+      "South Jersey",
+      "Philadelphia, PA",
+      "Cherry Hill, NJ",
+      "Wilmington, DE",
+      "Mount Laurel, NJ"
+    ],
+    "remote_preference": "hybrid",
+    "minimum_salary": 40000,
+    "preferred_schedule": "full-time",
+    "excluded_locations": [],
+    "certifications_in_progress": ["CompTIA A+"],
+    "certifications_planned": ["CompTIA Security+"],
+    "resume_file_path": "data/documents/resume.pdf",
+    "cover_letter_template_path": "data/documents/cover_letter_template.docx",
+    "application_weekly_goal": 3
+  },
+
+  "security": {
+    "lab_scan_targets": ["192.168.1.0/24"],
+    "allowed_scan_ranges": ["192.168.1.0/24", "10.0.0.0/8"],
+    "log_locations": [],
+    "safe_mode_enabled": true,
+    "nmap_path": null,
+    "scan_schedule": null,
+    "threat_intel_feeds": []
+  },
+
+  "finance": {
+    "monthly_income": 0,
+    "income_sources": [],
+    "bills": [],
+    "savings_goals": {
+      "emergency_fund": 5000,
+      "travel": 2000,
+      "certification": 500
+    },
+    "emergency_fund_goal": 5000,
+    "travel_goal": 2000,
+    "budget_categories": [
+      "Housing",
+      "Food",
+      "Transportation",
+      "Subscriptions",
+      "Medical",
+      "Entertainment",
+      "Savings"
+    ],
+    "currency": "USD"
+  },
+
+  "productivity": {
+    "calendar_provider": null,
+    "work_schedule": {
+      "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "start": "09:00",
+      "end": "17:00"
+    },
+    "school_schedule": null,
+    "focus_hours": {
+      "start": "09:00",
+      "end": "12:00"
+    },
+    "reminder_preferences": {
+      "lead_time_minutes": 15,
+      "daily_briefing": true,
+      "briefing_time": "08:00"
+    },
+    "default_task_priority": "medium"
+  },
+
+  "commerce": {
+    "product_categories": [
+      "Digital Art",
+      "Print on Demand",
+      "Tech Accessories"
+    ],
+    "platforms": ["Etsy"],
+    "tiktok_enabled": false,
+    "budget_limit_per_item": 50,
+    "monthly_ad_budget": 0,
+    "approval_required_before_publishing": true,
+    "approval_required_before_ad_spend": true,
+    "target_monthly_revenue": 200,
+    "shipping_provider": null
+  },
+
+  "global": {
+    "ceo_approval_required_for_external_actions": true,
+    "daily_briefing_time": "08:00",
+    "timezone": "America/New_York",
+    "autonomous_routines_enabled": false,
+    "company_name": "CyberCookieOS",
+    "ceo_name": "Zimiah",
+    "log_all_agent_actions": true
+  }
+}

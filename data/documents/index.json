@@ -1,0 +1,5 @@
+{
+  "_version": "1.0",
+  "_note": "Register documents via POST /api/documents/register or by editing this file directly. Place actual files in data/documents/.",
+  "documents": []
+}

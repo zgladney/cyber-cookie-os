@@ -1,0 +1,361 @@
+{
+  "_version": "1.0",
+  "_updated": "2026-06-29",
+  "_note": "Defines what each agent can do autonomously vs. what requires CEO approval. Call requiresApproval(agent, action) before any external action.",
+
+  "agents": {
+
+    "nova": {
+      "department": "career",
+      "can": [
+        "search_jobs",
+        "save_jobs",
+        "analyze_jobs",
+        "rank_applications",
+        "generate_reports",
+        "compare_salaries",
+        "score_job_fit",
+        "read_resume",
+        "build_shortlist",
+        "review_recruiter_messages"
+      ],
+      "requires_approval": [
+        "submit_application",
+        "send_recruiter_email",
+        "update_linkedin",
+        "schedule_interview",
+        "decline_offer",
+        "accept_offer"
+      ]
+    },
+
+    "resuMate": {
+      "department": "career",
+      "can": [
+        "analyze_resume",
+        "score_ats_match",
+        "suggest_keywords",
+        "generate_bullet_points",
+        "check_formatting",
+        "compare_to_job_description",
+        "draft_cover_letter",
+        "generate_report"
+      ],
+      "requires_approval": [
+        "rewrite_resume",
+        "send_resume",
+        "update_resume_file",
+        "submit_to_ats"
+      ]
+    },
+
+    "scoutX": {
+      "department": "career",
+      "can": [
+        "analyze_regional_market",
+        "compare_locations",
+        "calculate_demand_index",
+        "pull_certification_roi",
+        "research_employers",
+        "build_region_report",
+        "flag_opportunities"
+      ],
+      "requires_approval": [
+        "contact_employer",
+        "request_salary_data"
+      ]
+    },
+
+    "athena": {
+      "department": "security",
+      "can": [
+        "scan_local_network",
+        "analyze_packets",
+        "correlate_logs",
+        "build_incident_report",
+        "review_siem_alerts",
+        "compare_threat_signatures",
+        "update_case_file",
+        "check_ip_reputation"
+      ],
+      "requires_approval": [
+        "block_ip",
+        "quarantine_system",
+        "run_external_scan",
+        "contact_isp",
+        "submit_abuse_report",
+        "modify_firewall_rules"
+      ]
+    },
+
+    "nimbus": {
+      "department": "security",
+      "can": [
+        "monitor_logs",
+        "flag_anomalies",
+        "compare_baselines",
+        "generate_anomaly_digest",
+        "watch_beacon_intervals",
+        "cross_reference_threat_intel"
+      ],
+      "requires_approval": [
+        "escalate_to_external",
+        "disable_service",
+        "alert_third_party"
+      ]
+    },
+
+    "sentinel": {
+      "department": "security",
+      "can": [
+        "validate_firewall_rules",
+        "monitor_perimeter",
+        "audit_port_access",
+        "review_access_logs",
+        "update_ip_blocklist_local",
+        "test_rule_changes_local",
+        "review_vpn_connections"
+      ],
+      "requires_approval": [
+        "apply_firewall_rule",
+        "block_port",
+        "modify_vpn_config",
+        "disable_account"
+      ]
+    },
+
+    "pixel": {
+      "department": "commerce",
+      "can": [
+        "scan_tiktok_trends",
+        "calculate_trend_scores",
+        "compare_product_velocity",
+        "flag_rising_niches",
+        "update_hotness_index",
+        "generate_product_ideas",
+        "write_listing_draft",
+        "build_trend_report"
+      ],
+      "requires_approval": [
+        "publish_listing",
+        "delete_listing",
+        "spend_ad_budget",
+        "purchase_product_samples"
+      ]
+    },
+
+    "etsybot": {
+      "department": "commerce",
+      "can": [
+        "read_listings",
+        "monitor_order_queue",
+        "check_review_scores",
+        "analyze_search_ranking",
+        "prepare_inventory_report",
+        "flag_stale_listings",
+        "draft_listing_updates"
+      ],
+      "requires_approval": [
+        "update_listing",
+        "publish_new_listing",
+        "respond_to_review",
+        "process_refund",
+        "modify_pricing"
+      ]
+    },
+
+    "spark": {
+      "department": "commerce",
+      "can": [
+        "draft_hook_scripts",
+        "schedule_content_ideas",
+        "write_product_captions",
+        "generate_video_concepts",
+        "review_engagement_data",
+        "build_content_calendar",
+        "write_trend_narrative"
+      ],
+      "requires_approval": [
+        "publish_post",
+        "schedule_post",
+        "run_ad_campaign",
+        "spend_promotion_budget",
+        "respond_to_comment"
+      ]
+    },
+
+    "forge": {
+      "department": "commerce",
+      "can": [
+        "view_pod_orders",
+        "check_print_queue",
+        "verify_shipping_labels",
+        "monitor_fulfillment_status",
+        "update_design_library_local",
+        "flag_production_delays",
+        "generate_fulfillment_report"
+      ],
+      "requires_approval": [
+        "submit_pod_order",
+        "cancel_order",
+        "contact_print_partner",
+        "approve_design_for_production",
+        "purchase_design_assets"
+      ]
+    },
+
+    "calypso": {
+      "department": "productivity",
+      "can": [
+        "read_calendar",
+        "protect_focus_blocks_local",
+        "build_daily_schedule",
+        "flag_conflicts",
+        "generate_briefing",
+        "block_time_locally",
+        "review_ceo_availability"
+      ],
+      "requires_approval": [
+        "create_calendar_event",
+        "delete_calendar_event",
+        "invite_external_attendee",
+        "reschedule_meeting",
+        "decline_meeting"
+      ]
+    },
+
+    "echo": {
+      "department": "productivity",
+      "can": [
+        "read_inbox",
+        "prioritize_messages",
+        "draft_response_templates",
+        "flag_ceo_relevant_items",
+        "summarize_unread",
+        "route_action_items",
+        "clear_read_queue"
+      ],
+      "requires_approval": [
+        "send_email",
+        "reply_to_message",
+        "unsubscribe",
+        "archive_thread",
+        "forward_email"
+      ]
+    },
+
+    "atlas": {
+      "department": "productivity",
+      "can": [
+        "map_task_dependencies",
+        "reorganize_task_board_local",
+        "assign_tasks_locally",
+        "track_milestone_progress",
+        "generate_weekly_digest",
+        "update_task_graph",
+        "close_completed_items_local"
+      ],
+      "requires_approval": [
+        "assign_task_to_external",
+        "create_external_ticket",
+        "close_critical_task",
+        "change_project_deadline"
+      ]
+    },
+
+    "memo": {
+      "department": "productivity",
+      "can": [
+        "set_local_reminders",
+        "check_overdue_items",
+        "prepare_reminder_digest",
+        "log_completed_tasks",
+        "route_time_sensitive_alerts",
+        "queue_follow_ups"
+      ],
+      "requires_approval": [
+        "send_reminder_email",
+        "notify_external_party",
+        "escalate_overdue_item"
+      ]
+    },
+
+    "greenbean": {
+      "department": "finance",
+      "can": [
+        "run_cash_flow_analysis",
+        "review_pending_bills",
+        "build_weekly_summary",
+        "flag_unusual_charges",
+        "reconcile_local_transactions",
+        "project_monthly_balance",
+        "generate_report"
+      ],
+      "requires_approval": [
+        "pay_bill",
+        "approve_purchase",
+        "move_money",
+        "transfer_funds",
+        "authorize_payment"
+      ]
+    },
+
+    "ledger": {
+      "department": "finance",
+      "can": [
+        "categorize_expenses",
+        "reconcile_bill_queue",
+        "check_recurring_charges",
+        "flag_anomalous_spend",
+        "generate_ledger_report",
+        "close_weekly_books_local",
+        "match_receipts_local"
+      ],
+      "requires_approval": [
+        "delete_transaction",
+        "dispute_charge",
+        "contact_creditor",
+        "modify_budget_category"
+      ]
+    },
+
+    "penny": {
+      "department": "finance",
+      "can": [
+        "analyze_budget_usage",
+        "simulate_scenarios",
+        "compare_spend_vs_plan",
+        "flag_category_overruns",
+        "build_budget_forecast",
+        "project_end_of_month",
+        "calculate_relocation_cost"
+      ],
+      "requires_approval": [
+        "adjust_budget_limit",
+        "reallocate_budget",
+        "approve_over_budget_expense"
+      ]
+    },
+
+    "vault": {
+      "department": "finance",
+      "can": [
+        "calculate_savings_rate",
+        "project_emergency_fund",
+        "review_subscriptions",
+        "compare_savings_vs_goal",
+        "flag_unnecessary_charges",
+        "generate_savings_report",
+        "optimize_contribution_plan_local"
+      ],
+      "requires_approval": [
+        "cancel_subscription",
+        "move_to_savings",
+        "withdraw_savings",
+        "invest_funds",
+        "purchase_investment"
+      ]
+    }
+
+  }
+}

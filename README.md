@@ -288,6 +288,87 @@ hq/index.html
 
 ---
 
+---
+
+## Phase 16 — Real Data Foundation
+
+CyberCookieOS can now run on real data. Every department shows a data status badge (● SIMULATED / ◑ PARTIAL REAL / ● REAL DATA) that updates automatically as you connect sources.
+
+### Server
+
+```bash
+python server.py
+```
+
+Replaces `python -m http.server`. Serves static files **and** handles `/api/*` routes for config, documents, permissions, and data source management.
+
+App: `http://localhost:3000/hallway/index.html`
+API: `http://localhost:3000/api/status`
+
+### How to add real data — quickstart
+
+**1. Drop a file in `data/documents/`, then register it:**
+
+```bash
+curl -X POST http://localhost:3000/api/documents/register \
+  -H "Content-Type: application/json" \
+  -d '{"id":"my_resume","filename":"resume.pdf","type":"resume","department":"career"}'
+```
+
+**2. Edit `data/company_config.json`** with your real salary targets, savings goals, focus hours, etc.
+
+**3. Connect OAuth accounts** (tokens stored in `data/tokens/` — gitignored, never in browser):
+
+```bash
+curl -X POST http://localhost:3000/api/data-sources/update \
+  -H "Content-Type: application/json" \
+  -d '{"source_id":"google_calendar","status":"connected"}'
+```
+
+### What is still simulated
+
+| Department | Simulated | Connect to fix |
+|-----------|-----------|----------------|
+| Career | Job listings, match scores | Job board APIs |
+| Security | Scan results, threat alerts | Set nmap_path in config, add log files |
+| Commerce | Etsy orders, TikTok trends | Etsy + TikTok OAuth |
+| Productivity | Calendar, inbox, reminders | Google Calendar + Gmail OAuth |
+| Finance | Cash flow, budget, savings | Place budget.json + bills.json in data/documents/ |
+
+### Agent permissions
+
+`data/permissions.json` defines what each of the 18 agents can do autonomously vs. what requires CEO approval. Any action in a `requires_approval` list creates an ORION approval request before executing.
+
+```javascript
+// Before any external action:
+COS.permissions.guardedAction('nova', 'submit_application', 'Submit to Company X', function() {
+    doTheAction(); // Only runs if CEO approves
+});
+```
+
+### API reference
+
+| Route | Description |
+|-------|-------------|
+| GET `/api/config` | Company config |
+| POST `/api/config/update` | Update config by department |
+| GET `/api/documents` | Registered documents |
+| POST `/api/documents/register` | Add a document |
+| GET `/api/data-sources` | All data source statuses |
+| POST `/api/data-sources/update` | Mark a source connected |
+| GET `/api/permissions` | Agent permission definitions |
+| GET `/api/check-permission?agent=X&action=Y` | Check one permission |
+| GET `/api/status` | Data readiness per department |
+
+### Security rules (never break these)
+
+- Tokens live in `data/tokens/` (gitignored) — never in JavaScript or any frontend file
+- Client secrets live in `.env` (gitignored) — never committed
+- The frontend only sees status strings, never credentials
+- All external agent actions require CEO approval via `requiresApproval()` before execution
+
+---
+
 # Author
 
 **Zimiah Gladney**

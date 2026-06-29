@@ -1,0 +1,101 @@
+/* =============================================
+   cos_ui.css — Shared CyberCookieOS UI Components
+   Data status badges, shared utilities.
+   Import in department pages that need these.
+============================================= */
+
+/* ── Data Status Badge ─────────────────────── */
+
+.data-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+    cursor: default;
+    user-select: none;
+    line-height: 1;
+}
+
+.data-status-badge.dsb-simulated {
+    color: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.data-status-badge.dsb-partial {
+    color: rgba(255, 210, 80, 0.75);
+    background: rgba(255, 210, 80, 0.07);
+    border: 1px solid rgba(255, 210, 80, 0.2);
+}
+
+.data-status-badge.dsb-real {
+    color: rgba(46, 204, 113, 0.85);
+    background: rgba(46, 204, 113, 0.08);
+    border: 1px solid rgba(46, 204, 113, 0.25);
+}
+
+/* Department-tinted variants */
+.dept-security   .data-status-badge.dsb-simulated { border-color: rgba(155, 107, 255, 0.15); color: rgba(155, 107, 255, 0.35); background: rgba(155, 107, 255, 0.04); }
+.dept-career     .data-status-badge.dsb-simulated { border-color: rgba(123, 107, 255, 0.15); color: rgba(123, 107, 255, 0.35); background: rgba(123, 107, 255, 0.04); }
+.dept-commerce   .data-status-badge.dsb-simulated { border-color: rgba(255, 105, 180, 0.15); color: rgba(255, 105, 180, 0.35); background: rgba(255, 105, 180, 0.04); }
+.dept-productivity .data-status-badge.dsb-simulated { border-color: rgba(58, 168, 200, 0.15); color: rgba(58, 168, 200, 0.35); background: rgba(58, 168, 200, 0.04); }
+.dept-finance    .data-status-badge.dsb-simulated { border-color: rgba(46, 204, 113, 0.15); color: rgba(46, 204, 113, 0.35); background: rgba(46, 204, 113, 0.04); }
+
+/* ── Connection Status Pill ────────────────── */
+
+.conn-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 6px;
+    font-family: 'Courier New', monospace;
+    letter-spacing: .8px;
+    padding: 2px 6px;
+    border-radius: 10px;
+}
+
+.conn-pill.cp-connected    { color: rgba(46,204,113,.9); background: rgba(46,204,113,.1); border: 1px solid rgba(46,204,113,.25); }
+.conn-pill.cp-partial      { color: rgba(255,210,80,.9); background: rgba(255,210,80,.08); border: 1px solid rgba(255,210,80,.2); }
+.conn-pill.cp-not-connected { color: rgba(255,255,255,.3); background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); }
+.conn-pill.cp-coming-soon  { color: rgba(155,107,255,.5); background: rgba(155,107,255,.05); border: 1px dashed rgba(155,107,255,.15); }
+
+/* ── Approval Request Banner ───────────────── */
+
+.approval-banner {
+    background: rgba(255, 210, 80, 0.08);
+    border: 1px solid rgba(255, 210, 80, 0.25);
+    border-left: 3px solid rgba(255, 210, 80, 0.6);
+    padding: 8px 12px;
+    font-size: 8px;
+    font-family: 'Courier New', monospace;
+    color: rgba(255, 210, 80, 0.8);
+    letter-spacing: .5px;
+    border-radius: 2px;
+    margin: 6px 0;
+}
+
+.approval-banner .ab-agent  { color: rgba(255, 210, 80, 1); font-weight: 700; }
+.approval-banner .ab-action { color: rgba(255, 255, 255, 0.7); }
+
+/* ── Phase / Data Mode Indicator ───────────── */
+
+.data-mode-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0 8px;
+}
+
+.data-mode-row .dmr-label {
+    font-size: 6px;
+    font-family: 'Courier New', monospace;
+    letter-spacing: .8px;
+    color: rgba(255,255,255,.25);
+    text-transform: uppercase;
+}
