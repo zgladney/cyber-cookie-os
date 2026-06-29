@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CyberCookieOS — Server Test</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #03000e;
+  color: rgba(200,160,255,.8);
+  padding: 40px 32px;
+  font-size: 13px;
+}
+h1 { font-size: 16px; letter-spacing: 4px; color: hotpink; margin-bottom: 6px; }
+.sub { font-size: 9px; letter-spacing: 2px; color: rgba(156,246,255,.4); margin-bottom: 32px; }
+.check {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 14px 18px; margin-bottom: 10px; border-radius: 6px;
+  border: 1px solid rgba(150,80,255,.15); background: rgba(8,2,22,.7);
+}
+.check-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.check-body { flex: 1; min-width: 0; }
+.check-title { font-size: 10px; font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; }
+.check-detail { font-size: 9px; color: rgba(200,160,255,.45); line-height: 1.6; word-break: break-all; }
+.pass  { border-color: rgba(46,204,113,.3);  background: rgba(46,204,113,.04); }
+.fail  { border-color: rgba(255,80,80,.3);   background: rgba(255,80,80,.04); }
+.warn  { border-color: rgba(255,220,50,.3);  background: rgba(255,220,50,.04); }
+.wait  { border-color: rgba(150,80,255,.2); }
+.pass  .check-title { color: rgba(46,204,113,.9); }
+.fail  .check-title { color: rgba(255,80,80,.9); }
+.warn  .check-title { color: rgba(255,220,50,.9); }
+pre {
+  background: rgba(0,0,0,.4); border: 1px solid rgba(150,80,255,.1);
+  border-radius: 4px; padding: 12px 14px; font-size: 8.5px;
+  color: rgba(156,246,255,.55); overflow-x: auto;
+  margin-top: 8px; white-space: pre-wrap; word-break: break-all;
+}
+.links { margin-top: 28px; display: flex; gap: 10px; flex-wrap: wrap; }
+a.btn {
+  font-size: 8px; letter-spacing: 1.5px; padding: 7px 16px;
+  border: 1px solid rgba(156,246,255,.25); border-radius: 3px;
+  color: rgba(156,246,255,.6); text-decoration: none; transition: all .2s;
+}
+a.btn:hover { border-color: rgba(156,246,255,.6); color: rgba(156,246,255,.95); background: rgba(156,246,255,.05); }
+</style>
+</head>
+<body>
+
+<h1>CyberCookieOS</h1>
+<div class="sub">// SERVER DIAGNOSTIC — run this from http://localhost:8080/test.html</div>
+
+<div class="check" id="chk-protocol">
+  <div class="check-icon">⏳</div>
+  <div class="check-body">
+    <div class="check-title">Checking page URL protocol...</div>
+    <div class="check-detail" id="chk-protocol-detail"></div>
+  </div>
+</div>
+
+<div class="check" id="chk-api">
+  <div class="check-icon">⏳</div>
+  <div class="check-body">
+    <div class="check-title">Checking GET /api/auth/status...</div>
+    <div class="check-detail" id="chk-api-detail"></div>
+  </div>
+</div>
+
+<div class="check" id="chk-connections">
+  <div class="check-icon">⏳</div>
+  <div class="check-body">
+    <div class="check-title">Checking service connection data...</div>
+    <div class="check-detail" id="chk-connections-detail"></div>
+  </div>
+</div>
+
+<div class="links">
+  <a class="btn" href="/connections/index.html">→ CONNECTIONS PAGE</a>
+  <a class="btn" href="/hallway/index.html">→ HQ HALLWAY</a>
+  <a class="btn" href="/api/auth/status" target="_blank">→ RAW /api/auth/status JSON</a>
+  <a class="btn" href="javascript:location.reload()">↻ RE-RUN TEST</a>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  function setCheck(id, state, title, detail, pre) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.className = 'check ' + state;
+    var icon = { pass: '✓', fail: '✕', warn: '⚠', wait: '⏳' }[state] || '·';
+    el.querySelector('.check-icon').textContent = icon;
+    el.querySelector('.check-title').textContent = title;
+    var detEl = el.querySelector('.check-detail');
+    detEl.textContent = detail || '';
+    if (pre) {
+      var preEl = document.createElement('pre');
+      preEl.textContent = pre;
+      detEl.appendChild(preEl);
+    }
+  }
+
+  // ── Check 1: Protocol ──────────────────────────────────────
+  var proto = window.location.protocol;
+  var origin = window.location.origin;
+  if (proto === 'file:') {
+    setCheck('chk-protocol', 'fail',
+      'FAIL — page opened as file:// (not via server)',
+      'Open this file from the running server instead: http://localhost:8080/test.html\n' +
+      'Run "python server.py" first, then paste that URL into your browser.');
+  } else if (proto === 'http:' || proto === 'https:') {
+    setCheck('chk-protocol', 'pass',
+      'PASS — page served via ' + proto + '//',
+      'Origin: ' + origin + '  (fetches to /api/... will reach this server)');
+  } else {
+    setCheck('chk-protocol', 'warn', 'UNKNOWN protocol: ' + proto, '');
+  }
+
+  // ── Check 2: /api/auth/status ──────────────────────────────
+  if (proto === 'file:') {
+    setCheck('chk-api', 'warn', 'SKIPPED — cannot fetch from file:// origin', '');
+    setCheck('chk-connections', 'warn', 'SKIPPED', '');
+    return;
+  }
+
+  setCheck('chk-api', 'wait', 'Fetching /api/auth/status...', '');
+
+  var ctrl    = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  var timeout = ctrl ? setTimeout(function () { ctrl.abort(); }, 6000) : null;
+
+  fetch('/api/auth/status', ctrl ? { signal: ctrl.signal } : {})
+    .then(function (r) {
+      if (timeout) clearTimeout(timeout);
+      if (!r.ok) { throw new Error('HTTP ' + r.status + ' ' + r.statusText); }
+      return r.json().then(function (data) { return { status: r.status, data: data }; });
+    })
+    .then(function (result) {
+      setCheck('chk-api', 'pass',
+        'PASS — HTTP ' + result.status + ' OK from /api/auth/status',
+        'Response received at ' + new Date().toLocaleTimeString(),
+        JSON.stringify(result.data, null, 2));
+
+      // ── Check 3: connection data ───────────────────────────
+      var conns = (result.data.connections || []);
+      if (!conns.length) {
+        setCheck('chk-connections', 'warn',
+          'WARN — connections array is empty',
+          'The endpoint responded but returned no service entries. Check data/connections.json.');
+        return;
+      }
+      var summary = conns.map(function (c) {
+        return (c.service || '?') + ': ' + (c.status || 'unknown');
+      }).join('\n');
+      var connected = conns.filter(function (c) { return c.status === 'connected'; }).length;
+      var configured = conns.filter(function (c) { return c.status === 'configured'; }).length;
+      setCheck('chk-connections', 'pass',
+        'PASS — ' + conns.length + ' services returned (' + connected + ' connected, ' + configured + ' configured)',
+        '',
+        summary);
+    })
+    .catch(function (err) {
+      if (timeout) clearTimeout(timeout);
+      var msg = (err && err.message) ? err.message : String(err);
+      var hint = '';
+      if (msg.indexOf('abort') !== -1 || msg.indexOf('Abort') !== -1) {
+        hint = 'Request timed out after 6 seconds — server may not be running or is hung.';
+      } else if (msg.indexOf('Failed to fetch') !== -1 || msg.indexOf('NetworkError') !== -1) {
+        hint = 'Could not connect to server — make sure "python server.py" is running on port 8080.';
+      } else if (msg.indexOf('HTTP 404') !== -1) {
+        hint = 'Server responded with 404. The /api/auth/status route may not be in server.py yet — restart the server after any code changes.';
+      }
+      setCheck('chk-api', 'fail',
+        'FAIL — ' + msg,
+        hint || 'Check the terminal where python server.py is running for error output.');
+      setCheck('chk-connections', 'warn', 'SKIPPED — depends on check above', '');
+    });
+})();
+</script>
+</body>
+</html>
