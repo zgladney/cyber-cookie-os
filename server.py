@@ -157,20 +157,27 @@ class CyberCookieHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         path  = urlparse(self.path).path
         parts = path.split('/')  # e.g. ['', 'api', 'auth', 'google_calendar', 'start']
+        print(f'[GET] {path}')
 
+        # ── Auth routes (must be checked before static fallback) ──────────────
         if path == '/api/auth/status':
             self._handle_auth_status()
             return
 
-        if len(parts) == 5 and parts[1] == 'api' and parts[2] == 'auth':
-            service = parts[3]
-            action  = parts[4]
+        if len(parts) >= 4 and parts[1] == 'api' and parts[2] == 'auth':
+            service = parts[3] if len(parts) > 3 else ''
+            action  = parts[4] if len(parts) > 4 else ''
             if action == 'start':
                 self._handle_auth_start(service)
                 return
             if action == 'callback':
                 self._handle_auth_callback(service)
                 return
+
+        # ── Guard: never let /api/ paths fall through to static serving ───────
+        if path.startswith('/api/'):
+            self._send_json(404, {'error': f'Unknown API endpoint: {path}'})
+            return
 
         super().do_GET()
 

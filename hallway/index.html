@@ -98,20 +98,37 @@
 
             <div id="hw-floorGlow"></div>
 
-            <!-- Walking employee sprites -->
+            <!-- Walking employee sprites — 12 agents visible -->
             <div id="hw-sprites" aria-hidden="true">
-              <div class="hw-sprite hw-sp-security"    style="--sp-color:#9b6bff;--sp-dur:7s;--sp-from:8%;--sp-to:62%;--sp-bot:6px;animation-delay:0s">A</div>
-              <div class="hw-sprite hw-sp-housing"     style="--sp-color:#c4784a;--sp-dur:9.5s;--sp-from:18%;--sp-to:78%;--sp-bot:9px;animation-delay:-3s">N</div>
-              <div class="hw-sprite hw-sp-commerce"    style="--sp-color:#ff69b4;--sp-dur:11s;--sp-from:5%;--sp-to:55%;--sp-bot:5px;animation-delay:-6s">P</div>
-              <div class="hw-sprite hw-sp-productivity" style="--sp-color:#3aa8c8;--sp-dur:8.5s;--sp-from:25%;--sp-to:72%;--sp-bot:11px;animation-delay:-2s">C</div>
-              <div class="hw-sprite hw-sp-finance"     style="--sp-color:#2ecc71;--sp-dur:10s;--sp-from:12%;--sp-to:68%;--sp-bot:7px;animation-delay:-4.5s">G</div>
-              <div class="hw-sprite hw-sp-security"    style="--sp-color:#9b6bff;--sp-dur:13s;--sp-from:30%;--sp-to:82%;--sp-bot:4px;animation-delay:-8s">S</div>
+              <!-- Security dept -->
+              <div class="hw-sprite hw-sp-security"    id="hw-sp-athena"   style="--sp-color:#9b6bff;--sp-dur:7s;--sp-from:8%;--sp-to:62%;--sp-bot:6px;animation-delay:0s">A</div>
+              <div class="hw-sprite hw-sp-security"    id="hw-sp-nimbus"   style="--sp-color:#9b6bff;--sp-dur:13s;--sp-from:30%;--sp-to:82%;--sp-bot:4px;animation-delay:-8s">Ni</div>
+              <!-- Housing dept -->
+              <div class="hw-sprite hw-sp-housing"     id="hw-sp-nova"     style="--sp-color:#c4784a;--sp-dur:9.5s;--sp-from:18%;--sp-to:78%;--sp-bot:9px;animation-delay:-3s">N</div>
+              <div class="hw-sprite hw-sp-housing"     id="hw-sp-beacon"   style="--sp-color:#d9965e;--sp-dur:11.5s;--sp-from:42%;--sp-to:88%;--sp-bot:12px;animation-delay:-5.5s">B</div>
+              <!-- Commerce dept -->
+              <div class="hw-sprite hw-sp-commerce"    id="hw-sp-pixel"    style="--sp-color:#ff69b4;--sp-dur:11s;--sp-from:5%;--sp-to:55%;--sp-bot:5px;animation-delay:-6s">P</div>
+              <div class="hw-sprite hw-sp-commerce"    id="hw-sp-spark"    style="--sp-color:#ff85c5;--sp-dur:14s;--sp-from:48%;--sp-to:86%;--sp-bot:8px;animation-delay:-10s">Sp</div>
+              <!-- Productivity dept -->
+              <div class="hw-sprite hw-sp-productivity" id="hw-sp-calypso" style="--sp-color:#3aa8c8;--sp-dur:8.5s;--sp-from:25%;--sp-to:72%;--sp-bot:11px;animation-delay:-2s">C</div>
+              <div class="hw-sprite hw-sp-productivity" id="hw-sp-echo"    style="--sp-color:#57bcd6;--sp-dur:12s;--sp-from:15%;--sp-to:60%;--sp-bot:14px;animation-delay:-7s">E</div>
+              <!-- Finance dept -->
+              <div class="hw-sprite hw-sp-finance"     id="hw-sp-greenbean" style="--sp-color:#2ecc71;--sp-dur:10s;--sp-from:12%;--sp-to:68%;--sp-bot:7px;animation-delay:-4.5s">G</div>
+              <div class="hw-sprite hw-sp-finance"     id="hw-sp-penny"    style="--sp-color:#45e088;--sp-dur:8s;--sp-from:35%;--sp-to:75%;--sp-bot:10px;animation-delay:-1.5s">Pe</div>
+              <div class="hw-sprite hw-sp-finance"     id="hw-sp-ledger"   style="--sp-color:#2ecc71;--sp-dur:15s;--sp-from:55%;--sp-to:90%;--sp-bot:13px;animation-delay:-11s">L</div>
+              <div class="hw-sprite hw-sp-security"    id="hw-sp-sentinel" style="--sp-color:#bf9fff;--sp-dur:6s;--sp-from:60%;--sp-to:92%;--sp-bot:3px;animation-delay:-3.5s">Se</div>
+            </div>
+
+            <!-- Housing Mission status overlay (shown when AE is running) -->
+            <div id="hw-missionOverlay" style="display:none" aria-live="polite">
+              <div class="hw-missionTitle">🏠 HOUSING MISSION</div>
+              <div id="hw-missionPhases"></div>
             </div>
 
             <!-- HQ Stats bar (top of back wall) -->
             <div id="hw-statsBar" aria-hidden="true">
               <div class="hw-statItem"><div id="hw-clock" class="hw-statVal">--:--:--</div><div class="hw-statLabel">HQ TIME</div></div>
-              <div class="hw-statItem"><div class="hw-statVal hw-stat-online" id="hw-onlineCount">18</div><div class="hw-statLabel">ONLINE</div></div>
+              <div class="hw-statItem"><div class="hw-statVal hw-stat-online" id="hw-onlineCount">18</div><div class="hw-statLabel">AGENTS</div></div>
               <div class="hw-statItem"><div class="hw-statVal" id="hw-uptimeStat">0:00</div><div class="hw-statLabel">UPTIME</div></div>
               <div class="hw-statItem"><div class="hw-statVal hw-stat-reports" id="hw-reportsStat">0</div><div class="hw-statLabel">REPORTS</div></div>
             </div>
@@ -240,6 +257,16 @@
 
         </div><!-- /hw-deptGrid -->
 
+        <!-- ═══════════ COMMAND CONSOLE ═══════════ -->
+        <div id="hw-consoleWrap" style="display:none" aria-live="polite">
+            <div id="hw-consoleHead">
+                <span class="hw-consoleLbl">// COMMAND CONSOLE</span>
+                <span id="hw-consoleMission"></span>
+                <button id="hw-consoleClear" class="hw-consoleClrBtn">CLEAR</button>
+            </div>
+            <div id="hw-consoleFeed"></div>
+        </div>
+
         <!-- ═══════════ ACTIVITY TICKER ═══════════ -->
         <div id="hw-ticker">
             <span class="hw-tickerLabel">// LIVE FEED //</span>
@@ -255,6 +282,8 @@
 <script src="../js/cybercookieos.js"></script>
 <script src="../js/agent_runtime.js"></script>
 <script src="../js/output_engine.js"></script>
+<script src="../js/agent_engine.js"></script>
+<script src="../js/notifications.js"></script>
 <script src="js/hallway_hub.js" defer></script>
 </body>
 </html>

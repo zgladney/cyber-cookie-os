@@ -994,3 +994,197 @@ body {
 .hw-stat-online  { color: rgba(46,204,113,.8); text-shadow: 0 0 8px rgba(46,204,113,.4); }
 .hw-stat-reports { color: rgba(255,220,50,.7); text-shadow: 0 0 8px rgba(255,220,50,.3); }
 #hw-clock { color: rgba(156,246,255,.8); text-shadow: 0 0 8px rgba(156,246,255,.3); }
+
+/* =============================================
+   PHASE 11 — SPRITE STATE ANIMATIONS
+============================================= */
+
+/* Running agents: faster walk, brighter glow */
+.hw-sprite-running {
+    animation-duration: 3.5s !important;
+    filter: brightness(1.6);
+}
+
+/* Working agents: pulse in place (no walk) */
+.hw-sprite-working {
+    animation: hwSpriteWorkPulse 0.8s ease-in-out infinite alternate !important;
+}
+@keyframes hwSpriteWorkPulse {
+    from { transform: scale(1);    opacity: .9; }
+    to   { transform: scale(1.15); opacity: 1;  box-shadow: 0 0 18px var(--sp-color), 0 0 36px color-mix(in srgb, var(--sp-color) 40%, transparent); }
+}
+
+/* Completed agents: brief success flash then idle */
+.hw-sprite-complete {
+    animation: hwSpriteFlash 1.5s ease-out forwards, hwSpriteWalk var(--sp-dur, 8s) ease-in-out 1.5s infinite alternate !important;
+}
+@keyframes hwSpriteFlash {
+    0%   { filter: brightness(1); }
+    25%  { filter: brightness(2.5) drop-shadow(0 0 10px #7dff9c); }
+    60%  { filter: brightness(1.8) drop-shadow(0 0 6px #7dff9c); }
+    100% { filter: brightness(1); }
+}
+
+/* =============================================
+   PHASE 11 — HOUSING MISSION OVERLAY
+============================================= */
+
+#hw-missionOverlay {
+    position: absolute;
+    right: 140px;
+    bottom: 55px;
+    z-index: 15;
+    background: rgba(4,0,18,.85);
+    border: 1px solid rgba(196,120,74,.35);
+    border-radius: 6px;
+    padding: 8px 12px;
+    min-width: 190px;
+    backdrop-filter: blur(3px);
+    box-shadow: 0 4px 16px rgba(0,0,0,.5), 0 0 0 1px rgba(196,120,74,.08);
+}
+
+.hw-missionTitle {
+    font-size: 8px;
+    letter-spacing: 2.5px;
+    color: rgba(196,120,74,.9);
+    font-weight: 700;
+    margin-bottom: 6px;
+    text-shadow: 0 0 10px rgba(196,120,74,.4);
+    border-bottom: 1px solid rgba(196,120,74,.18);
+    padding-bottom: 4px;
+}
+
+.hw-mphase {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 0;
+    font-size: 7.5px;
+    font-family: Arial, sans-serif;
+    flex-wrap: wrap;
+}
+
+.hw-mphaseIcon {
+    font-size: 9px;
+    width: 12px;
+    flex-shrink: 0;
+    text-align: center;
+}
+
+.hw-mphaseName {
+    letter-spacing: 1px;
+    flex: 1;
+}
+
+.hw-mphasePct {
+    font-size: 7px;
+    letter-spacing: .5px;
+    opacity: .8;
+}
+
+.hw-mphaseStep {
+    width: 100%;
+    font-size: 6.5px;
+    opacity: .6;
+    padding-left: 18px;
+    letter-spacing: .3px;
+    margin-top: 1px;
+}
+
+/* Phase state colors */
+.hw-mphase-pending .hw-mphaseName,
+.hw-mphase-pending .hw-mphaseIcon { color: rgba(200,160,255,.25); }
+
+.hw-mphase-active  .hw-mphaseName { color: var(--ph-color, #c4784a); animation: hwMphaseGlow 1.2s ease-in-out infinite alternate; }
+.hw-mphase-active  .hw-mphaseIcon { color: rgba(255,220,50,.9); }
+
+.hw-mphase-done    .hw-mphaseName,
+.hw-mphase-done    .hw-mphaseIcon { color: rgba(125,255,156,.75); }
+
+@keyframes hwMphaseGlow {
+    from { opacity: .75; }
+    to   { opacity: 1; text-shadow: 0 0 8px var(--ph-color, #c4784a); }
+}
+
+/* =============================================
+   PHASE 11 — COMMAND CONSOLE
+============================================= */
+
+#hw-consoleWrap {
+    background: rgba(2,0,10,.96);
+    border-top: 1px solid rgba(150,80,255,.14);
+    border-bottom: 1px solid rgba(150,80,255,.08);
+    flex-shrink: 0;
+}
+
+#hw-consoleHead {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 4px 16px;
+    border-bottom: 1px solid rgba(150,80,255,.1);
+}
+
+.hw-consoleLbl {
+    font-size: 7px;
+    letter-spacing: 2px;
+    color: rgba(156,246,255,.3);
+    flex-shrink: 0;
+}
+
+#hw-consoleMission {
+    font-size: 7px;
+    letter-spacing: 1.5px;
+    color: rgba(196,120,74,.7);
+    flex: 1;
+    animation: hwMphaseGlow 1.8s ease-in-out infinite alternate;
+}
+
+.hw-consoleClrBtn {
+    background: transparent;
+    border: 1px solid rgba(150,80,255,.1);
+    color: rgba(200,160,255,.2);
+    font-size: 6px;
+    letter-spacing: 1px;
+    padding: 2px 7px;
+    cursor: pointer;
+    border-radius: 2px;
+    font-family: inherit;
+    transition: all .15s;
+    flex-shrink: 0;
+}
+.hw-consoleClrBtn:hover {
+    border-color: rgba(150,80,255,.3);
+    color: rgba(200,160,255,.6);
+}
+
+#hw-consoleFeed {
+    max-height: 72px;
+    overflow-y: auto;
+    padding: 4px 16px 5px;
+    font-family: Arial, sans-serif;
+}
+#hw-consoleFeed::-webkit-scrollbar { width: 3px; }
+#hw-consoleFeed::-webkit-scrollbar-thumb { background: rgba(150,80,255,.15); border-radius: 2px; }
+
+.hw-cLine {
+    font-size: 8px;
+    letter-spacing: .3px;
+    color: rgba(200,160,255,.4);
+    line-height: 1.7;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.hw-cTs {
+    color: rgba(200,160,255,.2);
+    font-size: 7px;
+    letter-spacing: .3px;
+    margin-right: 4px;
+}
+.hw-cLine-mission { color: rgba(196,120,74,.85); font-weight: 700; }
+.hw-cLine-phase   { color: rgba(255,220,50,.7); }
+.hw-cLine-step    { color: rgba(200,160,255,.38); }
+.hw-cLine-ok      { color: rgba(125,255,156,.75); }
+.hw-cLine-success { color: rgba(125,255,156,.95); font-weight: 700; }
+.hw-cLine-dim     { color: rgba(200,160,255,.22); }

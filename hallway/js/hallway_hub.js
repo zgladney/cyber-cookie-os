@@ -1,25 +1,48 @@
 /* ================================================================
-   CyberCookieOS — Hallway Hub Controller
-   Live data from COS, ART, OE for the HQ hallway.
-   Replaces old agent_status.js (which polled a non-existent JSON).
+   CyberCookieOS — Hallway Hub Controller  v2.0 (Phase 11)
+   Wires COS, ART, OE, AE event streams to the hallway UI.
+
+   Bug fixes vs v1:
+   - ART emits e.s as state OBJECT {state,task,…}, not a string.
+     All comparisons now use e.s.state and e.s.task.
+   - getDeptActiveCount: ART.getEmpState returns object, not string.
+   - cntRpts element id is hw-cntRpts (not hw-cntReports).
+
+   New in Phase 11:
+   - AE Housing Mission: panel overlay + console feed updates
+   - Command console #hw-consoleWrap: shows live task log
+   - RUN HQ button also triggers AE.runHousingMission()
+   - Sprite state classes: hw-sprite-running / working / complete
+   - Agent count: dynamic from COS.employees (18 registered)
 ================================================================ */
 (function () {
   'use strict';
 
   var DEPT_IDS = ['security', 'housing', 'commerce', 'productivity', 'finance'];
-  var DEPT_COLORS = {
-    security: '#9b6bff', housing: '#c4784a', commerce: '#ff69b4',
-    productivity: '#3aa8c8', finance: '#2ecc71',
-  };
 
-  // Department leads shown on back wall board
   var LEADS = [
-    { dept: 'security',    id: 'athena',     icon: '🛡', name: 'ATHENA' },
-    { dept: 'housing',     id: 'nova',       icon: '🏠', name: 'NOVA' },
-    { dept: 'commerce',    id: 'pixel',      icon: '📈', name: 'PIXEL' },
-    { dept: 'productivity',id: 'calypso',    icon: '📅', name: 'CALYPSO' },
-    { dept: 'finance',     id: 'greenbean',  icon: '💰', name: 'GREENBEAN' },
+    { dept: 'security',     id: 'athena',    icon: '🛡', name: 'ATHENA' },
+    { dept: 'housing',      id: 'nova',      icon: '🏠', name: 'NOVA' },
+    { dept: 'commerce',     id: 'pixel',     icon: '📈', name: 'PIXEL' },
+    { dept: 'productivity', id: 'calypso',   icon: '📅', name: 'CALYPSO' },
+    { dept: 'finance',      id: 'greenbean', icon: '💰', name: 'GREENBEAN' },
   ];
+
+  // Sprite-id to agent-id mapping for state animations
+  var SPRITE_AGENTS = {
+    'hw-sp-athena':    'athena',
+    'hw-sp-nimbus':    'nimbus',
+    'hw-sp-sentinel':  'sentinel',
+    'hw-sp-nova':      'nova',
+    'hw-sp-beacon':    'beacon',
+    'hw-sp-pixel':     'pixel',
+    'hw-sp-spark':     'spark',
+    'hw-sp-calypso':   'calypso',
+    'hw-sp-echo':      'echo',
+    'hw-sp-greenbean': 'greenbean',
+    'hw-sp-penny':     'penny',
+    'hw-sp-ledger':    'ledger',
+  };
 
   var STATE_CSS = {
     idle:      'hw-s-idle',
@@ -32,6 +55,7 @@
 
   var _agentStates = {};  // empId → state string
   var _metrics     = { tasksCompleted: 0, errorsTotal: 0 };
+  var _consoleLog  = [];  // recent console entries
 
   // ── BACK WALL AGENT BOARD ───────────────────────────────────────
 
@@ -39,93 +63,94 @@
     var board = document.getElementById('hw-agentRows');
     if (!board) return;
     board.innerHTML = LEADS.map(function (lead) {
-      var state   = _agentStates[lead.id] || 'idle';
-      var css     = STATE_CSS[state] || 'hw-s-idle';
-      var label   = state.toUpperCase();
+      var s     = _agentStates[lead.id] || 'idle';
+      var css   = STATE_CSS[s] || 'hw-s-idle';
       return (
         '<div class="hw-agentRow" id="hw-row-' + lead.id + '">' +
           '<span class="hw-aIcon">' + lead.icon + '</span>' +
           '<span class="hw-aName">' + lead.name + '</span>' +
-          '<span class="hw-aStatus ' + css + '" id="hw-status-' + lead.id + '">● ' + label + '</span>' +
+          '<span class="hw-aStatus ' + css + '" id="hw-status-' + lead.id + '">● ' + s.toUpperCase() + '</span>' +
         '</div>'
       );
     }).join('');
   }
 
-  function updateBoardRow(empId, state) {
+  function updateBoardRow(empId, stateStr) {
     var el = document.getElementById('hw-status-' + empId);
     if (!el) return;
-    var css   = STATE_CSS[state] || 'hw-s-idle';
-    el.className = 'hw-aStatus ' + css;
-    el.textContent = '● ' + state.toUpperCase();
+    var css = STATE_CSS[stateStr] || 'hw-s-idle';
+    el.className   = 'hw-aStatus ' + css;
+    el.textContent = '● ' + (stateStr || 'idle').toUpperCase();
   }
 
-  // ── DEPT CARDS LIVE DATA ────────────────────────────────────────
+  // ── SPRITE STATE ANIMATIONS ─────────────────────────────────────
+
+  function updateSprites() {
+    var spIds = Object.keys(SPRITE_AGENTS);
+    spIds.forEach(function (spId) {
+      var agentId = SPRITE_AGENTS[spId];
+      var el      = document.getElementById(spId);
+      if (!el) return;
+      var s = _agentStates[agentId] || 'idle';
+      el.classList.remove('hw-sprite-running', 'hw-sprite-working', 'hw-sprite-complete');
+      if (s === 'running')   el.classList.add('hw-sprite-running');
+      if (s === 'paused')    el.classList.add('hw-sprite-working');
+      if (s === 'completed') el.classList.add('hw-sprite-complete');
+    });
+  }
+
+  // ── DEPT CARDS ──────────────────────────────────────────────────
 
   function getDeptActiveCount(deptId) {
     if (typeof ART === 'undefined') return 0;
-    var ids = (window.COS && COS.deptEmployees && COS.deptEmployees[deptId]) || [];
+    var ids = (typeof COS !== 'undefined' && COS.deptEmployees && COS.deptEmployees[deptId]) || [];
     var count = 0;
     ids.forEach(function (id) {
-      var s = ART.getEmpState(id);
+      var emp = ART.getEmpState(id);
+      var s   = (emp && typeof emp === 'object') ? emp.state : emp;
       if (s === 'running' || s === 'paused') count++;
     });
     return count;
   }
 
-  function getDeptQueueCount(deptId) {
-    if (typeof ART === 'undefined') return 0;
-    var q = ART.getQueue(deptId);
-    return q ? q.length : 0;
-  }
-
-  function getDeptLatestDeliverable(deptId) {
-    if (typeof OE === 'undefined') return null;
-    var recent = OE.getByDept(deptId);
-    return recent.length ? recent[0] : null;
-  }
-
   function updateDeptCard(deptId) {
-    var active    = getDeptActiveCount(deptId);
-    var queued    = getDeptQueueCount(deptId);
-    var latest    = getDeptLatestDeliverable(deptId);
+    var active  = getDeptActiveCount(deptId);
+    var queued  = typeof ART !== 'undefined' ? (ART.getQueue(deptId) || []).length : 0;
+    var latest  = typeof OE  !== 'undefined' ? (OE.getByDept(deptId)[0] || null) : null;
 
-    var activeEl  = document.getElementById('hw-active-' + deptId);
-    var queueEl   = document.getElementById('hw-queue-'  + deptId);
-    var delivEl   = document.getElementById('hw-dlv-'    + deptId);
-    var badgeEl   = document.getElementById('hw-badge-'  + deptId);
+    var activeEl = document.getElementById('hw-active-' + deptId);
+    var queueEl  = document.getElementById('hw-queue-'  + deptId);
+    var delivEl  = document.getElementById('hw-dlv-'    + deptId);
+    var badgeEl  = document.getElementById('hw-badge-'  + deptId);
 
     if (activeEl) activeEl.textContent = active + ' active';
     if (queueEl)  queueEl.textContent  = queued + ' queued';
     if (delivEl) {
       if (latest) {
         var diff = Math.floor((Date.now() - latest.ts) / 1000);
-        var ago  = diff < 60 ? diff + 's ago' : diff < 3600 ? Math.floor(diff/60) + 'm ago' : Math.floor(diff/3600) + 'h ago';
+        var ago  = diff < 60 ? diff + 's ago' : diff < 3600 ? Math.floor(diff / 60) + 'm ago' : Math.floor(diff / 3600) + 'h ago';
         delivEl.textContent = latest.agentName + ': ' + latest.summary.slice(0, 36) + (latest.summary.length > 36 ? '…' : '') + ' · ' + ago;
       } else {
         delivEl.textContent = '— No deliverables yet';
       }
     }
-
     if (badgeEl) {
       var deptState = typeof ART !== 'undefined' ? ART.getDeptState(deptId) : 'idle';
       if (deptState === 'running') {
-        badgeEl.className = 'hw-deptBadge hw-badge-running';
+        badgeEl.className   = 'hw-deptBadge hw-badge-running';
         badgeEl.textContent = '● RUNNING';
       } else if (deptState === 'paused') {
-        badgeEl.className = 'hw-deptBadge hw-badge-paused';
+        badgeEl.className   = 'hw-deptBadge hw-badge-paused';
         badgeEl.textContent = '⏸ PAUSED';
       } else {
         badgeEl.className = 'hw-deptBadge';
-        var wingMap = { security:'A', housing:'B', commerce:'C', productivity:'D', finance:'E' };
+        var wingMap = { security: 'A', housing: 'B', commerce: 'C', productivity: 'D', finance: 'E' };
         badgeEl.textContent = '● WING ' + (wingMap[deptId] || '?');
       }
     }
   }
 
-  function updateAllDeptCards() {
-    DEPT_IDS.forEach(updateDeptCard);
-  }
+  function updateAllDeptCards() { DEPT_IDS.forEach(updateDeptCard); }
 
   // ── COMMAND STRIP ───────────────────────────────────────────────
 
@@ -134,44 +159,54 @@
     var metaEl    = document.getElementById('hw-hqMeta');
     var cntAgents = document.getElementById('hw-cntAgents');
     var cntTasks  = document.getElementById('hw-cntTasks');
-    var cntRpts   = document.getElementById('hw-cntReports');
+    var cntRpts   = document.getElementById('hw-cntRpts');  // fixed: was hw-cntReports
 
     var running = 0;
     if (typeof ART !== 'undefined') {
-      DEPT_IDS.forEach(function (d) {
-        if (ART.getDeptState(d) === 'running') running++;
-      });
+      DEPT_IDS.forEach(function (d) { if (ART.getDeptState(d) === 'running') running++; });
       var m = ART.getMetrics();
       if (m) _metrics = m;
     }
 
-    var totalActive = 0;
+    var aeRunning    = typeof AE !== 'undefined' && AE.isRunning();
+    var totalActive  = 0;
     DEPT_IDS.forEach(function (d) { totalActive += getDeptActiveCount(d); });
     var todayReports = typeof OE !== 'undefined' ? OE.getTodayCount() : 0;
 
     if (stateEl) {
-      if (running > 0) {
-        stateEl.textContent = '● HQ ACTIVE — ' + running + ' dept' + (running > 1 ? 's' : '') + ' running';
-        stateEl.className = 'hw-hqState hw-hqState-running';
+      if (running > 0 || aeRunning) {
+        var parts = [];
+        if (running > 0) parts.push(running + ' dept' + (running > 1 ? 's' : '') + ' running');
+        if (aeRunning) {
+          var ae   = AE.getState();
+          var pct  = ae.totalPhases > 0 ? Math.round((ae.completed.length / ae.totalPhases) * 100) : 0;
+          parts.push('Housing Mission ' + pct + '%');
+        }
+        stateEl.textContent = '● HQ ACTIVE — ' + parts.join(' · ');
+        stateEl.className   = 'hw-hqState hw-hqState-running';
       } else {
         stateEl.textContent = '● HQ STANDBY';
-        stateEl.className = 'hw-hqState';
+        stateEl.className   = 'hw-hqState';
       }
     }
 
     if (metaEl) {
       metaEl.textContent = totalActive + ' agents active · ' + (_metrics.tasksCompleted || 0) + ' tasks completed · ' + todayReports + ' reports today';
     }
-
     if (cntAgents) cntAgents.textContent = totalActive;
     if (cntTasks)  cntTasks.textContent  = _metrics.tasksCompleted || 0;
     if (cntRpts)   cntRpts.textContent   = todayReports;
+
+    // Update agent count badge (18 registered agents)
+    var onlineEl = document.getElementById('hw-onlineCount');
+    if (onlineEl && typeof COS !== 'undefined' && COS.employees) {
+      onlineEl.textContent = Object.keys(COS.employees).length;
+    }
   }
 
   // ── ACTIVITY TICKER ─────────────────────────────────────────────
 
   var _tickerItems = [];
-  var _tickerIdx   = 0;
 
   function pushTicker(msg) {
     _tickerItems.unshift(msg);
@@ -185,24 +220,87 @@
     var items = _tickerItems.slice(0, 10);
     if (!items.length) return;
     var text = items.join(' ◆ ') + ' ◆ ';
-    // Duplicate content for seamless CSS marquee loop
     track.textContent = text + text;
   }
 
   function seedTicker() {
-    var seeds = [
-      'CyberCookieOS HQ online',
-      'All systems nominal',
-      'Awaiting run command',
-    ];
+    var seeds = ['CyberCookieOS HQ online', 'All systems nominal', 'Awaiting run command'];
     if (typeof COS !== 'undefined') {
       var recent = COS.activity.get().slice(0, 3);
-      recent.forEach(function (a) {
-        if (a.msg) seeds.push('[' + a.agent + '] ' + a.msg);
-      });
+      recent.forEach(function (a) { if (a.msg) seeds.push('[' + a.agent + '] ' + a.msg); });
     }
     seeds.forEach(function (s) { _tickerItems.push(s); });
     renderTicker();
+  }
+
+  // ── COMMAND CONSOLE ─────────────────────────────────────────────
+
+  var _MAX_CONSOLE = 80;
+
+  function _ts() {
+    var d = new Date();
+    return String(d.getHours()).padStart(2, '0') + ':' +
+           String(d.getMinutes()).padStart(2, '0') + ':' +
+           String(d.getSeconds()).padStart(2, '0');
+  }
+
+  function pushConsole(msg, cls) {
+    _consoleLog.push({ ts: _ts(), msg: msg, cls: cls || '' });
+    if (_consoleLog.length > _MAX_CONSOLE) _consoleLog.shift();
+    renderConsole();
+
+    var wrap = document.getElementById('hw-consoleWrap');
+    if (wrap) wrap.style.display = 'block';
+  }
+
+  function renderConsole() {
+    var feed = document.getElementById('hw-consoleFeed');
+    if (!feed) return;
+    var slice = _consoleLog.slice(-20);
+    feed.innerHTML = slice.map(function (e) {
+      return '<div class="hw-cLine' + (e.cls ? ' ' + e.cls : '') + '">' +
+             '<span class="hw-cTs">' + e.ts + '</span> ' +
+             _esc(e.msg) + '</div>';
+    }).join('');
+    feed.scrollTop = feed.scrollHeight;
+  }
+
+  function _esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  // ── HOUSING MISSION OVERLAY ─────────────────────────────────────
+
+  function updateMissionOverlay() {
+    var overlay = document.getElementById('hw-missionOverlay');
+    var phases  = document.getElementById('hw-missionPhases');
+    if (!overlay || !phases || typeof AE === 'undefined') return;
+
+    var ae = AE.getState();
+
+    if (!ae.running && ae.phase === -1 && ae.completed.length === 0) {
+      overlay.style.display = 'none';
+      return;
+    }
+
+    overlay.style.display = 'block';
+    phases.innerHTML = AE.WORKFLOW.map(function (step, i) {
+      var done    = ae.completed.indexOf(i) !== -1;
+      var active  = ae.phase === i && ae.running;
+      var pdata   = ae.agentProgress[step.agent] || {};
+      var cls     = done ? 'hw-mphase-done' : (active ? 'hw-mphase-active' : 'hw-mphase-pending');
+      var icon    = done ? '✓' : (active ? '▶' : '○');
+      var detail  = active && pdata.step ? pdata.step.slice(0, 38) : '';
+      var pct     = active && pdata.pct ? pdata.pct : (done ? 100 : 0);
+      return (
+        '<div class="hw-mphase ' + cls + '" style="--ph-color:' + step.color + '">' +
+          '<span class="hw-mphaseIcon">' + icon + '</span>' +
+          '<span class="hw-mphaseName">' + step.label.toUpperCase() + '</span>' +
+          (active ? '<span class="hw-mphasePct">' + pct + '%</span>' : '') +
+          (detail  ? '<div class="hw-mphaseStep">' + _esc(detail) + '</div>' : '') +
+        '</div>'
+      );
+    }).join('');
   }
 
   // ── EVENT WIRING ────────────────────────────────────────────────
@@ -210,14 +308,18 @@
   function wireEvents() {
     if (typeof COS === 'undefined') return;
 
+    // ART agent state changes — e.s is the FULL state OBJECT {state, task, progress, …}
     COS.events.on('agent:stateChange', function (e) {
-      _agentStates[e.id] = e.s;
-      updateBoardRow(e.id, e.s);
+      var stateObj = e.s;
+      var stateStr = (stateObj && typeof stateObj === 'object') ? stateObj.state : stateObj;
+      _agentStates[e.id] = stateStr || 'idle';
+      updateBoardRow(e.id, _agentStates[e.id]);
       updateAllDeptCards();
       updateCommandStrip();
-      if (e.s === 'running' && e.task) {
+      updateSprites();
+      if (stateStr === 'running' && stateObj && stateObj.task) {
         var emp = COS.employees[e.id];
-        if (emp) pushTicker('[' + emp.name + '] started: ' + e.task);
+        if (emp) pushTicker('[' + emp.name + '] started: ' + stateObj.task);
       }
     });
 
@@ -234,33 +336,120 @@
     COS.events.on('output:created', function (e) {
       updateAllDeptCards();
       updateCommandStrip();
-      if (e.output) pushTicker('[' + e.output.agentName + '] ' + e.output.summary.slice(0, 50));
+      if (e.output) {
+        pushTicker('[' + e.output.agentName + '] ' + e.output.summary.slice(0, 50));
+        if (e.output.taskType === 'housing_mission') {
+          pushConsole('🏠 ' + e.output.summary, 'hw-cLine-success');
+        }
+      }
     });
 
     COS.events.on('cos:activity', function (e) {
       if (e && e.msg) pushTicker('[' + (e.agent || 'HQ') + '] ' + e.msg);
     });
+
+    // ── AE Housing Mission events ──────────────────────────────────
+
+    COS.events.on('ae:missionStart', function (e) {
+      pushConsole('🏠 Housing Mission started [' + e.missionId + ']', 'hw-cLine-mission');
+      pushConsole('  Workflow: Nova → Penny → Calypso → Nimbus → Report Center', 'hw-cLine-dim');
+      updateMissionOverlay();
+      updateCommandStrip();
+
+      var label = document.getElementById('hw-consoleMission');
+      if (label) label.textContent = '// HOUSING MISSION ACTIVE';
+    });
+
+    COS.events.on('ae:phaseStart', function (e) {
+      pushConsole('▶ Phase ' + (e.phase + 1) + '/' + e.total + ' — [' + (e.agent || '').toUpperCase() + '] ' + e.label, 'hw-cLine-phase');
+      updateMissionOverlay();
+      updateCommandStrip();
+    });
+
+    COS.events.on('ae:agentTask', function (e) {
+      var s = e.state || {};
+      if (s.status === 'running' && s.step) {
+        var line = '  [' + (e.agent || '').toUpperCase() + '] ' + (s.pct || 0) + '% — ' + s.step;
+        // Update existing last line if same agent to avoid flooding
+        if (_consoleLog.length && _consoleLog[_consoleLog.length - 1].msg.indexOf('[' + (e.agent || '').toUpperCase() + ']') === 2) {
+          _consoleLog[_consoleLog.length - 1].msg = line;
+          _consoleLog[_consoleLog.length - 1].ts  = _ts();
+          renderConsole();
+        } else {
+          pushConsole(line, 'hw-cLine-step');
+        }
+      }
+      updateMissionOverlay();
+    });
+
+    COS.events.on('ae:phaseComplete', function (e) {
+      pushConsole('✓ [' + (e.agent || '').toUpperCase() + '] Phase ' + (e.phase + 1) + ' complete — mission ' + e.missionPct + '% done', 'hw-cLine-ok');
+      updateMissionOverlay();
+      updateCommandStrip();
+    });
+
+    COS.events.on('ae:missionComplete', function (e) {
+      pushConsole('🏁 Housing Mission Complete — ' + e.duration + 's · ' + e.properties + ' listings ready for review', 'hw-cLine-success');
+      setTimeout(function () {
+        var overlay = document.getElementById('hw-missionOverlay');
+        if (overlay) overlay.style.display = 'none';
+        var btn = document.getElementById('hw-btnRunHQ');
+        if (btn) btn.textContent = '▶ RUN HEADQUARTERS';
+        var label = document.getElementById('hw-consoleMission');
+        if (label) label.textContent = '';
+        updateCommandStrip();
+      }, 3000);
+    });
+
+    COS.events.on('ae:missionStopped', function () {
+      pushConsole('⏹ Housing Mission stopped.', 'hw-cLine-dim');
+      setTimeout(function () {
+        var overlay = document.getElementById('hw-missionOverlay');
+        if (overlay) overlay.style.display = 'none';
+        var label = document.getElementById('hw-consoleMission');
+        if (label) label.textContent = '';
+      }, 800);
+      updateCommandStrip();
+    });
   }
+
+  // ── RUN HQ BUTTON ───────────────────────────────────────────────
 
   function wireRunBtn() {
     var btn = document.getElementById('hw-btnRunHQ');
     if (!btn) return;
+
     btn.addEventListener('click', function () {
-      if (typeof ART === 'undefined') return;
-      if (ART.isAnyRunning()) {
-        ART.stopAll();
+      var artRunning = typeof ART !== 'undefined' && ART.isAnyRunning();
+      var aeRunning  = typeof AE  !== 'undefined' && AE.isRunning();
+      var anyRunning = artRunning || aeRunning;
+
+      if (anyRunning) {
+        if (typeof ART !== 'undefined') ART.stopAll();
+        if (typeof AE  !== 'undefined') AE.stopMission();
         btn.textContent = '▶ RUN HEADQUARTERS';
       } else {
-        ART.runAll();
+        if (typeof ART !== 'undefined') ART.runAll();
+        if (typeof AE  !== 'undefined') AE.runHousingMission();
         btn.textContent = '⏹ STOP ALL';
       }
     });
 
-    // Also wire the existing ops button (opsBtn)
     var opsBtn = document.getElementById('hw-opsBtn');
     if (opsBtn) {
       opsBtn.addEventListener('click', function () {
         window.location.href = '../ops_center/index.html';
+      });
+    }
+
+    // Console clear button
+    var clrBtn = document.getElementById('hw-consoleClear');
+    if (clrBtn) {
+      clrBtn.addEventListener('click', function () {
+        _consoleLog = [];
+        renderConsole();
+        var wrap = document.getElementById('hw-consoleWrap');
+        if (wrap) wrap.style.display = 'none';
       });
     }
   }
@@ -270,23 +459,21 @@
   var _startTime = Date.now();
 
   function updateClock() {
-    var now    = new Date();
-    var h      = String(now.getHours()).padStart(2, '0');
-    var m      = String(now.getMinutes()).padStart(2, '0');
-    var s      = String(now.getSeconds()).padStart(2, '0');
-    var el     = document.getElementById('hw-clock');
+    var now   = new Date();
+    var h     = String(now.getHours()).padStart(2, '0');
+    var m     = String(now.getMinutes()).padStart(2, '0');
+    var s     = String(now.getSeconds()).padStart(2, '0');
+    var el    = document.getElementById('hw-clock');
     if (el) el.textContent = h + ':' + m + ':' + s;
 
-    // Uptime
-    var secs   = Math.floor((Date.now() - _startTime) / 1000);
-    var uMins  = Math.floor(secs / 60);
-    var uHrs   = Math.floor(uMins / 60);
-    uMins      = uMins % 60;
-    var upEl   = document.getElementById('hw-uptimeStat');
+    var secs  = Math.floor((Date.now() - _startTime) / 1000);
+    var uMins = Math.floor(secs / 60);
+    var uHrs  = Math.floor(uMins / 60);
+    uMins     = uMins % 60;
+    var upEl  = document.getElementById('hw-uptimeStat');
     if (upEl) upEl.textContent = (uHrs > 0 ? uHrs + 'h ' : '') + uMins + ':' + String(secs % 60).padStart(2, '0');
 
-    // Reports count
-    var rptEl  = document.getElementById('hw-reportsStat');
+    var rptEl = document.getElementById('hw-reportsStat');
     if (rptEl && typeof OE !== 'undefined') rptEl.textContent = OE.getTodayCount();
   }
 
@@ -300,14 +487,13 @@
     wireEvents();
     wireRunBtn();
 
-    // Clock ticks every second
     updateClock();
     setInterval(updateClock, 1000);
 
-    // Refresh all every 10 seconds
     setInterval(function () {
       updateAllDeptCards();
       updateCommandStrip();
+      if (typeof AE !== 'undefined' && AE.isRunning()) updateMissionOverlay();
     }, 10000);
   });
 
