@@ -198,6 +198,7 @@
                 <div class="cic-nameplate">
                     <div class="cic-nm-name">NOVA</div>
                     <div class="cic-nm-role">CHIEF CAREER INTELLIGENCE OFFICER</div>
+                    <div class="cic-nm-task" id="cic-task-nova">Scanning LinkedIn...</div>
                 </div>
                 <div class="cic-sprite" id="cic-sp-nova">N<span class="cic-spritelbl">NOVA — Chief Career Intelligence Officer</span></div>
             </div>
@@ -223,6 +224,7 @@
                 <div class="cic-nameplate">
                     <div class="cic-nm-name cic-nm-cyan">RESU-MATE</div>
                     <div class="cic-nm-role">RESUME OPTIMIZATION SPECIALIST</div>
+                    <div class="cic-nm-task" id="cic-task-resu">Analyzing ATS keywords...</div>
                 </div>
                 <div class="cic-sprite cic-sp-cyan" id="cic-sp-resu">R<span class="cic-spritelbl">RESU-MATE — Resume Optimization Specialist</span></div>
             </div>
@@ -250,6 +252,7 @@
                 <div class="cic-nameplate">
                     <div class="cic-nm-name cic-nm-green">SCOUT-X</div>
                     <div class="cic-nm-role">GEOGRAPHIC OPPORTUNITY ANALYST</div>
+                    <div class="cic-nm-task" id="cic-task-scoutx">Mapping regional opportunities...</div>
                 </div>
                 <div class="cic-sprite cic-sp-green" id="cic-sp-scoutx">S<span class="cic-spritelbl">SCOUT-X — Geographic Opportunity Analyst</span></div>
             </div>
@@ -311,16 +314,10 @@
                 </div>
             </div>
 
-            <!-- Mission Board -->
+            <!-- Live Activity Log -->
             <div class="cic-card">
-                <div class="cic-cardTitle">// CAREER MISSION</div>
-                <div class="cic-mission">
-                    <div class="cic-mItem cic-m-active">▸ CompTIA A+ cert prep</div>
-                    <div class="cic-mItem cic-m-active">▸ Apply to 3 roles/week</div>
-                    <div class="cic-mItem cic-m-pending">○ Home lab SOC setup</div>
-                    <div class="cic-mItem cic-m-pending">○ CompTIA Security+</div>
-                    <div class="cic-mItem cic-m-done">✓ Resume updated</div>
-                </div>
+                <div class="cic-cardTitle">// TODAY'S ACTIVITY</div>
+                <div class="al-feed" id="cic-lifeFeed"></div>
             </div>
 
         </aside>
@@ -590,7 +587,7 @@
 <script src="../js/agent_presence.js"></script>
 <script src="workspace.js"></script>
 <script src="js/career_intel.js"></script>
-
+<script src="../js/company_life.js"></script>
 
 <script>
 /* Phase 12: Page transition support */
@@ -607,6 +604,17 @@ document.addEventListener("DOMContentLoaded", function () {
       a.addEventListener("click", function (e) { e.preventDefault(); navigateTo(href); });
     }
   });
+
+  if (window.LIFE) {
+    LIFE.boot('career', {
+      tasks: {
+        nova:     'cic-task-nova',
+        resuMate: 'cic-task-resu',
+        scoutX:   'cic-task-scoutx'
+      },
+      logEl: 'cic-lifeFeed'
+    });
+  }
 });
 </script>
 <style>

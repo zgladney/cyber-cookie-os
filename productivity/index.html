@@ -101,6 +101,7 @@
                 <div class="pd-stn-plate">
                     <div class="pd-stn-name">CALYPSO</div>
                     <div class="pd-stn-role">CALENDAR &amp; FOCUS DIRECTOR</div>
+                    <div class="pd-stn-task" id="pd-task-calypso">Protecting focus blocks...</div>
                 </div>
             </div>
 
@@ -125,6 +126,7 @@
                 <div class="pd-stn-plate">
                     <div class="pd-stn-name" style="color:#7EC8E3">ECHO</div>
                     <div class="pd-stn-role">COMMUNICATIONS SPECIALIST</div>
+                    <div class="pd-stn-task" id="pd-task-echo">Processing inbox queue...</div>
                 </div>
             </div>
 
@@ -149,6 +151,7 @@
                 <div class="pd-stn-plate">
                     <div class="pd-stn-name" style="color:rgba(180,120,255,.9)">ATLAS PLANNER</div>
                     <div class="pd-stn-role">TASK DEPENDENCY MANAGER</div>
+                    <div class="pd-stn-task" id="pd-task-atlas">Mapping task dependencies...</div>
                 </div>
             </div>
 
@@ -173,6 +176,7 @@
                 <div class="pd-stn-plate">
                     <div class="pd-stn-name" style="color:rgba(125,255,156,.85)">MEMO</div>
                     <div class="pd-stn-role">REMINDER &amp; DEADLINE TRACKER</div>
+                    <div class="pd-stn-task" id="pd-task-memo">Setting deadline reminders...</div>
                 </div>
             </div>
 
@@ -209,6 +213,11 @@
                 <div class="pd-intReq">→ Career: Interview scheduling</div>
                 <div class="pd-intReq">→ Security: Maintenance windows</div>
                 <div class="pd-intReq">← Finance: Review cycle dates</div>
+            </div>
+
+            <div class="pd-card">
+                <div class="pd-cardTitle">// TODAY'S ACTIVITY</div>
+                <div class="al-feed" id="pd-lifeFeed"></div>
             </div>
 
             <div class="pd-navLinks">
@@ -300,7 +309,7 @@
 <script src="../js/art_room_ui.js"></script>
 <script src="../js/agent_presence.js"></script>
 <script src="workspace.js"></script>
-
+<script src="../js/company_life.js"></script>
 
 <script>
 /* Phase 12: Page transition support */
@@ -317,6 +326,18 @@ document.addEventListener("DOMContentLoaded", function () {
       a.addEventListener("click", function (e) { e.preventDefault(); navigateTo(href); });
     }
   });
+
+  if (window.LIFE) {
+    LIFE.boot('productivity', {
+      tasks: {
+        calypso: 'pd-task-calypso',
+        echo:    'pd-task-echo',
+        atlas:   'pd-task-atlas',
+        memo:    'pd-task-memo'
+      },
+      logEl: 'pd-lifeFeed'
+    });
+  }
 });
 </script>
 <style>

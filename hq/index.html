@@ -276,6 +276,7 @@
                 <div class="stn-nameplate">
                     <div class="stn-nm-name">ATHENA</div>
                     <div class="stn-nm-role">THREAT HUNTER LEAD</div>
+                    <div class="stn-task" id="soc-task-athena">Scanning suspicious IPs...</div>
                 </div>
             </div>
 
@@ -301,6 +302,7 @@
                 <div class="stn-nameplate">
                     <div class="stn-nm-name">NIMBUS</div>
                     <div class="stn-nm-role">ANOMALY DETECTION</div>
+                    <div class="stn-task" id="soc-task-nimbus">Monitoring log feeds...</div>
                 </div>
             </div>
 
@@ -331,6 +333,7 @@
                 <div class="stn-nameplate">
                     <div class="stn-nm-name">SENTINEL</div>
                     <div class="stn-nm-role">NETWORK PATROL</div>
+                    <div class="stn-task" id="soc-task-sentinel">Validating firewall rules...</div>
                 </div>
             </div>
 
@@ -379,6 +382,12 @@
             <div class="soc-card">
                 <div class="soc-cardTitle">// SCAN HISTORY</div>
                 <div id="hq-scanHistory"></div>
+            </div>
+
+            <!-- Live Department Activity -->
+            <div class="soc-card">
+                <div class="soc-cardTitle">// TODAY'S ACTIVITY</div>
+                <div class="al-feed" id="soc-lifeFeed"></div>
             </div>
         </aside>
 
@@ -536,6 +545,7 @@
 <script src="../js/agent_presence.js"></script>
 <script src="workspace.js"></script>
 <script src="js/soc_live.js"></script>
+<script src="../js/company_life.js"></script>
 
 <script>
 /* Page transition: fade out before navigation */
@@ -551,6 +561,18 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('.dirItem[onclick]').forEach(function (el) {
     el.style.cursor = 'pointer';
   });
+
+  /* Boot ambient activity engine */
+  if (window.LIFE) {
+    LIFE.boot('security', {
+      tasks: {
+        athena:   'soc-task-athena',
+        nimbus:   'soc-task-nimbus',
+        sentinel: 'soc-task-sentinel'
+      },
+      logEl: 'soc-lifeFeed'
+    });
+  }
 });
 </script>
 

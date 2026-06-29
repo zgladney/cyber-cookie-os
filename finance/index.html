@@ -101,6 +101,7 @@
                 <div class="fn-stn-plate">
                     <div class="fn-stn-name">GREENBEAN</div>
                     <div class="fn-stn-role">FINANCE MANAGER</div>
+                    <div class="fn-stn-task" id="fn-task-greenbean">Running cash flow analysis...</div>
                 </div>
             </div>
 
@@ -125,6 +126,7 @@
                 <div class="fn-stn-plate">
                     <div class="fn-stn-name" style="color:rgba(255,210,80,.9)">LEDGER</div>
                     <div class="fn-stn-role">BILL &amp; TRANSACTION TRACKER</div>
+                    <div class="fn-stn-task" id="fn-task-ledger">Categorizing expenses...</div>
                 </div>
             </div>
 
@@ -149,6 +151,7 @@
                 <div class="fn-stn-plate">
                     <div class="fn-stn-name" style="color:rgba(80,210,160,.85)">PENNY</div>
                     <div class="fn-stn-role">BUDGET PLANNING OFFICER</div>
+                    <div class="fn-stn-task" id="fn-task-penny">Analyzing budget usage...</div>
                 </div>
             </div>
 
@@ -184,6 +187,7 @@
                 <div class="fn-stn-plate">
                     <div class="fn-stn-name" style="color:#2ECC71">VAULT</div>
                     <div class="fn-stn-role">SAVINGS &amp; FUND TRACKER</div>
+                    <div class="fn-stn-task" id="fn-task-vault">Calculating savings rate...</div>
                 </div>
             </div>
 
@@ -220,6 +224,11 @@
                 <div class="fn-intReq">← Career: Salary benchmarks</div>
                 <div class="fn-intReq">→ Commerce: Profit forecast</div>
                 <div class="fn-intReq">← Productivity: Review dates</div>
+            </div>
+
+            <div class="fn-card">
+                <div class="fn-cardTitle">// TODAY'S ACTIVITY</div>
+                <div class="al-feed" id="fn-lifeFeed"></div>
             </div>
 
             <div style="margin-top:4px">
@@ -432,7 +441,7 @@
 <script src="../js/art_room_ui.js"></script>
 <script src="../js/agent_presence.js"></script>
 <script src="workspace.js"></script>
-
+<script src="../js/company_life.js"></script>
 
 <script>
 /* Phase 12: Page transition support */
@@ -449,6 +458,18 @@ document.addEventListener("DOMContentLoaded", function () {
       a.addEventListener("click", function (e) { e.preventDefault(); navigateTo(href); });
     }
   });
+
+  if (window.LIFE) {
+    LIFE.boot('finance', {
+      tasks: {
+        greenbean: 'fn-task-greenbean',
+        ledger:    'fn-task-ledger',
+        penny:     'fn-task-penny',
+        vault:     'fn-task-vault'
+      },
+      logEl: 'fn-lifeFeed'
+    });
+  }
 });
 </script>
 <style>

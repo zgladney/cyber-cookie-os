@@ -103,6 +103,7 @@
                 <div class="cm-stn-plate">
                     <div class="cm-stn-name">PIXEL</div>
                     <div class="cm-stn-role">TREND INTELLIGENCE</div>
+                    <div class="cm-stn-task" id="cm-task-pixel">Scanning TikTok trends...</div>
                 </div>
             </div>
 
@@ -126,6 +127,7 @@
                 <div class="cm-stn-plate">
                     <div class="cm-stn-name" style="color:hotpink">ETSYBOT</div>
                     <div class="cm-stn-role">LISTINGS &amp; ORDER MANAGER</div>
+                    <div class="cm-stn-task" id="cm-task-etsybot">Syncing listing data...</div>
                 </div>
             </div>
 
@@ -150,6 +152,7 @@
                 <div class="cm-stn-plate">
                     <div class="cm-stn-name" style="color:rgba(200,100,255,.9)">SPARK</div>
                     <div class="cm-stn-role">CONTENT STUDIO DIRECTOR</div>
+                    <div class="cm-stn-task" id="cm-task-spark">Drafting hook scripts...</div>
                 </div>
             </div>
 
@@ -173,6 +176,7 @@
                 <div class="cm-stn-plate">
                     <div class="cm-stn-name" style="color:rgba(255,200,80,.9)">FORGE</div>
                     <div class="cm-stn-role">POD &amp; FULFILLMENT MANAGER</div>
+                    <div class="cm-stn-task" id="cm-task-forge">Processing POD orders...</div>
                 </div>
             </div>
 
@@ -209,6 +213,11 @@
                 <div class="cm-intReq">← Finance: Profit forecast</div>
                 <div class="cm-intReq">← Security: Brand monitor</div>
                 <div class="cm-intReq">→ Finance: Revenue data</div>
+            </div>
+
+            <div class="cm-card">
+                <div class="cm-cardTitle">// TODAY'S ACTIVITY</div>
+                <div class="al-feed" id="cm-lifeFeed"></div>
             </div>
 
             <div class="cm-navLinks">
@@ -308,7 +317,7 @@
 <script src="../js/art_room_ui.js"></script>
 <script src="../js/agent_presence.js"></script>
 <script src="workspace.js"></script>
-
+<script src="../js/company_life.js"></script>
 
 <script>
 /* Phase 12: Page transition support */
@@ -325,6 +334,19 @@ document.addEventListener("DOMContentLoaded", function () {
       a.addEventListener("click", function (e) { e.preventDefault(); navigateTo(href); });
     }
   });
+
+  /* Boot ambient activity engine */
+  if (window.LIFE) {
+    LIFE.boot('commerce', {
+      tasks: {
+        pixel:   ['cm-task-pixel',   'cm-ag-pixel'],
+        etsybot: ['cm-task-etsybot', 'cm-ag-etsy'],
+        spark:   ['cm-task-spark',   'cm-ag-spark'],
+        forge:   ['cm-task-forge',   'cm-ag-forge']
+      },
+      logEl: 'cm-lifeFeed'
+    });
+  }
 });
 </script>
 <style>

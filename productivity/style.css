@@ -456,3 +456,20 @@ body {
 .pd-ag-memo   { color: rgba(125,255,156,.8); }
 .pd-agActivity { font-size: 6px; letter-spacing: .8px; color: rgba(125,255,156,.65); }
 .pd-intReq { font-size: 6.5px; color: rgba(100,200,230,.35); line-height: 2.1; }
+
+/* ── Agent task line (LIFE engine) ── */
+.pd-stn-task {
+    font-size: 5.5px; letter-spacing: .4px;
+    color: rgba(58,168,200,.4); margin-top: 2px; min-height: 7px;
+    font-family: Arial, sans-serif; line-height: 1.3;
+    animation: pdTaskFade .4s ease;
+}
+@keyframes pdTaskFade { from { opacity: 0; } to { opacity: 1; } }
+
+/* ── Activity log feed ── */
+.al-feed { max-height: 130px; overflow: hidden; }
+.al-row  { display: flex; gap: 5px; margin-bottom: 4px; align-items: flex-start; }
+.al-ts   { font-size: 5.5px; color: rgba(58,168,200,.28); flex-shrink: 0; padding-top: 1px; }
+.al-msg  { font-size: 6px; color: rgba(100,200,230,.45); line-height: 1.5; }
+.al-idm .al-msg  { color: rgba(255,210,80,.4); }
+.al-empty { font-size: 6px; color: rgba(255,255,255,.15); }

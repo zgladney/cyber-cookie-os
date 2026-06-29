@@ -1458,6 +1458,16 @@ body { overflow-y: auto !important; }
 .cic-nm-cyan   { color: rgba(58,168,200,.85) !important; text-shadow: 0 0 8px rgba(58,168,200,.3) !important; }
 .cic-nm-green  { color: rgba(46,204,113,.85) !important; text-shadow: 0 0 8px rgba(46,204,113,.3) !important; }
 .cic-nm-role   { font-size: 6px; letter-spacing: 1px; color: rgba(200,160,255,.3); font-family: Arial, sans-serif; }
+.cic-nm-task   { font-size: 5.5px; letter-spacing: .4px; color: rgba(180,130,255,.4); margin-top: 2px; min-height: 7px; font-family: Arial, sans-serif; line-height: 1.3; animation: cicTaskFade .4s ease; }
+@keyframes cicTaskFade { from { opacity: 0; } to { opacity: 1; } }
+
+/* ── Activity log feed ── */
+.al-feed { max-height: 130px; overflow: hidden; }
+.al-row  { display: flex; gap: 5px; margin-bottom: 4px; align-items: flex-start; }
+.al-ts   { font-size: 5.5px; color: rgba(150,100,255,.3); flex-shrink: 0; padding-top: 1px; }
+.al-msg  { font-size: 6px; color: rgba(180,140,255,.45); line-height: 1.5; }
+.al-idm .al-msg  { color: rgba(255,210,80,.4); }
+.al-empty { font-size: 6px; color: rgba(255,255,255,.15); }
 
 /* Agent sprites */
 .cic-sprite {
