@@ -213,5 +213,29 @@
 <script src="../js/agent_presence.js"></script>
 <script src="workspace.js"></script>
 
+
+<script>
+/* Phase 12: Page transition support */
+function navigateTo(url) {
+  document.documentElement.classList.add("cos-nav-out");
+  setTimeout(function () { window.location.href = url; }, 280);
+}
+document.addEventListener("DOMContentLoaded", function () {
+  document.documentElement.classList.add("cos-nav-in");
+  setTimeout(function () { document.documentElement.classList.remove("cos-nav-in"); }, 350);
+  document.querySelectorAll("a[href]").forEach(function (a) {
+    var href = a.getAttribute("href");
+    if (href && href.indexOf("http") !== 0 && href.indexOf("javascript") !== 0 && href.charAt(0) !== "#") {
+      a.addEventListener("click", function (e) { e.preventDefault(); navigateTo(href); });
+    }
+  });
+});
+</script>
+<style>
+html { transition: opacity .28s ease; }
+html.cos-nav-out { opacity: 0; pointer-events: none; }
+html.cos-nav-in  { animation: cosNavIn .32s ease forwards; }
+@keyframes cosNavIn { from { opacity:0; transform:translateY(3px); } to { opacity:1; transform:translateY(0); } }
+</style>
 </body>
 </html>

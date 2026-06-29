@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CyberCookieOS</title>
+<title>Security Ops — CyberCookieOS</title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="../css/workspace.css">
 </head>
@@ -13,10 +13,21 @@
 <div id="app">
 
     <header id="topBar">
-        <a href="../hallway/index.html" style="font-size:9px;color:rgba(255,105,180,.5);text-decoration:none;letter-spacing:2px;border:1px solid rgba(255,105,180,.2);padding:5px 10px;border-radius:4px;margin-right:12px">← HALLWAY</a>
-        <h1>CyberCookieOS</h1>
-        <p>Security Operations // Athena · Nimbus · Sentinel</p>
-        <a href="../ops_center/index.html" style="font-size:9px;color:rgba(156,246,255,.5);text-decoration:none;letter-spacing:2px;border:1px solid rgba(156,246,255,.2);padding:5px 10px;border-radius:4px;margin-left:12px">OPS CENTER →</a>
+        <div id="hqNav">
+          <a href="#" onclick="navigateTo('../hallway/index.html');return false;" class="hqNavLink hqNavBack">← HQ HALLWAY</a>
+          <span class="hqNavSep">·</span>
+          <span class="hqNavWing">WING A — SECURITY OPS</span>
+        </div>
+        <div id="hqTitle">
+          <h1>CyberCookieOS</h1>
+          <p>THREAT HUNTER CONSOLE // ATHENA · NIMBUS · SENTINEL</p>
+        </div>
+        <div id="hqNavRight">
+          <span class="hqAgentBadge hqAgent-athena">● ATHENA</span>
+          <span class="hqAgentBadge hqAgent-nimbus">● NIMBUS</span>
+          <span class="hqAgentBadge hqAgent-sentinel">● SENTINEL</span>
+          <a href="#" onclick="navigateTo('../ops_center/index.html');return false;" class="hqNavLink hqNavOps">OPS CENTER →</a>
+        </div>
     </header>
 
     <main id="mainLayout">
@@ -100,18 +111,18 @@
 
                 <!-- Sticky notes in wall-screen to window gap -->
                 <div class="stickyNote" id="sn1">SCAN @23:00</div>
-                <div class="stickyNote sn-pink" id="sn2">AGENT 001 ✓</div>
+                <div class="stickyNote sn-pink" id="sn2">ATHENA ✓</div>
                 <div class="stickyNote" id="sn3">CHECK LOGS</div>
 
                 <!-- HQ Directory below window -->
                 <div id="hqDirectory" data-tip="HQ WING MAP">
                     <div class="dirTitle">★ HQ DIRECTORY</div>
-                    <div class="dirItem current">▸ Threat Hunter</div>
-                    <div class="dirItem" data-href="../hallway/index.html">▸ Apt. Hunter</div>
+                    <div class="dirItem current">▸ Wing A — Security</div>
+                    <div class="dirItem" onclick="navigateTo('../hallway/index.html')">▸ HQ Hallway</div>
+                    <div class="dirItem" onclick="navigateTo('../housing/index.html')">▸ Wing B — Housing</div>
+                    <div class="dirItem" onclick="navigateTo('../finance/index.html')">▸ Wing E — Finance</div>
                     <div class="dirItem locked">⬡ Cloud Lab</div>
-                    <div class="dirItem locked">⬡ AI Workshop</div>
                     <div class="dirItem locked">⬡ Obsidian Lib</div>
-                    <div class="dirItem locked">⬡ Calendar</div>
                 </div>
 
                 <div id="statusBar">
@@ -173,11 +184,34 @@
             <div id="floorGlow"></div>
 
             <!-- ═══════════════════════════ WORKSTATION ═══════════════════════════ -->
+            <!-- UPS / power unit beside server rack -->
+            <div id="upsUnit">
+              <div class="upsLed upsLed-green"></div>
+              <div class="upsLed upsLed-green"></div>
+              <div class="upsLed upsLed-amber"></div>
+              <div class="upsBar"></div>
+              <div class="upsLabel">UPS-01</div>
+            </div>
+
             <div id="desk">
-                <div class="monitor" id="securityMonitor">🛡️</div>
-                <div class="monitor center">📊</div>
-                <div class="monitor right">🤖</div>
-                <div id="stationPlaque">▸ AGENT 001</div>
+                <!-- Athena: primary security monitor -->
+                <div class="monitor" id="securityMonitor" data-tip="ATHENA — THREAT ANALYSIS">🛡️</div>
+                <!-- Nimbus: network monitor -->
+                <div class="monitor center" id="networkMonitor" data-tip="NIMBUS — NETWORK MONITOR">📊</div>
+                <!-- Sentinel: AI scan -->
+                <div class="monitor right" id="aiMonitor" data-tip="SENTINEL — AI PATROL">🤖</div>
+                <!-- Agent name plaques -->
+                <div id="stationPlaques">
+                  <span class="sPlaqueItem">▸ ATHENA</span>
+                  <span class="sPlaqueItem sPlaqueNimbus">▸ NIMBUS</span>
+                  <span class="sPlaqueItem sPlaqueNimbus">▸ SENTINEL</span>
+                </div>
+                <!-- Desk props -->
+                <div id="deskProps">
+                  <span class="deskProp" title="Security Badge">🪪</span>
+                  <span class="deskProp" title="Notebook">📓</span>
+                  <span class="deskProp" title="USB Key">🔑</span>
+                </div>
                 <div id="mouse"></div>
             </div>
 
@@ -416,6 +450,109 @@
 <script src="../js/art_room_ui.js"></script>
 <script src="../js/agent_presence.js"></script>
 <script src="workspace.js"></script>
+
+<script>
+/* Page transition: fade out before navigation */
+function navigateTo(url) {
+  document.documentElement.classList.add('hq-nav-out');
+  setTimeout(function () { window.location.href = url; }, 280);
+}
+document.addEventListener('DOMContentLoaded', function () {
+  document.documentElement.classList.add('hq-nav-in');
+  setTimeout(function () { document.documentElement.classList.remove('hq-nav-in'); }, 350);
+
+  /* Wire directory items that use onclick */
+  document.querySelectorAll('.dirItem[onclick]').forEach(function (el) {
+    el.style.cursor = 'pointer';
+  });
+});
+</script>
+
+<style>
+/* ── Page transitions ── */
+html { transition: opacity .28s ease; }
+html.hq-nav-out { opacity: 0; pointer-events: none; }
+html.hq-nav-in  { animation: hqNavIn .32s ease forwards; }
+@keyframes hqNavIn { from { opacity:0; transform:translateY(3px); } to { opacity:1; transform:translateY(0); } }
+
+/* ── Top bar nav redesign ── */
+#topBar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 16px; }
+#hqNav, #hqNavRight { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+#hqTitle { text-align: center; flex: 1; }
+#hqTitle h1 { font-size: 14px; margin: 0; }
+#hqTitle p  { font-size: 7px; margin: 0; }
+.hqNavLink {
+  font-size: 8px; letter-spacing: 1.5px; text-decoration: none;
+  padding: 4px 10px; border-radius: 3px;
+  transition: all .15s;
+}
+.hqNavBack {
+  color: rgba(255,105,180,.6);
+  border: 1px solid rgba(255,105,180,.2);
+}
+.hqNavBack:hover { color: rgba(255,105,180,.95); border-color: rgba(255,105,180,.5); background: rgba(255,105,180,.05); }
+.hqNavOps  {
+  color: rgba(156,246,255,.6);
+  border: 1px solid rgba(156,246,255,.2);
+}
+.hqNavOps:hover { color: rgba(156,246,255,.95); border-color: rgba(156,246,255,.5); background: rgba(156,246,255,.05); }
+.hqNavSep  { color: rgba(200,160,255,.2); font-size: 8px; }
+.hqNavWing { font-size: 7px; letter-spacing: 2px; color: rgba(200,160,255,.35); }
+.hqAgentBadge {
+  font-size: 6.5px; letter-spacing: 1.5px; padding: 2px 7px;
+  border-radius: 2px; border: 1px solid rgba(155,107,255,.2);
+  color: rgba(155,107,255,.5);
+}
+.hqAgent-athena  { color: rgba(155,107,255,.7); border-color: rgba(155,107,255,.3); }
+.hqAgent-nimbus  { color: rgba(156,246,255,.5); border-color: rgba(156,246,255,.2); }
+.hqAgent-sentinel{ color: rgba(125,255,156,.5); border-color: rgba(125,255,156,.2); }
+
+/* ── UPS unit (beside server rack) ── */
+#upsUnit {
+  position: absolute;
+  right: 74px; bottom: 108px;
+  width: 22px;
+  background: rgba(4,0,14,.95);
+  border: 1px solid rgba(150,80,255,.2);
+  border-radius: 2px;
+  padding: 5px 4px;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  z-index: 6;
+}
+.upsLed {
+  width: 5px; height: 5px; border-radius: 50%;
+}
+.upsLed-green  { background: #2ecc71; box-shadow: 0 0 5px #2ecc71; animation: upsLedPulse 2s ease-in-out infinite; }
+.upsLed-amber  { background: #f7c948; box-shadow: 0 0 5px #f7c948; animation: upsLedPulse 0.8s ease-in-out infinite; }
+@keyframes upsLedPulse { 50% { opacity: .4; } }
+.upsBar {
+  width: 12px; height: 3px;
+  background: linear-gradient(90deg, #2ecc71 70%, rgba(150,80,255,.1) 70%);
+  border-radius: 1px; margin: 2px 0;
+}
+.upsLabel { font-size: 4.5px; letter-spacing: 1px; color: rgba(200,160,255,.25); }
+
+/* ── Named workstation plaques ── */
+#stationPlaque { display: none; }   /* hide old single plaque */
+#stationPlaques {
+  position: absolute;
+  bottom: -14px; left: 0; right: 0;
+  display: flex; justify-content: space-around;
+  font-size: 5.5px; letter-spacing: 1.5px;
+}
+.sPlaqueItem { color: rgba(200,160,255,.4); }
+.sPlaqueNimbus { color: rgba(156,246,255,.35); }
+
+/* ── Desk prop icons ── */
+#deskProps {
+  position: absolute;
+  bottom: -22px; right: 6px;
+  display: flex; gap: 6px;
+  font-size: 10px; line-height: 1;
+  opacity: .55;
+}
+.deskProp { cursor: default; }
+</style>
 
 </body>
 </html>
