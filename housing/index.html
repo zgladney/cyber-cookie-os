@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Housing Scout — CyberCookieOS</title>
+<title>Career Intelligence Center — CyberCookieOS</title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="../css/workspace.css">
 </head>
@@ -13,12 +13,21 @@
 <div id="ah-app">
 
     <header id="ah-topBar">
-        <h1>CyberCookieOS</h1>
-        <p>Housing Department // Nova — Housing Scout</p>
-        <nav id="ah-nav">
-            <a href="../hallway/index.html" class="ah-navLink">← Hallway</a>
-            <a href="../ops_center/index.html" class="ah-navLink">Ops Center</a>
-        </nav>
+        <div id="cic-navLeft">
+            <a href="#" onclick="navigateTo('../hallway/index.html');return false;" class="ah-navLink">← HALLWAY</a>
+            <span class="cic-navSep">·</span>
+            <span class="cic-navWing">WING B — CAREER INTEL</span>
+        </div>
+        <div id="cic-topCenter">
+            <h1>CyberCookieOS</h1>
+            <p>CAREER INTELLIGENCE CENTER // NOVA · RESU-MATE · SCOUT-X</p>
+        </div>
+        <div id="cic-navRight">
+            <span class="cic-agentBadge cic-badge-nova">● NOVA</span>
+            <span class="cic-agentBadge cic-badge-resu">● RESU-MATE</span>
+            <span class="cic-agentBadge cic-badge-scout">● SCOUT-X</span>
+            <a href="#" onclick="navigateTo('../ops_center/index.html');return false;" class="ah-navLink">OPS →</a>
+        </div>
     </header>
 
     <main id="ah-mainLayout">
@@ -31,102 +40,96 @@
             <!-- ═══════════════════ BACK WALL ═══════════════════ -->
             <div id="ah-backWall">
 
-                <!-- Left column: neon sign + app tracker -->
-                <div id="ah-neonSign">HOUSING SCOUT</div>
-                <div id="ah-rune">✦ ⬡ ✦</div>
+                <!-- Left column: neon sign + pipeline board -->
+                <div id="ah-neonSign">CAREER INTEL CENTER</div>
+                <div id="ah-rune">✦ ⬢ ✦</div>
 
                 <div id="ah-appBoard">
-                    <div class="ah-boardTitle">APPLICATION TRACKER</div>
+                    <div class="ah-boardTitle">APPLICATION PIPELINE</div>
                     <div class="ah-appCols">
                         <div class="ah-col">
-                            <div class="ah-colHead">SHORTLIST</div>
-                            <div class="ah-dot ah-dotGreen"></div>
+                            <div class="ah-colHead">SAVED</div>
+                            <div class="ah-dot ah-dotGreen" id="cic-dot-saved"></div>
                             <div class="ah-dot ah-dotGreen"></div>
                             <div class="ah-dot ah-dotGreen"></div>
                         </div>
                         <div class="ah-col">
                             <div class="ah-colHead">APPLIED</div>
-                            <div class="ah-dot ah-dotYellow"></div>
+                            <div class="ah-dot ah-dotYellow" id="cic-dot-applied"></div>
                             <div class="ah-dot ah-dotYellow"></div>
                         </div>
                         <div class="ah-col">
-                            <div class="ah-colHead">CLOSED</div>
-                            <div class="ah-dot ah-dotRed"></div>
+                            <div class="ah-colHead">INTERVIEW</div>
+                            <div class="ah-dot ah-dotRed" id="cic-dot-interview"></div>
+                        </div>
+                        <div class="ah-col">
+                            <div class="ah-colHead">OFFER</div>
+                            <div class="ah-dot ah-dotGreen" style="background:#ffd700;box-shadow:0 0 6px #ffd700" id="cic-dot-offer"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Center: City map wall -->
+                <!-- Center: US opportunity map -->
                 <div id="ah-cityMap">
-                    <div class="ah-mapLabel">DISTRICT MAP — BURLINGTON CO, NJ</div>
-                    <div class="ah-mapGrid">
-                        <div class="ah-district d-atl" style="left:10%;top:16%;width:38%;height:38%">
-                            <span class="ah-distLabel">WILLINGBORO</span>
-                        </div>
-                        <div class="ah-district d-dec" style="left:52%;top:12%;width:36%;height:36%">
-                            <span class="ah-distLabel">MT LAUREL</span>
-                        </div>
-                        <div class="ah-district d-ep" style="left:14%;top:60%;width:32%;height:30%">
-                            <span class="ah-distLabel">MARLTON</span>
-                        </div>
-                        <div class="ah-district d-dec" style="left:52%;top:54%;width:30%;height:32%;opacity:.7">
-                            <span class="ah-distLabel">SOUTHAMPTON</span>
-                        </div>
-                        <span class="ah-pin pin-best"  style="left:20%;top:26%" data-tip="Mount Laurel Colonial — $2,050 HOUSE"></span>
-                        <span class="ah-pin pin-good"  style="left:58%;top:22%" data-tip="Mount Laurel Crossing — $2,000 TOWNHOUSE"></span>
-                        <span class="ah-pin pin-good"  style="left:26%;top:36%" data-tip="Willingboro Townhouse — $1,850"></span>
-                        <span class="ah-pin pin-good"  style="left:16%;top:68%" data-tip="Marlton Oaks — $1,950 HOUSE"></span>
-                        <span class="ah-pin pin-good"  style="left:22%;top:76%" data-tip="Marlton Crossing — $1,950 TOWNHOUSE"></span>
-                        <span class="ah-pin pin-ok"    style="left:34%;top:28%" data-tip="Willingboro Park Condo — $1,700"></span>
-                        <span class="ah-pin pin-ok"    style="left:60%;top:62%" data-tip="Southampton Gardens — $1,800 HOUSE"></span>
-                        <span class="ah-pin pin-ok"    style="left:70%;top:72%" data-tip="Southampton Ridge — $1,750 TOWNHOUSE"></span>
+                    <div class="ah-mapLabel">SCOUT-X — U.S. OPPORTUNITY MAP</div>
+                    <div class="ah-mapGrid" id="cic-usMap">
+                        <div class="cic-usRegion cic-reg-hot"  style="left:62%;top:12%;width:26%;height:28%"><span class="ah-distLabel">VIRGINIA<br><span class="cic-regVal">+38% SOC</span></span></div>
+                        <div class="cic-usRegion cic-reg-hot"  style="left:62%;top:44%;width:28%;height:26%"><span class="ah-distLabel">MARYLAND<br><span class="cic-regVal">+31% SEC</span></span></div>
+                        <div class="cic-usRegion cic-reg-warm" style="left:20%;top:55%;width:30%;height:28%"><span class="ah-distLabel">TEXAS<br><span class="cic-regVal">+29% OPS</span></span></div>
+                        <div class="cic-usRegion cic-reg-warm" style="left:55%;top:60%;width:22%;height:24%"><span class="ah-distLabel">N. CAROLINA<br><span class="cic-regVal">+34% TECH</span></span></div>
+                        <div class="cic-usRegion cic-reg-cool" style="left:10%;top:18%;width:24%;height:25%"><span class="ah-distLabel">COLORADO<br><span class="cic-regVal">REMOTE ★</span></span></div>
+                        <div class="cic-usRegion cic-reg-local" style="left:72%;top:44%;width:20%;height:20%"><span class="ah-distLabel">PA/NJ<br><span class="cic-regVal">LOCAL</span></span></div>
+                        <span class="ah-pin pin-best" style="left:65%;top:16%" data-tip="Virginia: +38% SOC openings"></span>
+                        <span class="ah-pin pin-good" style="left:63%;top:48%" data-tip="Maryland: NSA/DHS corridor"></span>
+                        <span class="ah-pin pin-good" style="left:22%;top:58%" data-tip="Texas: DFW boom"></span>
+                        <span class="ah-pin pin-ok"   style="left:56%;top:64%" data-tip="North Carolina: RTP growth"></span>
                     </div>
                     <div class="ah-mapLegend">
-                        <span class="ah-legDot pin-best"></span><span>Best</span>
-                        <span class="ah-legDot pin-good"></span><span>Match</span>
-                        <span class="ah-legDot pin-ok"></span><span>Good</span>
+                        <span class="ah-legDot pin-best"></span><span>High Demand</span>
+                        <span class="ah-legDot pin-good"></span><span>Growing</span>
+                        <span class="ah-legDot pin-ok"></span><span>Emerging</span>
                     </div>
                 </div>
 
-                <!-- Right column: budget + pet + transit board -->
+                <!-- Right column: career metrics -->
                 <div id="ah-budgetPanel">
-                    <div class="ah-panelTitle">BUDGET TRACKER</div>
+                    <div class="ah-panelTitle">CAREER METRICS</div>
                     <div class="ah-budgetRow">
-                        <span class="ah-bLabel">MAX RENT</span>
-                        <span class="ah-bValue" id="ah-maxRent">$2,100/mo</span>
+                        <span class="ah-bLabel">JOBS FOUND</span>
+                        <span class="ah-bValue" id="cic-jobsFound">15</span>
                     </div>
                     <div class="ah-budgetBar">
-                        <div class="ah-budgetFill" id="ah-budgetFill" style="width:75%"></div>
+                        <div class="ah-budgetFill" id="cic-matchBar" style="width:60%"></div>
                     </div>
-                    <div class="ah-budgetStatus" id="ah-budgetStatus">WITHIN BUDGET</div>
+                    <div class="ah-budgetStatus" id="cic-matchStatus">ACTIVE SEARCH</div>
 
                     <div class="ah-divider"></div>
 
                     <div class="ah-budgetRow">
-                        <span class="ah-bLabel">PET FRIENDLY</span>
-                        <span class="ah-petLed" id="ah-petLed"></span>
+                        <span class="ah-bLabel">REMOTE</span>
+                        <span class="ah-petLed" id="cic-remoteLed" style="background:#7dff9c;box-shadow:0 0 5px #7dff9c"></span>
                     </div>
                     <div class="ah-budgetRow">
-                        <span class="ah-bLabel">VOUCHER</span>
-                        <span class="ah-petLed" id="ah-voucherLed"></span>
+                        <span class="ah-bLabel">HYBRID</span>
+                        <span class="ah-petLed" id="cic-hybridLed" style="background:#7dff9c;box-shadow:0 0 5px #7dff9c"></span>
                     </div>
 
                     <div class="ah-divider"></div>
 
-                    <div class="ah-panelTitle" style="margin-top:6px">TRANSIT</div>
+                    <div class="ah-panelTitle" style="margin-top:6px">TARGET MARKET</div>
                     <div class="ah-transitRow">
-                        <span class="ah-transitIcon">🚌</span><span class="ah-transitLabel">BUS</span>
-                        <span class="ah-transitIcon">🚇</span><span class="ah-transitLabel">METRO</span>
+                        <span class="ah-transitIcon">🏙</span><span class="ah-transitLabel">PHILLY</span>
+                        <span class="ah-transitIcon">🌐</span><span class="ah-transitLabel">REMOTE</span>
                     </div>
-                    <div class="ah-transitNote">Burlington Co, NJ</div>
+                    <div class="ah-transitNote">South Jersey + Philadelphia</div>
                 </div>
 
                 <!-- Navigation directory -->
                 <div id="ah-roomDir">
                     <div class="ah-dirTitle">← NAVIGATE</div>
-                    <a href="../hallway/index.html" class="ah-dirLink">⬡ Hallway</a>
-                    <a href="../ops_center/index.html" class="ah-dirLink">⬡ Ops Center</a>
-                    <a href="../hq/index.html" class="ah-dirLink">⬡ Security Ops</a>
+                    <a href="#" onclick="navigateTo('../hallway/index.html');return false;" class="ah-dirLink">⬡ Hallway</a>
+                    <a href="#" onclick="navigateTo('../ops_center/index.html');return false;" class="ah-dirLink">⬡ Ops Center</a>
+                    <a href="#" onclick="navigateTo('../hq/index.html');return false;" class="ah-dirLink">⬡ Security Ops</a>
                 </div>
 
                 <!-- Status bar -->
@@ -134,7 +137,7 @@
                     <span class="ah-sLed led-purple"></span><span class="ah-sLabel">NOVA</span>
                     <span class="ah-sLed led-green"></span><span class="ah-sLabel">SCAN OK</span>
                     <span class="ah-sLed led-amber"></span><span class="ah-sLabel">SEARCH</span>
-                    <span class="ah-sLed led-purple"></span><span class="ah-sLabel">SCOUT</span>
+                    <span class="ah-sLed led-purple"></span><span class="ah-sLabel">SCOUT-X</span>
                 </div>
 
             </div><!-- /ah-backWall -->
@@ -149,31 +152,107 @@
 
             <!-- Filing cabinet (left side) -->
             <div id="ah-fileCabinet">
-                <div class="ah-drawer">
-                    <div class="ah-drawerLabel">CITY A–F</div>
-                </div>
-                <div class="ah-drawer">
-                    <div class="ah-drawerLabel">PET LISTS</div>
-                </div>
-                <div class="ah-drawer">
-                    <div class="ah-drawerLabel">VOUCHER</div>
-                </div>
+                <div class="ah-drawer"><div class="ah-drawerLabel">RESUMES</div></div>
+                <div class="ah-drawer"><div class="ah-drawerLabel">JOB LEADS</div></div>
+                <div class="ah-drawer"><div class="ah-drawerLabel">CERT PREP</div></div>
                 <div class="ah-drawerBase"></div>
             </div>
 
             <!-- Sticky notes -->
-            <div class="ah-stickyNote" id="ah-sn1">MT LAUREL COLONIAL<br>CALL TUESDAY</div>
-            <div class="ah-stickyNote ah-snPurple" id="ah-sn2">MAX: $2,100</div>
-            <div class="ah-stickyNote" id="ah-sn3">🐾 PETS OK<br>NO SENIOR HSG</div>
+            <div class="ah-stickyNote" id="ah-sn1">APPLY TO<br>LOCKHEED MARTIN</div>
+            <div class="ah-stickyNote ah-snPurple" id="ah-sn2">CERT: SEC+<br>2026 GOAL</div>
+            <div class="ah-stickyNote" id="ah-sn3">SCOUT-X:<br>VA = +38% SOC</div>
 
-            <!-- Desk with listing monitors -->
-            <div id="ah-desk">
-                <div id="ah-monitor">🏠</div>
-                <div id="ah-monitor2">📋</div>
-                <div id="ah-deskPlaque">▸ NOVA</div>
-                <div id="ah-keyboard">⌨</div>
+            <!-- ═══════════════ THREE WORKSTATIONS ═══════════════ -->
+
+            <!-- NOVA station (left, gold/purple) -->
+            <div class="cic-station" id="cic-stn-nova">
+                <div class="cic-monitors">
+                    <div class="cic-monitor cic-mon-main">
+                        <div class="cic-monHud cic-hud-nova">NOVA — JOB FEED</div>
+                        <div class="cic-monBody">
+                            <div class="cic-liveFeed" id="cic-novaFeed">
+                                <div class="cic-feedItem cic-fi-hot">● Help Desk — TechPath Solutions — $42k</div>
+                                <div class="cic-feedItem cic-fi-new">● SOC Analyst — Comcast — $55k</div>
+                                <div class="cic-feedItem cic-fi-rem">● Remote IT — Conduent — $43k</div>
+                                <div class="cic-feedItem cic-fi-new">● NOC Tech — GTT — $48k</div>
+                                <div class="cic-feedItem cic-fi-hot">● Systems Admin — Cooper Health — $58k</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cic-monitor cic-mon-sm">
+                        <div class="cic-monHud cic-hud-nova">APPS</div>
+                        <div class="cic-monBody">
+                            <div style="font-size:6px;line-height:1.8;color:rgba(255,200,100,.5)">
+                                SAVED: <span id="cic-mn-saved">3</span><br>
+                                APPLIED: <span id="cic-mn-applied">1</span><br>
+                                INTERVIEWS: <span id="cic-mn-interviews">0</span><br>
+                                OFFERS: <span id="cic-mn-offers">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cic-desk cic-desk-nova">
+                    <div class="cic-deskProps"><span>📋</span><span>☕</span></div>
+                </div>
+                <div class="cic-nameplate">
+                    <div class="cic-nm-name">NOVA</div>
+                    <div class="cic-nm-role">CHIEF CAREER INTELLIGENCE OFFICER</div>
+                </div>
+                <div class="cic-sprite" id="cic-sp-nova">N<span class="cic-spritelbl">NOVA — Chief Career Intelligence Officer</span></div>
             </div>
-            <div id="ah-chair"></div>
+
+            <!-- RESU-MATE station (center, cyan) -->
+            <div class="cic-station" id="cic-stn-resu">
+                <div class="cic-monitors">
+                    <div class="cic-monitor cic-mon-main cic-mon-cyan">
+                        <div class="cic-monHud cic-hud-cyan">RESU-MATE — MATCH SCORE</div>
+                        <div class="cic-monBody">
+                            <div class="cic-resumeDisplay">
+                                <div class="cic-matchBig" id="cic-rm-score">72%</div>
+                                <div class="cic-matchLabel">ATS MATCH</div>
+                                <div class="cic-matchJob" id="cic-rm-job">Service Desk Analyst</div>
+                                <div class="cic-matchTip">↑ Add: ServiceNow, ITSM</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cic-desk cic-desk-resu">
+                    <div class="cic-deskProps"><span>📄</span><span>✏️</span></div>
+                </div>
+                <div class="cic-nameplate">
+                    <div class="cic-nm-name cic-nm-cyan">RESU-MATE</div>
+                    <div class="cic-nm-role">RESUME OPTIMIZATION SPECIALIST</div>
+                </div>
+                <div class="cic-sprite cic-sp-cyan" id="cic-sp-resu">R<span class="cic-spritelbl">RESU-MATE — Resume Optimization Specialist</span></div>
+            </div>
+
+            <!-- SCOUT-X station (right, green) -->
+            <div class="cic-station" id="cic-stn-scoutx">
+                <div class="cic-monitors">
+                    <div class="cic-monitor cic-mon-main cic-mon-green">
+                        <div class="cic-monHud cic-hud-green">SCOUT-X — GEO ANALYSIS</div>
+                        <div class="cic-monBody">
+                            <div class="cic-geoDisplay">
+                                <div class="cic-geoRow cic-geo-hot"><span>VA</span><span>+38%</span></div>
+                                <div class="cic-geoRow cic-geo-hot"><span>MD</span><span>+31%</span></div>
+                                <div class="cic-geoRow cic-geo-warm"><span>NC</span><span>+34%</span></div>
+                                <div class="cic-geoRow cic-geo-warm"><span>TX</span><span>+29%</span></div>
+                                <div class="cic-geoRow cic-geo-cool"><span>CO</span><span>REMOTE★</span></div>
+                                <div class="cic-geoRow"><span>NJ</span><span>LOCAL</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cic-desk cic-desk-scoutx">
+                    <div class="cic-deskProps"><span>🗺️</span><span>📊</span></div>
+                </div>
+                <div class="cic-nameplate">
+                    <div class="cic-nm-name cic-nm-green">SCOUT-X</div>
+                    <div class="cic-nm-role">GEOGRAPHIC OPPORTUNITY ANALYST</div>
+                </div>
+                <div class="cic-sprite cic-sp-green" id="cic-sp-scoutx">S<span class="cic-spritelbl">SCOUT-X — Geographic Opportunity Analyst</span></div>
+            </div>
 
             <!-- Plant -->
             <div id="ah-plant">🌿</div>
@@ -198,252 +277,216 @@
             </div>
             <div id="ah-archLabel">WING B ←</div>
 
-            <!-- Nova — Housing Scout -->
-            <div id="ah-agent">
-                <img id="ah-agentSprite" src="assets/agent002.png" alt="Nova — Housing Scout">
-                <div id="ah-headsetLed"></div>
-            </div>
-
         </section>
 
-        <!-- Side panel -->
-        <aside id="ah-panel">
-            <h2>Housing Scout</h2>
-            <p>Employee: <span id="ah-agentStatus">Nova</span></p>
-            <p>Status: <span id="ah-status">Ready</span></p>
+        <!-- ═══════════════ RIGHT PANEL ═══════════════ -->
+        <aside id="cic-panel">
 
-            <div class="ah-statBlock">
-                <div class="ah-statRow">
-                    <span class="ah-statLabel">Listings</span>
-                    <span class="ah-statVal" id="ah-totalListings">—</span>
-                </div>
-                <div class="ah-statRow">
-                    <span class="ah-statLabel">Matches</span>
-                    <span class="ah-statVal" id="ah-totalMatches">—</span>
-                </div>
-                <div class="ah-statRow">
-                    <span class="ah-statLabel">Pet-Friendly</span>
-                    <span class="ah-statVal" id="ah-petCount">—</span>
-                </div>
-                <div class="ah-statRow">
-                    <span class="ah-statLabel">Budget</span>
-                    <span class="ah-statVal" id="ah-budgetStat">—</span>
+            <!-- Career Status Card -->
+            <div class="cic-card">
+                <div class="cic-cardTitle">// CAREER STATUS</div>
+                <div class="cic-statRow"><span>STATUS</span><span class="cic-ok">● ACTIVE</span></div>
+                <div class="cic-statRow"><span>JOBS FOUND</span><span id="cic-stat-jobs">15</span></div>
+                <div class="cic-statRow"><span>SAVED</span><span id="cic-stat-saved">3</span></div>
+                <div class="cic-statRow"><span>APPLIED</span><span id="cic-stat-applied">1</span></div>
+                <div class="cic-statRow"><span>INTERVIEWS</span><span id="cic-stat-interviews">0</span></div>
+                <div class="cic-statRow"><span>TOP MATCH</span><span class="cic-ok" id="cic-stat-topMatch">72%</span></div>
+                <button class="cic-cardBtn" id="cic-runNovaBtn">▸ RUN NOVA SCOUT</button>
+            </div>
+
+            <!-- Best Opportunity -->
+            <div class="cic-card">
+                <div class="cic-cardTitle">// BEST MATCH</div>
+                <div class="cic-bestJob" id="cic-bestJob">
+                    <div class="cic-bestTitle" id="cic-best-title">Service Desk Analyst</div>
+                    <div class="cic-bestCompany" id="cic-best-company">Lockheed Martin</div>
+                    <div class="cic-bestSalary" id="cic-best-salary">$52,000/yr</div>
+                    <div class="cic-bestMatch" id="cic-best-match">● 72% MATCH</div>
                 </div>
             </div>
 
-            <div id="ah-bestFitCard">
-                <div class="ah-bestTitle">★ Best Fit</div>
-                <div id="ah-bestName">—</div>
-                <div id="ah-bestScore"></div>
-                <div id="ah-bestCity"></div>
-                <div id="ah-bestRent"></div>
+            <!-- Mission Board -->
+            <div class="cic-card">
+                <div class="cic-cardTitle">// CAREER MISSION</div>
+                <div class="cic-mission">
+                    <div class="cic-mItem cic-m-active">▸ CompTIA A+ cert prep</div>
+                    <div class="cic-mItem cic-m-active">▸ Apply to 3 roles/week</div>
+                    <div class="cic-mItem cic-m-pending">○ Home lab SOC setup</div>
+                    <div class="cic-mItem cic-m-pending">○ CompTIA Security+</div>
+                    <div class="cic-mItem cic-m-done">✓ Resume updated</div>
+                </div>
             </div>
 
-            <div id="ah-topListPanel">
-                <div class="ah-topTitle">Top Picks</div>
-                <div id="ah-topList"></div>
-            </div>
-
-            <button id="ah-runAgent">▸ Run Housing Scout</button>
-            <p id="ah-lastUpdate" class="ah-updateLine">Not yet loaded.</p>
         </aside>
 
     </main>
 
 </div>
 
-<!-- ════════════════════ APARTMENT & HOUSING HUNTER ════════════════════ -->
-<section class="ws-section" id="hs-workspace" style="--ws-color:#c4784a">
+<!-- ════════════════════ CAREER INTELLIGENCE WORKSPACE ════════════════════ -->
+<section class="ws-section" id="cic-workspace" style="--ws-color:#7b6bff">
   <div class="ws-header">
-    <h2 class="ws-title">APARTMENT &amp; HOUSING HUNTER</h2>
-    <span class="ws-sub">// Nova Property Search · Burlington County, NJ · Save · Track · Contact</span>
+    <h2 class="ws-title">CAREER INTELLIGENCE CENTER</h2>
+    <span class="ws-sub">// Nova · Resu-Mate · Scout-X — Track · Search · Analyze · Optimize</span>
   </div>
   <div class="ws-body" style="flex-direction:column">
 
-    <!-- Row 1: Search Criteria + Summary -->
+    <!-- Row 1: Saved search criteria + Application tracker -->
     <div style="display:flex;gap:18px;flex-wrap:wrap">
 
       <div class="ws-panel ws-panel-narrow">
         <div class="ws-pTitle">SAVED SEARCH CRITERIA</div>
         <div class="ws-form">
           <div class="ws-field">
-            <label class="ws-label">NEIGHBORHOODS / AREAS</label>
-            <textarea class="ws-input" id="hs-searchNeighborhoods" rows="4" placeholder="One per line:&#10;Willingboro NJ&#10;Mount Laurel NJ&#10;Marlton NJ"></textarea>
+            <label class="ws-label">TARGET REGIONS</label>
+            <textarea class="ws-input" id="cic-searchRegions" rows="3" placeholder="One per line:&#10;South Jersey&#10;Philadelphia&#10;Remote (United States)"></textarea>
           </div>
           <div class="ws-form-row">
             <div class="ws-field">
-              <label class="ws-label">MAX RENT ($)</label>
-              <input class="ws-input" id="hs-searchMaxRent" placeholder="2100" type="number" min="0" />
-            </div>
-            <div class="ws-field">
-              <label class="ws-label">BEDROOMS</label>
-              <input class="ws-input" id="hs-searchBedrooms" placeholder="2" type="number" min="0" max="10" />
+              <label class="ws-label">MIN SALARY ($)</label>
+              <input class="ws-input" id="cic-searchMinSalary" placeholder="40000" type="number" min="0" />
             </div>
           </div>
           <div class="ws-field">
-            <label class="ws-label">PROPERTY TYPES</label>
-            <input class="ws-input" id="hs-searchTypes" placeholder="house, townhouse, condo" type="text" />
+            <label class="ws-label">JOB TYPES</label>
+            <input class="ws-input" id="cic-searchTypes" placeholder="help desk, service desk, SOC analyst" type="text" />
           </div>
           <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;padding:4px 0">
             <label style="display:flex;align-items:center;gap:8px;font-size:8px;color:rgba(200,160,255,.5);cursor:pointer">
-              <input type="checkbox" id="hs-searchPets" />
-              <span>Pets OK</span>
+              <input type="checkbox" id="cic-searchRemote" /> <span>Remote</span>
             </label>
             <label style="display:flex;align-items:center;gap:8px;font-size:8px;color:rgba(200,160,255,.5);cursor:pointer">
-              <input type="checkbox" id="hs-searchVoucher" />
-              <span>Voucher</span>
+              <input type="checkbox" id="cic-searchHybrid" /> <span>Hybrid</span>
             </label>
             <label style="display:flex;align-items:center;gap:8px;font-size:8px;color:rgba(200,160,255,.5);cursor:pointer">
-              <input type="checkbox" id="hs-searchFamily" />
-              <span>Family Friendly</span>
+              <input type="checkbox" id="cic-searchOnsite" /> <span>Onsite</span>
             </label>
           </div>
-          <button class="ws-btn ws-btn-full" id="hs-saveSearch">SAVE CRITERIA</button>
+          <button class="ws-btn ws-btn-full" id="cic-saveSearch">SAVE CRITERIA</button>
         </div>
       </div>
 
-      <!-- Listing tracker -->
+      <!-- Application tracker -->
       <div class="ws-panel" style="flex:2 1 400px">
-        <div class="ws-pTitle">LISTING TRACKER</div>
-        <div id="hs-listingContainer" class="ws-listings"></div>
+        <div class="ws-pTitle">APPLICATION TRACKER</div>
+        <div id="cic-appContainer" class="ws-listings"></div>
       </div>
 
     </div>
 
-    <!-- Row 2: Add / Edit Listing -->
-    <div class="ws-panel ws-panel-full" id="hs-addPanel">
-      <div class="ws-pTitle">ADD / EDIT LISTING</div>
+    <!-- Row 2: Add / Edit Application -->
+    <div class="ws-panel ws-panel-full" id="cic-addPanel">
+      <div class="ws-pTitle">ADD / EDIT APPLICATION</div>
       <div class="ws-form">
         <div class="ws-form-row">
           <div class="ws-field">
-            <label class="ws-label">LISTING NAME *</label>
-            <input class="ws-input" id="hs-newName" placeholder="e.g. 2BR on Maple Ave" type="text" />
+            <label class="ws-label">JOB TITLE *</label>
+            <input class="ws-input" id="cic-newTitle" placeholder="e.g. Help Desk Technician" type="text" />
           </div>
           <div class="ws-field">
-            <label class="ws-label">MONTHLY RENT ($)</label>
-            <input class="ws-input" id="hs-newRent" placeholder="e.g. 1400" type="number" min="0" />
+            <label class="ws-label">COMPANY</label>
+            <input class="ws-input" id="cic-newCompany" placeholder="e.g. TechPath Solutions" type="text" />
           </div>
         </div>
         <div class="ws-form-row">
+          <div class="ws-field">
+            <label class="ws-label">SALARY ($/yr)</label>
+            <input class="ws-input" id="cic-newSalary" placeholder="e.g. 45000" type="number" min="0" />
+          </div>
           <div class="ws-field">
             <label class="ws-label">LOCATION</label>
-            <input class="ws-input" id="hs-newLocation" placeholder="City, State" type="text" />
-          </div>
-          <div class="ws-field">
-            <label class="ws-label">LISTING URL</label>
-            <input class="ws-input" id="hs-newLink" placeholder="https://..." type="url" />
+            <input class="ws-input" id="cic-newLocation" placeholder="City, State or Remote" type="text" />
           </div>
         </div>
         <div class="ws-form-row">
           <div class="ws-field">
-            <label class="ws-label">PROPERTY TYPE</label>
-            <select class="ws-input" id="hs-newType">
-              <option value="house">House</option>
-              <option value="townhouse">Townhouse</option>
-              <option value="condo">Condo</option>
-              <option value="apartment">Apartment</option>
-              <option value="other">Other</option>
-            </select>
+            <label class="ws-label">LISTING URL</label>
+            <input class="ws-input" id="cic-newLink" placeholder="https://..." type="url" />
           </div>
           <div class="ws-field">
             <label class="ws-label">STATUS</label>
-            <select class="ws-input" id="hs-newStatus">
-              <option value="interested">Interested</option>
+            <select class="ws-input" id="cic-newStatus">
+              <option value="saved">Saved</option>
               <option value="applied">Applied</option>
-              <option value="tour">Tour Scheduled</option>
+              <option value="interview_scheduled">Interview Scheduled</option>
+              <option value="interview_complete">Interview Complete</option>
+              <option value="offer">Offer</option>
               <option value="rejected">Rejected</option>
-              <option value="moved-in">Moved In</option>
+              <option value="ghosted">Ghosted</option>
+              <option value="follow_up">Follow-Up</option>
             </select>
           </div>
         </div>
-        <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:center;padding:4px 0">
-          <label style="display:flex;align-items:center;gap:8px;font-size:8px;color:rgba(200,160,255,.5);cursor:pointer">
-            <input type="checkbox" id="hs-newPets" />
-            <span>Pets OK</span>
-          </label>
-          <label style="display:flex;align-items:center;gap:8px;font-size:8px;color:rgba(200,160,255,.5);cursor:pointer">
-            <input type="checkbox" id="hs-newVoucher" />
-            <span>Voucher OK</span>
-          </label>
-          <label style="display:flex;align-items:center;gap:8px;font-size:8px;color:rgba(200,160,255,.5);cursor:pointer">
-            <input type="checkbox" id="hs-newFamily" checked />
-            <span>Family Friendly</span>
-          </label>
-        </div>
         <div class="ws-field">
           <label class="ws-label">NOTES</label>
-          <textarea class="ws-input" id="hs-newNotes" placeholder="Anything notable about this listing..." rows="2"></textarea>
+          <textarea class="ws-input" id="cic-newNotes" placeholder="Anything notable about this application..." rows="2"></textarea>
         </div>
         <div style="display:flex;gap:8px">
-          <button class="ws-btn" style="flex:1" id="hs-submitListing">+ ADD LISTING</button>
-          <button class="ws-btn ws-btn-ghost" id="hs-cancelEdit">CANCEL</button>
+          <button class="ws-btn" style="flex:1" id="cic-submitApp">+ ADD APPLICATION</button>
+          <button class="ws-btn ws-btn-ghost" id="cic-cancelEdit">CANCEL</button>
         </div>
       </div>
     </div>
 
-    <!-- ══ NOVA PROPERTY SEARCH ══ -->
-    <div class="ws-panel ws-panel-full" id="hs-searchPanel">
+    <!-- ══ NOVA JOB INTELLIGENCE SEARCH ══ -->
+    <div class="ws-panel ws-panel-full" id="cic-searchPanel">
       <div class="ws-pTitle" style="display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px">
-        <span style="font-size:11px;letter-spacing:3px">🏠 NOVA PROPERTY SEARCH — APARTMENT &amp; HOUSING HUNTER</span>
-        <span style="font-size:7px;color:rgba(196,120,74,.5);letter-spacing:1px">Burlington County, NJ · Simulated · Scraper-Ready</span>
+        <span style="font-size:11px;letter-spacing:3px">💼 NOVA JOB INTELLIGENCE — CAREER OPPORTUNITY SEARCH</span>
+        <span style="font-size:7px;color:rgba(123,107,255,.5);letter-spacing:1px">South Jersey · Philadelphia · Remote (United States)</span>
       </div>
 
       <!-- ── Filter bar ── -->
-      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;padding:12px;background:rgba(255,255,255,.02);border-radius:4px;border:1px solid rgba(196,120,74,.1)">
-        <!-- Row 1: dropdowns + number fields -->
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;padding:12px;background:rgba(255,255,255,.02);border-radius:4px;border:1px solid rgba(123,107,255,.1)">
         <div style="display:flex;flex-wrap:wrap;gap:8px">
           <div class="ws-field" style="flex:1 1 150px">
-            <label class="ws-label">CITY / AREA</label>
-            <select class="ws-input" id="sp-city">
-              <option value="all">All Areas</option>
-              <option value="zee-cities">Zee's Cities (W · ML · M · S)</option>
-              <option value="Willingboro">Willingboro</option>
-              <option value="Mount Laurel">Mount Laurel</option>
-              <option value="Marlton">Marlton</option>
-              <option value="Southampton">Southampton</option>
-              <option value="Burlington">Burlington</option>
-              <option value="Lumberton">Lumberton</option>
+            <label class="ws-label">REGION</label>
+            <select class="ws-input" id="cic-region">
+              <option value="all">All Regions</option>
+              <option value="south_jersey">South Jersey</option>
+              <option value="philadelphia">Philadelphia</option>
+              <option value="remote">Remote</option>
+              <option value="national">National</option>
+            </select>
+          </div>
+          <div class="ws-field" style="flex:1 1 150px">
+            <label class="ws-label">JOB TYPE</label>
+            <select class="ws-input" id="cic-type">
+              <option value="all">Any Type</option>
+              <option value="help_desk">Help Desk</option>
+              <option value="service_desk">Service Desk</option>
+              <option value="soc_analyst">SOC Analyst</option>
+              <option value="noc">NOC</option>
+              <option value="cloud_support">Cloud Support</option>
+              <option value="systems_admin">Systems Admin</option>
+              <option value="it_ops">IT Ops</option>
+              <option value="security_jr">Junior Security</option>
+              <option value="ms_support">M365 Support</option>
             </select>
           </div>
           <div class="ws-field" style="flex:1 1 110px">
-            <label class="ws-label">MAX RENT ($)</label>
-            <input class="ws-input" id="sp-maxRent" type="number" value="2100" min="0" />
-          </div>
-          <div class="ws-field" style="flex:0 0 90px">
-            <label class="ws-label">MIN BEDS</label>
-            <input class="ws-input" id="sp-beds" type="number" value="2" min="0" max="10" />
-          </div>
-          <div class="ws-field" style="flex:0 0 90px">
-            <label class="ws-label">MIN BATHS</label>
-            <input class="ws-input" id="sp-baths" type="number" value="0" min="0" max="5" step="0.5" />
+            <label class="ws-label">MIN SALARY ($)</label>
+            <input class="ws-input" id="cic-salary" type="number" value="40000" min="0" />
           </div>
           <div class="ws-field" style="flex:1 1 120px">
-            <label class="ws-label">PROPERTY TYPE</label>
-            <select class="ws-input" id="sp-type">
-              <option value="all">Any Type</option>
-              <option value="house">House</option>
-              <option value="townhouse">Townhouse</option>
-              <option value="condo">Condo</option>
-              <option value="apartment">Apartment</option>
+            <label class="ws-label">WORK TYPE</label>
+            <select class="ws-input" id="cic-workType">
+              <option value="all">Any</option>
+              <option value="remote">Remote</option>
+              <option value="hybrid">Hybrid</option>
+              <option value="onsite">Onsite</option>
             </select>
           </div>
         </div>
-        <!-- Row 2: checkboxes + keyword -->
         <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end">
-          <label style="display:flex;align-items:center;gap:6px;font-size:7px;color:rgba(200,160,255,.5);cursor:pointer;white-space:nowrap"><input type="checkbox" id="sp-pets" /> Pets OK</label>
-          <label style="display:flex;align-items:center;gap:6px;font-size:7px;color:rgba(200,160,255,.5);cursor:pointer;white-space:nowrap"><input type="checkbox" id="sp-voucher" checked /> Voucher</label>
-          <label style="display:flex;align-items:center;gap:6px;font-size:7px;color:rgba(200,160,255,.5);cursor:pointer;white-space:nowrap"><input type="checkbox" id="sp-family" /> Family Friendly</label>
-          <label style="display:flex;align-items:center;gap:6px;font-size:7px;color:rgba(200,160,255,.5);cursor:pointer;white-space:nowrap"><input type="checkbox" id="sp-hasLink" /> Has Direct Link</label>
           <div class="ws-field" style="flex:1 1 200px">
             <label class="ws-label">KEYWORD SEARCH</label>
-            <input class="ws-input" id="sp-keyword" type="text" placeholder="e.g. backyard, garage, colonial, fenced..." />
+            <input class="ws-input" id="cic-keyword" type="text" placeholder="e.g. Splunk, AWS, ServiceNow, ITIL..." />
           </div>
         </div>
-        <!-- Row 3: action buttons -->
         <div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:4px">
-          <button class="ws-btn" id="sp-searchBtn" style="background:rgba(196,120,74,.08);border-color:rgba(196,120,74,.35);color:rgba(196,120,74,.85)">🔍 SEARCH</button>
-          <button class="ws-btn" id="sp-loadZee" style="background:rgba(150,80,255,.06);border-color:rgba(150,80,255,.3);color:rgba(180,130,255,.85)">★ LOAD ZEE'S SEARCH PROFILE</button>
-          <button class="ws-btn sp-btnScout" id="sp-scoutBtn">▸ RUN HOUSING SCOUT</button>
+          <button class="ws-btn" id="cic-searchBtn" style="background:rgba(123,107,255,.08);border-color:rgba(123,107,255,.35);color:rgba(180,160,255,.85)">🔍 SEARCH</button>
+          <button class="ws-btn" id="cic-myProfile" style="background:rgba(150,80,255,.06);border-color:rgba(150,80,255,.3);color:rgba(180,130,255,.85)">★ LOAD MY PROFILE</button>
+          <button class="ws-btn sp-btnScout" id="sp-scoutBtn">▸ RUN CAREER SCOUT</button>
         </div>
       </div>
 
@@ -463,16 +506,72 @@
       <!-- Results grid -->
       <div id="sp-results" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px"></div>
 
-      <!-- Saved properties section -->
+      <!-- Saved jobs section -->
       <div class="sp-savedSection" id="sp-savedSection"></div>
+    </div>
+
+    <!-- ══ SKILL GAP ANALYZER ══ -->
+    <div class="ws-panel ws-panel-full" id="cic-sgaPanel">
+      <div class="ws-pTitle" style="display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+        <span style="font-size:11px;letter-spacing:3px">🧠 SKILL GAP ANALYZER — Powered by Resu-Mate</span>
+        <span style="font-size:7px;color:rgba(58,168,200,.5);letter-spacing:1px">Compare your skills against any role · cert + project recommendations</span>
+      </div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px;padding:12px;background:rgba(255,255,255,.02);border-radius:4px;border:1px solid rgba(58,168,200,.1)">
+        <div class="ws-field" style="flex:1 1 280px">
+          <label class="ws-label">SELECT A JOB</label>
+          <select class="ws-input" id="cic-sgaJobSel"></select>
+        </div>
+        <button class="ws-btn" id="cic-sgaRunBtn" style="background:rgba(58,168,200,.08);border-color:rgba(58,168,200,.35);color:rgba(120,210,235,.9)">🧠 ANALYZE SKILLS</button>
+      </div>
+
+      <div id="cic-sgaResult" style="display:none;padding:14px;background:rgba(255,255,255,.02);border-radius:4px;border:1px solid rgba(123,107,255,.12)">
+        <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:center;margin-bottom:14px">
+          <div style="text-align:center;min-width:120px">
+            <div id="cic-sgaMatch"><span class="cic-matchPct">—</span></div>
+            <div style="font-size:7px;letter-spacing:2px;color:rgba(200,160,255,.35);margin-top:4px">SKILL MATCH</div>
+          </div>
+          <div style="flex:1 1 200px">
+            <div style="font-size:11px;font-weight:700;color:rgba(200,160,255,.9)" id="cic-sgaTitle">—</div>
+          </div>
+        </div>
+
+        <div class="cic-sgaSection">
+          <div class="cic-sgaLabel">✓ SKILLS YOU HAVE</div>
+          <div id="cic-sgaSkillsHave"></div>
+        </div>
+        <div class="cic-sgaSection">
+          <div class="cic-sgaLabel">✗ SKILLS TO BUILD (priority)</div>
+          <div id="cic-sgaMissing"></div>
+        </div>
+        <div class="cic-sgaSection" style="font-size:9px;color:rgba(200,160,255,.7);line-height:1.8">
+          <div id="cic-sgaCert"></div>
+          <div id="cic-sgaProject"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SCOUT-X GEOGRAPHIC ANALYSIS ══ -->
+    <div class="ws-panel ws-panel-full" id="cic-scoutxPanel">
+      <div class="ws-pTitle" style="display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+        <span style="font-size:11px;letter-spacing:3px">🗺️ SCOUT-X — U.S. OPPORTUNITY INTELLIGENCE</span>
+        <span style="font-size:7px;color:rgba(46,204,113,.5);letter-spacing:1px">Where the IT / cybersecurity jobs are growing fastest</span>
+      </div>
+
+      <div style="margin-bottom:14px">
+        <button class="ws-btn" id="cic-scoutxAnalyze" style="background:rgba(46,204,113,.08);border-color:rgba(46,204,113,.35);color:rgba(120,235,170,.9)">▸ RUN SCOUT-X ANALYSIS</button>
+      </div>
+
+      <div id="cic-scoutxTable" style="overflow-x:auto"></div>
     </div>
 
   </div>
 </section>
-<!-- toast -->
-<div id="hs-toast" style="position:fixed;bottom:20px;right:20px;background:rgba(8,2,22,.95);border:1px solid rgba(196,120,74,.4);border-radius:6px;padding:10px 16px;font-size:9px;color:rgba(240,220,255,.8);letter-spacing:1px;opacity:0;transition:opacity .3s;z-index:999;pointer-events:none"></div>
 
-<script src="js/housing_scout.js"></script>
+<!-- toast -->
+<div id="hs-toast" style="position:fixed;bottom:20px;right:20px;background:rgba(8,2,22,.95);border:1px solid rgba(123,107,255,.4);border-radius:6px;padding:10px 16px;font-size:9px;color:rgba(240,220,255,.8);letter-spacing:1px;opacity:0;transition:opacity .3s;z-index:999;pointer-events:none"></div>
+
+<script src="js/career_intel.js"></script>
 <script src="../js/cybercookieos.js"></script>
 <script src="../js/agent_runtime.js"></script>
 <script src="../js/output_engine.js"></script>
