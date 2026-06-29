@@ -6,278 +6,438 @@
 <title>HQ Hallway — CyberCookieOS</title>
 <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
 <div id="hw-app">
 
-    <header id="hw-topBar">
-        <div id="hw-logo">
-            <div id="hw-logoText">CyberCookieOS</div>
-            <div id="hw-logoSub">// HEADQUARTERS — COMMAND NEXUS</div>
-        </div>
-        <div id="hw-opsBtn" role="button" tabindex="0">
-            <span>⬡</span> OPS CENTER
-        </div>
-    </header>
+  <!-- ═══════════ TOP BAR ═══════════ -->
+  <header id="hw-topBar">
+    <div id="hw-logo">
+      <div id="hw-logoText">CyberCookieOS</div>
+      <div id="hw-logoSub">// HEADQUARTERS — COMMAND NEXUS</div>
+    </div>
 
-    <main id="hw-main">
+    <!-- HQ stats moved from room into top bar -->
+    <div id="hw-topStats">
+      <div class="hw-topStat">
+        <div class="hw-topStatVal" id="hw-clock">--:--:--</div>
+        <div class="hw-topStatLbl">HQ TIME</div>
+      </div>
+      <div class="hw-topStatDivider"></div>
+      <div class="hw-topStat">
+        <div class="hw-topStatVal hw-stat-online" id="hw-onlineCount">18</div>
+        <div class="hw-topStatLbl">AGENTS</div>
+      </div>
+      <div class="hw-topStatDivider"></div>
+      <div class="hw-topStat">
+        <div class="hw-topStatVal" id="hw-uptimeStat">0:00</div>
+        <div class="hw-topStatLbl">UPTIME</div>
+      </div>
+      <div class="hw-topStatDivider"></div>
+      <div class="hw-topStat">
+        <div class="hw-topStatVal hw-stat-reports" id="hw-reportsStat">0</div>
+        <div class="hw-topStatLbl">REPORTS</div>
+      </div>
+    </div>
 
-        <div id="hw-room">
+    <div id="hw-opsBtn" role="button" tabindex="0">
+      <span>⬡</span> OPS CENTER
+    </div>
+  </header>
 
-            <!-- Overhead corridor lights -->
-            <div id="hw-ceiling">
-                <div class="hw-light hl1"></div>
-                <div class="hw-light hl2"></div>
-                <div class="hw-light hl3"></div>
-                <div class="hw-light hl4"></div>
-                <div class="hw-light hl5"></div>
-            </div>
+  <main id="hw-main">
 
-            <!-- Back wall: agent status board + ops link -->
-            <div id="hw-backWall">
+    <div id="hw-room">
 
-                <div id="hw-agentBoard">
-                    <div class="hw-boardTitle">// DEPARTMENT LEADS — LIVE STATUS</div>
-                    <div id="hw-agentRows">
-                        <div class="hw-agentRow">
-                            <span class="hw-aIcon">🛡</span>
-                            <span class="hw-aName">ATHENA</span>
-                            <span class="hw-aStatus hw-s-idle" id="hw-status-athena">● IDLE</span>
-                        </div>
-                        <div class="hw-agentRow">
-                            <span class="hw-aIcon">🏠</span>
-                            <span class="hw-aName">NOVA</span>
-                            <span class="hw-aStatus hw-s-idle" id="hw-status-nova">● IDLE</span>
-                        </div>
-                        <div class="hw-agentRow">
-                            <span class="hw-aIcon">📈</span>
-                            <span class="hw-aName">PIXEL</span>
-                            <span class="hw-aStatus hw-s-idle" id="hw-status-pixel">● IDLE</span>
-                        </div>
-                        <div class="hw-agentRow">
-                            <span class="hw-aIcon">📅</span>
-                            <span class="hw-aName">CALYPSO</span>
-                            <span class="hw-aStatus hw-s-idle" id="hw-status-calypso">● IDLE</span>
-                        </div>
-                        <div class="hw-agentRow">
-                            <span class="hw-aIcon">💰</span>
-                            <span class="hw-aName">GREENBEAN</span>
-                            <span class="hw-aStatus hw-s-idle" id="hw-status-greenbean">● IDLE</span>
-                        </div>
-                    </div>
-                </div>
+      <!-- ═══════════ CEILING ═══════════ -->
+      <div id="hw-ceiling">
+        <div class="hw-light hl1"></div>
+        <div class="hw-light hl2"></div>
+        <div class="hw-light hl3"></div>
+        <div class="hw-light hl4"></div>
+        <div class="hw-light hl5"></div>
+      </div>
 
-                <div id="hw-opsLink" onclick="window.location.href='../ops_center/index.html'" role="button" tabindex="0">
-                    <div class="hw-opsIcon">⬡</div>
-                    <div class="hw-opsName">OPS CENTER</div>
-                    <div class="hw-opsSub">MISSION CONTROL →</div>
-                </div>
+      <!-- ═══════════ BACK WALL — MISSION CONTROL ═══════════ -->
+      <div id="hw-backWall">
 
-                <div id="hw-wallRune">✦ ⬡ ✦ ⬡ ✦</div>
-            </div>
-
-            <!-- Perspective floor -->
-            <div id="hw-floor">
-                <svg id="hw-perspective" viewBox="0 0 900 290" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-                    <line x1="0"   y1="290" x2="450" y2="0" stroke="rgba(255,105,180,.15)" stroke-width="1"/>
-                    <line x1="90"  y1="290" x2="450" y2="0" stroke="rgba(255,105,180,.1)"  stroke-width="1"/>
-                    <line x1="200" y1="290" x2="450" y2="0" stroke="rgba(255,105,180,.07)" stroke-width="1"/>
-                    <line x1="330" y1="290" x2="450" y2="0" stroke="rgba(255,105,180,.05)" stroke-width="1"/>
-                    <line x1="900" y1="290" x2="450" y2="0" stroke="rgba(150,80,255,.15)"  stroke-width="1"/>
-                    <line x1="810" y1="290" x2="450" y2="0" stroke="rgba(150,80,255,.1)"   stroke-width="1"/>
-                    <line x1="700" y1="290" x2="450" y2="0" stroke="rgba(150,80,255,.07)"  stroke-width="1"/>
-                    <line x1="570" y1="290" x2="450" y2="0" stroke="rgba(150,80,255,.05)"  stroke-width="1"/>
-                    <line x1="0" y1="240" x2="900" y2="240" stroke="rgba(200,150,255,.05)" stroke-width="1"/>
-                    <line x1="60" y1="180" x2="840" y2="180" stroke="rgba(200,150,255,.04)" stroke-width="1"/>
-                    <line x1="130" y1="120" x2="770" y2="120" stroke="rgba(200,150,255,.03)" stroke-width="1"/>
-                    <line x1="200" y1="70"  x2="700" y2="70"  stroke="rgba(200,150,255,.02)" stroke-width="1"/>
-                    <line x1="450" y1="0" x2="450" y2="290" stroke="rgba(200,150,255,.06)" stroke-width="20"/>
-                </svg>
-            </div>
-
-            <div id="hw-floorGlow"></div>
-
-            <!-- Walking employee sprites — 12 agents visible -->
-            <div id="hw-sprites" aria-hidden="true">
-              <!-- Security dept -->
-              <div class="hw-sprite hw-sp-security"    id="hw-sp-athena"   style="--sp-color:#9b6bff;--sp-dur:7s;--sp-from:8%;--sp-to:62%;--sp-bot:6px;animation-delay:0s">A</div>
-              <div class="hw-sprite hw-sp-security"    id="hw-sp-nimbus"   style="--sp-color:#9b6bff;--sp-dur:13s;--sp-from:30%;--sp-to:82%;--sp-bot:4px;animation-delay:-8s">Ni</div>
-              <!-- Housing dept -->
-              <div class="hw-sprite hw-sp-housing"     id="hw-sp-nova"     style="--sp-color:#c4784a;--sp-dur:9.5s;--sp-from:18%;--sp-to:78%;--sp-bot:9px;animation-delay:-3s">N</div>
-              <div class="hw-sprite hw-sp-housing"     id="hw-sp-beacon"   style="--sp-color:#d9965e;--sp-dur:11.5s;--sp-from:42%;--sp-to:88%;--sp-bot:12px;animation-delay:-5.5s">B</div>
-              <!-- Commerce dept -->
-              <div class="hw-sprite hw-sp-commerce"    id="hw-sp-pixel"    style="--sp-color:#ff69b4;--sp-dur:11s;--sp-from:5%;--sp-to:55%;--sp-bot:5px;animation-delay:-6s">P</div>
-              <div class="hw-sprite hw-sp-commerce"    id="hw-sp-spark"    style="--sp-color:#ff85c5;--sp-dur:14s;--sp-from:48%;--sp-to:86%;--sp-bot:8px;animation-delay:-10s">Sp</div>
-              <!-- Productivity dept -->
-              <div class="hw-sprite hw-sp-productivity" id="hw-sp-calypso" style="--sp-color:#3aa8c8;--sp-dur:8.5s;--sp-from:25%;--sp-to:72%;--sp-bot:11px;animation-delay:-2s">C</div>
-              <div class="hw-sprite hw-sp-productivity" id="hw-sp-echo"    style="--sp-color:#57bcd6;--sp-dur:12s;--sp-from:15%;--sp-to:60%;--sp-bot:14px;animation-delay:-7s">E</div>
-              <!-- Finance dept -->
-              <div class="hw-sprite hw-sp-finance"     id="hw-sp-greenbean" style="--sp-color:#2ecc71;--sp-dur:10s;--sp-from:12%;--sp-to:68%;--sp-bot:7px;animation-delay:-4.5s">G</div>
-              <div class="hw-sprite hw-sp-finance"     id="hw-sp-penny"    style="--sp-color:#45e088;--sp-dur:8s;--sp-from:35%;--sp-to:75%;--sp-bot:10px;animation-delay:-1.5s">Pe</div>
-              <div class="hw-sprite hw-sp-finance"     id="hw-sp-ledger"   style="--sp-color:#2ecc71;--sp-dur:15s;--sp-from:55%;--sp-to:90%;--sp-bot:13px;animation-delay:-11s">L</div>
-              <div class="hw-sprite hw-sp-security"    id="hw-sp-sentinel" style="--sp-color:#bf9fff;--sp-dur:6s;--sp-from:60%;--sp-to:92%;--sp-bot:3px;animation-delay:-3.5s">Se</div>
-            </div>
-
-            <!-- Housing Mission status overlay (shown when AE is running) -->
-            <div id="hw-missionOverlay" style="display:none" aria-live="polite">
-              <div class="hw-missionTitle">🏠 HOUSING MISSION</div>
-              <div id="hw-missionPhases"></div>
-            </div>
-
-            <!-- HQ Stats bar (top of back wall) -->
-            <div id="hw-statsBar" aria-hidden="true">
-              <div class="hw-statItem"><div id="hw-clock" class="hw-statVal">--:--:--</div><div class="hw-statLabel">HQ TIME</div></div>
-              <div class="hw-statItem"><div class="hw-statVal hw-stat-online" id="hw-onlineCount">18</div><div class="hw-statLabel">AGENTS</div></div>
-              <div class="hw-statItem"><div class="hw-statVal" id="hw-uptimeStat">0:00</div><div class="hw-statLabel">UPTIME</div></div>
-              <div class="hw-statItem"><div class="hw-statVal hw-stat-reports" id="hw-reportsStat">0</div><div class="hw-statLabel">REPORTS</div></div>
-            </div>
-
-            <!-- Center floor badge -->
-            <div id="hw-floorBadge">
-                <div id="hw-badgeText">CyberCookieOS</div>
-                <div id="hw-badgeSub">HQ NEXUS</div>
-            </div>
-
-        </div><!-- /hw-room -->
-
-        <!-- ═══════════ COMMAND STRIP ═══════════ -->
-        <div id="hw-cmdStrip">
-            <div id="hw-hqStatusRow">
-                <div id="hw-hqState" class="hw-hqState">● HQ STANDBY</div>
-                <div id="hw-hqMeta">All departments idle · 0 tasks completed · 0 reports today</div>
-            </div>
-            <div id="hw-cmdBtns">
-                <button id="hw-btnRunHQ">&#9654; RUN HEADQUARTERS</button>
-                <a href="../reports/index.html"     class="hw-quickLink">&#128202; REPORTS</a>
-                <a href="../connections/index.html" class="hw-quickLink">&#128268; CONNECTIONS</a>
-                <a href="../ops_center/index.html"  class="hw-quickLink">&#9651; OPS CENTER</a>
-                <a href="../employees/profile.html" class="hw-quickLink">&#128100; PROFILES</a>
-            </div>
-            <div id="hw-hqCountRow">
-                <div class="hw-hqCount">
-                    <div class="hw-hqCountNum" id="hw-cntAgents">0</div>
-                    <div class="hw-hqCountLabel">ACTIVE</div>
-                </div>
-                <div class="hw-hqCount">
-                    <div class="hw-hqCountNum" id="hw-cntTasks">0</div>
-                    <div class="hw-hqCountLabel">TASKS</div>
-                </div>
-                <div class="hw-hqCount">
-                    <div class="hw-hqCountNum" id="hw-cntRpts">0</div>
-                    <div class="hw-hqCountLabel">REPORTS</div>
-                </div>
-            </div>
+        <!-- Server racks on left of back wall -->
+        <div class="hw-serverRack hw-rack-left">
+          <div class="hw-rackChassis">
+            <div class="hw-rackUnit"><span class="hw-rackLed hw-led-green"></span><span class="hw-rackBar"></span></div>
+            <div class="hw-rackUnit"><span class="hw-rackLed hw-led-blue"></span><span class="hw-rackBar"></span></div>
+            <div class="hw-rackUnit hw-rackBusy"><span class="hw-rackLed hw-led-yellow"></span><span class="hw-rackBar hw-rackBarBusy"></span></div>
+            <div class="hw-rackUnit"><span class="hw-rackLed hw-led-green"></span><span class="hw-rackBar"></span></div>
+            <div class="hw-rackUnit"><span class="hw-rackLed hw-led-green"></span><span class="hw-rackBar"></span></div>
+            <div class="hw-rackUnit hw-rackBusy"><span class="hw-rackLed hw-led-yellow"></span><span class="hw-rackBar hw-rackBarBusy"></span></div>
+            <div class="hw-rackUnit"><span class="hw-rackLed hw-led-blue"></span><span class="hw-rackBar"></span></div>
+          </div>
+          <div class="hw-rackLabel">SRV-A01</div>
         </div>
 
-        <!-- ═══════════ DEPARTMENT CARDS ═══════════ -->
-        <div id="hw-deptGrid">
+        <!-- Center: HQ branding + mission board + ops link -->
+        <div id="hw-backCenter">
+          <div id="hw-hqBadge">
+            <div id="hw-hqBadgeHex">⬡</div>
+            <div id="hw-hqBadgeName">CyberCookieOS</div>
+            <div id="hw-hqBadgeSub">HEADQUARTERS · EST. 2025</div>
+          </div>
 
-            <div class="hw-deptCard hw-dept-security" onclick="window.location.href='../hq/index.html'" role="button" tabindex="0">
-                <div class="hw-deptIcon">🛡</div>
-                <div class="hw-deptName">SECURITY OPS</div>
-                <div class="hw-deptSub">Athena · Nimbus · Sentinel</div>
-                <div class="hw-deptBadge" id="hw-badge-security">● WING A</div>
-                <div class="hw-deptLive">
-                    <span id="hw-active-security" class="hw-liveCount">0 active</span>
-                    <span class="hw-liveSep">·</span>
-                    <span id="hw-queue-security" class="hw-liveQueue">0 queued</span>
-                </div>
-                <div class="hw-deptDeliverable" id="hw-dlv-security">— No deliverables yet</div>
-                <div class="hw-deptEnter">ENTER ROOM →</div>
-            </div>
+          <div id="hw-agentBoard">
+            <div class="hw-boardTitle">// DEPARTMENT LEADS — LIVE STATUS</div>
+            <div id="hw-agentRows"></div>
+          </div>
 
-            <div class="hw-deptCard hw-dept-housing" onclick="window.location.href='../housing/index.html'" role="button" tabindex="0">
-                <div class="hw-deptIcon">🏠</div>
-                <div class="hw-deptName">HOUSING</div>
-                <div class="hw-deptSub">Nova · Beacon · Atlas</div>
-                <div class="hw-deptBadge" id="hw-badge-housing">● WING B</div>
-                <div class="hw-deptLive">
-                    <span id="hw-active-housing" class="hw-liveCount">0 active</span>
-                    <span class="hw-liveSep">·</span>
-                    <span id="hw-queue-housing" class="hw-liveQueue">0 queued</span>
-                </div>
-                <div class="hw-deptDeliverable" id="hw-dlv-housing">— No deliverables yet</div>
-                <div class="hw-deptEnter">ENTER ROOM →</div>
-            </div>
-
-            <div class="hw-deptCard hw-dept-commerce" onclick="window.location.href='../commerce/index.html'" role="button" tabindex="0">
-                <div class="hw-deptIcon">🛍</div>
-                <div class="hw-deptName">COMMERCE</div>
-                <div class="hw-deptSub">Pixel · EtsyBot · Spark · Forge</div>
-                <div class="hw-deptBadge" id="hw-badge-commerce">● WING C</div>
-                <div class="hw-deptLive">
-                    <span id="hw-active-commerce" class="hw-liveCount">0 active</span>
-                    <span class="hw-liveSep">·</span>
-                    <span id="hw-queue-commerce" class="hw-liveQueue">0 queued</span>
-                </div>
-                <div class="hw-deptDeliverable" id="hw-dlv-commerce">— No deliverables yet</div>
-                <div class="hw-deptEnter">ENTER ROOM →</div>
-            </div>
-
-            <div class="hw-deptCard hw-dept-productivity" onclick="window.location.href='../productivity/index.html'" role="button" tabindex="0">
-                <div class="hw-deptIcon">📅</div>
-                <div class="hw-deptName">PRODUCTIVITY</div>
-                <div class="hw-deptSub">Calypso · Echo · Atlas P. · Memo</div>
-                <div class="hw-deptBadge" id="hw-badge-productivity">● WING D</div>
-                <div class="hw-deptLive">
-                    <span id="hw-active-productivity" class="hw-liveCount">0 active</span>
-                    <span class="hw-liveSep">·</span>
-                    <span id="hw-queue-productivity" class="hw-liveQueue">0 queued</span>
-                </div>
-                <div class="hw-deptDeliverable" id="hw-dlv-productivity">— No deliverables yet</div>
-                <div class="hw-deptEnter">ENTER ROOM →</div>
-            </div>
-
-            <div class="hw-deptCard hw-dept-finance" onclick="window.location.href='../finance/index.html'" role="button" tabindex="0">
-                <div class="hw-deptIcon">💰</div>
-                <div class="hw-deptName">FINANCE</div>
-                <div class="hw-deptSub">Greenbean · Ledger · Penny · Vault</div>
-                <div class="hw-deptBadge" id="hw-badge-finance">● WING E</div>
-                <div class="hw-deptLive">
-                    <span id="hw-active-finance" class="hw-liveCount">0 active</span>
-                    <span class="hw-liveSep">·</span>
-                    <span id="hw-queue-finance" class="hw-liveQueue">0 queued</span>
-                </div>
-                <div class="hw-deptDeliverable" id="hw-dlv-finance">— No deliverables yet</div>
-                <div class="hw-deptEnter">ENTER ROOM →</div>
-            </div>
-
-            <div class="hw-deptCard hw-dept-ops" onclick="window.location.href='../ops_center/index.html'" role="button" tabindex="0">
-                <div class="hw-deptIcon">⬡</div>
-                <div class="hw-deptName">OPS CENTER</div>
-                <div class="hw-deptSub">Mission Control · HQ</div>
-                <div class="hw-deptBadge">● COMMAND</div>
-                <div class="hw-deptLive">
-                    <span class="hw-liveCount">MASTER CONTROL</span>
-                </div>
-                <div class="hw-deptDeliverable">Full directory &amp; dashboards</div>
-                <div class="hw-deptEnter">ENTER HQ →</div>
-            </div>
-
-        </div><!-- /hw-deptGrid -->
-
-        <!-- ═══════════ COMMAND CONSOLE ═══════════ -->
-        <div id="hw-consoleWrap" style="display:none" aria-live="polite">
-            <div id="hw-consoleHead">
-                <span class="hw-consoleLbl">// COMMAND CONSOLE</span>
-                <span id="hw-consoleMission"></span>
-                <button id="hw-consoleClear" class="hw-consoleClrBtn">CLEAR</button>
-            </div>
-            <div id="hw-consoleFeed"></div>
+          <div id="hw-opsLink" onclick="navigateTo('../ops_center/index.html')" role="button" tabindex="0">
+            <span class="hw-opsIcon">⬡</span>
+            <span class="hw-opsName">OPS CENTER</span>
+            <span class="hw-opsSub">MISSION CONTROL →</span>
+          </div>
         </div>
 
-        <!-- ═══════════ ACTIVITY TICKER ═══════════ -->
-        <div id="hw-ticker">
-            <span class="hw-tickerLabel">// LIVE FEED //</span>
-            <div id="hw-tickerWindow">
-                <div id="hw-tickerTrack">CyberCookieOS HQ online ◆ All systems nominal ◆ Awaiting run command ◆ </div>
-            </div>
+        <!-- Server racks on right of back wall -->
+        <div class="hw-serverRack hw-rack-right">
+          <div class="hw-rackChassis">
+            <div class="hw-rackUnit"><span class="hw-rackLed hw-led-blue"></span><span class="hw-rackBar"></span></div>
+            <div class="hw-rackUnit hw-rackBusy"><span class="hw-rackLed hw-led-yellow"></span><span class="hw-rackBar hw-rackBarBusy"></span></div>
+            <div class="hw-rackUnit"><span class="hw-rackLed hw-led-green"></span><span class="hw-rackBar"></span></div>
+            <div class="hw-rackUnit"><span class="hw-rackLed hw-led-green"></span><span class="hw-rackBar"></span></div>
+            <div class="hw-rackUnit hw-rackBusy"><span class="hw-rackLed hw-led-yellow"></span><span class="hw-rackBar hw-rackBarBusy"></span></div>
+            <div class="hw-rackUnit"><span class="hw-rackLed hw-led-green"></span><span class="hw-rackBar"></span></div>
+            <div class="hw-rackUnit"><span class="hw-rackLed hw-led-blue"></span><span class="hw-rackBar"></span></div>
+          </div>
+          <div class="hw-rackLabel">SRV-B02</div>
         </div>
 
-    </main>
+        <div id="hw-wallRune">✦ ⬡ ✦ ⬡ ✦</div>
+      </div>
 
+      <!-- ═══════════ WING DOORS — LEFT WALL ═══════════ -->
+      <!-- Wing A: Security Ops -->
+      <!-- Wing B: Housing     -->
+      <div id="hw-wallLeft">
+
+        <div class="hw-wingDoor hw-wing-a"
+             onclick="navigateTo('../hq/index.html')"
+             role="button" tabindex="0"
+             title="Security Operations — Wing A">
+          <div class="hw-wingGlow" style="--wc:rgba(155,107,255,.6)"></div>
+          <div class="hw-wingStripe" style="background:rgba(155,107,255,.7)"></div>
+          <div class="hw-wingInner">
+            <div class="hw-wingHeader">
+              <span class="hw-wingEmoji">🛡</span>
+              <span class="hw-wingBadge" id="hw-badge-security">● WING A</span>
+            </div>
+            <div class="hw-wingDeptName">SECURITY OPS</div>
+            <div class="hw-wingAgentList">Athena · Nimbus · Sentinel</div>
+            <div class="hw-wingLive">
+              <span id="hw-active-security">0 active</span>
+              <span class="hw-wingSep">·</span>
+              <span id="hw-queue-security">0 queued</span>
+            </div>
+            <div class="hw-wingDlv" id="hw-dlv-security">— No deliverables yet</div>
+          </div>
+          <div class="hw-wingFooter">
+            <span class="hw-wingOpen">● OPEN</span>
+            <span class="hw-wingEnterArrow">ENTER →</span>
+          </div>
+        </div>
+
+        <div class="hw-wingDoor hw-wing-b"
+             onclick="navigateTo('../housing/index.html')"
+             role="button" tabindex="0"
+             title="Housing Department — Wing B">
+          <div class="hw-wingGlow" style="--wc:rgba(196,120,74,.6)"></div>
+          <div class="hw-wingStripe" style="background:rgba(196,120,74,.7)"></div>
+          <div class="hw-wingInner">
+            <div class="hw-wingHeader">
+              <span class="hw-wingEmoji">🏠</span>
+              <span class="hw-wingBadge" id="hw-badge-housing">● WING B</span>
+            </div>
+            <div class="hw-wingDeptName">HOUSING</div>
+            <div class="hw-wingAgentList">Nova · Beacon · Atlas</div>
+            <div class="hw-wingLive">
+              <span id="hw-active-housing">0 active</span>
+              <span class="hw-wingSep">·</span>
+              <span id="hw-queue-housing">0 queued</span>
+            </div>
+            <div class="hw-wingDlv" id="hw-dlv-housing">— No deliverables yet</div>
+          </div>
+          <div class="hw-wingFooter">
+            <span class="hw-wingOpen">● OPEN</span>
+            <span class="hw-wingEnterArrow">ENTER →</span>
+          </div>
+        </div>
+
+      </div><!-- /hw-wallLeft -->
+
+      <!-- ═══════════ WING DOORS — RIGHT WALL ═══════════ -->
+      <!-- Wing C: Commerce     -->
+      <!-- Wing D: Productivity -->
+      <!-- Wing E: Finance      -->
+      <div id="hw-wallRight">
+
+        <div class="hw-wingDoor hw-wing-c"
+             onclick="navigateTo('../commerce/index.html')"
+             role="button" tabindex="0"
+             title="Commerce Department — Wing C">
+          <div class="hw-wingGlow" style="--wc:rgba(255,105,180,.6)"></div>
+          <div class="hw-wingStripe" style="background:rgba(255,105,180,.7)"></div>
+          <div class="hw-wingInner">
+            <div class="hw-wingHeader">
+              <span class="hw-wingEmoji">🛍</span>
+              <span class="hw-wingBadge" id="hw-badge-commerce">● WING C</span>
+            </div>
+            <div class="hw-wingDeptName">COMMERCE</div>
+            <div class="hw-wingAgentList">Pixel · EtsyBot · Spark</div>
+            <div class="hw-wingLive">
+              <span id="hw-active-commerce">0 active</span>
+              <span class="hw-wingSep">·</span>
+              <span id="hw-queue-commerce">0 queued</span>
+            </div>
+            <div class="hw-wingDlv" id="hw-dlv-commerce">— No deliverables yet</div>
+          </div>
+          <div class="hw-wingFooter">
+            <span class="hw-wingOpen">● OPEN</span>
+            <span class="hw-wingEnterArrow">ENTER →</span>
+          </div>
+        </div>
+
+        <div class="hw-wingDoor hw-wing-d"
+             onclick="navigateTo('../productivity/index.html')"
+             role="button" tabindex="0"
+             title="Productivity Department — Wing D">
+          <div class="hw-wingGlow" style="--wc:rgba(58,168,200,.6)"></div>
+          <div class="hw-wingStripe" style="background:rgba(58,168,200,.7)"></div>
+          <div class="hw-wingInner">
+            <div class="hw-wingHeader">
+              <span class="hw-wingEmoji">📅</span>
+              <span class="hw-wingBadge" id="hw-badge-productivity">● WING D</span>
+            </div>
+            <div class="hw-wingDeptName">PRODUCTIVITY</div>
+            <div class="hw-wingAgentList">Calypso · Echo · Memo</div>
+            <div class="hw-wingLive">
+              <span id="hw-active-productivity">0 active</span>
+              <span class="hw-wingSep">·</span>
+              <span id="hw-queue-productivity">0 queued</span>
+            </div>
+            <div class="hw-wingDlv" id="hw-dlv-productivity">— No deliverables yet</div>
+          </div>
+          <div class="hw-wingFooter">
+            <span class="hw-wingOpen">● OPEN</span>
+            <span class="hw-wingEnterArrow">ENTER →</span>
+          </div>
+        </div>
+
+        <div class="hw-wingDoor hw-wing-e"
+             onclick="navigateTo('../finance/index.html')"
+             role="button" tabindex="0"
+             title="Finance Department — Wing E">
+          <div class="hw-wingGlow" style="--wc:rgba(46,204,113,.6)"></div>
+          <div class="hw-wingStripe" style="background:rgba(46,204,113,.7)"></div>
+          <div class="hw-wingInner">
+            <div class="hw-wingHeader">
+              <span class="hw-wingEmoji">💰</span>
+              <span class="hw-wingBadge" id="hw-badge-finance">● WING E</span>
+            </div>
+            <div class="hw-wingDeptName">FINANCE</div>
+            <div class="hw-wingAgentList">Greenbean · Penny · Vault</div>
+            <div class="hw-wingLive">
+              <span id="hw-active-finance">0 active</span>
+              <span class="hw-wingSep">·</span>
+              <span id="hw-queue-finance">0 queued</span>
+            </div>
+            <div class="hw-wingDlv" id="hw-dlv-finance">— No deliverables yet</div>
+          </div>
+          <div class="hw-wingFooter">
+            <span class="hw-wingOpen">● OPEN</span>
+            <span class="hw-wingEnterArrow">ENTER →</span>
+          </div>
+        </div>
+
+      </div><!-- /hw-wallRight -->
+
+      <!-- ═══════════ PERSPECTIVE FLOOR ═══════════ -->
+      <div id="hw-floor">
+
+        <!-- Animated LED floor strips -->
+        <div id="hw-floorLeds">
+          <div class="hw-ledStrip hw-ls-l2"></div>
+          <div class="hw-ledStrip hw-ls-l1"></div>
+          <div class="hw-ledStrip hw-ls-c"></div>
+          <div class="hw-ledStrip hw-ls-r1"></div>
+          <div class="hw-ledStrip hw-ls-r2"></div>
+        </div>
+
+        <svg id="hw-perspective" viewBox="0 0 900 290" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <line x1="0"   y1="290" x2="450" y2="0" stroke="rgba(255,105,180,.15)" stroke-width="1"/>
+          <line x1="90"  y1="290" x2="450" y2="0" stroke="rgba(255,105,180,.1)"  stroke-width="1"/>
+          <line x1="200" y1="290" x2="450" y2="0" stroke="rgba(255,105,180,.07)" stroke-width="1"/>
+          <line x1="330" y1="290" x2="450" y2="0" stroke="rgba(255,105,180,.05)" stroke-width="1"/>
+          <line x1="900" y1="290" x2="450" y2="0" stroke="rgba(150,80,255,.15)"  stroke-width="1"/>
+          <line x1="810" y1="290" x2="450" y2="0" stroke="rgba(150,80,255,.1)"   stroke-width="1"/>
+          <line x1="700" y1="290" x2="450" y2="0" stroke="rgba(150,80,255,.07)"  stroke-width="1"/>
+          <line x1="570" y1="290" x2="450" y2="0" stroke="rgba(150,80,255,.05)"  stroke-width="1"/>
+          <line x1="0" y1="240" x2="900" y2="240" stroke="rgba(200,150,255,.05)" stroke-width="1"/>
+          <line x1="60" y1="180" x2="840" y2="180" stroke="rgba(200,150,255,.04)" stroke-width="1"/>
+          <line x1="130" y1="120" x2="770" y2="120" stroke="rgba(200,150,255,.03)" stroke-width="1"/>
+          <line x1="200" y1="70"  x2="700" y2="70"  stroke="rgba(200,150,255,.02)" stroke-width="1"/>
+          <line x1="450" y1="0" x2="450" y2="290" stroke="rgba(200,150,255,.06)" stroke-width="20"/>
+        </svg>
+
+        <div id="hw-floorGlow"></div>
+
+        <!-- Reception desk (visual prop) -->
+        <div id="hw-reception">
+          <div class="hw-deskSurface">
+            <div class="hw-deskScreen">
+              <div class="hw-deskScreenContent">
+                <div class="hw-deskLine"></div>
+                <div class="hw-deskLine hw-deskLine-short"></div>
+                <div class="hw-deskLine"></div>
+              </div>
+            </div>
+            <div class="hw-deskPlant">🪴</div>
+          </div>
+          <div class="hw-deskBase"></div>
+          <div class="hw-deskLabel">// RECEPTION</div>
+        </div>
+
+        <!-- Floor badge -->
+        <div id="hw-floorBadge">
+          <div id="hw-badgeText">CyberCookieOS</div>
+          <div id="hw-badgeSub">HQ NEXUS</div>
+        </div>
+
+      </div><!-- /hw-floor -->
+
+      <!-- ═══════════ AGENT SPRITES — 12 agents with hover labels ═══════════ -->
+      <div id="hw-sprites" aria-hidden="true">
+        <!-- Security dept -->
+        <div class="hw-sprite hw-sp-security" id="hw-sp-athena"
+             style="--sp-color:#9b6bff;--sp-dur:7s;--sp-from:18%;--sp-to:65%;--sp-bot:6px;animation-delay:0s">
+          A<span class="hw-spriteLbl">Athena · Security</span>
+        </div>
+        <div class="hw-sprite hw-sp-security" id="hw-sp-nimbus"
+             style="--sp-color:#9b6bff;--sp-dur:13s;--sp-from:35%;--sp-to:78%;--sp-bot:4px;animation-delay:-8s">
+          Ni<span class="hw-spriteLbl">Nimbus · Security</span>
+        </div>
+        <div class="hw-sprite hw-sp-security" id="hw-sp-sentinel"
+             style="--sp-color:#bf9fff;--sp-dur:6s;--sp-from:62%;--sp-to:84%;--sp-bot:3px;animation-delay:-3.5s">
+          Se<span class="hw-spriteLbl">Sentinel · Security</span>
+        </div>
+        <!-- Housing dept -->
+        <div class="hw-sprite hw-sp-housing" id="hw-sp-nova"
+             style="--sp-color:#c4784a;--sp-dur:9.5s;--sp-from:22%;--sp-to:72%;--sp-bot:9px;animation-delay:-3s">
+          N<span class="hw-spriteLbl">Nova · Housing</span>
+        </div>
+        <div class="hw-sprite hw-sp-housing" id="hw-sp-beacon"
+             style="--sp-color:#d9965e;--sp-dur:11.5s;--sp-from:45%;--sp-to:82%;--sp-bot:12px;animation-delay:-5.5s">
+          B<span class="hw-spriteLbl">Beacon · Housing</span>
+        </div>
+        <!-- Commerce dept -->
+        <div class="hw-sprite hw-sp-commerce" id="hw-sp-pixel"
+             style="--sp-color:#ff69b4;--sp-dur:11s;--sp-from:14%;--sp-to:58%;--sp-bot:5px;animation-delay:-6s">
+          P<span class="hw-spriteLbl">Pixel · Commerce</span>
+        </div>
+        <div class="hw-sprite hw-sp-commerce" id="hw-sp-spark"
+             style="--sp-color:#ff85c5;--sp-dur:14s;--sp-from:50%;--sp-to:80%;--sp-bot:8px;animation-delay:-10s">
+          Sp<span class="hw-spriteLbl">Spark · Commerce</span>
+        </div>
+        <!-- Productivity dept -->
+        <div class="hw-sprite hw-sp-productivity" id="hw-sp-calypso"
+             style="--sp-color:#3aa8c8;--sp-dur:8.5s;--sp-from:28%;--sp-to:68%;--sp-bot:11px;animation-delay:-2s">
+          C<span class="hw-spriteLbl">Calypso · Productivity</span>
+        </div>
+        <div class="hw-sprite hw-sp-productivity" id="hw-sp-echo"
+             style="--sp-color:#57bcd6;--sp-dur:12s;--sp-from:16%;--sp-to:56%;--sp-bot:14px;animation-delay:-7s">
+          E<span class="hw-spriteLbl">Echo · Productivity</span>
+        </div>
+        <!-- Finance dept -->
+        <div class="hw-sprite hw-sp-finance" id="hw-sp-greenbean"
+             style="--sp-color:#2ecc71;--sp-dur:10s;--sp-from:20%;--sp-to:62%;--sp-bot:7px;animation-delay:-4.5s">
+          G<span class="hw-spriteLbl">Greenbean · Finance</span>
+        </div>
+        <div class="hw-sprite hw-sp-finance" id="hw-sp-penny"
+             style="--sp-color:#45e088;--sp-dur:8s;--sp-from:38%;--sp-to:72%;--sp-bot:10px;animation-delay:-1.5s">
+          Pe<span class="hw-spriteLbl">Penny · Finance</span>
+        </div>
+        <div class="hw-sprite hw-sp-finance" id="hw-sp-ledger"
+             style="--sp-color:#2ecc71;--sp-dur:15s;--sp-from:55%;--sp-to:84%;--sp-bot:13px;animation-delay:-11s">
+          L<span class="hw-spriteLbl">Ledger · Finance</span>
+        </div>
+      </div><!-- /hw-sprites -->
+
+      <!-- Housing Mission overlay (Phase 11) -->
+      <div id="hw-missionOverlay" style="display:none" aria-live="polite">
+        <div class="hw-missionTitle">🏠 HOUSING MISSION</div>
+        <div id="hw-missionPhases"></div>
+      </div>
+
+    </div><!-- /hw-room -->
+
+    <!-- ═══════════ COMMAND STRIP ═══════════ -->
+    <div id="hw-cmdStrip">
+      <div id="hw-hqStatusRow">
+        <div id="hw-hqState" class="hw-hqState">● HQ STANDBY</div>
+        <div id="hw-hqMeta">All departments idle · 0 tasks completed · 0 reports today</div>
+      </div>
+      <div id="hw-cmdBtns">
+        <button id="hw-btnRunHQ">&#9654; RUN HEADQUARTERS</button>
+        <a href="../reports/index.html"     class="hw-quickLink">&#128202; REPORTS</a>
+        <a href="../connections/index.html" class="hw-quickLink">&#128268; CONNECTIONS</a>
+        <a href="../ops_center/index.html"  class="hw-quickLink">&#9651; OPS CENTER</a>
+        <a href="../employees/profile.html" class="hw-quickLink">&#128100; PROFILES</a>
+      </div>
+      <div id="hw-hqCountRow">
+        <div class="hw-hqCount">
+          <div class="hw-hqCountNum" id="hw-cntAgents">0</div>
+          <div class="hw-hqCountLabel">ACTIVE</div>
+        </div>
+        <div class="hw-hqCount">
+          <div class="hw-hqCountNum" id="hw-cntTasks">0</div>
+          <div class="hw-hqCountLabel">TASKS</div>
+        </div>
+        <div class="hw-hqCount">
+          <div class="hw-hqCountNum" id="hw-cntRpts">0</div>
+          <div class="hw-hqCountLabel">REPORTS</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ COMMAND CONSOLE (Phase 11) ═══════════ -->
+    <div id="hw-consoleWrap" style="display:none" aria-live="polite">
+      <div id="hw-consoleHead">
+        <span class="hw-consoleLbl">// COMMAND CONSOLE</span>
+        <span id="hw-consoleMission"></span>
+        <button id="hw-consoleClear" class="hw-consoleClrBtn">CLEAR</button>
+      </div>
+      <div id="hw-consoleFeed"></div>
+    </div>
+
+    <!-- ═══════════ ACTIVITY TICKER ═══════════ -->
+    <div id="hw-ticker">
+      <span class="hw-tickerLabel">// LIVE FEED //</span>
+      <div id="hw-tickerWindow">
+        <div id="hw-tickerTrack">CyberCookieOS HQ online ◆ All systems nominal ◆ Awaiting run command ◆ </div>
+      </div>
+    </div>
+
+  </main>
 </div>
+
+<!-- Page transition: fades out before navigating -->
+<script>
+function navigateTo(url) {
+  document.documentElement.classList.add('hw-nav-out');
+  setTimeout(function () { window.location.href = url; }, 280);
+}
+document.addEventListener('DOMContentLoaded', function () {
+  document.documentElement.classList.remove('hw-nav-out');
+  document.documentElement.classList.add('hw-nav-in');
+  setTimeout(function () { document.documentElement.classList.remove('hw-nav-in'); }, 350);
+});
+</script>
 
 <script src="../js/cybercookieos.js"></script>
 <script src="../js/agent_runtime.js"></script>

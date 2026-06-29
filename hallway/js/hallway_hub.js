@@ -136,15 +136,15 @@
     }
     if (badgeEl) {
       var deptState = typeof ART !== 'undefined' ? ART.getDeptState(deptId) : 'idle';
+      var wingMap   = { security: 'A', housing: 'B', commerce: 'C', productivity: 'D', finance: 'E' };
       if (deptState === 'running') {
-        badgeEl.className   = 'hw-deptBadge hw-badge-running';
-        badgeEl.textContent = '● RUNNING';
+        badgeEl.className   = 'hw-wingBadge hw-badge-running';
+        badgeEl.textContent = '● WING ' + (wingMap[deptId] || '?') + ' RUNNING';
       } else if (deptState === 'paused') {
-        badgeEl.className   = 'hw-deptBadge hw-badge-paused';
-        badgeEl.textContent = '⏸ PAUSED';
+        badgeEl.className   = 'hw-wingBadge hw-badge-paused';
+        badgeEl.textContent = '⏸ WING ' + (wingMap[deptId] || '?') + ' PAUSED';
       } else {
-        badgeEl.className = 'hw-deptBadge';
-        var wingMap = { security: 'A', housing: 'B', commerce: 'C', productivity: 'D', finance: 'E' };
+        badgeEl.className   = 'hw-wingBadge';
         badgeEl.textContent = '● WING ' + (wingMap[deptId] || '?');
       }
     }
@@ -438,7 +438,11 @@
     var opsBtn = document.getElementById('hw-opsBtn');
     if (opsBtn) {
       opsBtn.addEventListener('click', function () {
-        window.location.href = '../ops_center/index.html';
+        if (typeof navigateTo === 'function') {
+          navigateTo('../ops_center/index.html');
+        } else {
+          window.location.href = '../ops_center/index.html';
+        }
       });
     }
 

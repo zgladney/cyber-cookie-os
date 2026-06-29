@@ -1188,3 +1188,602 @@ body {
 .hw-cLine-ok      { color: rgba(125,255,156,.75); }
 .hw-cLine-success { color: rgba(125,255,156,.95); font-weight: 700; }
 .hw-cLine-dim     { color: rgba(200,160,255,.22); }
+
+/* =============================================
+   PHASE 12 — HEADQUARTERS REDESIGN
+   Environment: wing doors, server racks,
+   LED floor, reception, sprite labels,
+   page transitions, top stats bar
+============================================= */
+
+/* ── Page transitions ── */
+html { transition: opacity .28s ease; }
+html.hw-nav-out { opacity: 0; pointer-events: none; }
+html.hw-nav-in  { animation: hwNavIn .32s ease forwards; }
+@keyframes hwNavIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+/* ── Room: taller for more depth ── */
+#hw-room     { height: 420px !important; }
+#hw-backWall { height: 265px !important; }
+#hw-floor    { height: 155px !important; position: relative !important; overflow: hidden; }
+
+/* ── Top bar: add stats row between logo and OPS btn ── */
+#hw-topStats {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: rgba(4,0,14,.6);
+  border: 1px solid rgba(150,80,255,.12);
+  border-radius: 4px;
+  padding: 0 4px;
+}
+.hw-topStat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px 14px;
+  gap: 2px;
+}
+.hw-topStatVal {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: rgba(200,160,255,.85);
+  line-height: 1;
+  font-family: inherit;
+}
+.hw-topStatLbl {
+  font-size: 6px;
+  letter-spacing: 2px;
+  color: rgba(200,160,255,.3);
+  white-space: nowrap;
+}
+.hw-topStatDivider {
+  width: 1px; height: 26px;
+  background: rgba(150,80,255,.12);
+  flex-shrink: 0;
+}
+.hw-stat-online  { color: rgba(125,255,156,.9)  !important; }
+.hw-stat-reports { color: rgba(156,246,255,.85) !important; }
+
+/* ── Back wall: 3-column layout (rack / center / rack) ── */
+#hw-backWall {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: stretch !important;
+  padding: 0 !important;
+}
+
+/* ── Server racks ── */
+.hw-serverRack {
+  flex-shrink: 0;
+  width: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 6px;
+  gap: 6px;
+  background: rgba(2,0,10,.7);
+}
+.hw-rack-left  { border-right: 1px solid rgba(150,80,255,.1); }
+.hw-rack-right { border-left:  1px solid rgba(150,80,255,.1); }
+.hw-rackChassis {
+  background: rgba(6,0,18,.9);
+  border: 1px solid rgba(150,80,255,.14);
+  border-radius: 2px;
+  padding: 4px 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+}
+.hw-rackUnit {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 10px;
+  background: rgba(4,0,16,.6);
+  border: 1px solid rgba(150,80,255,.07);
+  border-radius: 1px;
+  padding: 0 3px;
+}
+.hw-rackBusy { background: rgba(8,3,20,.8); }
+.hw-rackLed {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.hw-led-green  { background: #2ecc71; box-shadow: 0 0 4px #2ecc71; animation: hwLedPulse 2.3s ease-in-out infinite; }
+.hw-led-blue   { background: #3af0ff; box-shadow: 0 0 4px #3af0ff; animation: hwLedPulse 3.1s ease-in-out infinite; }
+.hw-led-yellow { background: #f7c948; box-shadow: 0 0 4px #f7c948; animation: hwLedPulse 0.9s ease-in-out infinite; }
+@keyframes hwLedPulse {
+  0%,100% { opacity: 1; }
+  50%      { opacity: .4; }
+}
+.hw-rackBar {
+  flex: 1; height: 2px;
+  background: rgba(150,80,255,.1);
+  border-radius: 1px;
+}
+.hw-rackBarBusy {
+  background: rgba(247,201,72,.25);
+  animation: hwRackBusy 1.2s ease-in-out infinite alternate;
+}
+@keyframes hwRackBusy {
+  from { background: rgba(247,201,72,.15); }
+  to   { background: rgba(247,201,72,.4); }
+}
+.hw-rackLabel {
+  font-size: 6px;
+  letter-spacing: 1.5px;
+  color: rgba(200,160,255,.2);
+  text-align: center;
+}
+
+/* ── Back wall center (logo + board + ops) ── */
+#hw-backCenter {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px 6px;
+  min-width: 0;
+}
+
+/* HQ badge / logo */
+#hw-hqBadge {
+  text-align: center;
+  flex-shrink: 0;
+}
+#hw-hqBadgeHex {
+  font-size: 22px;
+  color: rgba(156,246,255,.6);
+  line-height: 1;
+  margin-bottom: 2px;
+  animation: hwHexSpin 6s linear infinite;
+  display: inline-block;
+}
+@keyframes hwHexSpin {
+  from { text-shadow: 0 0 12px rgba(156,246,255,.4); }
+  50%  { text-shadow: 0 0 24px rgba(156,246,255,.8), 0 0 40px rgba(150,80,255,.4); }
+  to   { text-shadow: 0 0 12px rgba(156,246,255,.4); }
+}
+#hw-hqBadgeName {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: rgba(200,160,255,.9);
+  line-height: 1;
+}
+#hw-hqBadgeSub {
+  font-size: 6px;
+  letter-spacing: 2.5px;
+  color: rgba(156,246,255,.3);
+  margin-top: 2px;
+}
+
+/* Agent board inside back center */
+#hw-agentBoard {
+  flex: 1;
+  width: 100%;
+  overflow: hidden;
+  margin: 6px 0;
+}
+.hw-boardTitle {
+  font-size: 6px;
+  letter-spacing: 2px;
+  color: rgba(156,246,255,.25);
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+/* OPS center link in back wall */
+#hw-opsLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(6,0,20,.6);
+  border: 1px solid rgba(156,246,255,.12);
+  border-radius: 3px;
+  padding: 5px 14px;
+  cursor: pointer;
+  transition: all .2s;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+#hw-opsLink:hover {
+  background: rgba(10,2,28,.8);
+  border-color: rgba(156,246,255,.3);
+  box-shadow: 0 0 16px rgba(156,246,255,.08);
+}
+.hw-opsIcon { font-size: 14px; color: rgba(156,246,255,.5); }
+.hw-opsName {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: rgba(156,246,255,.7);
+}
+.hw-opsSub {
+  font-size: 6px;
+  letter-spacing: 1.5px;
+  color: rgba(156,246,255,.35);
+}
+
+/* ── Wing walls (left and right) ── */
+#hw-wallLeft,
+#hw-wallRight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 154px;
+  z-index: 22;
+  display: flex;
+  flex-direction: column;
+}
+#hw-wallLeft {
+  left: 0;
+  background: linear-gradient(90deg, rgba(3,0,12,.97) 0%, rgba(8,2,22,.8) 100%);
+  border-right: 1px solid rgba(150,80,255,.18);
+  box-shadow: inset -6px 0 30px rgba(150,80,255,.06), 6px 0 24px rgba(0,0,0,.45);
+}
+#hw-wallRight {
+  right: 0;
+  background: linear-gradient(270deg, rgba(3,0,12,.97) 0%, rgba(8,2,22,.8) 100%);
+  border-left: 1px solid rgba(150,80,255,.18);
+  box-shadow: inset 6px 0 30px rgba(150,80,255,.06), -6px 0 24px rgba(0,0,0,.45);
+}
+
+/* Individual wing door card */
+.hw-wingDoor {
+  flex: 1;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: background .2s;
+  border-bottom: 1px solid rgba(150,80,255,.08);
+}
+.hw-wingDoor:last-child { border-bottom: none; }
+.hw-wingDoor:hover { background: rgba(150,80,255,.04); }
+.hw-wingDoor:hover .hw-wingEnterArrow { opacity: 1; transform: translateX(0); }
+.hw-wingDoor:hover .hw-wingGlow { opacity: 1; }
+
+/* Dept-color glow overlay */
+.hw-wingGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 120% 50%, var(--wc, rgba(150,80,255,.5)) 0%, transparent 65%);
+  opacity: .5;
+  pointer-events: none;
+  transition: opacity .2s;
+}
+
+/* Left-edge colored stripe */
+.hw-wingStripe {
+  position: absolute;
+  left: 0; top: 16px; bottom: 16px;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  opacity: .7;
+  pointer-events: none;
+}
+#hw-wallRight .hw-wingStripe {
+  left: auto; right: 0;
+  border-radius: 2px 0 0 2px;
+}
+
+.hw-wingInner {
+  flex: 1;
+  padding: 8px 10px 6px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+}
+#hw-wallRight .hw-wingInner { padding-left: 10px; padding-right: 14px; }
+
+.hw-wingHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.hw-wingEmoji { font-size: 12px; flex-shrink: 0; }
+.hw-wingBadge {
+  font-size: 7px;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  color: rgba(200,160,255,.55);
+  white-space: nowrap;
+}
+
+/* Active dept badge state colors */
+.hw-badge-active   { color: rgba(125,255,156,.8)  !important; }
+.hw-badge-standby  { color: rgba(200,160,255,.55) !important; }
+.hw-badge-running  { color: rgba(247,201,72,.85)  !important; animation: hwBadgePulse 1.4s ease-in-out infinite; }
+.hw-badge-paused   { color: rgba(255,180,60,.7)   !important; }
+@keyframes hwBadgePulse { 50% { opacity: .6; } }
+
+.hw-wingDeptName {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: rgba(200,160,255,.8);
+  line-height: 1;
+}
+.hw-wingAgentList {
+  font-size: 7px;
+  color: rgba(200,160,255,.28);
+  letter-spacing: .5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hw-wingLive {
+  display: flex;
+  gap: 4px;
+  font-size: 7px;
+  color: rgba(200,160,255,.45);
+  letter-spacing: .5px;
+  align-items: center;
+}
+.hw-wingSep { color: rgba(200,160,255,.2); }
+.hw-wingDlv {
+  font-size: 6.5px;
+  color: rgba(200,160,255,.22);
+  letter-spacing: .3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+.hw-wingFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 10px 5px 14px;
+  border-top: 1px solid rgba(150,80,255,.07);
+  flex-shrink: 0;
+}
+#hw-wallRight .hw-wingFooter { padding-left: 10px; padding-right: 14px; }
+.hw-wingOpen {
+  font-size: 6px;
+  letter-spacing: 1.5px;
+  color: rgba(125,255,156,.55);
+}
+.hw-wingEnterArrow {
+  font-size: 6.5px;
+  letter-spacing: 1.5px;
+  color: rgba(200,160,255,.4);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity .2s, transform .2s;
+}
+
+/* ── Floor LED strips ── */
+#hw-floorLeds {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+.hw-ledStrip {
+  position: absolute;
+  bottom: 0;
+  width: 2px;
+  height: 60%;
+  border-radius: 2px 2px 0 0;
+  animation: hwLedFlow 2s ease-in-out infinite;
+}
+.hw-ls-l2 { left: 16%;  background: linear-gradient(to top, rgba(155,107,255,.5), transparent); animation-delay: 0s; }
+.hw-ls-l1 { left: 30%;  background: linear-gradient(to top, rgba(155,107,255,.35), transparent); animation-delay: .4s; }
+.hw-ls-c  { left: 50%;  background: linear-gradient(to top, rgba(156,246,255,.4), transparent); animation-delay: .8s; transform: translateX(-50%); }
+.hw-ls-r1 { right: 30%; background: linear-gradient(to top, rgba(155,107,255,.35), transparent); animation-delay: 1.2s; }
+.hw-ls-r2 { right: 16%; background: linear-gradient(to top, rgba(155,107,255,.5), transparent); animation-delay: 1.6s; }
+@keyframes hwLedFlow {
+  0%,100% { opacity: .55; height: 55%; }
+  50%      { opacity: 1;   height: 72%; }
+}
+
+/* ── Reception desk prop ── */
+#hw-reception {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  width: 100px;
+}
+.hw-deskSurface {
+  width: 100px;
+  height: 14px;
+  background: rgba(6,2,18,.95);
+  border: 1px solid rgba(150,80,255,.25);
+  border-radius: 3px 3px 0 0;
+  box-shadow: 0 0 12px rgba(150,80,255,.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+}
+.hw-deskScreen {
+  width: 32px;
+  height: 22px;
+  background: rgba(3,0,12,.9);
+  border: 1px solid rgba(156,246,255,.2);
+  border-radius: 2px;
+  box-shadow: 0 0 8px rgba(156,246,255,.15), inset 0 0 6px rgba(156,246,255,.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+  position: relative;
+  top: -10px;
+}
+.hw-deskScreenContent { width: 100%; display: flex; flex-direction: column; gap: 2px; }
+.hw-deskLine {
+  height: 1px;
+  background: rgba(156,246,255,.3);
+  border-radius: 1px;
+  animation: hwDeskBlink 2.5s ease-in-out infinite;
+}
+.hw-deskLine-short { width: 70%; }
+@keyframes hwDeskBlink {
+  0%,100% { opacity: .4; }
+  50%      { opacity: .9; }
+}
+.hw-deskPlant { font-size: 10px; margin-right: 2px; }
+.hw-deskBase {
+  width: 80px;
+  height: 6px;
+  background: rgba(4,0,14,.95);
+  border: 1px solid rgba(150,80,255,.15);
+  border-top: none;
+  border-radius: 0 0 2px 2px;
+}
+.hw-deskLabel {
+  font-size: 5.5px;
+  letter-spacing: 2px;
+  color: rgba(156,246,255,.18);
+  margin-top: 4px;
+}
+
+/* ── Sprite hover labels ── */
+.hw-sprite { pointer-events: auto !important; cursor: default; overflow: visible !important; }
+.hw-spriteLbl {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(4,0,18,.95);
+  color: rgba(200,160,255,.9);
+  font-size: 7px;
+  letter-spacing: .5px;
+  padding: 3px 7px;
+  border-radius: 3px;
+  white-space: nowrap;
+  border: 1px solid rgba(150,80,255,.25);
+  box-shadow: 0 2px 10px rgba(0,0,0,.6);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .15s;
+  z-index: 50;
+}
+.hw-sprite:hover .hw-spriteLbl { opacity: 1; }
+
+/* ── Floor badge (moved down to not clash with reception desk) ── */
+#hw-floorBadge {
+  bottom: 6px !important;
+  font-size: 7px !important;
+}
+
+/* ── Command strip: keep compact, add quick links ── */
+#hw-cmdStrip {
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0;
+  padding: 0 !important;
+}
+#hw-hqStatusRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px;
+  flex: 1;
+  min-width: 220px;
+  border-right: 1px solid rgba(150,80,255,.08);
+}
+#hw-hqState { font-size: 8px !important; }
+#hw-hqMeta  { font-size: 7px !important; }
+#hw-cmdBtns {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  flex-wrap: wrap;
+  flex: 2;
+}
+.hw-quickLink {
+  font-size: 7px;
+  letter-spacing: 1px;
+  color: rgba(156,246,255,.45);
+  text-decoration: none;
+  border: 1px solid rgba(156,246,255,.12);
+  border-radius: 2px;
+  padding: 3px 8px;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.hw-quickLink:hover {
+  color: rgba(156,246,255,.8);
+  border-color: rgba(156,246,255,.3);
+  background: rgba(156,246,255,.04);
+}
+#hw-hqCountRow {
+  display: flex;
+  gap: 0;
+  flex-shrink: 0;
+  border-left: 1px solid rgba(150,80,255,.08);
+}
+.hw-hqCount {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 5px 12px;
+  border-right: 1px solid rgba(150,80,255,.06);
+}
+.hw-hqCount:last-child { border-right: none; }
+.hw-hqCountNum {
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(200,160,255,.75);
+  line-height: 1;
+}
+.hw-hqCountLabel {
+  font-size: 5.5px;
+  letter-spacing: 2px;
+  color: rgba(200,160,255,.25);
+}
+
+/* ── Mission overlay: ensure it sits above new wing walls ── */
+#hw-missionOverlay { z-index: 30 !important; }
+
+/* ── Fix top-bar logo: clear back-wall margin that migrated ── */
+#hw-topBar #hw-logo { margin-bottom: 0 !important; text-align: left !important; }
+#hw-topBar #hw-logoText { font-size: 14px !important; }
+#hw-topBar #hw-logoSub  { font-size: 7px !important; }
+
+/* ── Agent board: fill available width inside hw-backCenter ── */
+#hw-agentBoard {
+  width: auto !important;
+  flex: 1 !important;
+  margin-bottom: 6px !important;
+  padding: 6px 10px !important;
+  box-sizing: border-box;
+}
+
+/* ── Wall rune: pin to bottom edge of back wall ── */
+#hw-wallRune {
+  position: absolute !important;
+  bottom: 3px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  font-size: 8px !important;
+  letter-spacing: 8px !important;
+}
