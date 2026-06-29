@@ -278,3 +278,163 @@ body {
   box-shadow: 0 0 16px rgba(46,204,113,.15) !important;
   transition: all .2s;
 }
+
+/* ================================================================
+   PHASE 16 — FINANCE AGENT WORKSTATIONS
+================================================================ */
+
+/* Financial Operations Center wall */
+#fn-dashboardWall {
+    width: 560px; padding: 12px 16px;
+}
+.fn-cashBar {
+    display: flex; align-items: center; gap: 8px;
+    border-top: 1px solid rgba(46,204,113,.1); padding-top: 8px; margin-top: 10px;
+}
+.fn-cashLabel { font-size: 6px; letter-spacing: 1px; color: rgba(46,204,113,.4); white-space: nowrap; }
+.fn-cashTrack { flex: 1; height: 4px; background: rgba(46,204,113,.1); border-radius: 2px; overflow: hidden; }
+.fn-cashFill  { height: 100%; background: linear-gradient(90deg, #1A9955, #2ECC71); border-radius: 2px; }
+.fn-cashVal   { font-size: 7px; color: #2ECC71; font-weight: 700; white-space: nowrap; min-width: 28px; text-align: right; }
+
+/* Vault reposition — now an anchor prop behind Vault's station, not the primary desk */
+#fn-vault { right: 22px; top: 320px; width: 80px; height: 100px; z-index: 18; }
+.fn-vaultDial { width: 34px; height: 34px; border-width: 2px; }
+
+/* 4-station layout */
+.fn-stn {
+    position: absolute; z-index: 30;
+    display: flex; flex-direction: column; align-items: flex-start;
+}
+#fn-stn-greenbean { left:  83px; top: 315px; width: 172px; }
+#fn-stn-ledger    { left: 266px; top: 319px; width: 172px; }
+#fn-stn-penny     { left: 449px; top: 319px; width: 172px; }
+#fn-stn-vault     { left: 633px; top: 315px; width: 172px; }
+
+.fn-stn-monitors { display: flex; }
+.fn-stn-monitor {
+    width: 160px; height: 100px;
+    border: 2px solid rgba(46,204,113,.55);
+    border-radius: 6px 6px 3px 3px; overflow: hidden;
+    background: rgba(0,4,2,.97);
+    box-shadow: 0 0 14px rgba(46,204,113,.18), inset 0 0 8px rgba(0,0,0,.5);
+}
+.fn-mon-gold    { border-color: rgba(255,210,60,.45); box-shadow: 0 0 12px rgba(255,210,60,.12); }
+.fn-mon-teal    { border-color: rgba(80,210,160,.45); box-shadow: 0 0 12px rgba(80,210,160,.1); }
+.fn-mon-emerald { border-color: rgba(46,204,113,.6);  box-shadow: 0 0 14px rgba(46,204,113,.18); }
+
+.fn-monHud {
+    background: rgba(46,204,113,.08); font-size: 5.5px; font-weight: 700;
+    letter-spacing: 1.2px; color: rgba(80,200,120,.7);
+    padding: 3px 5px; border-bottom: 1px solid rgba(46,204,113,.1);
+}
+.fn-hud-gold    { background: rgba(255,210,60,.06);   color: rgba(255,220,100,.7); border-color: rgba(255,210,60,.08); }
+.fn-hud-teal    { background: rgba(80,210,160,.06);   color: rgba(100,220,170,.7); border-color: rgba(80,210,160,.07); }
+.fn-hud-emerald { background: rgba(46,204,113,.1);    color: rgba(80,230,140,.75); border-color: rgba(46,204,113,.12); }
+
+.fn-monBody { padding: 4px 5px; font-size: 7px; height: calc(100% - 19px); overflow: hidden; }
+.fn-monMeta { margin-top: 4px; font-size: 5px; color: rgba(46,204,113,.38); letter-spacing: .8px; }
+
+/* Cash flow rows */
+.fn-cfRow { display: flex; align-items: center; gap: 4px; margin-bottom: 2.5px; font-size: 5.5px; color: rgba(80,200,120,.4); }
+.fn-cfRow span:nth-child(2) { flex: 1; }
+.fn-cfIcon  { width: 10px; text-align: center; }
+.fn-cfVal   { font-weight: 700; color: rgba(80,200,120,.6); }
+.fn-cf-in   .fn-cfVal { color: rgba(125,255,156,.75); }
+.fn-cf-out  .fn-cfVal { color: rgba(255,180,80,.6); }
+.fn-cf-net  .fn-cfVal { font-size: 6px; letter-spacing: .5px; }
+.fn-cf-pos  { color: rgba(125,255,156,.8) !important; }
+.fn-cf-warn { color: rgba(255,220,50,.75) !important; }
+.fn-cfDivider { height: 1px; background: rgba(46,204,113,.12); margin: 3px 0; }
+
+/* Bill rows */
+.fn-billRow { display: flex; align-items: center; gap: 3px; margin-bottom: 3px; font-size: 5.5px; color: rgba(255,200,130,.4); }
+.fn-billRow span:nth-child(2) { flex: 1; }
+.fn-billStatus { font-size: 4px; letter-spacing: .8px; padding: 1px 3px; border-radius: 2px; flex-shrink: 0; }
+.fn-bill-due  .fn-billStatus { background: rgba(255,200,60,.18); color: rgba(255,220,80,.85); }
+.fn-bill-paid .fn-billStatus { background: rgba(125,255,156,.1);  color: rgba(125,255,156,.75); }
+.fn-bill-sched .fn-billStatus { background: rgba(156,246,255,.08); color: rgba(156,246,255,.55); }
+.fn-billAmt   { font-weight: 700; color: rgba(255,210,60,.5); }
+
+/* Budget rows (Penny) */
+.fn-budgetRow { display: flex; align-items: center; gap: 4px; margin-bottom: 4px; font-size: 5.5px; color: rgba(80,200,120,.4); }
+.fn-budgetRow span:first-child { width: 52px; flex-shrink: 0; }
+.fn-miniBar   { flex: 1; height: 4px; background: rgba(46,204,113,.1); border-radius: 2px; overflow: hidden; }
+.fn-miniBarFill { height: 100%; border-radius: 2px; }
+.fn-mb-green  { background: linear-gradient(90deg, #1A9955, #2ECC71); }
+.fn-mb-amber  { background: linear-gradient(90deg, rgba(200,160,40,.6), rgba(255,200,60,.7)); }
+.fn-mb-red    { background: linear-gradient(90deg, rgba(200,60,60,.5), rgba(255,80,80,.6)); }
+.fn-budgPct   { width: 24px; text-align: right; color: rgba(80,200,120,.55); font-weight: 700; }
+
+/* Savings rows (Vault) */
+.fn-savRow { display: flex; align-items: center; gap: 4px; margin-bottom: 5px; font-size: 5.5px; }
+.fn-savLabel { width: 68px; flex-shrink: 0; color: rgba(80,200,120,.4); }
+.fn-savBar   { flex: 1; height: 4px; background: rgba(46,204,113,.1); border-radius: 2px; overflow: hidden; }
+.fn-savFill  { height: 100%; background: linear-gradient(90deg, #1A9955, #2ECC71); border-radius: 2px; }
+.fn-sav-amber { background: linear-gradient(90deg, rgba(200,160,40,.55), rgba(255,200,60,.65)); }
+.fn-sav-red   { background: linear-gradient(90deg, rgba(180,50,50,.5), rgba(255,80,80,.55)); }
+.fn-savPct   { width: 24px; text-align: right; color: rgba(46,204,113,.65); font-weight: 700; font-size: 5.5px; }
+
+/* Desk */
+.fn-stn-desk {
+    width: 100%; height: 42px;
+    background: linear-gradient(180deg, #001508, #000b04);
+    border: 2px solid rgba(46,204,113,.45); border-bottom: none;
+    border-radius: 5px 5px 0 0; margin-top: 3px; position: relative;
+    box-shadow: 0 0 14px rgba(46,204,113,.16), inset 0 1px 0 rgba(46,204,113,.1);
+}
+.fn-desk-gold    { border-color: rgba(255,210,60,.4); box-shadow: 0 0 12px rgba(255,210,60,.1); }
+.fn-desk-teal    { border-color: rgba(80,210,160,.4); box-shadow: 0 0 12px rgba(80,210,160,.1); }
+.fn-desk-emerald { border-color: rgba(46,204,113,.55); box-shadow: 0 0 14px rgba(46,204,113,.18); }
+.fn-stn-desk::before {
+    content: "⌨"; position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%,-50%); font-size: 13px; color: rgba(46,204,113,.25); pointer-events: none;
+}
+.fn-stn-desk::after {
+    content: ""; position: absolute; bottom: -7px; left: 3px; right: 3px;
+    height: 7px; background: #000502; border-radius: 0 0 4px 4px;
+    border: 1.5px solid rgba(46,204,113,.1); border-top: none;
+}
+.fn-stn-props { position: absolute; left: 7px; top: 6px; font-size: 10px; letter-spacing: 3px; pointer-events: none; }
+
+/* Sprites */
+.fn-sprite {
+    position: absolute; right: 9px; top: 4px;
+    width: 16px; height: 20px;
+    background: rgba(46,204,113,.12); border: 1px solid rgba(46,204,113,.28);
+    border-radius: 4px 4px 3px 3px; font-size: 0; overflow: visible;
+}
+.fn-sprite::before {
+    content: ''; position: absolute; top: -7px; left: 50%; transform: translateX(-50%);
+    width: 10px; height: 10px; border-radius: 50%;
+    background: rgba(46,204,113,.32); box-shadow: 0 0 5px rgba(46,204,113,.38);
+}
+.fn-sp-gold::before    { background: rgba(255,210,60,.35); box-shadow: 0 0 5px rgba(255,210,60,.4); }
+.fn-sp-teal::before    { background: rgba(80,210,160,.35); box-shadow: 0 0 5px rgba(80,210,160,.4); }
+.fn-sp-emerald::before { background: rgba(46,204,113,.4);  box-shadow: 0 0 6px rgba(46,204,113,.5); }
+
+.fn-spritelbl {
+    position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+    font-size: 5.5px; color: rgba(46,204,113,.55); letter-spacing: .8px; white-space: nowrap;
+    background: rgba(0,4,2,.9); border: 1px solid rgba(46,204,113,.18); padding: 1px 4px; border-radius: 2px;
+}
+
+/* Nameplate */
+.fn-stn-plate { padding: 2px 0 0; display: flex; flex-direction: column; gap: 1px; }
+.fn-stn-name  { font-size: 9px; font-weight: 700; color: #2ECC71; letter-spacing: 1.5px; }
+.fn-stn-role  { font-size: 5px; letter-spacing: .8px; color: rgba(80,200,120,.3); }
+
+/* Panel cards */
+.fn-card { border: 1px solid rgba(46,204,113,.18); border-radius: 7px; padding: 9px 10px; background: rgba(0,0,0,.2); }
+.fn-cardTitle { font-size: 7px; letter-spacing: 2px; color: rgba(46,204,113,.42); margin-bottom: 8px; font-weight: 700; }
+.fn-statRow { display: flex; justify-content: space-between; font-size: 8px; color: rgba(80,200,120,.4); margin-bottom: 4px; }
+.fn-statRow span:last-child { color: rgba(46,204,113,.72); font-weight: 700; }
+.fn-ok   { color: rgba(125,255,156,.7) !important; }
+.fn-warn { color: rgba(255,220,50,.7) !important; }
+.fn-agentRow { display: flex; justify-content: space-between; font-size: 7px; margin-bottom: 5px; }
+.fn-agBadge  { font-size: 6.5px; font-weight: 700; letter-spacing: 1px; }
+.fn-ag-green   { color: #2ECC71; }
+.fn-ag-gold    { color: rgba(255,210,60,.8); }
+.fn-ag-teal    { color: rgba(80,210,160,.8); }
+.fn-ag-emerald { color: rgba(125,255,156,.8); }
+.fn-agActivity { font-size: 6px; letter-spacing: .8px; color: rgba(125,255,156,.62); }
+.fn-intReq { font-size: 6.5px; color: rgba(80,200,120,.32); line-height: 2.1; }

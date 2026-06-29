@@ -74,17 +74,26 @@
                     <div class="mEntry warn">⚠ SUSPICIOUS IP FLAGGED</div>
                 </div>
 
-                <!-- Bookshelf below mission log -->
-                <div id="wallShelf" data-tip="RESEARCH ARCHIVE">
-                    <div class="book bk-pink bk-tall"></div>
-                    <div class="book bk-cyan"></div>
-                    <div class="book bk-dark"></div>
-                    <div class="book bk-pink bk-sm"></div>
-                    <div class="book bk-mint bk-tall"></div>
-                    <div class="book bk-dark bk-sm"></div>
-                    <div class="book bk-cyan"></div>
-                    <div class="book bk-pink"></div>
-                    <div class="book bk-dark bk-tall"></div>
+                <!-- Evidence Locker — case files, forensic storage -->
+                <div id="evidenceLocker" data-tip="EVIDENCE LOCKER — CASE FILES &amp; FORENSIC STORAGE">
+                    <div class="ev-lockerTitle">EVIDENCE LOCKER</div>
+                    <div class="ev-drawer">
+                        <div class="ev-drawerLabel">CASE #0042 — ACTIVE</div>
+                        <div class="ev-drawerLed ev-led-hot"></div>
+                    </div>
+                    <div class="ev-drawer">
+                        <div class="ev-drawerLabel">FORENSIC IMAGES</div>
+                        <div class="ev-drawerLed ev-led-on"></div>
+                    </div>
+                    <div class="ev-drawer">
+                        <div class="ev-drawerLabel">MALWARE SAMPLES</div>
+                        <div class="ev-drawerLed ev-led-on"></div>
+                    </div>
+                    <div class="ev-drawer ev-drawer-locked">
+                        <div class="ev-drawerLabel">CLOSED CASES</div>
+                        <div class="ev-drawerLed ev-led-off"></div>
+                    </div>
+                    <div class="ev-lockerBase">SRV-EVID-01 // READ-ONLY</div>
                 </div>
 
                 <!-- Center: Threat map -->
@@ -179,11 +188,15 @@
             <div id="cable2" class="floorCable"></div>
             <div id="cable3" class="floorCable"></div>
 
-            <!-- Small crystals near server rack -->
-            <div id="crystals">💎</div>
-
-            <!-- Plant with sway -->
-            <div id="plant">🌱</div>
+            <!-- UPS battery terminal label (replaced crystals) -->
+            <div id="patchPanel" data-tip="PATCH PANEL — NETWORK CONNECTIONS">
+                <div class="pp-port pp-on"></div>
+                <div class="pp-port pp-on"></div>
+                <div class="pp-port pp-warn"></div>
+                <div class="pp-port pp-on"></div>
+                <div class="pp-port pp-on"></div>
+                <div class="pp-port pp-off"></div>
+            </div>
 
             <!-- Steam rising from coffee -->
             <div id="steamGroup">

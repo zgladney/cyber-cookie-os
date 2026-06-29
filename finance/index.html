@@ -31,28 +31,33 @@
                 <div id="fn-subSign">// BUDGET · BILLS · SAVINGS · WEALTH</div>
 
                 <div id="fn-dashboardWall">
-                    <div class="fn-wallTitle">FINANCIAL DASHBOARD</div>
+                    <div class="fn-wallTitle">FINANCIAL OPERATIONS CENTER</div>
                     <div class="fn-dashGrid">
                         <div class="fn-dashTile fn-t-budget">
-                            <div class="fn-tileLabel">BUDGET</div>
+                            <div class="fn-tileLabel">MONTHLY BUDGET</div>
                             <div class="fn-tileVal" id="fn-budgetVal">$2,100</div>
-                            <div class="fn-tileBar"><div class="fn-tileBarFill" style="width:62%"></div></div>
+                            <div class="fn-tileBar"><div class="fn-tileBarFill" id="fn-budgetBar" style="width:62%"></div></div>
                         </div>
                         <div class="fn-dashTile fn-t-bills">
                             <div class="fn-tileLabel">BILLS DUE</div>
-                            <div class="fn-tileVal fn-tv-warn">3 THIS WEEK</div>
-                            <div class="fn-tileNote">Rent · Phone · Electric</div>
+                            <div class="fn-tileVal fn-tv-warn" id="fn-billsVal">3 THIS WEEK</div>
+                            <div class="fn-tileNote" id="fn-billsNote">Rent · Phone · Electric</div>
                         </div>
                         <div class="fn-dashTile fn-t-savings">
-                            <div class="fn-tileLabel">SAVINGS</div>
-                            <div class="fn-tileVal fn-tv-good">ON TRACK</div>
-                            <div class="fn-tileBar"><div class="fn-tileBarFill fn-fill-green" style="width:45%"></div></div>
+                            <div class="fn-tileLabel">SAVINGS RATE</div>
+                            <div class="fn-tileVal fn-tv-good" id="fn-savingsVal">ON TRACK</div>
+                            <div class="fn-tileBar"><div class="fn-tileBarFill fn-fill-green" id="fn-savingsBar" style="width:45%"></div></div>
                         </div>
                         <div class="fn-dashTile fn-t-income">
-                            <div class="fn-tileLabel">NET INCOME</div>
-                            <div class="fn-tileVal fn-tv-good">HEALTHY</div>
-                            <div class="fn-tileNote">Updated today</div>
+                            <div class="fn-tileLabel">CASH FLOW</div>
+                            <div class="fn-tileVal fn-tv-good" id="fn-cashFlowVal">POSITIVE</div>
+                            <div class="fn-tileNote" id="fn-cashFlowNote">Ledger updated today</div>
                         </div>
+                    </div>
+                    <div class="fn-cashBar">
+                        <span class="fn-cashLabel">EMERGENCY FUND PROGRESS</span>
+                        <div class="fn-cashTrack"><div class="fn-cashFill" id="fn-emergFill" style="width:32%"></div></div>
+                        <span class="fn-cashVal" id="fn-emergVal">32%</span>
                     </div>
                 </div>
 
@@ -68,22 +73,119 @@
             <div id="fn-floor"></div>
             <div id="fn-floorGlow"></div>
 
-            <!-- Financial desk -->
-            <div id="fn-desk">
-                <div id="fn-monitor">💰</div>
-                <div id="fn-monitor2">📊</div>
-                <div id="fn-deskPlaque">▸ GREENBEAN / LEDGER</div>
-            </div>
-
-            <!-- Vault door -->
+            <!-- Vault door — Vault's workspace anchor -->
             <div id="fn-vault">
                 <div class="fn-vaultDial"></div>
                 <div class="fn-vaultLabel">VAULT</div>
             </div>
 
-            <!-- Gold accent -->
-            <div id="fn-coins">🪙</div>
-            <div id="fn-plant">🌿</div>
+            <!-- GREENBEAN — Cash Flow Monitor -->
+            <div class="fn-stn" id="fn-stn-greenbean">
+                <div class="fn-stn-monitors">
+                    <div class="fn-stn-monitor">
+                        <div class="fn-monHud">GREENBEAN // CASH FLOW</div>
+                        <div class="fn-monBody">
+                            <div class="fn-cfRow fn-cf-in"><span class="fn-cfIcon">↑</span><span>Income</span><span id="fn-cf-income" class="fn-cfVal">—</span></div>
+                            <div class="fn-cfRow fn-cf-out"><span class="fn-cfIcon">↓</span><span>Expenses</span><span id="fn-cf-expense" class="fn-cfVal">—</span></div>
+                            <div class="fn-cfRow fn-cf-net"><span class="fn-cfIcon">→</span><span>Net</span><span id="fn-cf-net" class="fn-cfVal fn-cf-pos">POSITIVE</span></div>
+                            <div class="fn-cfDivider"></div>
+                            <div class="fn-cfRow"><span class="fn-cfIcon">⚑</span><span>Pending bills</span><span id="fn-cf-bills" class="fn-cfVal fn-cf-warn">3</span></div>
+                            <div class="fn-monMeta">LAST RECONCILE: <span id="fn-reconTime" style="color:#2ECC71">TODAY</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fn-stn-desk">
+                    <div class="fn-stn-props">📈 💹</div>
+                    <div class="fn-sprite" id="fn-sp-greenbean">G<span class="fn-spritelbl">GREENBEAN</span></div>
+                </div>
+                <div class="fn-stn-plate">
+                    <div class="fn-stn-name">GREENBEAN</div>
+                    <div class="fn-stn-role">FINANCE MANAGER</div>
+                </div>
+            </div>
+
+            <!-- LEDGER — Bill Tracker -->
+            <div class="fn-stn" id="fn-stn-ledger">
+                <div class="fn-stn-monitors">
+                    <div class="fn-stn-monitor fn-mon-gold">
+                        <div class="fn-monHud fn-hud-gold">LEDGER // BILL QUEUE</div>
+                        <div class="fn-monBody">
+                            <div class="fn-billRow fn-bill-due"><span class="fn-billStatus">DUE</span><span>Rent</span><span class="fn-billAmt" id="fn-rent-amt">—</span></div>
+                            <div class="fn-billRow fn-bill-due"><span class="fn-billStatus">DUE</span><span>Electric</span><span class="fn-billAmt">—</span></div>
+                            <div class="fn-billRow fn-bill-paid"><span class="fn-billStatus">PAID</span><span>Phone</span><span class="fn-billAmt">—</span></div>
+                            <div class="fn-billRow fn-bill-sched"><span class="fn-billStatus">SCHED</span><span>Internet</span><span class="fn-billAmt">—</span></div>
+                            <div class="fn-monMeta">TOTAL DUE: <span id="fn-totalDue" style="color:rgba(255,220,50,.8)">$0</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fn-stn-desk fn-desk-gold">
+                    <div class="fn-stn-props">🗓 💳</div>
+                    <div class="fn-sprite fn-sp-gold" id="fn-sp-ledger">L<span class="fn-spritelbl">LEDGER</span></div>
+                </div>
+                <div class="fn-stn-plate">
+                    <div class="fn-stn-name" style="color:rgba(255,210,80,.9)">LEDGER</div>
+                    <div class="fn-stn-role">BILL &amp; TRANSACTION TRACKER</div>
+                </div>
+            </div>
+
+            <!-- PENNY — Budget Planning -->
+            <div class="fn-stn" id="fn-stn-penny">
+                <div class="fn-stn-monitors">
+                    <div class="fn-stn-monitor fn-mon-teal">
+                        <div class="fn-monHud fn-hud-teal">PENNY // BUDGET HEALTH</div>
+                        <div class="fn-monBody">
+                            <div class="fn-budgetRow"><span>Housing</span><div class="fn-miniBar"><div class="fn-miniBarFill fn-mb-red" style="width:72%"></div></div><span class="fn-budgPct">72%</span></div>
+                            <div class="fn-budgetRow"><span>Food</span><div class="fn-miniBar"><div class="fn-miniBarFill fn-mb-green" style="width:41%"></div></div><span class="fn-budgPct">41%</span></div>
+                            <div class="fn-budgetRow"><span>Transport</span><div class="fn-miniBar"><div class="fn-miniBarFill fn-mb-green" style="width:28%"></div></div><span class="fn-budgPct">28%</span></div>
+                            <div class="fn-budgetRow"><span>Subs</span><div class="fn-miniBar"><div class="fn-miniBarFill fn-mb-amber" style="width:55%"></div></div><span class="fn-budgPct">55%</span></div>
+                            <div class="fn-monMeta">BUDGET HEALTH: <span id="fn-budgetHealth" style="color:#2ECC71">ON TRACK</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fn-stn-desk fn-desk-teal">
+                    <div class="fn-stn-props">📊 📋</div>
+                    <div class="fn-sprite fn-sp-teal" id="fn-sp-penny">Py<span class="fn-spritelbl">PENNY</span></div>
+                </div>
+                <div class="fn-stn-plate">
+                    <div class="fn-stn-name" style="color:rgba(80,210,160,.85)">PENNY</div>
+                    <div class="fn-stn-role">BUDGET PLANNING OFFICER</div>
+                </div>
+            </div>
+
+            <!-- VAULT — Savings & Emergency Fund -->
+            <div class="fn-stn" id="fn-stn-vault">
+                <div class="fn-stn-monitors">
+                    <div class="fn-stn-monitor fn-mon-emerald">
+                        <div class="fn-monHud fn-hud-emerald">VAULT // SAVINGS</div>
+                        <div class="fn-monBody">
+                            <div class="fn-savRow">
+                                <span class="fn-savLabel">EMERG. FUND</span>
+                                <div class="fn-savBar"><div class="fn-savFill" id="fn-emerg-bar" style="width:32%"></div></div>
+                                <span class="fn-savPct" id="fn-emerg-pct">32%</span>
+                            </div>
+                            <div class="fn-savRow">
+                                <span class="fn-savLabel">SAVINGS RATE</span>
+                                <div class="fn-savBar"><div class="fn-savFill fn-sav-amber" id="fn-rate-bar" style="width:12%"></div></div>
+                                <span class="fn-savPct" id="fn-rate-pct">12%</span>
+                            </div>
+                            <div class="fn-savRow">
+                                <span class="fn-savLabel">SUBSCRIPTIONS</span>
+                                <div class="fn-savBar"><div class="fn-savFill fn-sav-red" id="fn-subs-bar" style="width:55%"></div></div>
+                                <span class="fn-savPct" id="fn-subs-pct">55%</span>
+                            </div>
+                            <div class="fn-monMeta">TARGET: <span id="fn-savTarget" style="color:#2ECC71">$5,000</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fn-stn-desk fn-desk-emerald">
+                    <div class="fn-stn-props">🏦 💾</div>
+                    <div class="fn-sprite fn-sp-emerald" id="fn-sp-vault">V<span class="fn-spritelbl">VAULT</span></div>
+                </div>
+                <div class="fn-stn-plate">
+                    <div class="fn-stn-name" style="color:#2ECC71">VAULT</div>
+                    <div class="fn-stn-role">SAVINGS &amp; FUND TRACKER</div>
+                </div>
+            </div>
 
             <!-- Exit arch -->
             <div id="fn-exitArch">
@@ -95,37 +197,38 @@
 
         <!-- Side panel -->
         <aside id="fn-panel">
-            <h2>Finance</h2>
-            <p>Department status: <span id="fn-deptStatus">Online</span></p>
 
-            <div class="fn-empCard">
-                <div class="fn-empName">Greenbean</div>
-                <div class="fn-empTitle">Finance Manager</div>
-                <div class="fn-empStatus fn-s-idle">● IDLE</div>
-            </div>
-            <div class="fn-empCard">
-                <div class="fn-empName">Ledger</div>
-                <div class="fn-empTitle">Bill Tracker</div>
-                <div class="fn-empStatus fn-s-idle">● IDLE</div>
-            </div>
-            <div class="fn-empCard">
-                <div class="fn-empName">Penny</div>
-                <div class="fn-empTitle">Budget Planner</div>
-                <div class="fn-empStatus fn-s-idle">● IDLE</div>
-            </div>
-            <div class="fn-empCard">
-                <div class="fn-empName">Vault</div>
-                <div class="fn-empTitle">Savings Tracker</div>
-                <div class="fn-empStatus fn-s-idle">● IDLE</div>
+            <div class="fn-card">
+                <div class="fn-cardTitle">// FINANCIAL HEALTH</div>
+                <div class="fn-statRow"><span>CASH FLOW</span><span id="fn-stat-cashflow" class="fn-ok">● POSITIVE</span></div>
+                <div class="fn-statRow"><span>BILLS DUE</span><span id="fn-stat-bills" class="fn-warn">3</span></div>
+                <div class="fn-statRow"><span>BUDGET USED</span><span id="fn-stat-budget">62%</span></div>
+                <div class="fn-statRow"><span>SAVINGS RATE</span><span id="fn-stat-savings">12%</span></div>
+                <div class="fn-statRow"><span>EMERG. FUND</span><span id="fn-stat-emerg">32%</span></div>
             </div>
 
-            <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px">
-                <button id="fn-sidebarOpenBudget" class="fn-navLink" style="background:rgba(46,204,113,.08);border-color:rgba(46,204,113,.5);color:#2ecc71;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:1px;font-size:8px;padding:8px 10px;border-radius:4px;border:1px solid;text-align:center">OPEN BUDGET SETUP</button>
+            <div class="fn-card">
+                <div class="fn-cardTitle">// AGENT STATUS</div>
+                <div class="fn-agentRow"><span class="fn-agBadge fn-ag-green">● GREENBEAN</span><span class="fn-agActivity">RECONCILING</span></div>
+                <div class="fn-agentRow"><span class="fn-agBadge fn-ag-gold">● LEDGER</span><span class="fn-agActivity">TRACKING</span></div>
+                <div class="fn-agentRow"><span class="fn-agBadge fn-ag-teal">● PENNY</span><span class="fn-agActivity">PLANNING</span></div>
+                <div class="fn-agentRow"><span class="fn-agBadge fn-ag-emerald">● VAULT</span><span class="fn-agActivity">PROJECTING</span></div>
+            </div>
+
+            <div class="fn-card">
+                <div class="fn-cardTitle">// INTEL REQUESTS</div>
+                <div class="fn-intReq">← Career: Salary benchmarks</div>
+                <div class="fn-intReq">→ Commerce: Profit forecast</div>
+                <div class="fn-intReq">← Productivity: Review dates</div>
+            </div>
+
+            <div style="margin-top:4px">
+                <button id="fn-sidebarOpenBudget" class="fn-navLink" style="background:rgba(46,204,113,.08);border-color:rgba(46,204,113,.5);color:#2ecc71;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:1px;font-size:8px;padding:8px 10px;border-radius:4px;border:1px solid;text-align:center;width:100%">OPEN BUDGET SETUP</button>
             </div>
 
             <div class="fn-navLinks">
                 <a href="../hallway/index.html" class="fn-navLink">⬡ Hallway</a>
-                <a href="../ops_center/index.html" class="fn-navLink">⬡ Ops Center</a>
+                <a href="../ops_center/index.html" class="fn-navLink">⬡ Mission Control</a>
             </div>
         </aside>
 
@@ -321,6 +424,11 @@
 <script src="../js/cybercookieos.js"></script>
 <script src="../js/agent_runtime.js"></script>
 <script src="../js/output_engine.js"></script>
+<script src="../js/mission_system.js"></script>
+<script src="../js/company_kpi.js"></script>
+<script src="../js/company_memory.js"></script>
+<script src="../js/orion.js"></script>
+<script src="../js/autonomous_ops.js"></script>
 <script src="../js/art_room_ui.js"></script>
 <script src="../js/agent_presence.js"></script>
 <script src="workspace.js"></script>

@@ -920,18 +920,25 @@ body {
 }
 
 /* =============================================
-   CRYSTALS
+   INTERVIEW PREP CORNER (replaced crystals)
 ============================================= */
 
-#ah-crystals {
+#ah-interviewCorner {
     position: absolute;
-    left: 672px;
-    top: 510px;
-    font-size: 18px;
-    z-index: 26;
-    filter: drop-shadow(0 0 8px rgba(150,80,255,.7));
-    animation: ahCrystalGlow 4s ease-in-out infinite alternate;
+    left: 638px; top: 484px;
+    width: 148px; z-index: 26;
+    background: rgba(5,0,16,.9);
+    border: 1px solid rgba(123,107,255,.3);
+    border-radius: 5px; padding: 7px 9px;
+    box-shadow: 0 0 12px rgba(123,107,255,.1);
 }
+.ah-icTitle {
+    font-size: 6px; letter-spacing: 2px; font-weight: 700;
+    color: rgba(150,120,255,.55); margin-bottom: 5px;
+    border-bottom: 1px solid rgba(123,107,255,.15); padding-bottom: 3px;
+}
+.ah-icRow { font-size: 6.5px; color: rgba(180,160,255,.4); line-height: 1.9; letter-spacing: .3px; }
+.ah-ic-pending { color: rgba(255,200,60,.35); }
 
 @keyframes ahCrystalGlow {
     from { filter: drop-shadow(0 0 6px rgba(150,80,255,.4)); }

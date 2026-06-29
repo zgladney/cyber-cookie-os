@@ -1335,46 +1335,37 @@ body {
    ROOM DETAILS — LIVED IN
 ═══════════════════════════════════════════ */
 
-/* ── Wall bookshelf ── */
-#wallShelf {
+/* ── Evidence Locker (replaced bookshelf) ── */
+#evidenceLocker {
     position: absolute;
-    left: 28px;
-    top: 202px;
-    width: 200px;
-    height: 26px;
-    display: flex;
-    align-items: flex-end;
-    gap: 3px;
-    padding: 0 5px;
+    left: 22px; top: 160px;
+    width: 110px;
+    background: rgba(4,0,14,.92);
+    border: 1px solid rgba(155,107,255,.35);
+    border-radius: 4px;
+    padding: 6px 7px 4px;
+    z-index: 5;
+    box-shadow: 0 0 14px rgba(155,107,255,.12), inset 0 0 10px rgba(0,0,0,.4);
 }
-
-/* Shelf board */
-#wallShelf::after {
-    content: "";
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 4px;
-    background: rgba(80,40,120,.8);
-    border: 1px solid rgba(255,105,180,.28);
-    border-radius: 2px;
-    box-shadow: 0 3px 8px rgba(0,0,0,.5);
+.ev-lockerTitle {
+    font-size: 5.5px; letter-spacing: 2px;
+    color: rgba(155,107,255,.5); margin-bottom: 5px;
+    border-bottom: 1px solid rgba(155,107,255,.15); padding-bottom: 3px;
 }
-
-.book {
-    width: 13px;
-    height: 20px;
-    border-radius: 2px 2px 0 0;
-    flex-shrink: 0;
-    position: relative;
-    z-index: 1;
+.ev-drawer {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 16px; background: rgba(20,5,40,.8);
+    border: 1px solid rgba(155,107,255,.18); border-radius: 2px;
+    padding: 0 5px; margin-bottom: 3px;
 }
-
-.bk-pink  { background: linear-gradient(180deg, #6b0028, #3d0018); border-top: 2px solid hotpink; }
-.bk-cyan  { background: linear-gradient(180deg, #003050, #001830); border-top: 2px solid #9cf6ff; }
-.bk-dark  { background: linear-gradient(180deg, #1a0035, #0d001e); border-top: 2px solid #6b5acd; }
-.bk-mint  { background: linear-gradient(180deg, #003520, #001f10); border-top: 2px solid #7dff9c; }
-.bk-tall  { height: 24px !important; }
-.bk-sm    { width: 9px !important; height: 15px !important; }
+.ev-drawer-locked { border-color: rgba(100,80,150,.15); opacity: .5; }
+.ev-drawerLabel { font-size: 5px; letter-spacing: .8px; color: rgba(200,150,255,.45); }
+.ev-drawerLed { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.ev-led-hot { background: rgba(255,80,80,.9); box-shadow: 0 0 4px rgba(255,80,80,.7); animation: evLedBlink .8s ease-in-out infinite alternate; }
+.ev-led-on  { background: rgba(125,255,156,.8); box-shadow: 0 0 4px rgba(125,255,156,.6); }
+.ev-led-off { background: rgba(80,80,80,.4); }
+@keyframes evLedBlink { from { opacity: .5; } to { opacity: 1; } }
+.ev-lockerBase { font-size: 4.5px; letter-spacing: 1.5px; color: rgba(155,107,255,.2); margin-top: 4px; text-align: center; }
 
 /* ── Sticky notes ── */
 .stickyNote {
@@ -1523,21 +1514,22 @@ body {
     transform: rotate(-15deg);
 }
 
-/* ── Crystals ── */
-#crystals {
+/* ── Patch Panel (replaced crystals) ── */
+#patchPanel {
     position: absolute;
-    left: 130px;
-    top: 510px;
-    font-size: 18px;
-    z-index: 26;
-    filter: drop-shadow(0 0 8px rgba(156,246,255,.6));
-    animation: crystalGlow 4s ease-in-out infinite alternate;
+    left: 126px; top: 506px;
+    width: 58px; height: 20px;
+    background: rgba(4,0,14,.9);
+    border: 1px solid rgba(155,107,255,.22);
+    border-radius: 3px; z-index: 26;
+    display: flex; align-items: center; justify-content: space-evenly; padding: 0 4px;
+    box-shadow: 0 0 8px rgba(155,107,255,.1);
 }
-
-@keyframes crystalGlow {
-    from { filter: drop-shadow(0 0 6px rgba(156,246,255,.4)); }
-    to   { filter: drop-shadow(0 0 14px rgba(156,246,255,.8)); }
-}
+.pp-port { width: 6px; height: 6px; border-radius: 1px; }
+.pp-on   { background: rgba(125,255,156,.8); box-shadow: 0 0 3px rgba(125,255,156,.5); }
+.pp-warn { background: rgba(255,200,50,.8);  box-shadow: 0 0 3px rgba(255,200,50,.5); animation: ppWarn 1s ease-in-out infinite alternate; }
+.pp-off  { background: rgba(60,40,80,.4); border: 1px solid rgba(155,107,255,.15); }
+@keyframes ppWarn { from { opacity: .5; } to { opacity: 1; } }
 
 /* ── Mouse on desk ── */
 #mouse {

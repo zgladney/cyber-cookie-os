@@ -306,3 +306,153 @@ body {
   border-color: rgba(58,168,200,.35) !important;
   transition: all .2s;
 }
+
+/* ================================================================
+   PHASE 16 — PRODUCTIVITY AGENT WORKSTATIONS
+================================================================ */
+
+/* Command Operations Center wall */
+#pd-commandWall {
+    position: absolute; left: 50%; top: 95px; transform: translateX(-50%);
+    width: 540px; background: rgba(0,10,20,.8);
+    border: 1px solid rgba(58,168,200,.3); border-radius: 8px; padding: 12px 14px;
+}
+.pd-commandGrid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 10px; }
+.pd-cmdBlock {
+    background: rgba(0,20,35,.55); border: 1px solid rgba(58,168,200,.18);
+    border-radius: 5px; padding: 7px 8px;
+}
+.pd-b-today  { border-color: rgba(58,168,200,.45); }
+.pd-b-week   { border-color: rgba(126,200,227,.25); }
+.pd-b-goals  { border-color: rgba(125,255,156,.2); }
+.pd-focusBar {
+    display: flex; align-items: center; gap: 8px;
+    border-top: 1px solid rgba(58,168,200,.1); padding-top: 8px;
+}
+.pd-fbLabel { font-size: 6px; letter-spacing: 1px; color: rgba(58,168,200,.4); white-space: nowrap; }
+.pd-fbTrack { flex: 1; height: 4px; background: rgba(58,168,200,.1); border-radius: 2px; overflow: hidden; }
+.pd-fbFill  { height: 100%; background: linear-gradient(90deg, rgba(58,168,200,.5), #7EC8E3); border-radius: 2px; }
+.pd-fbVal   { font-size: 7px; color: #7EC8E3; font-weight: 700; white-space: nowrap; min-width: 28px; text-align: right; }
+
+/* Whiteboard repositioned */
+#pd-whiteboard {
+    left: 22px; top: 318px; width: 160px;
+}
+.pd-wb-urgent { color: rgba(255,220,50,.65) !important; }
+
+/* 4-station layout */
+.pd-stn {
+    position: absolute; z-index: 30;
+    display: flex; flex-direction: column; align-items: flex-start;
+}
+#pd-stn-calypso { left:  83px; top: 315px; width: 172px; }
+#pd-stn-echo    { left: 266px; top: 319px; width: 172px; }
+#pd-stn-atlas   { left: 449px; top: 319px; width: 172px; }
+#pd-stn-memo    { left: 633px; top: 315px; width: 172px; }
+
+.pd-stn-monitors { display: flex; }
+.pd-stn-monitor {
+    width: 160px; height: 100px;
+    border: 2px solid rgba(58,168,200,.55);
+    border-radius: 6px 6px 3px 3px; overflow: hidden;
+    background: rgba(0,4,10,.96);
+    box-shadow: 0 0 14px rgba(58,168,200,.18), inset 0 0 8px rgba(0,0,0,.5);
+}
+.pd-mon-teal   { border-color: rgba(126,200,227,.5); box-shadow: 0 0 12px rgba(126,200,227,.15); }
+.pd-mon-purple { border-color: rgba(160,100,255,.5); box-shadow: 0 0 12px rgba(160,100,255,.12); }
+.pd-mon-green  { border-color: rgba(46,204,113,.45); box-shadow: 0 0 12px rgba(46,204,113,.1); }
+
+.pd-monHud {
+    background: rgba(58,168,200,.1); font-size: 5.5px; font-weight: 700;
+    letter-spacing: 1.2px; color: rgba(100,200,230,.7);
+    padding: 3px 5px; border-bottom: 1px solid rgba(58,168,200,.1);
+}
+.pd-hud-teal   { background: rgba(126,200,227,.08); color: rgba(140,210,240,.7); border-color: rgba(126,200,227,.1); }
+.pd-hud-purple { background: rgba(160,100,255,.07); color: rgba(180,140,255,.7); border-color: rgba(160,100,255,.08); }
+.pd-hud-green  { background: rgba(46,204,113,.07);  color: rgba(100,230,150,.7); border-color: rgba(46,204,113,.08); }
+
+.pd-monBody { padding: 4px 5px; font-size: 7px; height: calc(100% - 19px); overflow: hidden; }
+.pd-monMeta { margin-top: 4px; font-size: 5px; color: rgba(58,168,200,.4); letter-spacing: .8px; }
+
+.pd-schedRow { font-size: 5.5px; color: rgba(100,200,230,.45); margin-bottom: 2px; }
+.pd-sched-focus { color: rgba(58,168,200,.8); font-weight: 700; }
+.pd-sched-done  { color: rgba(125,255,156,.5); }
+
+.pd-inboxRow { font-size: 5.5px; color: rgba(100,200,230,.4); margin-bottom: 2px; }
+.pd-ib-high { color: rgba(255,220,50,.7); }
+.pd-ib-med  { color: rgba(126,200,227,.55); }
+.pd-ib-done { color: rgba(125,255,156,.5); }
+
+.pd-taskRow { display: flex; align-items: center; gap: 4px; margin-bottom: 3px; font-size: 5.5px; color: rgba(180,140,255,.4); }
+.pd-tk-done    { color: rgba(125,255,156,.6); }
+.pd-tk-active  { color: rgba(160,100,255,.8); }
+.pd-tk-pending { color: rgba(100,100,150,.5); }
+
+.pd-reminderRow { font-size: 5.5px; color: rgba(100,200,130,.4); margin-bottom: 2.5px; }
+.pd-rm-soon { color: rgba(255,200,50,.7); }
+.pd-rm-done { color: rgba(125,255,156,.5); }
+
+/* Desk */
+.pd-stn-desk {
+    width: 100%; height: 42px;
+    background: linear-gradient(180deg, #001828, #000f1a);
+    border: 2px solid rgba(58,168,200,.45); border-bottom: none;
+    border-radius: 5px 5px 0 0; margin-top: 3px; position: relative;
+    box-shadow: 0 0 14px rgba(58,168,200,.18), inset 0 1px 0 rgba(58,168,200,.1);
+}
+.pd-desk-teal   { border-color: rgba(126,200,227,.5); }
+.pd-desk-purple { border-color: rgba(160,100,255,.4); box-shadow: 0 0 14px rgba(160,100,255,.12); }
+.pd-desk-green  { border-color: rgba(46,204,113,.4);  box-shadow: 0 0 14px rgba(46,204,113,.1); }
+.pd-stn-desk::before {
+    content: "⌨"; position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%,-50%); font-size: 13px; color: rgba(58,168,200,.28); pointer-events: none;
+}
+.pd-stn-desk::after {
+    content: ""; position: absolute; bottom: -7px; left: 3px; right: 3px;
+    height: 7px; background: #00060e; border-radius: 0 0 4px 4px;
+    border: 1.5px solid rgba(58,168,200,.1); border-top: none;
+}
+.pd-stn-props { position: absolute; left: 7px; top: 6px; font-size: 10px; letter-spacing: 3px; pointer-events: none; }
+
+/* Sprites */
+.pd-sprite {
+    position: absolute; right: 9px; top: 4px;
+    width: 16px; height: 20px;
+    background: rgba(58,168,200,.14); border: 1px solid rgba(58,168,200,.3);
+    border-radius: 4px 4px 3px 3px; font-size: 0; overflow: visible;
+}
+.pd-sprite::before {
+    content: ''; position: absolute; top: -7px; left: 50%; transform: translateX(-50%);
+    width: 10px; height: 10px; border-radius: 50%;
+    background: rgba(58,168,200,.35); box-shadow: 0 0 5px rgba(58,168,200,.4);
+}
+.pd-sp-teal::before   { background: rgba(126,200,227,.38); box-shadow: 0 0 5px rgba(126,200,227,.45); }
+.pd-sp-purple::before { background: rgba(160,100,255,.38); box-shadow: 0 0 5px rgba(160,100,255,.45); }
+.pd-sp-green::before  { background: rgba(46,204,113,.38);  box-shadow: 0 0 5px rgba(46,204,113,.4); }
+
+.pd-spritelbl {
+    position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+    font-size: 5.5px; color: rgba(58,168,200,.55); letter-spacing: .8px; white-space: nowrap;
+    background: rgba(0,4,10,.9); border: 1px solid rgba(58,168,200,.18); padding: 1px 4px; border-radius: 2px;
+}
+
+/* Nameplate */
+.pd-stn-plate { padding: 2px 0 0; display: flex; flex-direction: column; gap: 1px; }
+.pd-stn-name  { font-size: 9px; font-weight: 700; color: #7EC8E3; letter-spacing: 1.5px; }
+.pd-stn-role  { font-size: 5px; letter-spacing: .8px; color: rgba(100,200,230,.32); }
+
+/* Panel cards */
+.pd-card { border: 1px solid rgba(58,168,200,.18); border-radius: 7px; padding: 9px 10px; background: rgba(0,0,0,.2); }
+.pd-cardTitle { font-size: 7px; letter-spacing: 2px; color: rgba(58,168,200,.45); margin-bottom: 8px; font-weight: 700; }
+.pd-statRow { display: flex; justify-content: space-between; font-size: 8px; color: rgba(100,200,230,.4); margin-bottom: 4px; }
+.pd-statRow span:last-child { color: rgba(58,168,200,.75); font-weight: 700; }
+.pd-ok   { color: rgba(125,255,156,.7) !important; }
+.pd-warn { color: rgba(255,220,50,.7) !important; }
+.pd-agentRow { display: flex; justify-content: space-between; font-size: 7px; margin-bottom: 5px; }
+.pd-agBadge   { font-size: 6.5px; font-weight: 700; letter-spacing: 1px; }
+.pd-ag-calypso { color: #7EC8E3; }
+.pd-ag-echo   { color: rgba(126,200,227,.8); }
+.pd-ag-atlas  { color: rgba(180,120,255,.8); }
+.pd-ag-memo   { color: rgba(125,255,156,.8); }
+.pd-agActivity { font-size: 6px; letter-spacing: .8px; color: rgba(125,255,156,.65); }
+.pd-intReq { font-size: 6.5px; color: rgba(100,200,230,.35); line-height: 2.1; }

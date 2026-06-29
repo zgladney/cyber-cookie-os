@@ -30,13 +30,34 @@
                 <div id="cm-neonSign">COMMERCE</div>
                 <div id="cm-subSign">// CREATIVE STUDIO</div>
 
-                <div id="cm-productWall">
-                    <div class="cm-wallTitle">PRODUCT PIPELINE</div>
-                    <div class="cm-productGrid">
-                        <div class="cm-productSlot cm-slot-etsy">ETSY<br><span>LISTINGS</span></div>
-                        <div class="cm-productSlot cm-slot-tiktok">TIKTOK<br><span>TRENDS</span></div>
-                        <div class="cm-productSlot cm-slot-pod">POD<br><span>DESIGNS</span></div>
-                        <div class="cm-productSlot cm-slot-trend">TREND<br><span>RESEARCH</span></div>
+                <div id="cm-analyticsWall">
+                    <div class="cm-wallTitle">ANALYTICS COMMAND CENTER</div>
+                    <div class="cm-analyticsGrid">
+                        <div class="cm-aStat cm-slot-etsy">
+                            <div class="cm-aLabel">ETSY LISTINGS</div>
+                            <div class="cm-aVal" id="cm-wall-listings">2</div>
+                            <div class="cm-aSub">ACTIVE</div>
+                        </div>
+                        <div class="cm-aStat cm-slot-tiktok">
+                            <div class="cm-aLabel">TIKTOK REACH</div>
+                            <div class="cm-aVal" id="cm-wall-reach">—</div>
+                            <div class="cm-aSub">TRACKING</div>
+                        </div>
+                        <div class="cm-aStat cm-slot-pod">
+                            <div class="cm-aLabel">POD ORDERS</div>
+                            <div class="cm-aVal" id="cm-wall-orders">0</div>
+                            <div class="cm-aSub">IN QUEUE</div>
+                        </div>
+                        <div class="cm-aStat cm-slot-trend">
+                            <div class="cm-aLabel">TREND SCORE</div>
+                            <div class="cm-aVal" id="cm-wall-trendscore">94</div>
+                            <div class="cm-aSub">TODAY</div>
+                        </div>
+                    </div>
+                    <div class="cm-revBar">
+                        <span class="cm-revLabel">REVENUE PIPELINE</span>
+                        <div class="cm-revTrack"><div class="cm-revFill" id="cm-revFill" style="width:38%"></div></div>
+                        <span class="cm-revVal" id="cm-revVal">38%</span>
                     </div>
                 </div>
 
@@ -52,24 +73,108 @@
             <div id="cm-floor"></div>
             <div id="cm-floorGlow"></div>
 
-            <!-- Shelves with product boxes -->
+            <!-- Fulfillment shelf (left wall prop) -->
             <div id="cm-shelf1">
-                <div class="cm-box cm-box-pink"></div>
-                <div class="cm-box cm-box-hot"></div>
-                <div class="cm-box cm-box-pink"></div>
-                <div class="cm-box cm-box-light"></div>
+                <div class="cm-box cm-box-pink" title="Sticker Sheets"></div>
+                <div class="cm-box cm-box-hot" title="Keychains"></div>
+                <div class="cm-box cm-box-pink" title="POD Apparel"></div>
+                <div class="cm-box cm-box-light" title="Gift Sets"></div>
+            </div>
+            <div id="cm-shelfLabel">FULFILLMENT STOCK</div>
+
+            <!-- PIXEL — Trend Intelligence -->
+            <div class="cm-stn" id="cm-stn-pixel">
+                <div class="cm-stn-monitors">
+                    <div class="cm-stn-monitor">
+                        <div class="cm-monHud">PIXEL // TREND RADAR</div>
+                        <div class="cm-monBody">
+                            <div class="cm-trendRow cm-tr-hot"><span>HOLOGRAPHIC STICKERS</span><span class="cm-trScore">94</span></div>
+                            <div class="cm-trendRow cm-tr-hot"><span>CRYSTAL KEYCHAINS</span><span class="cm-trScore">88</span></div>
+                            <div class="cm-trendRow cm-tr-warm"><span>DIGITAL PLANNERS</span><span class="cm-trScore">72</span></div>
+                            <div class="cm-trendRow"><span>POD APPAREL</span><span class="cm-trScore">65</span></div>
+                            <div class="cm-trendRow"><span>TIKTOK GIFT SETS</span><span class="cm-trScore">58</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cm-stn-desk">
+                    <div class="cm-stn-props">📊 🔍</div>
+                    <div class="cm-sprite" id="cm-sp-pixel">P<span class="cm-spritelbl">PIXEL</span></div>
+                </div>
+                <div class="cm-stn-plate">
+                    <div class="cm-stn-name">PIXEL</div>
+                    <div class="cm-stn-role">TREND INTELLIGENCE</div>
+                </div>
             </div>
 
-            <!-- Creative desk area -->
-            <div id="cm-desk">
-                <div id="cm-monitor">🛍</div>
-                <div id="cm-monitor2">📊</div>
-                <div id="cm-deskPlaque">▸ PIXEL / ETSYBOT</div>
+            <!-- ETSYBOT — Listings & Orders -->
+            <div class="cm-stn" id="cm-stn-etsybot">
+                <div class="cm-stn-monitors">
+                    <div class="cm-stn-monitor cm-mon-hot">
+                        <div class="cm-monHud cm-hud-hot">ETSYBOT // LISTINGS</div>
+                        <div class="cm-monBody">
+                            <div class="cm-listRow"><span class="cm-lr-badge cm-lr-live">LIVE</span><span>Holo Sticker Set</span><span class="cm-lr-num">×14</span></div>
+                            <div class="cm-listRow"><span class="cm-lr-badge cm-lr-live">LIVE</span><span>Crystal Keychain</span><span class="cm-lr-num">×7</span></div>
+                            <div class="cm-listRow"><span class="cm-lr-badge cm-lr-draft">DRAFT</span><span>POD Hoodie Design A</span><span class="cm-lr-num">—</span></div>
+                            <div class="cm-monMeta">ORDERS IN QUEUE: <span id="cm-orderCount" style="color:hotpink">0</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cm-stn-desk cm-desk-hot">
+                    <div class="cm-stn-props">🏷 📦</div>
+                    <div class="cm-sprite cm-sp-hot" id="cm-sp-etsybot">E<span class="cm-spritelbl">ETSYBOT</span></div>
+                </div>
+                <div class="cm-stn-plate">
+                    <div class="cm-stn-name" style="color:hotpink">ETSYBOT</div>
+                    <div class="cm-stn-role">LISTINGS &amp; ORDER MANAGER</div>
+                </div>
             </div>
 
-            <!-- Decorations -->
-            <div id="cm-plant">🌸</div>
-            <div id="cm-packages">📦</div>
+            <!-- SPARK — Content Studio -->
+            <div class="cm-stn" id="cm-stn-spark">
+                <div class="cm-stn-monitors">
+                    <div class="cm-stn-monitor cm-mon-purple">
+                        <div class="cm-monHud cm-hud-purple">SPARK // CONTENT STUDIO</div>
+                        <div class="cm-monBody">
+                            <div class="cm-contentRow">▸ Hook: "POV: you ordered this..."</div>
+                            <div class="cm-contentRow">▸ Trend audio: 2.4M uses</div>
+                            <div class="cm-contentRow cm-cr-done">✓ Script: Crystal Unboxing</div>
+                            <div class="cm-contentRow cm-cr-done">✓ Caption: Sticker Sheet Drop</div>
+                            <div class="cm-monMeta">NEXT POST: <span id="cm-nextPost" style="color:rgba(200,120,255,.8)">--:--</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cm-stn-desk cm-desk-purple">
+                    <div class="cm-stn-props">📱 🎬</div>
+                    <div class="cm-sprite cm-sp-purple" id="cm-sp-spark">Sk<span class="cm-spritelbl">SPARK</span></div>
+                </div>
+                <div class="cm-stn-plate">
+                    <div class="cm-stn-name" style="color:rgba(200,100,255,.9)">SPARK</div>
+                    <div class="cm-stn-role">CONTENT STUDIO DIRECTOR</div>
+                </div>
+            </div>
+
+            <!-- FORGE — POD & Fulfillment -->
+            <div class="cm-stn" id="cm-stn-forge">
+                <div class="cm-stn-monitors">
+                    <div class="cm-stn-monitor cm-mon-amber">
+                        <div class="cm-monHud cm-hud-amber">FORGE // FULFILLMENT</div>
+                        <div class="cm-monBody">
+                            <div class="cm-fulfillRow"><span class="cm-ff-status cm-ff-print">PRINTING</span><span>Design_A_Hoodie.png</span></div>
+                            <div class="cm-fulfillRow"><span class="cm-ff-status cm-ff-ship">SHIPPED</span><span>Sticker_Bundle_01</span></div>
+                            <div class="cm-fulfillRow"><span class="cm-ff-status cm-ff-queue">QUEUED</span><span>Design_B_Mug.svg</span></div>
+                            <div class="cm-monMeta">PIPELINE: <span id="cm-designCount" style="color:rgba(255,200,80,.8)">3</span> designs</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cm-stn-desk cm-desk-amber">
+                    <div class="cm-stn-props">🎨 🖨</div>
+                    <div class="cm-sprite cm-sp-amber" id="cm-sp-forge">F<span class="cm-spritelbl">FORGE</span></div>
+                </div>
+                <div class="cm-stn-plate">
+                    <div class="cm-stn-name" style="color:rgba(255,200,80,.9)">FORGE</div>
+                    <div class="cm-stn-role">POD &amp; FULFILLMENT MANAGER</div>
+                </div>
+            </div>
 
             <!-- Exit arch -->
             <div id="cm-exitArch">
@@ -81,33 +186,34 @@
 
         <!-- Side panel -->
         <aside id="cm-panel">
-            <h2>Commerce</h2>
-            <p>Department status: <span id="cm-deptStatus">Online</span></p>
 
-            <div class="cm-empCard">
-                <div class="cm-empName">Pixel</div>
-                <div class="cm-empTitle">Trend Hunter</div>
-                <div class="cm-empStatus cm-s-idle">● IDLE</div>
+            <div class="cm-card">
+                <div class="cm-cardTitle">// COMMERCE INTEL</div>
+                <div class="cm-statRow"><span>ACTIVE LISTINGS</span><span id="cm-stat-listings">2</span></div>
+                <div class="cm-statRow"><span>ORDERS PENDING</span><span id="cm-stat-orders" class="cm-warn">0</span></div>
+                <div class="cm-statRow"><span>TRENDS TRACKED</span><span id="cm-stat-trends">5</span></div>
+                <div class="cm-statRow"><span>CONTENT PIECES</span><span id="cm-stat-content">4</span></div>
+                <div class="cm-statRow"><span>PIPELINE HEALTH</span><span id="cm-stat-health" class="cm-ok">● ON TRACK</span></div>
             </div>
-            <div class="cm-empCard">
-                <div class="cm-empName">EtsyBot</div>
-                <div class="cm-empTitle">Etsy Manager</div>
-                <div class="cm-empStatus cm-s-idle">● IDLE</div>
+
+            <div class="cm-card">
+                <div class="cm-cardTitle">// AGENT STATUS</div>
+                <div class="cm-agentRow"><span class="cm-agBadge cm-ag-pixel">● PIXEL</span><span class="cm-agActivity" id="cm-ag-pixel">SCANNING</span></div>
+                <div class="cm-agentRow"><span class="cm-agBadge cm-ag-etsy">● ETSYBOT</span><span class="cm-agActivity" id="cm-ag-etsy">MONITORING</span></div>
+                <div class="cm-agentRow"><span class="cm-agBadge cm-ag-spark">● SPARK</span><span class="cm-agActivity" id="cm-ag-spark">CREATING</span></div>
+                <div class="cm-agentRow"><span class="cm-agBadge cm-ag-forge">● FORGE</span><span class="cm-agActivity" id="cm-ag-forge">FULFILLING</span></div>
             </div>
-            <div class="cm-empCard">
-                <div class="cm-empName">Spark</div>
-                <div class="cm-empTitle">TikTok Researcher</div>
-                <div class="cm-empStatus cm-s-idle">● IDLE</div>
-            </div>
-            <div class="cm-empCard">
-                <div class="cm-empName">Forge</div>
-                <div class="cm-empTitle">POD Manager</div>
-                <div class="cm-empStatus cm-s-idle">● IDLE</div>
+
+            <div class="cm-card">
+                <div class="cm-cardTitle">// INTEL REQUESTS</div>
+                <div class="cm-intReq">← Finance: Profit forecast</div>
+                <div class="cm-intReq">← Security: Brand monitor</div>
+                <div class="cm-intReq">→ Finance: Revenue data</div>
             </div>
 
             <div class="cm-navLinks">
                 <a href="../hallway/index.html" class="cm-navLink">⬡ Hallway</a>
-                <a href="../ops_center/index.html" class="cm-navLink">⬡ Ops Center</a>
+                <a href="../ops_center/index.html" class="cm-navLink">⬡ Mission Control</a>
             </div>
         </aside>
 
@@ -194,6 +300,11 @@
 <script src="../js/cybercookieos.js"></script>
 <script src="../js/agent_runtime.js"></script>
 <script src="../js/output_engine.js"></script>
+<script src="../js/mission_system.js"></script>
+<script src="../js/company_kpi.js"></script>
+<script src="../js/company_memory.js"></script>
+<script src="../js/orion.js"></script>
+<script src="../js/autonomous_ops.js"></script>
 <script src="../js/art_room_ui.js"></script>
 <script src="../js/agent_presence.js"></script>
 <script src="workspace.js"></script>

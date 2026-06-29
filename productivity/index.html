@@ -30,27 +30,32 @@
                 <div id="pd-neonSign">PRODUCTIVITY</div>
                 <div id="pd-subSign">// PLAN · SCHEDULE · EXECUTE</div>
 
-                <div id="pd-plannerWall">
-                    <div class="pd-wallTitle">PLANNER BOARD</div>
-                    <div class="pd-planGrid">
-                        <div class="pd-planBlock pd-b-today">
-                            <div class="pd-blockHead">TODAY</div>
-                            <div class="pd-task">Morning brief</div>
-                            <div class="pd-task">Review tasks</div>
-                            <div class="pd-task pd-task-done">✓ Agent sync</div>
+                <div id="pd-commandWall">
+                    <div class="pd-wallTitle">COMMAND OPERATIONS CENTER</div>
+                    <div class="pd-commandGrid">
+                        <div class="pd-cmdBlock pd-b-today">
+                            <div class="pd-blockHead">TODAY — CALYPSO</div>
+                            <div class="pd-task">● Morning brief dispatched</div>
+                            <div class="pd-task">● Focus block: 09:00–11:00</div>
+                            <div class="pd-task pd-task-done">✓ Agent sync complete</div>
                         </div>
-                        <div class="pd-planBlock pd-b-week">
-                            <div class="pd-blockHead">THIS WEEK</div>
-                            <div class="pd-task">Calendar review</div>
-                            <div class="pd-task">Email triage</div>
-                            <div class="pd-task">Reminders set</div>
+                        <div class="pd-cmdBlock pd-b-week">
+                            <div class="pd-blockHead">INBOX — ECHO</div>
+                            <div class="pd-task" id="pd-inbox-priority">● Priority queue: 0 items</div>
+                            <div class="pd-task">● Response rate: 94%</div>
+                            <div class="pd-task">● Triage: current</div>
                         </div>
-                        <div class="pd-planBlock pd-b-goals">
-                            <div class="pd-blockHead">GOALS</div>
-                            <div class="pd-task">Inbox zero</div>
-                            <div class="pd-task">Housing search</div>
-                            <div class="pd-task">Finance review</div>
+                        <div class="pd-cmdBlock pd-b-goals">
+                            <div class="pd-blockHead">CROSS-DEPT TASKS</div>
+                            <div class="pd-task">→ Career: Interview scheduling</div>
+                            <div class="pd-task">→ Security: Maint. windows</div>
+                            <div class="pd-task">→ Finance: Review cycle</div>
                         </div>
+                    </div>
+                    <div class="pd-focusBar">
+                        <span class="pd-fbLabel">FOCUS INTEGRITY</span>
+                        <div class="pd-fbTrack"><div class="pd-fbFill" id="pd-focusFill" style="width:72%"></div></div>
+                        <span class="pd-fbVal" id="pd-focusVal">72%</span>
                     </div>
                 </div>
 
@@ -66,32 +71,109 @@
             <div id="pd-floor"></div>
             <div id="pd-floorGlow"></div>
 
-            <!-- Calendar on wall -->
-            <div id="pd-calendar">
-                <div class="pd-calHead">📅 JUNE 2026</div>
-                <div class="pd-calGrid">
-                    <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span>
-                    <span class="pd-day">23</span><span class="pd-day">24</span>
-                    <span class="pd-day">25</span><span class="pd-day">26</span>
-                    <span class="pd-day pd-today">27</span>
-                    <span class="pd-day">30</span>
+            <!-- Whiteboard — cross-dept coordination notes -->
+            <div id="pd-whiteboard">
+                <div class="pd-wbTitle">COORDINATION BOARD</div>
+                <div class="pd-wbLine">→ Career: Interview sched.</div>
+                <div class="pd-wbLine">→ Finance: Review cycle</div>
+                <div class="pd-wbLine">→ Security: Maint. window</div>
+                <div class="pd-wbLine pd-wb-urgent">⚠ CEO brief: DAILY</div>
+            </div>
+
+            <!-- CALYPSO — Calendar & Focus Blocks -->
+            <div class="pd-stn" id="pd-stn-calypso">
+                <div class="pd-stn-monitors">
+                    <div class="pd-stn-monitor">
+                        <div class="pd-monHud">CALYPSO // SCHEDULE</div>
+                        <div class="pd-monBody">
+                            <div class="pd-schedRow pd-sched-focus">● FOCUS 09:00–11:00</div>
+                            <div class="pd-schedRow">● Brief 11:30–11:45</div>
+                            <div class="pd-schedRow">● Review 14:00–15:00</div>
+                            <div class="pd-schedRow pd-sched-done">✓ Sync: complete</div>
+                            <div class="pd-monMeta">BLOCKS PROTECTED: <span id="pd-focusBlocks" style="color:#7EC8E3">2</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pd-stn-desk">
+                    <div class="pd-stn-props">📅 ⏱</div>
+                    <div class="pd-sprite" id="pd-sp-calypso">C<span class="pd-spritelbl">CALYPSO</span></div>
+                </div>
+                <div class="pd-stn-plate">
+                    <div class="pd-stn-name">CALYPSO</div>
+                    <div class="pd-stn-role">CALENDAR &amp; FOCUS DIRECTOR</div>
                 </div>
             </div>
 
-            <!-- Desk -->
-            <div id="pd-desk">
-                <div id="pd-monitor">📅</div>
-                <div id="pd-monitor2">📧</div>
-                <div id="pd-deskPlaque">▸ CALYPSO / ECHO</div>
+            <!-- ECHO — Inbox & Communications -->
+            <div class="pd-stn" id="pd-stn-echo">
+                <div class="pd-stn-monitors">
+                    <div class="pd-stn-monitor pd-mon-teal">
+                        <div class="pd-monHud pd-hud-teal">ECHO // INBOX COMMAND</div>
+                        <div class="pd-monBody">
+                            <div class="pd-inboxRow pd-ib-high">⬆ Career: Interview confirm</div>
+                            <div class="pd-inboxRow pd-ib-high">⬆ Orion: Briefing ready</div>
+                            <div class="pd-inboxRow pd-ib-med">→ Finance: Q2 review</div>
+                            <div class="pd-inboxRow pd-ib-done">✓ Security: Scan complete</div>
+                            <div class="pd-monMeta">RESPONSE RATE: <span id="pd-responseRate" style="color:#7EC8E3">94%</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pd-stn-desk pd-desk-teal">
+                    <div class="pd-stn-props">📧 ✉</div>
+                    <div class="pd-sprite pd-sp-teal" id="pd-sp-echo">Ec<span class="pd-spritelbl">ECHO</span></div>
+                </div>
+                <div class="pd-stn-plate">
+                    <div class="pd-stn-name" style="color:#7EC8E3">ECHO</div>
+                    <div class="pd-stn-role">COMMUNICATIONS SPECIALIST</div>
+                </div>
             </div>
 
-            <!-- Plants and whiteboard -->
-            <div id="pd-plant">🌱</div>
-            <div id="pd-whiteboard">
-                <div class="pd-wbTitle">WHITEBOARD</div>
-                <div class="pd-wbLine">→ Housing scout: ON</div>
-                <div class="pd-wbLine">→ Finance: REVIEW</div>
-                <div class="pd-wbLine">→ Email: TRIAGE</div>
+            <!-- ATLAS PLANNER — Task Dependencies -->
+            <div class="pd-stn" id="pd-stn-atlas">
+                <div class="pd-stn-monitors">
+                    <div class="pd-stn-monitor pd-mon-purple">
+                        <div class="pd-monHud pd-hud-purple">ATLAS // TASK GRAPH</div>
+                        <div class="pd-monBody">
+                            <div class="pd-taskRow"><span class="pd-tk-done">✓</span><span>Career search active</span></div>
+                            <div class="pd-taskRow"><span class="pd-tk-active">▸</span><span>Finance review cycle</span></div>
+                            <div class="pd-taskRow"><span class="pd-tk-active">▸</span><span>Security maint. window</span></div>
+                            <div class="pd-taskRow"><span class="pd-tk-pending">○</span><span>Cert prep schedule</span></div>
+                            <div class="pd-monMeta">TASKS DONE TODAY: <span id="pd-tasksDone" style="color:rgba(180,120,255,.8)">0</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pd-stn-desk pd-desk-purple">
+                    <div class="pd-stn-props">📋 🗂</div>
+                    <div class="pd-sprite pd-sp-purple" id="pd-sp-atlas">At<span class="pd-spritelbl">ATLAS</span></div>
+                </div>
+                <div class="pd-stn-plate">
+                    <div class="pd-stn-name" style="color:rgba(180,120,255,.9)">ATLAS PLANNER</div>
+                    <div class="pd-stn-role">TASK DEPENDENCY MANAGER</div>
+                </div>
+            </div>
+
+            <!-- MEMO — Reminders & Deadlines -->
+            <div class="pd-stn" id="pd-stn-memo">
+                <div class="pd-stn-monitors">
+                    <div class="pd-stn-monitor pd-mon-green">
+                        <div class="pd-monHud pd-hud-green">MEMO // DEADLINE QUEUE</div>
+                        <div class="pd-monBody">
+                            <div class="pd-reminderRow pd-rm-soon">⏰ Security scan — today</div>
+                            <div class="pd-reminderRow pd-rm-soon">⏰ Finance review — 3 days</div>
+                            <div class="pd-reminderRow">📌 Cert deadline — 14 days</div>
+                            <div class="pd-reminderRow pd-rm-done">✓ Resume update sent</div>
+                            <div class="pd-monMeta">REMINDERS ACTIVE: <span id="pd-reminderCount" style="color:rgba(125,255,156,.7)">3</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pd-stn-desk pd-desk-green">
+                    <div class="pd-stn-props">⏰ 📌</div>
+                    <div class="pd-sprite pd-sp-green" id="pd-sp-memo">M<span class="pd-spritelbl">MEMO</span></div>
+                </div>
+                <div class="pd-stn-plate">
+                    <div class="pd-stn-name" style="color:rgba(125,255,156,.85)">MEMO</div>
+                    <div class="pd-stn-role">REMINDER &amp; DEADLINE TRACKER</div>
+                </div>
             </div>
 
             <!-- Exit arch -->
@@ -104,33 +186,34 @@
 
         <!-- Side panel -->
         <aside id="pd-panel">
-            <h2>Productivity</h2>
-            <p>Department status: <span id="pd-deptStatus">Online</span></p>
 
-            <div class="pd-empCard">
-                <div class="pd-empName">Calypso</div>
-                <div class="pd-empTitle">Calendar Assistant</div>
-                <div class="pd-empStatus pd-s-idle">● IDLE</div>
+            <div class="pd-card">
+                <div class="pd-cardTitle">// DAILY BRIEFING</div>
+                <div class="pd-statRow"><span>FOCUS BLOCKS</span><span id="pd-stat-focus">2</span></div>
+                <div class="pd-statRow"><span>TASKS COMPLETE</span><span id="pd-stat-tasks">0</span></div>
+                <div class="pd-statRow"><span>INBOX PRIORITY</span><span id="pd-stat-inbox" class="pd-warn">2</span></div>
+                <div class="pd-statRow"><span>REMINDERS DUE</span><span id="pd-stat-reminders" class="pd-warn">3</span></div>
+                <div class="pd-statRow"><span>CEO BRIEF</span><span id="pd-stat-brief" class="pd-ok">● SENT</span></div>
             </div>
-            <div class="pd-empCard">
-                <div class="pd-empName">Echo</div>
-                <div class="pd-empTitle">Email Assistant</div>
-                <div class="pd-empStatus pd-s-idle">● IDLE</div>
+
+            <div class="pd-card">
+                <div class="pd-cardTitle">// AGENT STATUS</div>
+                <div class="pd-agentRow"><span class="pd-agBadge pd-ag-calypso">● CALYPSO</span><span class="pd-agActivity">SCHEDULING</span></div>
+                <div class="pd-agentRow"><span class="pd-agBadge pd-ag-echo">● ECHO</span><span class="pd-agActivity">TRIAGING</span></div>
+                <div class="pd-agentRow"><span class="pd-agBadge pd-ag-atlas">● ATLAS</span><span class="pd-agActivity">PLANNING</span></div>
+                <div class="pd-agentRow"><span class="pd-agBadge pd-ag-memo">● MEMO</span><span class="pd-agActivity">TRACKING</span></div>
             </div>
-            <div class="pd-empCard">
-                <div class="pd-empName">Atlas Planner</div>
-                <div class="pd-empTitle">Task Manager</div>
-                <div class="pd-empStatus pd-s-idle">● IDLE</div>
-            </div>
-            <div class="pd-empCard">
-                <div class="pd-empName">Memo</div>
-                <div class="pd-empTitle">Reminder Assistant</div>
-                <div class="pd-empStatus pd-s-idle">● IDLE</div>
+
+            <div class="pd-card">
+                <div class="pd-cardTitle">// DEPT COORDINATION</div>
+                <div class="pd-intReq">→ Career: Interview scheduling</div>
+                <div class="pd-intReq">→ Security: Maintenance windows</div>
+                <div class="pd-intReq">← Finance: Review cycle dates</div>
             </div>
 
             <div class="pd-navLinks">
                 <a href="../hallway/index.html" class="pd-navLink">⬡ Hallway</a>
-                <a href="../ops_center/index.html" class="pd-navLink">⬡ Ops Center</a>
+                <a href="../ops_center/index.html" class="pd-navLink">⬡ Mission Control</a>
             </div>
         </aside>
 
@@ -209,6 +292,11 @@
 <script src="../js/cybercookieos.js"></script>
 <script src="../js/agent_runtime.js"></script>
 <script src="../js/output_engine.js"></script>
+<script src="../js/mission_system.js"></script>
+<script src="../js/company_kpi.js"></script>
+<script src="../js/company_memory.js"></script>
+<script src="../js/orion.js"></script>
+<script src="../js/autonomous_ops.js"></script>
 <script src="../js/art_room_ui.js"></script>
 <script src="../js/agent_presence.js"></script>
 <script src="workspace.js"></script>
