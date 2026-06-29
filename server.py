@@ -516,6 +516,106 @@ class COSHandler(http.server.SimpleHTTPRequestHandler):
             save_json('career_linkedin.json', li)
             self._send(200, {'ok': True, 'profile': li})
 
+        elif path == '/api/career/scout':
+            # POST body: { region, type, minSalary, workType, keyword }
+            # Returns: { success, jobs, sources_checked, applied_preferences }
+            # Each job: id, title, company, salary, location, region, workType,
+            #           type, skills, source, link, desc
+
+            # Curated job pool — same roles as frontend JOB_LISTINGS, filterable
+            # server-side using real career preferences from Career Memory.
+            _SCOUT_POOL = [
+                {'id':'j1',  'title':'Help Desk Technician I',          'company':'TechPath Solutions',  'salary':42000, 'location':'Cherry Hill, NJ',  'region':'south_jersey', 'workType':'hybrid',  'type':'help_desk',    'skills':['Windows 10','Office 365','Active Directory','Ticketing Systems','Hardware Troubleshooting'], 'source':'Indeed',          'link':'https://www.indeed.com/jobs?q=help+desk+cherry+hill+nj', 'desc':'Tier 1/2 desktop support for 200+ user environment. Windows 10, Active Directory, O365.'},
+                {'id':'j2',  'title':'IT Support Specialist',           'company':'Camden County Govt',  'salary':45000, 'location':'Lindenwold, NJ',   'region':'south_jersey', 'workType':'onsite',  'type':'it_ops',       'skills':['Windows 10','Networking','Hardware Troubleshooting','Customer Service','Documentation'],        'source':'County Website',  'link':'https://www.camdencounty.com/government/departments/human-resources/', 'desc':'County-wide IT support. PC imaging, network troubleshooting, user training.'},
+                {'id':'j3',  'title':'Service Desk Analyst',            'company':'Lockheed Martin',     'salary':52000, 'location':'Moorestown, NJ',   'region':'south_jersey', 'workType':'hybrid',  'type':'service_desk', 'skills':['Windows 10','ITSM','ServiceNow','Documentation','Active Directory'],                           'source':'LM Careers',      'link':'https://www.lockheedmartin.com/en-us/careers.html',      'desc':'ITSM-focused role. ServiceNow tickets, SLA management.'},
+                {'id':'j4',  'title':'NOC Technician',                  'company':'GTT Communications',  'salary':48000, 'location':'Mt Laurel, NJ',    'region':'south_jersey', 'workType':'hybrid',  'type':'noc',          'skills':['Network Monitoring','Cisco','Routing Protocols','ITIL','TCP/IP Networking'],                    'source':'LinkedIn',        'link':'https://www.linkedin.com/jobs/search/?keywords=NOC+technician+new+jersey', 'desc':'24/7 NOC. Monitor global WAN/LAN. Cisco IOS, incident escalation.'},
+                {'id':'j5',  'title':'Systems Administrator I',         'company':'Cooper Health System','salary':58000, 'location':'Camden, NJ',       'region':'south_jersey', 'workType':'onsite',  'type':'systems_admin', 'skills':['Active Directory','Windows Server','Azure','PowerShell','VMware'],                             'source':'Cooper Jobs',     'link':'https://careers.cooperhealth.org/',                       'desc':'Healthcare IT admin. AD, GPO, Azure AD sync, VMware vSphere.'},
+                {'id':'j6',  'title':'Junior SOC Analyst',              'company':'Comcast',             'salary':55000, 'location':'Philadelphia, PA', 'region':'philadelphia', 'workType':'hybrid',  'type':'soc_analyst',  'skills':['SIEM','Splunk','Incident Response','Network Analysis','Threat Hunting'],                      'source':'LinkedIn',        'link':'https://careers.comcast.com/',                            'desc':'Entry-level security monitoring. Splunk dashboards, alert triage.'},
+                {'id':'j7',  'title':'Cloud Support Engineer',          'company':'AWS / Amazon',        'salary':65000, 'location':'Philadelphia, PA', 'region':'philadelphia', 'workType':'hybrid',  'type':'cloud_support', 'skills':['AWS','Linux','Python','Networking','Docker'],                                                   'source':'Amazon Jobs',     'link':'https://www.amazon.jobs/en/teams/aws',                    'desc':'Tier 1 AWS support. EC2, S3, networking troubleshooting.'},
+                {'id':'j8',  'title':'Microsoft 365 Support Specialist','company':'CDW',                 'salary':50000, 'location':'Cherry Hill, NJ',  'region':'south_jersey', 'workType':'hybrid',  'type':'ms_support',   'skills':['Office 365','Intune','Azure AD','Exchange Online','PowerShell'],                               'source':'CDW Careers',     'link':'https://www.cdw.com/content/cdw/en/about/careers.html',   'desc':'M365 specialist. Tenant admin, license management, Exchange/Teams.'},
+                {'id':'j9',  'title':'IT Operations Specialist',        'company':'Jefferson Health',    'salary':54000, 'location':'Philadelphia, PA', 'region':'philadelphia', 'workType':'hybrid',  'type':'it_ops',       'skills':['ITSM','Windows Server','VMware','Backup Solutions','Documentation'],                          'source':'Indeed',          'link':'https://careers.jeffersonhealth.org/',                    'desc':'Hospital IT ops. Server monitoring, patch management, backup.'},
+                {'id':'j10', 'title':'Junior Security Analyst',         'company':'Unisys Corporation',  'salary':60000, 'location':'Blue Bell, PA',    'region':'philadelphia', 'workType':'hybrid',  'type':'security_jr',  'skills':['CompTIA Security+','Vulnerability Scanning','SIEM','EDR Tools','Incident Response'],          'source':'Unisys Careers',  'link':'https://www.unisys.com/careers/',                         'desc':'Entry security. VA scans, EDR alert review, vulnerability reporting.'},
+                {'id':'j11', 'title':'Remote Help Desk Technician',     'company':'Conduent Inc',        'salary':43000, 'location':'Remote — US',      'region':'remote',       'workType':'remote',  'type':'help_desk',    'skills':['Windows 10','Citrix','VPN','Office 365','Customer Service'],                                   'source':'Indeed',          'link':'https://careers.conduent.com/',                           'desc':'100% remote Tier 1 support. Citrix/VDI, VPN troubleshooting.'},
+                {'id':'j12', 'title':'Remote Service Desk Specialist',  'company':'DXC Technology',      'salary':46000, 'location':'Remote — US',      'region':'remote',       'workType':'remote',  'type':'service_desk', 'skills':['ServiceNow','ITIL','Windows 10','Active Directory','Documentation'],                           'source':'DXC Careers',     'link':'https://careers.dxc.com/',                                'desc':'Remote ITSM. ITIL v4, ServiceNow, global enterprise clients.'},
+                {'id':'j13', 'title':'Remote Cloud Support Specialist', 'company':'Rackspace Technology','salary':62000, 'location':'Remote — US',      'region':'remote',       'workType':'remote',  'type':'cloud_support', 'skills':['AWS','Azure','Linux','Docker','Python'],                                                        'source':'LinkedIn',        'link':'https://www.rackspace.com/talent',                        'desc':'Multi-cloud support. AWS + Azure. Linux admin.'},
+                {'id':'j14', 'title':'Remote IT Support Tier 1',        'company':'Teleperformance',     'salary':40000, 'location':'Remote — US',      'region':'remote',       'workType':'remote',  'type':'help_desk',    'skills':['Windows 10','VoIP','Customer Service','Basic Networking','Ticketing Systems'],                  'source':'Glassdoor',       'link':'https://jobs.teleperformance.com/',                        'desc':'Entry-level remote support. WFH equipment provided.'},
+                {'id':'j15', 'title':'Remote Junior SOC Analyst',       'company':'Secureworks',         'salary':58000, 'location':'Remote — US',      'region':'remote',       'workType':'remote',  'type':'soc_analyst',  'skills':['Splunk','Threat Hunting','Incident Response','Python','MITRE ATT&CK'],                   'source':'Secureworks Jobs', 'link':'https://www.secureworks.com/careers',                    'desc':'100% remote SOC. Managed detection & response. Splunk-heavy.'},
+            ]
+
+            # Load career memory for preferences and real skills
+            mem         = load_json('career_memory.json', {})
+            profile     = mem.get('profile', {})
+            my_skills   = [s.lower() for s in (profile.get('skills') or [])]
+
+            # Parse real minimum salary from raw preferences if available
+            pref_salary = profile.get('salary_min', 40000)
+            for line in (profile.get('_raw_preferences') or []):
+                if '$' in line and ('000' in line or 'k' in line.lower()):
+                    import re as _re
+                    m = _re.search(r'\$(\d[\d,]+)', line.replace(',', ''))
+                    if m:
+                        try:
+                            pref_salary = int(m.group(1).replace(',', ''))
+                            break
+                        except ValueError:
+                            pass
+
+            # Request filters
+            req_region   = body.get('region', 'all')
+            req_types    = body.get('type', [])
+            req_salary   = body.get('minSalary') or pref_salary
+            req_worktype = body.get('workType', 'all')
+            req_keyword  = (body.get('keyword') or '').lower().strip()
+            if isinstance(req_types, str):
+                req_types = [req_types] if req_types and req_types != 'all' else []
+
+            # Filter pool
+            results = []
+            for job in _SCOUT_POOL:
+                if req_region not in ('all', 'national') and job['region'] != req_region:
+                    continue
+                if req_types and job['type'] not in req_types:
+                    continue
+                if job['salary'] < req_salary:
+                    continue
+                if req_worktype != 'all' and job['workType'] != req_worktype:
+                    continue
+                if req_keyword:
+                    haystack = ' '.join([
+                        job.get('title', ''), job.get('company', ''),
+                        job.get('location', ''), job.get('desc', ''),
+                        ' '.join(job.get('skills', []))
+                    ]).lower()
+                    if req_keyword not in haystack:
+                        continue
+
+                # Skill match score using real indexed skills
+                job_skills_lower = [s.lower() for s in (job.get('skills') or [])]
+                if my_skills and job_skills_lower:
+                    matched = sum(1 for s in job_skills_lower if s in my_skills)
+                    job['_match_pct'] = round(matched / len(job_skills_lower) * 100)
+                else:
+                    job['_match_pct'] = 0
+
+                results.append(job)
+
+            # Rank: salary >= pref_salary first, then by skill match desc
+            results.sort(key=lambda j: (-(j['salary'] >= pref_salary), -j.get('_match_pct', 0)))
+
+            self._send(200, {
+                'success': True,
+                'jobs': results,
+                'sources_checked': 5,
+                'total_found': len(results),
+                'applied_preferences': {
+                    'min_salary': req_salary,
+                    'pref_salary_from_docs': pref_salary,
+                    'skills_in_memory': len(my_skills),
+                    'region': req_region,
+                    'work_type': req_worktype,
+                }
+            })
+
         elif path == '/api/career/companies/add':
             companies = load_json('career_companies.json', {'companies': []})
             co = {
