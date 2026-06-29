@@ -157,7 +157,7 @@ class CyberCookieHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         path  = urlparse(self.path).path
         parts = path.split('/')  # e.g. ['', 'api', 'auth', 'google_calendar', 'start']
-        print(f'[GET] {path}')
+        print('[GET] ' + path)
 
         # ── Auth routes (must be checked before static fallback) ──────────────
         if path == '/api/auth/status':

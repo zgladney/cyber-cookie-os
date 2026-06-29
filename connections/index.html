@@ -359,14 +359,35 @@ a { color: inherit; text-decoration: none; }
   // ── Fetch connection status from backend ──────────────────
 
   function fetchStatus() {
-    document.getElementById('ac-fetchBar').textContent = 'Fetching connection status...';
+    var bar = document.getElementById('ac-fetchBar');
+    if (bar) bar.textContent = 'Fetching connection status...';
 
-    fetch('/api/auth/status')
+    // If opened as file://, fetch('/api/...') can't reach the server at all.
+    if (window.location.protocol === 'file:') {
+      console.warn('[AC] Page opened as file:// — fetch cannot reach localhost server.');
+      backendOnline = false;
+      statusMap = {};
+      renderGrid();
+      setFetchBar(false, null, 'PAGE OPENED AS FILE:// — open via http://localhost:8080/connections/index.html');
+      return;
+    }
+
+    console.log('[AC] Fetching auth status from /api/auth/status on', window.location.origin);
+
+    // 6-second timeout so a stalled server doesn't hang the page.
+    var ctrl    = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var timeout = ctrl ? setTimeout(function () { ctrl.abort(); }, 6000) : null;
+    var opts    = ctrl ? { signal: ctrl.signal } : {};
+
+    fetch('/api/auth/status', opts)
       .then(function (r) {
-        if (!r.ok) { throw new Error('HTTP ' + r.status); }
+        if (timeout) clearTimeout(timeout);
+        console.log('[AC] Auth response:', r.status, r.statusText);
+        if (!r.ok) { throw new Error('HTTP ' + r.status + ' ' + r.statusText); }
         return r.json();
       })
       .then(function (data) {
+        console.log('[AC] Auth data OK — connections:', (data.connections || []).length);
         backendOnline = true;
         statusMap = {};
         (data.connections || []).forEach(function (c) {
@@ -375,27 +396,34 @@ a { color: inherit; text-decoration: none; }
         renderGrid();
         setFetchBar(true, data.checked_at);
       })
-      .catch(function () {
+      .catch(function (err) {
+        if (timeout) clearTimeout(timeout);
+        var msg = (err && err.message) ? err.message : String(err);
+        console.error('[AC] Fetch failed:', msg);
         backendOnline = false;
         statusMap = {};
         renderGrid();
-        setFetchBar(false, null);
+        setFetchBar(false, null, msg);
       });
   }
 
-  function setFetchBar(online, checkedAt) {
+  function setFetchBar(online, checkedAt, errDetail) {
     var btn = '<button class="ac-refreshBtn" onclick="window._AC_REFRESH()">↻ Refresh</button>';
     var bar = document.getElementById('ac-fetchBar');
+    if (!bar) return;
     if (online) {
       var t = checkedAt ? new Date(checkedAt).toLocaleTimeString() : '';
       bar.innerHTML =
         '<span style="color:rgba(46,204,113,.75)">● BACKEND ONLINE</span>' +
         (t ? ' — fetched at ' + t : '') + ' &nbsp; ' + btn;
     } else {
+      var detail = errDetail
+        ? ' <span style="color:rgba(255,80,80,.4);font-size:8px">(' + esc(errDetail) + ')</span>'
+        : '';
       bar.innerHTML =
         '<span style="color:rgba(255,80,80,.7)">● BACKEND OFFLINE</span>' +
-        ' — start the server: <code style="color:rgba(156,246,255,.6);font-size:8.5px">python server.py</code>' +
-        ' &nbsp; ' + btn;
+        ' — run: <code style="color:rgba(156,246,255,.6);font-size:8.5px">python server.py</code>' +
+        detail + ' &nbsp; ' + btn;
     }
   }
 
