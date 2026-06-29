@@ -41,7 +41,7 @@
     </div>
 
     <div id="hw-opsBtn" role="button" tabindex="0">
-      <span>⬡</span> OPS CENTER
+      <span>⬡</span> MISSION CONTROL
     </div>
   </header>
 
@@ -83,15 +83,58 @@
             <div id="hw-hqBadgeSub">HEADQUARTERS · EST. 2025</div>
           </div>
 
+          <div id="hw-hqAnnouncement">
+            <span id="hw-annText">Career Intelligence scanning opportunities ◆ Security perimeter active · no threats ◆ Finance reconciliation complete ◆ Orion assembling executive briefing ◆ Nova identified new career opportunities ◆ Mission Control ready for CEO review ◆ Scout-X market analysis complete · Virginia leads +38% ◆ Calypso protecting focus blocks for the week ◆</span>
+          </div>
+
           <div id="hw-agentBoard">
             <div class="hw-boardTitle">// DEPARTMENT LEADS — LIVE STATUS</div>
             <div id="hw-agentRows"></div>
           </div>
 
-          <div id="hw-opsLink" onclick="navigateTo('../ops_center/index.html')" role="button" tabindex="0">
-            <span class="hw-opsIcon">⬡</span>
-            <span class="hw-opsName">OPS CENTER</span>
-            <span class="hw-opsSub">MISSION CONTROL →</span>
+          <!-- EXECUTIVE ELEVATOR — Mission Control -->
+          <div id="hw-elevator" onclick="navigateToMissionControl()" role="button" tabindex="0" title="Mission Control — Executive Office">
+            <div id="hw-elevSurround">
+
+              <div id="hw-elevHeader">
+                <div id="hw-elevIndicators">
+                  <span class="hw-elevArrowUp">▲</span>
+                  <span id="hw-elevFloor">L.12</span>
+                </div>
+                <div id="hw-elevTitle">MISSION CONTROL</div>
+                <div id="hw-elevSubtitle">Executive Office</div>
+              </div>
+
+              <div id="hw-elevCabin">
+                <div id="hw-elevInterior">
+                  <div id="hw-elevIntGlow"></div>
+                  <div class="hw-elevIntLine"></div>
+                  <div class="hw-elevIntLine"></div>
+                  <div class="hw-elevIntLine"></div>
+                </div>
+                <div class="hw-elevDoor" id="hw-elevDoorL">
+                  <div class="hw-elevDoorInner">
+                    <div class="hw-elevDoorBar"></div>
+                    <div class="hw-elevDoorBar"></div>
+                    <div class="hw-elevDoorBar"></div>
+                  </div>
+                </div>
+                <div class="hw-elevDoor" id="hw-elevDoorR">
+                  <div class="hw-elevDoorInner">
+                    <div class="hw-elevDoorBar"></div>
+                    <div class="hw-elevDoorBar"></div>
+                    <div class="hw-elevDoorBar"></div>
+                  </div>
+                </div>
+                <div id="hw-elevSeam"></div>
+              </div>
+
+              <div id="hw-elevFooter">
+                <span>Restricted Access · Executive Floor</span>
+                <span id="hw-elevStatus">● READY</span>
+              </div>
+
+            </div>
           </div>
         </div>
 
@@ -130,12 +173,14 @@
             </div>
             <div class="hw-wingDeptName">SECURITY OPS</div>
             <div class="hw-wingAgentList">Athena · Nimbus · Sentinel</div>
+            <div class="hw-wingAccent hw-waccent-security"></div>
             <div class="hw-wingLive">
               <span id="hw-active-security">0 active</span>
               <span class="hw-wingSep">·</span>
               <span id="hw-queue-security">0 queued</span>
             </div>
             <div class="hw-wingDlv" id="hw-dlv-security">— No deliverables yet</div>
+            <div class="hw-wingStatus" id="hw-wstatus-security">🛡 PERIMETER: NOMINAL</div>
           </div>
           <div class="hw-wingFooter">
             <span class="hw-wingOpen">● OPEN</span>
@@ -156,12 +201,14 @@
             </div>
             <div class="hw-wingDeptName">CAREER INTEL</div>
             <div class="hw-wingAgentList">Nova · Resu-Mate · Scout-X</div>
+            <div class="hw-wingAccent hw-waccent-career"></div>
             <div class="hw-wingLive">
               <span id="hw-active-housing">0 active</span>
               <span class="hw-wingSep">·</span>
               <span id="hw-queue-housing">0 queued</span>
             </div>
             <div class="hw-wingDlv" id="hw-dlv-housing">— No deliverables yet</div>
+            <div class="hw-wingStatus" id="hw-wstatus-housing">💼 MORNING SEARCH QUEUED</div>
           </div>
           <div class="hw-wingFooter">
             <span class="hw-wingOpen">● OPEN</span>
@@ -190,12 +237,14 @@
             </div>
             <div class="hw-wingDeptName">COMMERCE</div>
             <div class="hw-wingAgentList">Pixel · EtsyBot · Spark</div>
+            <div class="hw-wingAccent hw-waccent-commerce"></div>
             <div class="hw-wingLive">
               <span id="hw-active-commerce">0 active</span>
               <span class="hw-wingSep">·</span>
               <span id="hw-queue-commerce">0 queued</span>
             </div>
             <div class="hw-wingDlv" id="hw-dlv-commerce">— No deliverables yet</div>
+            <div class="hw-wingStatus" id="hw-wstatus-commerce">🛍 TREND MONITORING ACTIVE</div>
           </div>
           <div class="hw-wingFooter">
             <span class="hw-wingOpen">● OPEN</span>
@@ -216,12 +265,14 @@
             </div>
             <div class="hw-wingDeptName">PRODUCTIVITY</div>
             <div class="hw-wingAgentList">Calypso · Echo · Memo</div>
+            <div class="hw-wingAccent hw-waccent-productivity"></div>
             <div class="hw-wingLive">
               <span id="hw-active-productivity">0 active</span>
               <span class="hw-wingSep">·</span>
               <span id="hw-queue-productivity">0 queued</span>
             </div>
             <div class="hw-wingDlv" id="hw-dlv-productivity">— No deliverables yet</div>
+            <div class="hw-wingStatus" id="hw-wstatus-productivity">📅 FOCUS BLOCKS PROTECTED</div>
           </div>
           <div class="hw-wingFooter">
             <span class="hw-wingOpen">● OPEN</span>
@@ -242,12 +293,14 @@
             </div>
             <div class="hw-wingDeptName">FINANCE</div>
             <div class="hw-wingAgentList">Greenbean · Penny · Vault</div>
+            <div class="hw-wingAccent hw-waccent-finance"></div>
             <div class="hw-wingLive">
               <span id="hw-active-finance">0 active</span>
               <span class="hw-wingSep">·</span>
               <span id="hw-queue-finance">0 queued</span>
             </div>
             <div class="hw-wingDlv" id="hw-dlv-finance">— No deliverables yet</div>
+            <div class="hw-wingStatus" id="hw-wstatus-finance">💰 BUDGET: ON TRACK</div>
           </div>
           <div class="hw-wingFooter">
             <span class="hw-wingOpen">● OPEN</span>
@@ -307,6 +360,24 @@
         <div id="hw-floorBadge">
           <div id="hw-badgeText">CyberCookieOS</div>
           <div id="hw-badgeSub">HQ NEXUS</div>
+        </div>
+
+        <!-- Company status kiosks -->
+        <div class="hw-kiosk hw-kiosk-l">
+          <div class="hw-kioskScreen">
+            <div class="hw-kioskLabel">MISSIONS</div>
+            <div class="hw-kioskVal" id="hw-k-missions">0</div>
+            <div class="hw-kioskSub">Active</div>
+          </div>
+          <div class="hw-kioskStand"></div>
+        </div>
+        <div class="hw-kiosk hw-kiosk-r">
+          <div class="hw-kioskScreen">
+            <div class="hw-kioskLabel">APPROVALS</div>
+            <div class="hw-kioskVal" id="hw-k-approvals">0</div>
+            <div class="hw-kioskSub">Pending CEO</div>
+          </div>
+          <div class="hw-kioskStand"></div>
         </div>
 
       </div><!-- /hw-floor -->
@@ -432,6 +503,13 @@ function navigateTo(url) {
   document.documentElement.classList.add('hw-nav-out');
   setTimeout(function () { window.location.href = url; }, 280);
 }
+function navigateToMissionControl() {
+  var elev = document.getElementById('hw-elevator');
+  if (elev) elev.classList.add('hw-elev-opening');
+  var st = document.getElementById('hw-elevStatus');
+  if (st) st.textContent = '● OPENING';
+  setTimeout(function () { navigateTo('../ops_center/index.html'); }, 720);
+}
 document.addEventListener('DOMContentLoaded', function () {
   document.documentElement.classList.remove('hw-nav-out');
   document.documentElement.classList.add('hw-nav-in');
@@ -442,6 +520,11 @@ document.addEventListener('DOMContentLoaded', function () {
 <script src="../js/cybercookieos.js"></script>
 <script src="../js/agent_runtime.js"></script>
 <script src="../js/output_engine.js"></script>
+<script src="../js/mission_system.js"></script>
+<script src="../js/company_kpi.js"></script>
+<script src="../js/company_memory.js"></script>
+<script src="../js/orion.js"></script>
+<script src="../js/autonomous_ops.js"></script>
 <script src="../js/agent_engine.js"></script>
 <script src="../js/notifications.js"></script>
 <script src="js/hallway_hub.js" defer></script>

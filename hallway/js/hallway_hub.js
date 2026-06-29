@@ -303,6 +303,122 @@
     }).join('');
   }
 
+  // ── LIVE SIGNAGE — kiosks + wing status from COS data ────────────
+
+  function updateSignage() {
+    // Floor kiosks
+    var mEl = document.getElementById('hw-k-missions');
+    var aEl = document.getElementById('hw-k-approvals');
+    if (mEl && typeof MS !== 'undefined') {
+      var cnt = MS.count();
+      mEl.textContent = cnt.pending || 0;
+    }
+    if (aEl && typeof ORION !== 'undefined') {
+      aEl.textContent = ORION.approvals.pending().length;
+    }
+
+    // Wing status labels
+    if (typeof KPI !== 'undefined') {
+      var kpi = KPI.all();
+
+      var wsSec = document.getElementById('hw-wstatus-security');
+      if (wsSec && kpi.security) {
+        var k = kpi.security;
+        if ((k.criticalAlerts || 0) > 0) {
+          wsSec.textContent = '⚠ CRITICAL — ' + k.criticalAlerts + ' ALERTS';
+          wsSec.style.color = 'rgba(255,80,80,.85)';
+        } else if ((k.threatsDetected || 0) > 0) {
+          wsSec.textContent = '🛡 ' + k.threatsDetected + ' THREATS LOGGED · MONITORING';
+          wsSec.style.color = 'rgba(247,201,72,.75)';
+        } else if ((k.scansCompleted || 0) > 0) {
+          wsSec.textContent = '🛡 ' + k.scansCompleted + ' SCANS · PERIMETER CLEAN';
+          wsSec.style.color = '';
+        }
+      }
+
+      var wsHouse = document.getElementById('hw-wstatus-housing');
+      if (wsHouse && kpi.career) {
+        var c = kpi.career;
+        if ((c.jobsFound || 0) > 0) {
+          wsHouse.textContent = '💼 ' + c.jobsFound + ' JOBS FOUND TODAY';
+          wsHouse.style.color = 'rgba(255,200,60,.8)';
+        }
+      }
+
+      var wsComm = document.getElementById('hw-wstatus-commerce');
+      if (wsComm && kpi.commerce) {
+        wsComm.textContent = '🛍 ' + (kpi.commerce.trends || 0) + ' TRENDS MONITORED';
+      }
+
+      var wsProd = document.getElementById('hw-wstatus-productivity');
+      if (wsProd && kpi.productivity) {
+        var p = kpi.productivity;
+        if ((p.tasksCompleted || 0) > 0) {
+          wsProd.textContent = '📅 ' + p.tasksCompleted + ' TASKS COMPLETE';
+          wsProd.style.color = 'rgba(58,168,200,.8)';
+        }
+      }
+
+      var wsFin = document.getElementById('hw-wstatus-finance');
+      if (wsFin && kpi.finance) {
+        var f = kpi.finance;
+        wsFin.textContent = '💰 BUDGET: ' + (f.budgetHealth || 'REVIEWING').toUpperCase();
+        wsFin.style.color = f.budgetHealth === 'on track' ? 'rgba(46,204,113,.75)' : '';
+      }
+    }
+  }
+
+  // ── AMBIENT ANNOUNCEMENTS — rotate text in back wall ticker ───────
+
+  var _ANN_POOL = [
+    'Career Intelligence scanning South Jersey · Philadelphia · Remote US ◆ ' +
+      'Security perimeter active · no critical threats detected ◆ ' +
+      'Finance reconciliation complete · budget health nominal ◆ ' +
+      'Orion assembling executive briefing ◆ ',
+    'Nova identified new job opportunities · cross-department analysis in progress ◆ ' +
+      'Athena overnight scan complete · all clear ◆ ' +
+      'Penny reviewing budget targets for this period ◆ ' +
+      'Mission Control awaiting CEO direction ◆ ',
+    'Scout-X market update: Virginia leads +38% SOC demand · $72k average ◆ ' +
+      'Calypso protected 2 focus blocks for the week ◆ ' +
+      'Resu-Mate ATS analysis complete · recommendations ready ◆ ' +
+      'Company health: nominal · 18 agents active ◆ ',
+    'Security Ops: Nimbus confirmed cloud health · 99.8% uptime ◆ ' +
+      'Career Intel: Resu-Mate resume optimization queued ◆ ' +
+      'Finance: Vault savings projection updated · on track ◆ ' +
+      'Orion: morning briefing assembled · CEO review pending ◆ ',
+  ];
+  var _annIdx = 0;
+
+  function _rotateAnnouncement() {
+    _annIdx = (_annIdx + 1) % _ANN_POOL.length;
+    var el = document.getElementById('hw-annText');
+    if (!el) return;
+
+    // Inject live data if available
+    var text = _ANN_POOL[_annIdx];
+    if (typeof KPI !== 'undefined') {
+      var kpi = KPI.all();
+      if (kpi.career && kpi.career.jobsFound > 0) {
+        text = 'Nova: ' + kpi.career.jobsFound + ' opportunities found today ◆ ' + text;
+      }
+      if (kpi.security && kpi.security.scansCompleted > 0) {
+        text = 'Athena: ' + kpi.security.scansCompleted + ' scan(s) complete ◆ ' + text;
+      }
+    }
+    if (typeof ORION !== 'undefined') {
+      var pending = ORION.approvals.pending().length;
+      if (pending > 0) {
+        text = '⚠ ' + pending + ' decision' + (pending !== 1 ? 's' : '') + ' awaiting CEO approval ◆ ' + text;
+      }
+    }
+    el.textContent = text;
+    // Re-trigger animation by cloning
+    el.style.animation = 'none';
+    void el.offsetWidth;
+    el.style.animation = '';
+  }
+
   // ── EVENT WIRING ────────────────────────────────────────────────
 
   function wireEvents() {
@@ -347,6 +463,14 @@
     COS.events.on('cos:activity', function (e) {
       if (e && e.msg) pushTicker('[' + (e.agent || 'HQ') + '] ' + e.msg);
     });
+
+    // Company Intelligence events → update live signage
+    COS.events.on('kpi:updated', function () { updateSignage(); });
+    COS.events.on('approval:added',    function () { updateSignage(); });
+    COS.events.on('approval:granted',  function () { updateSignage(); });
+    COS.events.on('approval:rejected', function () { updateSignage(); });
+    COS.events.on('mission:created',   function () { updateSignage(); });
+    COS.events.on('mission:completed', function () { updateSignage(); });
 
     // ── AE Housing Mission events ──────────────────────────────────
 
@@ -493,6 +617,13 @@
 
     updateClock();
     setInterval(updateClock, 1000);
+
+    // Live signage — initial + periodic
+    updateSignage();
+    setInterval(updateSignage, 15000);
+
+    // Announcement rotation
+    setInterval(_rotateAnnouncement, 34000);
 
     setInterval(function () {
       updateAllDeptCards();

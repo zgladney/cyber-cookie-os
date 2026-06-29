@@ -1787,3 +1787,450 @@ html.hw-nav-in  { animation: hwNavIn .32s ease forwards; }
   font-size: 8px !important;
   letter-spacing: 8px !important;
 }
+
+/* ================================================================
+   PHASE 15b — EXECUTIVE ELEVATOR (Mission Control entrance)
+================================================================ */
+
+#hw-elevator {
+  flex-shrink: 0;
+  width: 100%;
+  cursor: pointer;
+  margin-top: 2px;
+}
+
+#hw-elevSurround {
+  border: 1px solid rgba(156,246,255,.22);
+  border-radius: 5px 5px 2px 2px;
+  background: rgba(0,6,18,.75);
+  box-shadow: 0 0 22px rgba(156,246,255,.06), inset 0 0 30px rgba(0,8,24,.6);
+  overflow: hidden;
+  transition: border-color .25s, box-shadow .25s;
+}
+#hw-elevator:hover #hw-elevSurround {
+  border-color: rgba(156,246,255,.45);
+  box-shadow: 0 0 36px rgba(156,246,255,.14), inset 0 0 20px rgba(0,12,36,.5);
+}
+
+/* Header bar */
+#hw-elevHeader {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 9px;
+  background: rgba(0,4,14,.85);
+  border-bottom: 1px solid rgba(156,246,255,.1);
+}
+#hw-elevIndicators {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  background: rgba(0,12,28,.9);
+  border: 1px solid rgba(156,246,255,.18);
+  border-radius: 2px;
+  padding: 2px 5px;
+  min-width: 22px;
+  flex-shrink: 0;
+}
+.hw-elevArrowUp {
+  font-size: 7px;
+  color: rgba(156,246,255,.75);
+  animation: elevArrow 1.8s ease-in-out infinite;
+}
+@keyframes elevArrow {
+  0%,100% { opacity: .35; }
+  50%      { opacity: 1; text-shadow: 0 0 6px rgba(156,246,255,.8); }
+}
+#hw-elevFloor {
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: rgba(156,246,255,.55);
+  line-height: 1;
+}
+#hw-elevTitle {
+  flex: 1;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: rgba(156,246,255,.9);
+  text-shadow: 0 0 10px rgba(156,246,255,.35);
+}
+#hw-elevSubtitle {
+  font-size: 6.5px;
+  letter-spacing: 1.5px;
+  color: rgba(156,246,255,.32);
+  flex-shrink: 0;
+}
+
+/* Cabin */
+#hw-elevCabin {
+  position: relative;
+  height: 78px;
+  overflow: hidden;
+  background: rgba(0,3,12,.95);
+}
+#hw-elevInterior {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  z-index: 0;
+}
+#hw-elevIntGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(156,246,255,.12) 0%, transparent 70%);
+  transition: background .5s;
+}
+.hw-elevIntLine {
+  width: 1px;
+  height: 55%;
+  background: linear-gradient(to bottom, rgba(156,246,255,.35), transparent);
+  border-radius: 1px;
+}
+
+/* Doors */
+.hw-elevDoor {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 50%;
+  background: linear-gradient(180deg, rgba(5,14,34,.97) 0%, rgba(2,8,22,.99) 100%);
+  border: 1px solid rgba(156,246,255,.1);
+  z-index: 1;
+  transition: transform .72s cubic-bezier(.4,0,.2,1), box-shadow .3s;
+  overflow: hidden;
+}
+#hw-elevDoorL { left: 0;  border-right: 1px solid rgba(156,246,255,.06); box-shadow: inset -3px 0 14px rgba(0,0,0,.5); }
+#hw-elevDoorR { right: 0; border-left:  1px solid rgba(156,246,255,.06); box-shadow: inset  3px 0 14px rgba(0,0,0,.5); }
+
+#hw-elevator:hover #hw-elevDoorL { box-shadow: inset -3px 0 18px rgba(156,246,255,.03); }
+#hw-elevator:hover #hw-elevDoorR { box-shadow: inset  3px 0 18px rgba(156,246,255,.03); }
+
+.hw-elevDoorInner {
+  position: absolute;
+  inset: 10px 7px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.hw-elevDoorBar {
+  height: 1px;
+  background: rgba(156,246,255,.055);
+  border-radius: 1px;
+}
+
+/* Center seam glow */
+#hw-elevSeam {
+  position: absolute;
+  left: 50%; top: 0; bottom: 0;
+  width: 1px;
+  transform: translateX(-50%);
+  background: rgba(156,246,255,.35);
+  box-shadow: 0 0 5px rgba(156,246,255,.4), 0 0 12px rgba(156,246,255,.18);
+  z-index: 2;
+  animation: elevSeam 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes elevSeam {
+  0%,100% { box-shadow: 0 0 4px rgba(156,246,255,.28); opacity: .55; }
+  50%      { box-shadow: 0 0 10px rgba(156,246,255,.65), 0 0 22px rgba(156,246,255,.2); opacity: 1; }
+}
+#hw-elevator:hover #hw-elevSeam {
+  box-shadow: 0 0 14px rgba(156,246,255,.8), 0 0 28px rgba(156,246,255,.3);
+  opacity: 1;
+  animation: none;
+}
+
+/* Footer */
+#hw-elevFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 9px;
+  background: rgba(0,3,10,.88);
+  border-top: 1px solid rgba(156,246,255,.07);
+  font-size: 6px;
+  letter-spacing: 1px;
+  color: rgba(156,246,255,.28);
+}
+#hw-elevStatus {
+  color: rgba(125,255,156,.6);
+  letter-spacing: 1px;
+  animation: elevReady 2.8s ease-in-out infinite;
+}
+@keyframes elevReady {
+  0%,100% { opacity: .6; }
+  50%      { opacity: 1; }
+}
+
+/* Door open animation */
+.hw-elev-opening #hw-elevDoorL { transform: translateX(-100%); }
+.hw-elev-opening #hw-elevDoorR { transform: translateX(100%); }
+.hw-elev-opening #hw-elevIntGlow {
+  background: radial-gradient(ellipse at 50% 50%, rgba(156,246,255,.55) 0%, rgba(100,210,255,.1) 60%, transparent 100%);
+}
+.hw-elev-opening #hw-elevStatus { color: rgba(156,246,255,.95); animation: none; }
+
+/* ================================================================
+   PHASE 15b — WING DOOR ENHANCEMENTS
+================================================================ */
+
+/* Accent strip — animated dept identity bar */
+.hw-wingAccent {
+  height: 2px;
+  border-radius: 2px;
+  margin: 3px 0 2px;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* Security: blue scanner sweep */
+.hw-waccent-security { background: rgba(155,107,255,.1); }
+.hw-waccent-security::after {
+  content: '';
+  position: absolute;
+  left: -50%; top: 0; bottom: 0;
+  width: 35%;
+  background: linear-gradient(90deg, transparent, rgba(155,107,255,.7), transparent);
+  animation: secScan 2.4s ease-in-out infinite;
+}
+@keyframes secScan {
+  from { left: -35%; }
+  to   { left: 100%; }
+}
+
+/* Career: gold gradient glow */
+.hw-waccent-career {
+  background: linear-gradient(90deg, rgba(123,107,255,.35) 0%, rgba(255,200,60,.35) 100%);
+  animation: carGlow 2.8s ease-in-out infinite alternate;
+}
+@keyframes carGlow {
+  from { opacity: .55; }
+  to   { opacity: 1; box-shadow: 0 0 4px rgba(255,200,60,.3); }
+}
+
+/* Commerce: pink neon pulse */
+.hw-waccent-commerce {
+  background: rgba(255,105,180,.15);
+  animation: commNeon 1.6s ease-in-out infinite alternate;
+}
+@keyframes commNeon {
+  from { background: rgba(255,105,180,.1); }
+  to   { background: rgba(255,105,180,.3); box-shadow: 0 0 5px rgba(255,105,180,.25); }
+}
+
+/* Productivity: cyan segmented */
+.hw-waccent-productivity {
+  background: repeating-linear-gradient(90deg,
+    rgba(58,168,200,.4) 0px, rgba(58,168,200,.4) 8px,
+    rgba(58,168,200,.1) 8px, rgba(58,168,200,.1) 14px
+  );
+  animation: prodBlink 3s step-end infinite;
+}
+@keyframes prodBlink {
+  0%,80%,100% { opacity: .8; }
+  85%          { opacity: .4; }
+  90%          { opacity: .9; }
+}
+
+/* Finance: green savings arc */
+.hw-waccent-finance {
+  background: rgba(46,204,113,.12);
+  animation: finPulse 3s ease-in-out infinite;
+}
+@keyframes finPulse {
+  0%,100% { background: rgba(46,204,113,.1); }
+  50%      { background: rgba(46,204,113,.28); box-shadow: 0 0 4px rgba(46,204,113,.2); }
+}
+
+/* Wing status line */
+.hw-wingStatus {
+  font-size: 6.5px;
+  letter-spacing: .8px;
+  color: rgba(200,160,255,.45);
+  border-top: 1px solid rgba(150,80,255,.07);
+  padding-top: 3px;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+}
+
+/* ================================================================
+   PHASE 15b — HQ ANNOUNCEMENT TICKER (back wall)
+================================================================ */
+
+#hw-hqAnnouncement {
+  width: 100%;
+  overflow: hidden;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  border-top:    1px solid rgba(156,246,255,.06);
+  border-bottom: 1px solid rgba(156,246,255,.06);
+  margin: 2px 0 3px;
+  background: rgba(0,5,16,.5);
+  flex-shrink: 0;
+}
+#hw-annText {
+  display: inline-block;
+  white-space: nowrap;
+  font-size: 7px;
+  letter-spacing: .8px;
+  color: rgba(156,246,255,.38);
+  padding-left: 100%;
+  animation: annScroll 35s linear infinite;
+}
+@keyframes annScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
+}
+
+/* ================================================================
+   PHASE 15b — FLOOR KIOSKS
+================================================================ */
+
+.hw-kiosk {
+  position: absolute;
+  bottom: 20px;
+  z-index: 7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+.hw-kiosk-l { left: 185px; }
+.hw-kiosk-r { right: 185px; }
+
+.hw-kioskScreen {
+  background: rgba(2,5,18,.96);
+  border: 1px solid rgba(156,246,255,.22);
+  border-radius: 3px 3px 0 0;
+  padding: 5px 11px 4px;
+  text-align: center;
+  min-width: 72px;
+  box-shadow: 0 0 12px rgba(156,246,255,.08), inset 0 0 10px rgba(0,8,28,.5);
+  animation: kioskGlow 4s ease-in-out infinite alternate;
+}
+@keyframes kioskGlow {
+  from { box-shadow: 0 0 6px rgba(156,246,255,.06); }
+  to   { box-shadow: 0 0 18px rgba(156,246,255,.16); }
+}
+.hw-kioskLabel {
+  font-size: 5.5px;
+  letter-spacing: 1.5px;
+  color: rgba(156,246,255,.32);
+  margin-bottom: 3px;
+}
+.hw-kioskVal {
+  font-size: 22px;
+  font-weight: 900;
+  color: rgba(156,246,255,.85);
+  text-shadow: 0 0 14px rgba(156,246,255,.45);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.hw-kioskSub {
+  font-size: 5.5px;
+  letter-spacing: 1px;
+  color: rgba(200,160,255,.28);
+  margin-top: 2px;
+}
+.hw-kioskStand {
+  width: 3px;
+  height: 12px;
+  background: rgba(156,246,255,.18);
+}
+
+/* ================================================================
+   PHASE 15b — UPGRADED AGENT SPRITES
+================================================================ */
+
+/* Larger body + visible head silhouette */
+.hw-sprite {
+  width: 20px !important;
+  height: 24px !important;
+  border-radius: 6px 6px 4px 4px !important;
+  font-size: 0 !important;
+  overflow: visible !important;
+}
+/* Head circle */
+.hw-sprite::before {
+  content: '';
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--sp-color, #9b6bff) 80%, rgba(255,255,255,.2));
+  box-shadow: 0 0 7px var(--sp-color, #9b6bff);
+}
+/* Floor shadow larger to match */
+.hw-sprite::after {
+  width: 18px !important;
+  height: 4px !important;
+}
+/* Keep label readable */
+.hw-spriteLbl { font-size: 7px !important; bottom: calc(100% + 12px) !important; }
+
+/* ================================================================
+   PHASE 15b — ENVIRONMENTAL DEPTH
+================================================================ */
+
+/* Stronger ceiling glow */
+#hw-ceiling {
+  height: 18px !important;
+  box-shadow: 0 4px 20px rgba(150,80,255,.12) !important;
+}
+.hw-light {
+  width: 130px !important;
+  box-shadow: 0 0 20px rgba(200,150,255,.55), 0 8px 30px rgba(150,80,255,.2) !important;
+}
+
+/* More floor reflection depth */
+#hw-floor {
+  background: linear-gradient(180deg,
+    rgba(8,2,24,.95) 0%,
+    rgba(3,0,12,.98) 60%,
+    rgba(1,0,6,1) 100%) !important;
+}
+
+/* Room: deeper ambient background */
+#hw-room {
+  background: radial-gradient(ellipse at 50% 30%, #0e0028 0%, #040010 50%, #01000a 100%) !important;
+  box-shadow: 0 0 80px rgba(107,53,213,.25), inset 0 0 120px rgba(0,0,0,.75) !important;
+}
+
+/* Enhanced back wall gradient depth */
+#hw-backWall {
+  background: linear-gradient(180deg, #080020 0%, #040012 60%, #020009 100%) !important;
+}
+
+/* Floor badge: more prominent holographic feel */
+#hw-floorBadge {
+  opacity: .45 !important;
+}
+#hw-badgeText {
+  font-size: 16px !important;
+  letter-spacing: 5px !important;
+  text-shadow: 0 0 20px rgba(200,150,255,.5) !important;
+}
+
+/* Agent board: reduce margin to leave more room for elevator */
+#hw-agentBoard {
+  margin-bottom: 2px !important;
+}
+
+/* Announcement needs flex item behaviour in hw-backCenter */
+#hw-backCenter {
+  justify-content: flex-start !important;
+  gap: 3px !important;
+}
