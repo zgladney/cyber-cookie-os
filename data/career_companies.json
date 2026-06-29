@@ -1,0 +1,6 @@
+{
+  "_version": "1.0",
+  "_updated": null,
+  "_note": "Target companies tracker. Nova prioritizes job searches toward companies listed here. Add via POST /api/career/companies/add or by placing a Target_Companies.docx in data/documents/career/ and refreshing Career Memory.",
+  "companies": []
+}

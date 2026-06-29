@@ -1,5 +1,21 @@
 {
   "_version": "1.0",
   "_note": "Register documents via POST /api/documents/register or by editing this file directly. Place actual files in data/documents/.",
-  "documents": []
+  "documents": [
+    {
+      "id": "resume_v2",
+      "filename": "career/Zimiah_Gladney_ATS_Resume_v2.docx",
+      "type": "resume",
+      "department": "career",
+      "description": "ATS-optimized resume v2",
+      "tags": [
+        "resume",
+        "ats",
+        "career"
+      ],
+      "uploaded_at": "2026-06-29T18:07:07.530984",
+      "last_used_at": null,
+      "status": "registered"
+    }
+  ]
 }

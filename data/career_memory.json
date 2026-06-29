@@ -1,0 +1,178 @@
+{
+  "_version": "1.0",
+  "_last_refresh": "2026-06-29T18:28:10.094151",
+  "_doc_count": 6,
+  "_total_words": 1193,
+  "_source_docs": [
+    {
+      "filename": "Achievements.docx",
+      "type": "achievements",
+      "indexed_at": "2026-06-29T18:28:10.086310",
+      "last_modified": "2026-06-29T17:59:48.619876",
+      "word_count": 122,
+      "used_in": [
+        "resuMate",
+        "nova"
+      ],
+      "confidence": "high"
+    },
+    {
+      "filename": "Career_Preferences.docx",
+      "type": "career_preferences",
+      "indexed_at": "2026-06-29T18:28:10.087752",
+      "last_modified": "2026-06-29T17:58:27.523277",
+      "word_count": 87,
+      "used_in": [
+        "nova",
+        "scoutX"
+      ],
+      "confidence": "high"
+    },
+    {
+      "filename": "Skills_Inventory.docx",
+      "type": "skills_inventory",
+      "indexed_at": "2026-06-29T18:28:10.089215",
+      "last_modified": "2026-06-29T17:58:25.557636",
+      "word_count": 66,
+      "used_in": [
+        "nova",
+        "resuMate",
+        "scoutX"
+      ],
+      "confidence": "high"
+    },
+    {
+      "filename": "WGU_Course_Plan_Roadmap.docx",
+      "type": "course_plan",
+      "indexed_at": "2026-06-29T18:28:10.090962",
+      "last_modified": "2026-06-29T18:09:30.509820",
+      "word_count": 238,
+      "used_in": [
+        "resuMate",
+        "scoutX"
+      ],
+      "confidence": "high"
+    },
+    {
+      "filename": "Zimiah_Gladney_ATS_Resume_v2.docx",
+      "type": "resume",
+      "indexed_at": "2026-06-29T18:28:10.092408",
+      "last_modified": "2026-06-29T13:26:07.196925",
+      "word_count": 412,
+      "used_in": [
+        "nova",
+        "resuMate"
+      ],
+      "confidence": "high"
+    },
+    {
+      "filename": "master_cover_letter.docx",
+      "type": "cover_letter",
+      "indexed_at": "2026-06-29T18:28:10.094143",
+      "last_modified": "2026-06-29T17:55:16.009803",
+      "word_count": 268,
+      "used_in": [
+        "resuMate"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "_note": "Built automatically by POST /api/career/memory/refresh. Do not edit manually.",
+  "profile": {
+    "name": "",
+    "email": "",
+    "phone": "",
+    "location": "",
+    "linkedin_url": "",
+    "portfolio_url": "",
+    "target_roles": [],
+    "target_locations": [],
+    "salary_min": 40000,
+    "salary_max": null,
+    "work_preferences": [
+      "hybrid",
+      "remote"
+    ],
+    "skills": [
+      "CyberCookieOS Career Knowledge Base",
+      "Skills Inventory",
+      "Skill",
+      "Level (Beginner/Intermediate/Advanced)",
+      "Evidence / Project",
+      "Notes",
+      "Windows 10/11",
+      "Active Directory",
+      "Microsoft 365",
+      "Networking",
+      "TCP/IP",
+      "DHCP",
+      "VPN Troubleshooting",
+      "Hardware Repair",
+      "Linux",
+      "Python",
+      "Git/GitHub",
+      "PowerShell",
+      "Cybersecurity Fundamentals",
+      "Nmap",
+      "ServiceNow",
+      "Customer Service",
+      "Technical Documentation",
+      "Remote Support",
+      "Cloud (Azure/AWS)",
+      "Future Skills"
+    ],
+    "certifications": [],
+    "education": [],
+    "work_history": [],
+    "projects": [],
+    "achievements": [],
+    "career_goals": [],
+    "notes": "",
+    "_raw_preferences": [
+      "CyberCookieOS Career Knowledge Base",
+      "Career Preferences",
+      "Preference",
+      "Current Setting",
+      "Preferred Roles",
+      "Help Desk, Service Desk, SOC Analyst, NOC Technician, Junior Systems Administrator, Cloud Support",
+      "Preferred Locations",
+      "South Jersey, Philadelphia, Remote",
+      "Future Relocation",
+      "Virginia, North Carolina",
+      "Minimum Salary",
+      "$55,000+ (edit as needed)",
+      "Work Preference",
+      "Remote preferred; hybrid acceptable",
+      "Employment Type",
+      "Full-time",
+      "Shift Preference",
+      "Flexible",
+      "Industries",
+      "Technology, Government, Healthcare IT, Defense",
+      "Companies of Interest",
+      "Add target employers here",
+      "Do Not Recommend",
+      "Sales-heavy or unrelated roles",
+      "Career Goals",
+      "Finish WGU degree",
+      "Earn CompTIA certifications",
+      "Transition into cybersecurity",
+      "Continue building CyberCookieOS"
+    ]
+  },
+  "linkedin": {
+    "connected": false,
+    "import_method": null,
+    "last_imported": null,
+    "name": "",
+    "headline": "",
+    "profile_url": "",
+    "summary": "",
+    "location": "",
+    "experience": [],
+    "education": [],
+    "skills": [],
+    "certifications": [],
+    "discrepancies": {}
+  }
+}

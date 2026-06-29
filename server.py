@@ -18,6 +18,8 @@ import json
 import os
 import sys
 import urllib.parse
+import zipfile
+import xml.etree.ElementTree as ET
 from datetime import datetime
 
 PORT = 3000
@@ -45,6 +47,137 @@ def save_json(relative_path, data):
 
 def ts():
     return datetime.now().isoformat()
+
+
+# ── Career Intelligence helpers ───────────────────────────────────────────────
+
+CAREER_DOCS_DIR = os.path.join(ROOT, 'data', 'documents', 'career')
+
+DOC_TYPE_MAP = {
+    'resume':       {'type': 'resume',             'used_in': ['nova', 'resuMate']},
+    'skill':        {'type': 'skills_inventory',   'used_in': ['nova', 'resuMate', 'scoutX']},
+    'achievement':  {'type': 'achievements',        'used_in': ['resuMate', 'nova']},
+    'preference':   {'type': 'career_preferences', 'used_in': ['nova', 'scoutX']},
+    'cover':        {'type': 'cover_letter',        'used_in': ['resuMate']},
+    'course':       {'type': 'course_plan',         'used_in': ['resuMate', 'scoutX']},
+    'wgu':          {'type': 'course_plan',         'used_in': ['resuMate', 'scoutX']},
+    'company':      {'type': 'target_companies',   'used_in': ['nova', 'scoutX']},
+    'target':       {'type': 'target_companies',   'used_in': ['nova', 'scoutX']},
+}
+
+def _classify_doc(filename):
+    lower = filename.lower()
+    for keyword, meta in DOC_TYPE_MAP.items():
+        if keyword in lower:
+            return meta['type'], meta['used_in']
+    return 'document', ['nova']
+
+
+def _parse_docx(filepath):
+    """Extract plain text from .docx using stdlib zipfile + xml only."""
+    try:
+        with zipfile.ZipFile(filepath, 'r') as z:
+            if 'word/document.xml' not in z.namelist():
+                return ''
+            xml_bytes = z.read('word/document.xml')
+        ns = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
+        root = ET.fromstring(xml_bytes)
+        paragraphs = []
+        for p in root.iter(ns + 'p'):
+            texts = [t.text for t in p.iter(ns + 't') if t.text]
+            line = ''.join(texts).strip()
+            if line:
+                paragraphs.append(line)
+        return '\n'.join(paragraphs)
+    except Exception:
+        return ''
+
+
+def _list_career_docs():
+    """Return metadata for all .docx files in the career documents folder."""
+    if not os.path.isdir(CAREER_DOCS_DIR):
+        return []
+    memory = load_json('career_memory.json', {})
+    indexed = {d['filename']: d for d in memory.get('_source_docs', [])}
+    result = []
+    for name in sorted(os.listdir(CAREER_DOCS_DIR)):
+        if not name.lower().endswith('.docx'):
+            continue
+        full = os.path.join(CAREER_DOCS_DIR, name)
+        stat = os.stat(full)
+        idx  = indexed.get(name, {})
+        doc_type, used_in = _classify_doc(name)
+        result.append({
+            'filename':      name,
+            'path':          'data/documents/career/' + name,
+            'type':          doc_type,
+            'size_kb':       round(stat.st_size / 1024, 1),
+            'last_modified': datetime.fromtimestamp(stat.st_mtime).isoformat(),
+            'status':        'indexed' if idx.get('indexed_at') else 'pending',
+            'indexed_at':    idx.get('indexed_at'),
+            'word_count':    idx.get('word_count', 0),
+            'used_in':       used_in,
+            'confidence':    idx.get('confidence', 'unknown'),
+        })
+    return result
+
+
+def _refresh_career_memory():
+    """Parse all career docs and rebuild career_memory.json. Returns updated memory dict."""
+    memory = load_json('career_memory.json', {
+        '_version': '1.0', '_last_refresh': None, '_source_docs': [],
+        'profile': {}, 'linkedin': {}
+    })
+
+    if not os.path.isdir(CAREER_DOCS_DIR):
+        os.makedirs(CAREER_DOCS_DIR, exist_ok=True)
+
+    source_docs = []
+    all_text_by_type = {}
+
+    for name in sorted(os.listdir(CAREER_DOCS_DIR)):
+        if not name.lower().endswith('.docx'):
+            continue
+        full = os.path.join(CAREER_DOCS_DIR, name)
+        text = _parse_docx(full)
+        stat = os.stat(full)
+        doc_type, used_in = _classify_doc(name)
+        words = len(text.split()) if text else 0
+        source_docs.append({
+            'filename':      name,
+            'type':          doc_type,
+            'indexed_at':    ts(),
+            'last_modified': datetime.fromtimestamp(stat.st_mtime).isoformat(),
+            'word_count':    words,
+            'used_in':       used_in,
+            'confidence':    'high' if words > 50 else ('low' if words > 0 else 'empty'),
+        })
+        if text:
+            all_text_by_type[doc_type] = all_text_by_type.get(doc_type, '') + '\n' + text
+
+    memory['_source_docs'] = source_docs
+    memory['_last_refresh'] = ts()
+    memory['_doc_count']    = len(source_docs)
+    memory['_total_words']  = sum(d['word_count'] for d in source_docs)
+
+    # Seed profile fields from parsed text (keyword extraction)
+    profile = memory.get('profile', {})
+    skills_text = all_text_by_type.get('skills_inventory', '')
+    if skills_text and not profile.get('skills'):
+        # Extract lines that look like skill items (short, no full sentences)
+        lines = [l.strip() for l in skills_text.split('\n') if l.strip()]
+        skills = [l for l in lines if 3 < len(l) < 60 and '.' not in l]
+        if skills:
+            profile['skills'] = skills[:80]
+
+    prefs_text = all_text_by_type.get('career_preferences', '')
+    if prefs_text and not profile.get('target_roles'):
+        lines = [l.strip() for l in prefs_text.split('\n') if l.strip()]
+        profile['_raw_preferences'] = lines[:40]
+
+    memory['profile'] = profile
+    save_json('career_memory.json', memory)
+    return memory
 
 
 # ── Request handler ───────────────────────────────────────────────────────────
@@ -137,6 +270,27 @@ class COSHandler(http.server.SimpleHTTPRequestHandler):
                     dept_status[d] = 'partial'
             self._send(200, {'status': dept_status, 'checked_at': ts()})
 
+        # ── Career Intelligence routes ─────────────────────────────────────────
+
+        elif path == '/api/career/documents':
+            self._send(200, {'documents': _list_career_docs()})
+
+        elif path == '/api/career/memory':
+            self._send(200, load_json('career_memory.json',
+                {'_source_docs': [], 'profile': {}, 'linkedin': {}, '_doc_count': 0, '_last_refresh': None}))
+
+        elif path == '/api/career/jobs':
+            self._send(200, load_json('career_jobs.json', {'jobs': []}))
+
+        elif path == '/api/career/recommendations':
+            self._send(200, load_json('career_recommendations.json', {'recommendations': []}))
+
+        elif path == '/api/career/linkedin':
+            self._send(200, load_json('career_linkedin.json', {'connected': False}))
+
+        elif path == '/api/career/companies':
+            self._send(200, load_json('career_companies.json', {'companies': []}))
+
         else:
             self._send(404, {'error': 'Unknown API route: ' + path})
 
@@ -219,6 +373,166 @@ class COSHandler(http.server.SimpleHTTPRequestHandler):
             ds['_updated'] = ts()
             save_json('data_sources.json', ds)
             self._send(200, {'ok': True, 'updated': updated})
+
+        # ── Career Intelligence POST routes ───────────────────────────────────
+
+        elif path == '/api/career/memory/refresh':
+            result = _refresh_career_memory()
+            self._send(200, {
+                'ok': True,
+                'doc_count':    result.get('_doc_count', 0),
+                'total_words':  result.get('_total_words', 0),
+                'refreshed_at': result.get('_last_refresh'),
+                'source_docs':  result.get('_source_docs', [])
+            })
+
+        elif path == '/api/career/jobs/save':
+            jobs_data = load_json('career_jobs.json', {'jobs': []})
+            job = {
+                'id':               body.get('id') or 'job_' + str(int(datetime.now().timestamp())),
+                'title':            body.get('title', ''),
+                'company':          body.get('company', ''),
+                'salary_min':       body.get('salary_min') or body.get('salary'),
+                'salary_max':       body.get('salary_max'),
+                'location':         body.get('location', ''),
+                'work_type':        body.get('work_type', 'unknown'),
+                'description':      body.get('description', ''),
+                'url':              body.get('url', ''),
+                'source':           body.get('source', 'manual'),
+                'skills':           body.get('skills', []),
+                'stage':            body.get('stage', 'saved'),
+                'ats_score':        body.get('ats_score'),
+                'missing_keywords': body.get('missing_keywords', []),
+                'cover_letter_ready': body.get('cover_letter_ready', False),
+                'notes':            body.get('notes', ''),
+                'nova_score':       body.get('nova_score'),
+                'nova_reason':      body.get('nova_reason', ''),
+                'saved_at':         ts(),
+                'applied_at':       None,
+                'offer_details':    None,
+            }
+            jobs_data['jobs'] = [j for j in jobs_data.get('jobs', []) if j.get('id') != job['id']]
+            jobs_data['jobs'].append(job)
+            jobs_data['_updated'] = ts()
+            save_json('career_jobs.json', jobs_data)
+            self._send(200, {'ok': True, 'job': job})
+
+        elif path == '/api/career/jobs/update':
+            job_id = body.get('id', '')
+            if not job_id:
+                return self._send(400, {'error': 'id required'})
+            jobs_data = load_json('career_jobs.json', {'jobs': []})
+            updated = False
+            allowed = ['stage', 'notes', 'ats_score', 'missing_keywords', 'cover_letter_ready',
+                       'applied_at', 'offer_details', 'nova_score', 'nova_reason', 'title',
+                       'company', 'salary_min', 'location', 'url', 'description']
+            for j in jobs_data.get('jobs', []):
+                if j.get('id') == job_id:
+                    for k in allowed:
+                        if k in body:
+                            j[k] = body[k]
+                    if body.get('stage') == 'applied' and not j.get('applied_at'):
+                        j['applied_at'] = ts()
+                    j['_updated_at'] = ts()
+                    updated = True
+            jobs_data['_updated'] = ts()
+            save_json('career_jobs.json', jobs_data)
+            self._send(200, {'ok': True, 'updated': updated})
+
+        elif path == '/api/career/jobs/remove':
+            job_id = body.get('id', '')
+            if not job_id:
+                return self._send(400, {'error': 'id required'})
+            jobs_data = load_json('career_jobs.json', {'jobs': []})
+            before = len(jobs_data.get('jobs', []))
+            jobs_data['jobs'] = [j for j in jobs_data.get('jobs', []) if j.get('id') != job_id]
+            jobs_data['_updated'] = ts()
+            save_json('career_jobs.json', jobs_data)
+            self._send(200, {'ok': True, 'removed': before - len(jobs_data['jobs'])})
+
+        elif path == '/api/career/recommendations/create':
+            recs = load_json('career_recommendations.json', {'recommendations': []})
+            rec = {
+                'id':                 'rec_' + str(int(datetime.now().timestamp())),
+                'job_id':             body.get('job_id', ''),
+                'title':              body.get('title', ''),
+                'company':            body.get('company', ''),
+                'salary':             body.get('salary', ''),
+                'ats_match':          body.get('ats_match', 0),
+                'missing_keywords':   body.get('missing_keywords', []),
+                'resume_updated':     body.get('resume_updated', False),
+                'cover_letter_ready': body.get('cover_letter_ready', False),
+                'financial_impact':   body.get('financial_impact', 'unknown'),
+                'location':           body.get('location', ''),
+                'location_match':     body.get('location_match', False),
+                'recommendation':     body.get('recommendation', 'review'),
+                'orion_notes':        body.get('orion_notes', ''),
+                'status':             'awaiting_approval',
+                'created_at':         ts(),
+                'reviewed_at':        None,
+                'ceo_decision':       None,
+            }
+            recs.setdefault('recommendations', []).append(rec)
+            recs['_updated'] = ts()
+            save_json('career_recommendations.json', recs)
+            self._send(200, {'ok': True, 'recommendation': rec})
+
+        elif path == '/api/career/recommendations/action':
+            rec_id   = body.get('id', '')
+            decision = body.get('decision', '')
+            if not rec_id or decision not in ('approved', 'rejected'):
+                return self._send(400, {'error': 'id and decision (approved/rejected) required'})
+            recs = load_json('career_recommendations.json', {'recommendations': []})
+            updated = False
+            for r in recs.get('recommendations', []):
+                if r.get('id') == rec_id:
+                    r['ceo_decision'] = decision
+                    r['status']       = decision
+                    r['reviewed_at']  = ts()
+                    updated = True
+            recs['_updated'] = ts()
+            save_json('career_recommendations.json', recs)
+            self._send(200, {'ok': True, 'updated': updated})
+
+        elif path == '/api/career/linkedin/import':
+            li = load_json('career_linkedin.json', {})
+            li['connected']     = False  # Manual import only — no OAuth token
+            li['import_method'] = 'manual'
+            li['last_imported'] = ts()
+            allowed_li = ['headline', 'profile_url', 'summary', 'experience', 'education',
+                          'skills', 'certifications', 'name', 'location']
+            for k in allowed_li:
+                if k in body:
+                    li[k] = body[k]
+            # Cross-reference with resume skills from memory
+            mem = load_json('career_memory.json', {})
+            resume_skills = mem.get('profile', {}).get('skills', [])
+            li_skills     = body.get('skills', [])
+            if resume_skills and li_skills:
+                li['discrepancies'] = {
+                    'on_resume_not_linkedin': [s for s in resume_skills if s not in li_skills],
+                    'on_linkedin_not_resume':  [s for s in li_skills if s not in resume_skills],
+                }
+            save_json('career_linkedin.json', li)
+            self._send(200, {'ok': True, 'profile': li})
+
+        elif path == '/api/career/companies/add':
+            companies = load_json('career_companies.json', {'companies': []})
+            co = {
+                'id':                  'co_' + str(int(datetime.now().timestamp())),
+                'name':                body.get('name', ''),
+                'priority':            body.get('priority', 'medium'),
+                'reason':              body.get('reason', ''),
+                'applications':        [],
+                'recruiter_contacts':  [],
+                'interview_history':   [],
+                'status':              'tracking',
+                'added_at':            ts(),
+            }
+            companies.setdefault('companies', []).append(co)
+            companies['_updated'] = ts()
+            save_json('career_companies.json', companies)
+            self._send(200, {'ok': True, 'company': co})
 
         else:
             self._send(404, {'error': 'Unknown API route: ' + path})

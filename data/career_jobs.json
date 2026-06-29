@@ -1,0 +1,6 @@
+{
+  "_version": "1.0",
+  "_updated": null,
+  "_note": "Persistent application pipeline. Every job stays in this file. Stages: saved, reviewing, ready_to_apply, applied, interview_scheduled, interview_complete, offer, rejected, withdrawn.",
+  "jobs": []
+}

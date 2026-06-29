@@ -1,19 +1,17 @@
 {
   "_version": "1.0",
-  "_updated": "2026-06-29",
+  "_updated": "2026-06-29T18:07:16.439726",
   "_note": "Tracks all data sources across every department. OAuth connections are managed in connections.json. Update 'status' here as you connect sources. Do not store credentials or tokens in this file.",
-
   "sources": [
-
     {
       "source_id": "local_resume",
       "label": "Resume File",
       "department": "career",
       "type": "file",
-      "status": "not_connected",
+      "status": "connected",
       "file_path": "data/documents/resume.pdf",
-      "last_checked": null,
-      "notes": "Place your resume PDF at data/documents/resume.pdf, then register it via POST /api/documents/register.",
+      "last_checked": "2026-06-29T18:07:16.439705",
+      "notes": "Zimiah_Gladney_ATS_Resume_v2.docx registered in career/",
       "requires_auth": false,
       "approval_required": false
     },
@@ -65,7 +63,6 @@
       "requires_auth": true,
       "approval_required": false
     },
-
     {
       "source_id": "local_budget_file",
       "label": "Budget File",
@@ -102,7 +99,6 @@
       "requires_auth": false,
       "approval_required": false
     },
-
     {
       "source_id": "google_calendar",
       "label": "Google Calendar",
@@ -139,7 +135,6 @@
       "requires_auth": false,
       "approval_required": false
     },
-
     {
       "source_id": "nmap",
       "label": "Nmap (Local Tool)",
@@ -176,7 +171,6 @@
       "requires_auth": true,
       "approval_required": false
     },
-
     {
       "source_id": "etsy",
       "label": "Etsy Shop",
@@ -213,7 +207,6 @@
       "requires_auth": false,
       "approval_required": false
     },
-
     {
       "source_id": "google_drive",
       "label": "Google Drive",

@@ -1,0 +1,17 @@
+{
+  "_version": "1.0",
+  "_note": "LinkedIn profile data — manual import only. No tokens stored here. Import via POST /api/career/linkedin/import or the LinkedIn Import panel in Career Intelligence.",
+  "connected": false,
+  "import_method": null,
+  "last_imported": null,
+  "name": "",
+  "headline": "",
+  "profile_url": "",
+  "summary": "",
+  "location": "",
+  "experience": [],
+  "education": [],
+  "skills": [],
+  "certifications": [],
+  "discrepancies": {}
+}

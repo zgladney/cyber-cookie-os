@@ -1679,3 +1679,278 @@ body { overflow-y: auto !important; }
 
 .sp-scoutMsg  { color: rgba(220,200,180,.45); flex: 1; min-width: 0; }
 .sp-scoutTime { color: rgba(196,120,74,.35);  font-size: 7px; margin-left: auto; white-space: nowrap; }
+
+/* =============================================
+   PHASE 18 — Career Intelligence Real Data
+   Knowledge Base, Career Memory, LinkedIn,
+   ORION Recommendations
+============================================= */
+
+/* ── Knowledge Base (right panel) ─────────── */
+
+.cic-kbDoc {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 0;
+}
+.cic-kbDot {
+    font-size: 7px;
+    flex-shrink: 0;
+    line-height: 1;
+}
+.cic-kbName {
+    font-size: 6px;
+    letter-spacing: .5px;
+    color: rgba(200,160,255,.55);
+    font-family: 'Courier New', monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 130px;
+}
+.cic-kb-indexed { color: rgba(46,204,113,.85); }
+.cic-kb-partial { color: rgba(255,210,80,.7); }
+.cic-kb-empty   { color: rgba(255,100,100,.5); }
+.cic-kb-pending { color: rgba(200,160,255,.3); }
+.cic-kbMeta {
+    font-size: 5.5px;
+    color: rgba(200,160,255,.3);
+    letter-spacing: .5px;
+    margin-top: 6px;
+    font-family: 'Courier New', monospace;
+}
+
+/* ── Knowledge Base (workspace) ───────────── */
+
+.cic-kbRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: rgba(123,107,255,.03);
+    border: 1px solid rgba(123,107,255,.1);
+    border-radius: 4px;
+}
+.cic-kbRow:hover { background: rgba(123,107,255,.06); }
+.cic-kbRowIcon { font-size: 16px; flex-shrink: 0; }
+.cic-kbRowBody { flex: 1; min-width: 0; }
+.cic-kbRowName {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    color: rgba(200,160,255,.8);
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+}
+.cic-kbRowMeta {
+    font-size: 7px;
+    color: rgba(200,160,255,.35);
+    margin-top: 3px;
+    letter-spacing: .5px;
+}
+.cic-kbRowRight {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    flex-shrink: 0;
+}
+.cic-kbStatusPill {
+    font-size: 6px;
+    letter-spacing: 1.2px;
+    padding: 2px 8px;
+    border-radius: 2px;
+    border: 1px solid;
+    font-family: 'Courier New', monospace;
+}
+.cic-kbStatusPill.cic-kb-indexed {
+    color: rgba(46,204,113,.85);
+    border-color: rgba(46,204,113,.3);
+    background: rgba(46,204,113,.06);
+}
+.cic-kbStatusPill.cic-kb-pending {
+    color: rgba(200,160,255,.4);
+    border-color: rgba(200,160,255,.15);
+    background: rgba(200,160,255,.03);
+}
+.cic-kbStatusPill.cic-kb-empty {
+    color: rgba(255,100,100,.6);
+    border-color: rgba(255,100,100,.2);
+}
+.cic-kbRowDate { font-size: 5.5px; color: rgba(200,160,255,.25); }
+
+.cic-kbStat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3px 0;
+    font-size: 7px;
+    color: rgba(200,160,255,.45);
+    letter-spacing: .8px;
+    border-bottom: 1px solid rgba(255,255,255,.03);
+    font-family: 'Courier New', monospace;
+}
+.cic-kbStat span:last-child { color: rgba(230,210,255,.7); font-weight: 700; }
+
+.cic-kbRefreshMsg {
+    font-size: 7px;
+    color: rgba(200,160,255,.4);
+    letter-spacing: .5px;
+}
+
+/* ── LinkedIn panel ───────────────────────── */
+
+.cic-liMsg {
+    font-size: 7px;
+    color: rgba(46,204,113,.7);
+    letter-spacing: .8px;
+    margin-top: 6px;
+}
+
+/* ── ORION Recommendations (right panel) ──── */
+
+.cic-recCard {
+    border-left: 2px solid rgba(255,210,80,.3);
+}
+.cic-recRole {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(230,210,255,.9);
+    font-family: 'Courier New', monospace;
+    margin-bottom: 2px;
+}
+.cic-recCompany {
+    font-size: 7.5px;
+    letter-spacing: 1.5px;
+    color: rgba(200,160,255,.5);
+    margin-bottom: 8px;
+}
+.cic-recVerdict {
+    font-size: 12px;
+    letter-spacing: 3px;
+    font-weight: 900;
+    color: rgba(255,210,80,.9);
+    text-align: center;
+    padding: 6px;
+    border: 1px solid rgba(255,210,80,.25);
+    border-radius: 3px;
+    background: rgba(255,210,80,.05);
+    margin: 8px 0;
+    font-family: 'Courier New', monospace;
+}
+.cic-recVerdict.cic-verd-apply {
+    color: rgba(46,204,113,.95);
+    border-color: rgba(46,204,113,.3);
+    background: rgba(46,204,113,.06);
+}
+.cic-recVerdict.cic-verd-skip {
+    color: rgba(255,80,80,.8);
+    border-color: rgba(255,80,80,.25);
+    background: rgba(255,80,80,.04);
+}
+.cic-recOrion {
+    font-size: 5.5px;
+    color: rgba(200,160,255,.35);
+    line-height: 1.6;
+    letter-spacing: .4px;
+    margin-bottom: 4px;
+}
+.cic-recNav {
+    font-size: 6px;
+    color: rgba(200,160,255,.3);
+    text-align: center;
+    margin-top: 4px;
+    letter-spacing: 1px;
+}
+
+.cic-btn-approve {
+    background: rgba(46,204,113,.1) !important;
+    border-color: rgba(46,204,113,.35) !important;
+    color: rgba(100,255,150,.9) !important;
+    flex: 1;
+}
+.cic-btn-reject {
+    background: rgba(255,80,80,.07) !important;
+    border-color: rgba(255,80,80,.3) !important;
+    color: rgba(255,120,120,.8) !important;
+    flex: 1;
+}
+
+/* ── ORION Recommendations (workspace) ─────── */
+
+.cic-recRow {
+    display: flex;
+    gap: 14px;
+    padding: 14px;
+    background: rgba(255,210,80,.02);
+    border: 1px solid rgba(255,210,80,.1);
+    border-left: 3px solid rgba(255,210,80,.3);
+    border-radius: 4px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+}
+.cic-recRowLeft  { flex: 1; min-width: 0; }
+.cic-recRowRight { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+
+.cic-recRowTitle {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(230,210,255,.85);
+    font-family: 'Courier New', monospace;
+    margin-bottom: 3px;
+}
+.cic-recRowCompany {
+    font-size: 8px;
+    color: rgba(200,160,255,.5);
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+.cic-recRowMeta {
+    font-size: 7px;
+    color: rgba(200,160,255,.4);
+    letter-spacing: .5px;
+}
+.cic-recRowNotes {
+    font-size: 6.5px;
+    color: rgba(200,160,255,.3);
+    margin-top: 6px;
+    line-height: 1.6;
+    letter-spacing: .3px;
+}
+.cic-verdictPill {
+    font-size: 7px;
+    letter-spacing: 1.5px;
+    padding: 3px 10px;
+    border-radius: 2px;
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+}
+.cic-verdict-apply  { background: rgba(46,204,113,.1);  color: rgba(46,204,113,.9);  border: 1px solid rgba(46,204,113,.3); }
+.cic-verdict-review { background: rgba(255,210,80,.08); color: rgba(255,210,80,.85); border: 1px solid rgba(255,210,80,.25); }
+.cic-verdict-skip   { background: rgba(255,80,80,.06);  color: rgba(255,80,80,.8);   border: 1px solid rgba(255,80,80,.2); }
+.cic-recStatus {
+    font-size: 6.5px;
+    letter-spacing: 1px;
+    color: rgba(200,160,255,.4);
+    font-family: 'Courier New', monospace;
+}
+
+.ws-btn-sm {
+    font-size: 8px !important;
+    padding: 4px 10px !important;
+    letter-spacing: 1px !important;
+}
+
+/* ── EVALUATE button (job search cards) ─────── */
+.sp-btnEval {
+    background: rgba(255,210,80,.07) !important;
+    border: 1px solid rgba(255,210,80,.3) !important;
+    color: rgba(255,210,80,.85) !important;
+    font-size: 6.5px !important;
+    letter-spacing: 1px !important;
+    cursor: pointer;
+    border-radius: 3px;
+    padding: 4px 10px;
+    transition: background .2s;
+}
+.sp-btnEval:hover { background: rgba(255,210,80,.14) !important; }

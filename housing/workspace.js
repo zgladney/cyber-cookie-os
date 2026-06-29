@@ -435,6 +435,7 @@ function cicJobMatch(job) {
           '<button class="sp-btnSm sp-btnSchedule" data-action="interview" data-id="' + j.id + '">📅 INTERVIEW</button>' +
           '<button class="sp-btnSm sp-btnCopy"     data-action="copy"      data-id="' + j.id + '">📋 COPY MSG</button>' +
           '<button class="sp-btnSm sp-btnScout"    data-action="analyze"   data-id="' + j.id + '">🧠 SKILL GAP</button>' +
+          '<button class="sp-btnSm sp-btnEval"     data-action="evaluate"  data-id="' + j.id + '">★ EVALUATE</button>' +
           (j.link
             ? '<a href="' + j.link + '" target="_blank" rel="noopener noreferrer" class="sp-btnSm sp-btnOpen">🔗 OPEN LISTING</a>'
             : '<span class="sp-btnSm" style="opacity:.28;cursor:not-allowed" title="No listing URL available">NO LINK</span>') +
@@ -523,12 +524,59 @@ function cicJobMatch(job) {
       el.addEventListener('click', function () {
         var id     = this.getAttribute('data-id');
         var action = this.getAttribute('data-action');
-        if (action === 'save')      { toggleSave(id);                       runSearch(); }
+        if (action === 'save') {
+          toggleSave(id);
+          /* Also mirror to server via CareerMemory */
+          if (window.CareerMemory) {
+            var pool2 = currentDisplayed.length ? currentDisplayed : JOB_LISTINGS;
+            var jd = null;
+            for (var pi = 0; pi < pool2.length; pi++) { if (pool2[pi].id === id) { jd = pool2[pi]; break; } }
+            if (jd) {
+              var saved2 = getSaved();
+              if (saved2.indexOf(id) >= 0) {
+                CareerMemory.saveJob({ id: jd.id, title: jd.title, company: jd.company, salary_min: jd.salary, location: jd.location, work_type: jd.workType, description: jd.desc, url: jd.link, source: jd.source, skills: jd.skills || [], stage: 'saved' });
+              } else {
+                CareerMemory.removeJob(jd.id);
+              }
+            }
+          }
+          runSearch();
+        }
         if (action === 'hide')      { hideJob(id);                          runSearch(); }
-        if (action === 'apply')     { setStatus(id, 'applied');             runSearch(); }
-        if (action === 'interview') { setStatus(id, 'interview_scheduled'); runSearch(); }
+        if (action === 'apply')     { setStatus(id, 'applied');
+          if (window.CareerMemory) { CareerMemory.updateJob(id, { stage: 'applied' }); }
+          runSearch(); }
+        if (action === 'interview') { setStatus(id, 'interview_scheduled');
+          if (window.CareerMemory) { CareerMemory.updateJob(id, { stage: 'interview_scheduled' }); }
+          runSearch(); }
         if (action === 'copy')      { copyRecruiterMsg(); }
         if (action === 'analyze')   { triggerSkillGap(id); }
+        if (action === 'evaluate')  {
+          var pool3 = currentDisplayed.length ? currentDisplayed : JOB_LISTINGS;
+          var jev = null;
+          for (var ei = 0; ei < pool3.length; ei++) { if (pool3[ei].id === id) { jev = pool3[ei]; break; } }
+          if (jev && window.CareerMemory) {
+            showToast('ORION evaluating ' + jev.title + '...');
+            CareerMemory.evaluateJob(jev, function (rec) {
+              showToast('✓ Evaluation complete — verdict: ' + (rec.recommendation || 'REVIEW').toUpperCase() + '. Check ORION panel.');
+              var recList = document.getElementById('cic-recList');
+              if (recList) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', '/api/career/recommendations', true);
+                xhr.onreadystatechange = function () {
+                  if (xhr.readyState !== 4 || xhr.status !== 200) return;
+                  try {
+                    var data = JSON.parse(xhr.responseText);
+                    if (typeof window._renderRecs === 'function') window._renderRecs(data.recommendations || []);
+                  } catch (e) {}
+                };
+                xhr.send();
+              }
+            });
+          } else {
+            showToast('Career Memory not ready. Click REFRESH KNOWLEDGE BASE first.');
+          }
+        }
       }.bind(el));
     });
 

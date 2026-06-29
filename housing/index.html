@@ -310,6 +310,53 @@
                 <span class="data-status-badge" data-dept="career" id="cic-dataBadge">● SIMULATED</span>
             </div>
 
+            <!-- Knowledge Base -->
+            <div class="cic-card" id="cic-kbCard">
+                <div class="cic-cardTitle">// KNOWLEDGE BASE</div>
+                <div id="cic-kbDocs">
+                    <div class="cic-kbDoc"><span class="cic-kbDot cic-kb-pending">○</span><span class="cic-kbName">Loading documents...</span></div>
+                </div>
+                <button class="cic-cardBtn" id="cic-refreshMemBtn">↻ INDEX DOCUMENTS</button>
+                <div class="cic-kbMeta" id="cic-kbMeta"></div>
+            </div>
+
+            <!-- Career Memory -->
+            <div class="cic-card" id="cic-memCard">
+                <div class="cic-cardTitle">// CAREER MEMORY</div>
+                <div class="cic-statRow"><span>DOCUMENTS</span><span id="cic-mem-docCount">—</span></div>
+                <div class="cic-statRow"><span>SKILLS INDEXED</span><span id="cic-mem-skillCount">—</span></div>
+                <div class="cic-statRow"><span>LAST REFRESH</span><span id="cic-mem-lastRefresh" style="font-size:5px">—</span></div>
+                <div class="cic-statRow"><span>STATUS</span><span class="cic-warn" id="cic-mem-status">PENDING</span></div>
+            </div>
+
+            <!-- LinkedIn -->
+            <div class="cic-card" id="cic-liCard">
+                <div class="cic-cardTitle">// LINKEDIN</div>
+                <div class="cic-statRow"><span>METHOD</span><span class="cic-warn" id="cic-li-method">MANUAL IMPORT</span></div>
+                <div class="cic-statRow"><span>LAST IMPORT</span><span id="cic-li-imported" style="font-size:5px">—</span></div>
+                <div class="cic-statRow"><span>NAME</span><span id="cic-li-name">—</span></div>
+                <div class="cic-statRow"><span>DISCREPANCIES</span><span id="cic-li-disc">—</span></div>
+                <button class="cic-cardBtn" id="cic-liImportBtn">↓ IMPORT PROFILE</button>
+            </div>
+
+            <!-- ORION Executive Recommendation -->
+            <div class="cic-card cic-recCard" id="cic-recCard" style="display:none">
+                <div class="cic-cardTitle">// ORION RECOMMENDATION</div>
+                <div class="cic-recRole" id="cic-rec-role">—</div>
+                <div class="cic-recCompany" id="cic-rec-company">—</div>
+                <div class="cic-statRow"><span>ATS MATCH</span><span class="cic-ok" id="cic-rec-ats">—</span></div>
+                <div class="cic-statRow"><span>SALARY</span><span id="cic-rec-salary">—</span></div>
+                <div class="cic-statRow"><span>LOCATION</span><span id="cic-rec-loc">—</span></div>
+                <div class="cic-statRow"><span>FINANCE</span><span id="cic-rec-fin">—</span></div>
+                <div class="cic-recVerdict" id="cic-rec-verdict">APPLY</div>
+                <div class="cic-recOrion" id="cic-rec-orion"></div>
+                <div style="display:flex;gap:6px;margin-top:8px">
+                    <button class="cic-cardBtn cic-btn-approve" id="cic-rec-approve">✓ APPROVE</button>
+                    <button class="cic-cardBtn cic-btn-reject" id="cic-rec-reject">✗ DECLINE</button>
+                </div>
+                <div class="cic-recNav" id="cic-recNav"></div>
+            </div>
+
             <!-- Best Opportunity -->
             <div class="cic-card">
                 <div class="cic-cardTitle">// BEST MATCH</div>
@@ -340,6 +387,133 @@
     <span class="ws-sub">// Nova · Resu-Mate · Scout-X — Track · Search · Analyze · Optimize</span>
   </div>
   <div class="ws-body" style="flex-direction:column">
+
+    <!-- ══ KNOWLEDGE BASE ══ -->
+    <div class="ws-panel ws-panel-full" id="cic-kbPanel">
+      <div class="ws-pTitle" style="display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+        <span style="font-size:11px;letter-spacing:3px">📚 CAREER KNOWLEDGE BASE — Document Intelligence</span>
+        <span style="font-size:7px;color:rgba(123,107,255,.5);letter-spacing:1px">data/documents/career/ · Auto-indexed · Powers Nova · Resu-Mate · Scout-X</span>
+      </div>
+
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start">
+
+        <!-- Doc list -->
+        <div style="flex:2 1 340px">
+          <div id="cic-kbDocTable" style="display:flex;flex-direction:column;gap:6px">
+            <div style="font-size:8px;color:rgba(200,160,255,.3);letter-spacing:1px">Loading documents...</div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+            <button class="ws-btn" id="cic-kbRefreshBtn" style="background:rgba(123,107,255,.08);border-color:rgba(123,107,255,.35);color:rgba(180,160,255,.85)">↻ REFRESH KNOWLEDGE BASE</button>
+            <span class="cic-kbRefreshMsg" id="cic-kbRefreshMsg" style="font-size:7px;color:rgba(200,160,255,.4);align-self:center"></span>
+          </div>
+        </div>
+
+        <!-- Memory summary -->
+        <div style="flex:1 1 200px;background:rgba(123,107,255,.04);border:1px solid rgba(123,107,255,.1);border-radius:4px;padding:12px">
+          <div style="font-size:8px;letter-spacing:2px;color:rgba(200,160,255,.5);margin-bottom:10px">MEMORY PROFILE</div>
+          <div class="cic-kbStat"><span>TOTAL DOCS</span><span id="cic-kb-docTotal">—</span></div>
+          <div class="cic-kbStat"><span>TOTAL WORDS</span><span id="cic-kb-wordTotal">—</span></div>
+          <div class="cic-kbStat"><span>SKILLS EXTRACTED</span><span id="cic-kb-skillTotal">—</span></div>
+          <div class="cic-kbStat"><span>LAST INDEXED</span><span id="cic-kb-lastIdx" style="font-size:6px">—</span></div>
+          <div class="cic-kbStat"><span>VERSION</span><span id="cic-kb-version">—</span></div>
+          <div style="margin-top:10px">
+            <div style="font-size:7px;letter-spacing:1.5px;color:rgba(200,160,255,.4);margin-bottom:6px">TOP SKILLS (from docs)</div>
+            <div id="cic-kb-skillPreview" style="font-size:6px;color:rgba(180,140,255,.55);line-height:2"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══ LINKEDIN IMPORT ══ -->
+    <div class="ws-panel ws-panel-full" id="cic-liPanel">
+      <div class="ws-pTitle" style="display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+        <span style="font-size:11px;letter-spacing:3px">🔗 LINKEDIN PROFILE — Manual Import</span>
+        <span style="font-size:7px;color:rgba(123,107,255,.5);letter-spacing:1px">No OAuth required · Paste your profile data · Stored in Career Memory</span>
+      </div>
+
+      <div style="display:flex;gap:18px;flex-wrap:wrap">
+
+        <!-- Import form -->
+        <div class="ws-panel ws-panel-narrow" style="flex:1 1 300px">
+          <div class="ws-pTitle" style="font-size:8px">IMPORT / UPDATE PROFILE</div>
+          <div class="ws-form">
+            <div class="ws-form-row">
+              <div class="ws-field">
+                <label class="ws-label">FULL NAME</label>
+                <input class="ws-input" id="li-name" type="text" placeholder="Zimiah Gladney" />
+              </div>
+              <div class="ws-field">
+                <label class="ws-label">HEADLINE</label>
+                <input class="ws-input" id="li-headline" type="text" placeholder="IT Support Specialist | Cybersecurity Student" />
+              </div>
+            </div>
+            <div class="ws-form-row">
+              <div class="ws-field">
+                <label class="ws-label">PROFILE URL</label>
+                <input class="ws-input" id="li-url" type="text" placeholder="linkedin.com/in/your-username" />
+              </div>
+              <div class="ws-field">
+                <label class="ws-label">LOCATION</label>
+                <input class="ws-input" id="li-location" type="text" placeholder="South Jersey, NJ" />
+              </div>
+            </div>
+            <div class="ws-field">
+              <label class="ws-label">SUMMARY / ABOUT</label>
+              <textarea class="ws-input" id="li-summary" rows="3" placeholder="Paste your LinkedIn About section..."></textarea>
+            </div>
+            <div class="ws-field">
+              <label class="ws-label">LINKEDIN SKILLS (comma-separated)</label>
+              <textarea class="ws-input" id="li-skills" rows="3" placeholder="Windows 10, Active Directory, CompTIA A+, Customer Service, Networking..."></textarea>
+            </div>
+            <div class="ws-field">
+              <label class="ws-label">CERTIFICATIONS (comma-separated)</label>
+              <input class="ws-input" id="li-certs" type="text" placeholder="CompTIA A+, Google IT Support..." />
+            </div>
+            <button class="ws-btn ws-btn-full" id="cic-liSaveBtn" style="background:rgba(123,107,255,.08);border-color:rgba(123,107,255,.35);color:rgba(180,160,255,.9)">↓ SAVE TO CAREER MEMORY</button>
+            <div class="cic-liMsg" id="cic-liMsg"></div>
+          </div>
+        </div>
+
+        <!-- Current import status -->
+        <div style="flex:1 1 260px;display:flex;flex-direction:column;gap:10px">
+          <div style="background:rgba(123,107,255,.04);border:1px solid rgba(123,107,255,.1);border-radius:4px;padding:14px">
+            <div style="font-size:8px;letter-spacing:2px;color:rgba(200,160,255,.5);margin-bottom:10px">CURRENT IMPORT</div>
+            <div class="cic-kbStat"><span>NAME</span><span id="li-cur-name">—</span></div>
+            <div class="cic-kbStat"><span>HEADLINE</span><span id="li-cur-headline" style="font-size:6px">—</span></div>
+            <div class="cic-kbStat"><span>LAST IMPORT</span><span id="li-cur-imported" style="font-size:6px">—</span></div>
+            <div class="cic-kbStat"><span>LI SKILLS</span><span id="li-cur-skillCount">—</span></div>
+          </div>
+          <div style="background:rgba(255,210,80,.03);border:1px solid rgba(255,210,80,.12);border-radius:4px;padding:14px" id="cic-liDiscPanel" style="display:none">
+            <div style="font-size:8px;letter-spacing:2px;color:rgba(255,210,80,.5);margin-bottom:8px">DISCREPANCIES DETECTED</div>
+            <div style="font-size:7px;color:rgba(255,210,80,.4);margin-bottom:6px">On resume, not LinkedIn:</div>
+            <div id="li-disc-onResume" style="font-size:6px;color:rgba(255,200,80,.6);line-height:1.8"></div>
+            <div style="font-size:7px;color:rgba(255,210,80,.4);margin-top:8px;margin-bottom:6px">On LinkedIn, not resume:</div>
+            <div id="li-disc-onLinkedIn" style="font-size:6px;color:rgba(255,200,80,.6);line-height:1.8"></div>
+          </div>
+          <div style="background:rgba(123,107,255,.03);border:1px solid rgba(123,107,255,.08);border-radius:4px;padding:12px">
+            <div style="font-size:7px;color:rgba(200,160,255,.35);line-height:1.8">
+              ● No LinkedIn API key required<br>
+              ● Data stored locally in data/career_linkedin.json<br>
+              ● Compared against indexed resume skills<br>
+              ● Update any time — old data replaced
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══ ORION RECOMMENDATIONS ══ -->
+    <div class="ws-panel ws-panel-full" id="cic-orionPanel">
+      <div class="ws-pTitle" style="display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+        <span style="font-size:11px;letter-spacing:3px">⬡ ORION — EXECUTIVE RECOMMENDATIONS</span>
+        <span style="font-size:7px;color:rgba(123,107,255,.5);letter-spacing:1px">Nova · Resu-Mate · Finance · Scout-X evaluation complete · Awaiting CEO decision</span>
+      </div>
+      <div id="cic-recList">
+        <div style="font-size:8px;color:rgba(200,160,255,.25);letter-spacing:1px;padding:12px 0">No pending recommendations. Evaluate a job to generate one.</div>
+      </div>
+    </div>
 
     <!-- Row 1: Saved search criteria + Application tracker -->
     <div style="display:flex;gap:18px;flex-wrap:wrap">
@@ -581,7 +755,6 @@
 <!-- toast -->
 <div id="hs-toast" style="position:fixed;bottom:20px;right:20px;background:rgba(8,2,22,.95);border:1px solid rgba(123,107,255,.4);border-radius:6px;padding:10px 16px;font-size:9px;color:rgba(240,220,255,.8);letter-spacing:1px;opacity:0;transition:opacity .3s;z-index:999;pointer-events:none"></div>
 
-<script src="js/career_intel.js"></script>
 <script src="../js/cybercookieos.js"></script>
 <script src="../js/agent_runtime.js"></script>
 <script src="../js/output_engine.js"></script>
@@ -592,17 +765,257 @@
 <script src="../js/autonomous_ops.js"></script>
 <script src="../js/art_room_ui.js"></script>
 <script src="../js/agent_presence.js"></script>
+<script src="../js/career_memory.js"></script>
 <script src="workspace.js"></script>
 <script src="js/career_intel.js"></script>
 <script src="../js/company_life.js"></script>
 <script src="../js/cos_data_status.js"></script>
 
 <script>
-/* Phase 12: Page transition support */
+/* Page transitions */
 function navigateTo(url) {
   document.documentElement.classList.add("cos-nav-out");
   setTimeout(function () { window.location.href = url; }, 280);
 }
+
+/* ── Phase 18: Career Intelligence Real Data ── */
+
+function _fmtDate(iso) {
+  if (!iso) return '—';
+  try {
+    var d = new Date(iso);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' ' +
+           d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  } catch (e) { return iso.slice(0, 10); }
+}
+
+function _setText(id, val) {
+  var el = document.getElementById(id);
+  if (el) el.textContent = val || '—';
+}
+
+/* Render document knowledge base list */
+function _renderKbDocs(docs) {
+  var TYPE_ICONS = {
+    resume: '📄', skills_inventory: '🧠', achievements: '🏆',
+    career_preferences: '🎯', cover_letter: '✉', course_plan: '📘',
+    target_companies: '🏢', document: '📋'
+  };
+  var CONF_CLASS = { high: 'cic-kb-indexed', low: 'cic-kb-partial', empty: 'cic-kb-empty', unknown: 'cic-kb-pending' };
+
+  /* Right panel mini list */
+  var mini = document.getElementById('cic-kbDocs');
+  if (mini) {
+    if (!docs || !docs.length) {
+      mini.innerHTML = '<div class="cic-kbDoc"><span class="cic-kbDot cic-kb-pending">○</span><span class="cic-kbName">No .docx files found</span></div>';
+    } else {
+      mini.innerHTML = docs.map(function (d) {
+        var dot = d.status === 'indexed' ? '●' : '○';
+        var cls = d.status === 'indexed' ? 'cic-kb-indexed' : 'cic-kb-pending';
+        var name = d.filename.replace(/\.docx$/i, '').replace(/_/g, ' ');
+        return '<div class="cic-kbDoc"><span class="cic-kbDot ' + cls + '">' + dot + '</span><span class="cic-kbName">' + name + '</span></div>';
+      }).join('');
+    }
+  }
+
+  /* Workspace full table */
+  var table = document.getElementById('cic-kbDocTable');
+  if (table) {
+    if (!docs || !docs.length) {
+      table.innerHTML = '<div style="font-size:8px;color:rgba(200,160,255,.3)">Place .docx files in data/documents/career/ then click REFRESH KNOWLEDGE BASE.</div>';
+      return;
+    }
+    table.innerHTML = docs.map(function (d) {
+      var icon   = TYPE_ICONS[d.type] || '📋';
+      var conf   = d.confidence || 'unknown';
+      var cls    = CONF_CLASS[conf] || 'cic-kb-pending';
+      var label  = d.status === 'indexed' ? '● INDEXED' : '○ PENDING';
+      var agents = (d.used_in || []).join(' · ').toUpperCase();
+      var name   = d.filename.replace(/\.docx$/i, '').replace(/_/g, ' ');
+      return '<div class="cic-kbRow">' +
+        '<span class="cic-kbRowIcon">' + icon + '</span>' +
+        '<div class="cic-kbRowBody">' +
+          '<div class="cic-kbRowName">' + name + '</div>' +
+          '<div class="cic-kbRowMeta">' + (d.word_count || 0) + ' words · ' + (d.size_kb || 0) + ' KB · Used by: ' + (agents || '—') + '</div>' +
+        '</div>' +
+        '<div class="cic-kbRowRight">' +
+          '<span class="cic-kbStatusPill ' + cls + '">' + label + '</span>' +
+          '<div class="cic-kbRowDate">' + _fmtDate(d.indexed_at || d.last_modified) + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+}
+
+/* Render Career Memory summary */
+function _renderMemory(mem) {
+  if (!mem) return;
+  var docCount   = mem._doc_count || 0;
+  var skillCount = (mem.profile && mem.profile.skills) ? mem.profile.skills.length : 0;
+  var lastRef    = _fmtDate(mem._last_refresh);
+  var status     = docCount > 0 ? (skillCount > 0 ? 'INDEXED' : 'LOADED') : 'PENDING';
+  var statusEl   = document.getElementById('cic-mem-status');
+
+  _setText('cic-mem-docCount',    docCount);
+  _setText('cic-mem-skillCount',  skillCount || '—');
+  _setText('cic-mem-lastRefresh', lastRef);
+  if (statusEl) {
+    statusEl.textContent = status;
+    statusEl.className   = status === 'INDEXED' ? 'cic-ok' : 'cic-warn';
+  }
+
+  /* Workspace summary */
+  _setText('cic-kb-docTotal',   docCount);
+  _setText('cic-kb-wordTotal',  mem._total_words || '—');
+  _setText('cic-kb-skillTotal', skillCount || '—');
+  _setText('cic-kb-lastIdx',    lastRef);
+  _setText('cic-kb-version',    mem._version || '1.0');
+
+  /* Skill preview */
+  var preview = document.getElementById('cic-kb-skillPreview');
+  if (preview && skillCount > 0) {
+    preview.textContent = mem.profile.skills.slice(0, 12).join(' · ');
+  }
+
+  /* Update kb meta note */
+  _setText('cic-kbMeta', docCount + ' doc' + (docCount !== 1 ? 's' : '') + ' indexed · ' + (mem._total_words || 0) + ' words');
+}
+
+/* Render LinkedIn import status */
+function _renderLinkedIn(li) {
+  if (!li) return;
+  _setText('cic-li-method',   li.import_method === 'manual' ? 'MANUAL IMPORT' : 'NOT IMPORTED');
+  _setText('cic-li-imported', _fmtDate(li.last_imported));
+  _setText('cic-li-name',     li.name || '—');
+  var disc = li.discrepancies || {};
+  var totalDisc = ((disc.on_resume_not_linkedin || []).length) + ((disc.on_linkedin_not_resume || []).length);
+  _setText('cic-li-disc', totalDisc > 0 ? totalDisc + ' found' : 'none');
+
+  /* Workspace current import */
+  _setText('li-cur-name',       li.name || '—');
+  _setText('li-cur-headline',   li.headline || '—');
+  _setText('li-cur-imported',   _fmtDate(li.last_imported));
+  _setText('li-cur-skillCount', li.skills ? li.skills.length : '—');
+
+  /* Discrepancy panel */
+  var discPanel = document.getElementById('cic-liDiscPanel');
+  if (discPanel && totalDisc > 0) {
+    discPanel.style.display = 'block';
+    var onRes = document.getElementById('li-disc-onResume');
+    var onLi  = document.getElementById('li-disc-onLinkedIn');
+    if (onRes) onRes.textContent = (disc.on_resume_not_linkedin || []).slice(0, 10).join(', ') || '—';
+    if (onLi)  onLi.textContent  = (disc.on_linkedin_not_resume || []).slice(0, 10).join(', ') || '—';
+  }
+}
+
+/* Render ORION recommendations panel */
+var _recIdx = 0;
+function _renderRecs(recs) {
+  var pending = (recs || []).filter(function (r) { return r.status === 'awaiting_approval'; });
+
+  /* Mini right panel card */
+  var recCard = document.getElementById('cic-recCard');
+  if (recCard) {
+    if (!pending.length) {
+      recCard.style.display = 'none';
+    } else {
+      recCard.style.display = 'block';
+      _showRec(pending, _recIdx);
+    }
+  }
+
+  /* Workspace recommendations list */
+  var recList = document.getElementById('cic-recList');
+  if (!recList) return;
+  if (!recs || !recs.length) {
+    recList.innerHTML = '<div style="font-size:8px;color:rgba(200,160,255,.25);padding:12px 0">No recommendations yet. Click ★ EVALUATE on any job in the search panel.</div>';
+    return;
+  }
+  recList.innerHTML = recs.map(function (r, i) {
+    var vcls = r.recommendation === 'apply' ? 'cic-verdict-apply' : (r.recommendation === 'skip' ? 'cic-verdict-skip' : 'cic-verdict-review');
+    var scls = r.status === 'awaiting_approval' ? 'cic-warn' : (r.status === 'approved' ? 'cic-ok' : '');
+    return '<div class="cic-recRow">' +
+      '<div class="cic-recRowLeft">' +
+        '<div class="cic-recRowTitle">' + (r.title || '—') + '</div>' +
+        '<div class="cic-recRowCompany">' + (r.company || '—') + '</div>' +
+        '<div class="cic-recRowMeta">ATS: ' + (r.ats_match || 0) + '% · ' + (r.salary || 'salary unknown') + ' · ' + (r.location || '—') + '</div>' +
+        (r.orion_notes ? '<div class="cic-recRowNotes">' + r.orion_notes + '</div>' : '') +
+      '</div>' +
+      '<div class="cic-recRowRight">' +
+        '<span class="cic-verdictPill ' + vcls + '">' + (r.recommendation || 'review').toUpperCase() + '</span>' +
+        '<span class="cic-recStatus ' + scls + '">' + (r.status || '').replace(/_/g, ' ').toUpperCase() + '</span>' +
+        (r.status === 'awaiting_approval' ?
+          '<div style="display:flex;gap:4px;margin-top:6px">' +
+            '<button class="ws-btn ws-btn-sm cic-btn-approve" data-id="' + r.id + '">✓</button>' +
+            '<button class="ws-btn ws-btn-sm cic-btn-reject" data-id="' + r.id + '">✗</button>' +
+          '</div>' : '') +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  /* Wire approve/reject buttons */
+  recList.querySelectorAll('.cic-btn-approve').forEach(function (btn) {
+    btn.addEventListener('click', function () { _actRec(btn.getAttribute('data-id'), 'approved'); });
+  });
+  recList.querySelectorAll('.cic-btn-reject').forEach(function (btn) {
+    btn.addEventListener('click', function () { _actRec(btn.getAttribute('data-id'), 'rejected'); });
+  });
+}
+
+function _showRec(pending, idx) {
+  if (!pending.length) return;
+  if (idx >= pending.length) idx = 0;
+  var r = pending[idx];
+  _setText('cic-rec-role',    r.title || '—');
+  _setText('cic-rec-company', r.company || '—');
+  _setText('cic-rec-ats',     (r.ats_match || 0) + '%');
+  _setText('cic-rec-salary',  r.salary || '—');
+  _setText('cic-rec-loc',     r.location || '—');
+  _setText('cic-rec-fin',     (r.financial_impact || '—').replace(/_/g, ' ').toUpperCase());
+  _setText('cic-rec-verdict', (r.recommendation || 'REVIEW').toUpperCase());
+  _setText('cic-rec-orion',   r.orion_notes || '');
+  var verdEl = document.getElementById('cic-rec-verdict');
+  if (verdEl) {
+    verdEl.className = 'cic-recVerdict ' +
+      (r.recommendation === 'apply' ? 'cic-verd-apply' : (r.recommendation === 'skip' ? 'cic-verd-skip' : ''));
+  }
+  if (pending.length > 1) {
+    _setText('cic-recNav', (idx + 1) + ' / ' + pending.length + ' pending');
+  }
+  var approveBtn = document.getElementById('cic-rec-approve');
+  var rejectBtn  = document.getElementById('cic-rec-reject');
+  if (approveBtn) approveBtn.setAttribute('data-id', r.id);
+  if (rejectBtn)  rejectBtn.setAttribute('data-id', r.id);
+}
+
+function _actRec(id, decision) {
+  if (!id) return;
+  CareerMemory.actionRecommendation(id, decision, function () {
+    CareerMemory.getRecommendations ? null : null;
+    /* Reload recs from server */
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/api/career/recommendations', true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4 || xhr.status !== 200) return;
+      try {
+        var data = JSON.parse(xhr.responseText);
+        _renderRecs(data.recommendations || []);
+      } catch (e) {}
+    };
+    xhr.send();
+    _showToast(decision === 'approved' ? 'Approved — next steps logged.' : 'Declined — job moved to review.');
+  });
+}
+
+function _showToast(msg) {
+  var t = document.getElementById('hs-toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.style.opacity = '1';
+  setTimeout(function () { t.style.opacity = '0'; }, 3000);
+}
+
+/* ── DOMContentLoaded ── */
 document.addEventListener("DOMContentLoaded", function () {
   document.documentElement.classList.add("cos-nav-in");
   setTimeout(function () { document.documentElement.classList.remove("cos-nav-in"); }, 350);
@@ -613,16 +1026,121 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  /* Expose _renderRecs globally so workspace.js evaluate action can call it */
+  window._renderRecs = _renderRecs;
+
+  /* Ambient life engine */
   if (window.LIFE) {
     LIFE.boot('career', {
-      tasks: {
-        nova:     'cic-task-nova',
-        resuMate: 'cic-task-resu',
-        scoutX:   'cic-task-scoutx'
-      },
+      tasks: { nova: 'cic-task-nova', resuMate: 'cic-task-resu', scoutX: 'cic-task-scoutx' },
       logEl: 'cic-lifeFeed'
     });
   }
+
+  /* ── Phase 18: wire CareerMemory ── */
+  window._careerMemoryReady = function () {
+    var mem  = CareerMemory.raw();
+    var docs = CareerMemory.getSourceDocs();
+    var li   = CareerMemory.getLinkedIn();
+
+    _renderMemory(mem);
+    _renderKbDocs(docs.length ? docs : []);
+    _renderLinkedIn(li);
+
+    /* Update career status panel counts from real job data */
+    var counts = CareerMemory.getPipelineCounts();
+    _setText('cic-stat-jobs',       counts.total || '—');
+    _setText('cic-stat-saved',      counts.saved || 0);
+    _setText('cic-stat-applied',    counts.applied || 0);
+    _setText('cic-stat-interviews', counts.interview_scheduled || 0);
+    _setText('cic-mn-saved',        counts.saved || 0);
+    _setText('cic-mn-applied',      counts.applied || 0);
+    _setText('cic-mn-interviews',   counts.interview_scheduled || 0);
+    _setText('cic-mn-offers',       counts.offer || 0);
+
+    /* Load recs */
+    _renderRecs(CareerMemory.rawRecs() ? (CareerMemory.rawRecs().recommendations || []) : []);
+
+    /* Load doc list from server */
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/api/career/documents', true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4 || xhr.status !== 200) return;
+      try { _renderKbDocs(JSON.parse(xhr.responseText).documents || []); } catch (e) {}
+    };
+    xhr.send();
+
+    /* Load LinkedIn status */
+    var xhr2 = new XMLHttpRequest();
+    xhr2.open('GET', '/api/career/linkedin', true);
+    xhr2.onreadystatechange = function () {
+      if (xhr2.readyState !== 4 || xhr2.status !== 200) return;
+      try { _renderLinkedIn(JSON.parse(xhr2.responseText)); } catch (e) {}
+    };
+    xhr2.send();
+  };
+
+  /* ── Refresh Knowledge Base button ── */
+  function _doRefresh(btn, msgEl) {
+    if (btn) btn.disabled = true;
+    if (msgEl) msgEl.textContent = '↻ Indexing...';
+    CareerMemory.refresh(function (mem) {
+      _renderMemory(mem);
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', '/api/career/documents', true);
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState !== 4 || xhr.status !== 200) return;
+        try { _renderKbDocs(JSON.parse(xhr.responseText).documents || []); } catch (e) {}
+        if (btn) btn.disabled = false;
+        if (msgEl) msgEl.textContent = 'Indexed ' + _fmtDate(new Date().toISOString());
+      };
+      xhr.send();
+      _showToast('Knowledge base refreshed — ' + ((mem && mem._doc_count) || 0) + ' documents indexed.');
+    });
+  }
+
+  var kbBtn   = document.getElementById('cic-kbRefreshBtn');
+  var kbBtnMini = document.getElementById('cic-refreshMemBtn');
+  var kbMsg   = document.getElementById('cic-kbRefreshMsg');
+  if (kbBtn)     kbBtn.addEventListener('click',     function () { _doRefresh(kbBtn, kbMsg); });
+  if (kbBtnMini) kbBtnMini.addEventListener('click', function () { _doRefresh(kbBtnMini, null); });
+
+  /* ── LinkedIn import button ── */
+  var liSaveBtn = document.getElementById('cic-liSaveBtn');
+  var liImportBtn = document.getElementById('cic-liImportBtn');
+  function _doLiImport() {
+    var skillsRaw = (document.getElementById('li-skills') ? document.getElementById('li-skills').value : '') || '';
+    var certsRaw  = (document.getElementById('li-certs')  ? document.getElementById('li-certs').value  : '') || '';
+    var data = {
+      name:           document.getElementById('li-name')     ? document.getElementById('li-name').value.trim()     : '',
+      headline:       document.getElementById('li-headline') ? document.getElementById('li-headline').value.trim() : '',
+      profile_url:    document.getElementById('li-url')      ? document.getElementById('li-url').value.trim()      : '',
+      location:       document.getElementById('li-location') ? document.getElementById('li-location').value.trim() : '',
+      summary:        document.getElementById('li-summary')  ? document.getElementById('li-summary').value.trim()  : '',
+      skills:         skillsRaw.split(',').map(function (s) { return s.trim(); }).filter(Boolean),
+      certifications: certsRaw.split(',').map(function (s) { return s.trim(); }).filter(Boolean)
+    };
+    CareerMemory.importLinkedIn(data, function (err, result) {
+      if (!err && result && result.profile) {
+        _renderLinkedIn(result.profile);
+        _showToast('LinkedIn profile saved to Career Memory.');
+        var msg = document.getElementById('cic-liMsg');
+        if (msg) msg.textContent = '✓ Saved ' + _fmtDate(new Date().toISOString());
+      } else {
+        _showToast('Error saving LinkedIn profile.');
+      }
+    });
+  }
+  if (liSaveBtn)   liSaveBtn.addEventListener('click',   _doLiImport);
+  if (liImportBtn) liImportBtn.addEventListener('click', function () {
+    document.getElementById('cic-liPanel') && document.getElementById('cic-liPanel').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  /* ── Mini approve/reject in right panel ── */
+  var apBtn = document.getElementById('cic-rec-approve');
+  var rjBtn = document.getElementById('cic-rec-reject');
+  if (apBtn) apBtn.addEventListener('click', function () { _actRec(apBtn.getAttribute('data-id'), 'approved'); });
+  if (rjBtn) rjBtn.addEventListener('click', function () { _actRec(rjBtn.getAttribute('data-id'), 'rejected'); });
 });
 </script>
 <style>
