@@ -358,3 +358,42 @@
   });
 
 })();
+
+/* SOC integration — updates case board + sends notifications + adds scan log */
+(function () {
+  'use strict';
+
+  // Wait for DOM, then hook into the existing runScan / finalize flow
+  // We patch by listening to the cos:activity event Athena emits on scan complete
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof COS === 'undefined') return;
+
+    COS.events.on('cos:activity', function (e) {
+      if (!e || e.agent !== 'Athena' || !e.msg) return;
+      if (e.msg.indexOf('Scan complete') === -1) return;
+
+      // Notification toast
+      if (typeof COS !== 'undefined') {
+        COS.notifications.add('Security scan complete: ' + e.msg.slice(0, 70), 'high');
+      }
+
+      // Send to Report Center (OE)
+      if (typeof OE !== 'undefined') {
+        OE.generate(
+          { type: 'security_report', title: 'Threat Hunter Scan: ' + e.msg.slice(0, 50) },
+          'athena',
+          'security'
+        );
+      }
+
+      // Update SOCLive if available
+      if (typeof window.SOCLive !== 'undefined') {
+        setTimeout(function () {
+          window.SOCLive.updateCaseBoard();
+          window.SOCLive.updateLastScan();
+          window.SOCLive.updateReportsToday();
+        }, 600);
+      }
+    });
+  });
+})();

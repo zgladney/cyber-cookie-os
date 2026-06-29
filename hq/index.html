@@ -141,16 +141,6 @@
             <div id="lamp"></div>
             <div id="lampGlow"></div>
 
-            <!-- Floating holographic globe (above desk area) -->
-            <div id="hologram">
-                <div class="hOrbit h1"></div>
-                <div class="hOrbit h2"></div>
-                <div class="hCore"></div>
-            </div>
-
-            <!-- Headphones hanging on left wall -->
-            <div id="headphones">🎧</div>
-
             <!-- ═══════════════════════════ SERVER RACK ═══════════════════════════ -->
             <div id="serverRack" data-tip="SRV-01 | SLOT 3: WARN | SLOT 5: ALERT">
                 <div class="rackUnit"></div>
@@ -160,6 +150,29 @@
                 <div class="rackUnit ru-alert"></div>
                 <div id="rackFan"></div>
             </div>
+
+            <!-- Second server rack (layered in front, z-index 21) -->
+            <div id="serverRack2">
+                <div class="rackUnit"></div>
+                <div class="rackUnit ru-warn"></div>
+                <div class="rackUnit"></div>
+                <div class="rackUnit ru-alert"></div>
+                <div class="rackUnit"></div>
+            </div>
+
+            <!-- Cable tray across top of floor zone -->
+            <div id="cableTray"></div>
+
+            <!-- Router/switch below rack area -->
+            <div id="routerSwitch">
+                <div class="rtr-led rtr-led-on"></div>
+                <div class="rtr-led rtr-led-on"></div>
+                <div class="rtr-led rtr-led-blink"></div>
+                <div class="rtr-led rtr-led-on"></div>
+            </div>
+
+            <!-- Cooling fan -->
+            <div id="coolingFan">🌀</div>
 
             <!-- Floor cables -->
             <div id="cable1" class="floorCable"></div>
@@ -183,7 +196,6 @@
             <div id="floor"></div>
             <div id="floorGlow"></div>
 
-            <!-- ═══════════════════════════ WORKSTATION ═══════════════════════════ -->
             <!-- UPS / power unit beside server rack -->
             <div id="upsUnit">
               <div class="upsLed upsLed-green"></div>
@@ -193,29 +205,121 @@
               <div class="upsLabel">UPS-01</div>
             </div>
 
-            <div id="desk">
-                <!-- Athena: primary security monitor -->
-                <div class="monitor" id="securityMonitor" data-tip="ATHENA — THREAT ANALYSIS">🛡️</div>
-                <!-- Nimbus: network monitor -->
-                <div class="monitor center" id="networkMonitor" data-tip="NIMBUS — NETWORK MONITOR">📊</div>
-                <!-- Sentinel: AI scan -->
-                <div class="monitor right" id="aiMonitor" data-tip="SENTINEL — AI PATROL">🤖</div>
-                <!-- Agent name plaques -->
-                <div id="stationPlaques">
-                  <span class="sPlaqueItem">▸ ATHENA</span>
-                  <span class="sPlaqueItem sPlaqueNimbus">▸ NIMBUS</span>
-                  <span class="sPlaqueItem sPlaqueNimbus">▸ SENTINEL</span>
+            <!-- ═══════════════════════════ THREE WORKSTATIONS ═══════════════════════ -->
+
+            <!-- ATHENA — Threat Hunter Lead -->
+            <div class="soc-station" id="station-athena">
+                <div class="stn-monitors">
+                    <!-- Main monitor: embedded scan form -->
+                    <div class="stn-monitor stn-monitor-main">
+                        <div class="stn-hud">ATHENA // THREAT SCANNER</div>
+                        <div class="stn-body">
+                            <div id="hq-scanForm">
+                                <div class="soc-scanRow">
+                                    <input id="hq-scanIP" class="soc-inp" placeholder="192.168.x.x" type="text" />
+                                    <select id="hq-scanType" class="soc-inp">
+                                        <option value="quick">QUICK</option>
+                                        <option value="deep">DEEP</option>
+                                        <option value="stealth">STEALTH</option>
+                                    </select>
+                                    <button id="hq-runScan" class="soc-runBtn">▶ SCAN</button>
+                                </div>
+                                <div id="hq-scanProgress" style="display:none">
+                                    <div class="soc-barWrap"><div id="hq-scanBar" class="soc-bar"></div></div>
+                                    <div class="soc-scanMeta">
+                                        <span id="hq-scanStep" class="soc-step"></span>
+                                        <span id="hq-scanPct" class="soc-pct">0%</span>
+                                    </div>
+                                </div>
+                                <div id="hq-scanResult" style="display:none">
+                                    <div id="hq-scanOutput"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Secondary monitor: mini threat map -->
+                    <div class="stn-monitor stn-monitor-sm">
+                        <div class="stn-hud">THREAT MAP</div>
+                        <div class="stn-body">
+                            <svg viewBox="0 0 90 70" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+                                <line stroke="rgba(255,105,180,.25)" stroke-width="1" x1="10" y1="20" x2="45" y2="40"/>
+                                <line stroke="rgba(156,246,255,.2)" stroke-width="1" x1="45" y1="40" x2="80" y2="25"/>
+                                <line stroke="rgba(255,200,60,.15)" stroke-width="1" x1="25" y1="55" x2="45" y2="40"/>
+                                <circle cx="10" cy="20" r="3" fill="hotpink" opacity=".7"/>
+                                <circle cx="45" cy="40" r="3" fill="rgba(156,246,255,.8)" opacity=".7"/>
+                                <circle cx="80" cy="25" r="3" fill="#7dff9c" opacity=".7"/>
+                                <circle cx="25" cy="55" r="2" fill="hotpink" opacity=".5"/>
+                                <circle cx="70" cy="50" r="2" fill="rgba(255,200,60,.8)" opacity=".7"/>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
-                <!-- Desk props -->
-                <div id="deskProps">
-                  <span class="deskProp" title="Security Badge">🪪</span>
-                  <span class="deskProp" title="Notebook">📓</span>
-                  <span class="deskProp" title="USB Key">🔑</span>
+                <!-- Desk surface -->
+                <div class="stn-desk">
+                    <div class="stn-props">🪪 📓</div>
+                    <div class="stn-sprite" id="sprite-athena">A<span class="stn-sprite-lbl">ATHENA</span></div>
                 </div>
-                <div id="mouse"></div>
+                <!-- Nameplate -->
+                <div class="stn-nameplate">
+                    <div class="stn-nm-name">ATHENA</div>
+                    <div class="stn-nm-role">THREAT HUNTER LEAD</div>
+                </div>
             </div>
 
-            <div id="chair"></div>
+            <!-- NIMBUS — Anomaly Detection -->
+            <div class="soc-station" id="station-nimbus">
+                <div class="stn-monitors">
+                    <!-- Main monitor: live log feed -->
+                    <div class="stn-monitor stn-monitor-main stn-monitor-cyan">
+                        <div class="stn-hud stn-hud-cyan">NIMBUS // ANOMALY DETECT</div>
+                        <div class="stn-body stn-body-log">
+                            <div id="soc-logFeed">
+                                <!-- Populated by soc_live.js -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Desk surface -->
+                <div class="stn-desk">
+                    <div class="stn-props">📊 🔌</div>
+                    <div class="stn-sprite" id="sprite-nimbus">Ni<span class="stn-sprite-lbl">NIMBUS</span></div>
+                </div>
+                <!-- Nameplate -->
+                <div class="stn-nameplate">
+                    <div class="stn-nm-name">NIMBUS</div>
+                    <div class="stn-nm-role">ANOMALY DETECTION</div>
+                </div>
+            </div>
+
+            <!-- SENTINEL — Network Patrol -->
+            <div class="soc-station" id="station-sentinel">
+                <div class="stn-monitors">
+                    <!-- Main monitor: network status grid -->
+                    <div class="stn-monitor stn-monitor-main stn-monitor-green">
+                        <div class="stn-hud stn-hud-green">SENTINEL // NET PATROL</div>
+                        <div class="stn-body">
+                            <div id="soc-netGrid">
+                                <div class="soc-net-row"><span class="soc-net-lbl">FIREWALL</span><span class="soc-net-val soc-net-ok" id="stn-fw">● ACTIVE</span></div>
+                                <div class="soc-net-row"><span class="soc-net-lbl">PERIMETER</span><span class="soc-net-val soc-net-warn" id="stn-perim">⚠ ALERT</span></div>
+                                <div class="soc-net-row"><span class="soc-net-lbl">VPN</span><span class="soc-net-val soc-net-ok">● UP</span></div>
+                                <div class="soc-net-row"><span class="soc-net-lbl">IDS ENGINE</span><span class="soc-net-val soc-net-ok">● RUNNING</span></div>
+                                <div class="soc-net-row"><span class="soc-net-lbl">THREATS/HR</span><span class="soc-net-val soc-net-pulse" id="stn-tph">47</span></div>
+                                <div class="soc-net-row"><span class="soc-net-lbl">BLOCKED IPs</span><span class="soc-net-val" id="stn-blk">1,284</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Desk surface -->
+                <div class="stn-desk">
+                    <div class="stn-props">🛡 🔑</div>
+                    <div class="stn-sprite" id="sprite-sentinel">Se<span class="stn-sprite-lbl">SENTINEL</span></div>
+                </div>
+                <!-- Nameplate -->
+                <div class="stn-nameplate">
+                    <div class="stn-nm-name">SENTINEL</div>
+                    <div class="stn-nm-role">NETWORK PATROL</div>
+                </div>
+            </div>
 
             <!-- ═══════════════════════════ WORLD BUILDING ═══════════════════════ -->
             <!-- Exit corridor — hints the HQ is larger -->
@@ -228,19 +332,41 @@
             </div>
             <div id="archLabel">WING B →</div>
 
-            <!-- ═══════════════════════════ AGENT ═══════════════════════════════ -->
-            <div id="agent">
-                <img id="agentSprite" src="assets/agent001.png" alt="Cyber Cookie Agent 001">
-                <div id="headsetLed"></div>
-            </div>
-
         </section>
 
-        <aside id="panel">
-            <h2>Threat Hunter</h2>
-            <p>Status: <span id="status">Online</span></p>
-            <p>State: <span id="currentState">Patrol</span></p>
-            <p>Threat: <span id="threat">Low</span></p>
+        <!-- SOC STATUS PANEL (right column, replaces old #panel) -->
+        <aside id="socPanel">
+            <!-- Room Status Card -->
+            <div class="soc-card">
+                <div class="soc-cardTitle">// SOC STATUS</div>
+                <div class="soc-statusRow"><span>STATUS</span><span class="soc-ok">● ONLINE</span></div>
+                <div class="soc-statusRow"><span>MONITORING</span><span class="soc-ok">● ACTIVE</span></div>
+                <div class="soc-statusRow"><span>THREAT LEVEL</span><span class="soc-warn" id="soc-threatLevel">● MEDIUM</span></div>
+                <div class="soc-statusRow"><span>ACTIVE AGENTS</span><span>3</span></div>
+                <div class="soc-statusRow"><span>LAST SCAN</span><span id="soc-lastScan">—</span></div>
+                <div class="soc-statusRow"><span>REPORTS TODAY</span><span id="soc-reportsToday">0</span></div>
+            </div>
+
+            <!-- Case Board -->
+            <div class="soc-card" id="soc-caseCard">
+                <div class="soc-cardTitle">// CASE BOARD</div>
+                <div class="soc-caseStats">
+                    <div class="soc-caseNum soc-caseNum-active"><div id="soc-activeCount">2</div><div>ACTIVE</div></div>
+                    <div class="soc-caseNum soc-caseNum-flag"><div id="soc-flaggedCount">1</div><div>FLAGGED</div></div>
+                    <div class="soc-caseNum soc-caseNum-ok"><div id="soc-clearedCount">4</div><div>CLEARED</div></div>
+                </div>
+                <div class="soc-cardSubTitle">RECENT SCANS</div>
+                <div id="soc-caseScans">
+                    <div class="soc-caseEntry soc-case-high">⚠ 203.45.12.8 — HIGH</div>
+                    <div class="soc-caseEntry soc-case-ok">✓ 192.168.1.1 — CLEAN</div>
+                </div>
+            </div>
+
+            <!-- Scan History (moved from workspace scan panel) -->
+            <div class="soc-card">
+                <div class="soc-cardTitle">// SCAN HISTORY</div>
+                <div id="hq-scanHistory"></div>
+            </div>
         </aside>
 
     </main>
@@ -311,65 +437,6 @@
           <button class="ws-btn" style="flex:1" id="hq-addNote">+ ADD ENTRY</button>
           <button class="ws-btn ws-btn-ghost" id="hq-cancelEdit">CANCEL</button>
         </div>
-      </div>
-    </div>
-
-    <!-- ══ THREAT HUNTER SCAN CONSOLE ══ -->
-    <div class="ws-panel ws-panel-full" id="hq-scanPanel">
-      <div class="ws-pTitle" style="display:flex;align-items:center;gap:10px">
-        <span>🛡 THREAT HUNTER — IP SCAN CONSOLE</span>
-        <span id="hq-scanOnline" style="font-size:7px;color:rgba(46,204,113,.7);letter-spacing:1px">● ATHENA ONLINE</span>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-        <!-- Left: Scanner input -->
-        <div>
-          <div class="ws-form">
-            <div class="ws-field">
-              <label class="ws-label">TARGET IP ADDRESS</label>
-              <input class="ws-input" id="hq-scanIP" type="text" placeholder="e.g. 192.168.1.1 or 203.45.12.8" maxlength="64" />
-            </div>
-            <div class="ws-form-row">
-              <div class="ws-field">
-                <label class="ws-label">SCAN TYPE</label>
-                <select class="ws-input" id="hq-scanType">
-                  <option value="quick">Quick Scan</option>
-                  <option value="deep">Deep Scan</option>
-                  <option value="stealth">Stealth Scan</option>
-                  <option value="osint">OSINT Lookup</option>
-                </select>
-              </div>
-              <div class="ws-field">
-                <label class="ws-label">INTENSITY</label>
-                <select class="ws-input" id="hq-scanIntensity">
-                  <option value="low">Low</option>
-                  <option value="medium" selected>Medium</option>
-                  <option value="high">High</option>
-                </select>
-              </div>
-            </div>
-            <button class="ws-btn ws-btn-full" id="hq-runScan" style="background:rgba(255,80,80,.08);border-color:rgba(255,80,80,.3);color:rgba(255,80,80,.8)">▶ RUN SCAN</button>
-          </div>
-          <!-- Scan progress bar -->
-          <div id="hq-scanProgress" style="display:none;margin-top:12px">
-            <div style="display:flex;justify-content:space-between;font-size:7px;color:rgba(200,160,255,.5);margin-bottom:4px">
-              <span id="hq-scanStep">Initializing scan...</span>
-              <span id="hq-scanPct">0%</span>
-            </div>
-            <div style="height:6px;background:rgba(255,255,255,.05);border-radius:3px">
-              <div id="hq-scanBar" style="height:100%;width:0%;background:linear-gradient(90deg,#ff5050,#9b6bff);border-radius:3px;transition:width .4s;box-shadow:0 0 8px rgba(255,80,80,.4)"></div>
-            </div>
-          </div>
-        </div>
-        <!-- Right: Scan result -->
-        <div id="hq-scanResult" style="display:none">
-          <div style="font-size:7px;letter-spacing:2px;color:rgba(200,160,255,.4);margin-bottom:8px">SCAN RESULT</div>
-          <div id="hq-scanOutput"></div>
-        </div>
-      </div>
-      <!-- Scan history -->
-      <div style="margin-top:14px;padding-top:10px;border-top:1px solid rgba(150,80,255,.1)">
-        <div style="font-size:7px;letter-spacing:2px;color:rgba(200,160,255,.3);margin-bottom:8px">RECENT SCANS</div>
-        <div id="hq-scanHistory"></div>
       </div>
     </div>
 
@@ -450,6 +517,7 @@
 <script src="../js/art_room_ui.js"></script>
 <script src="../js/agent_presence.js"></script>
 <script src="workspace.js"></script>
+<script src="js/soc_live.js"></script>
 
 <script>
 /* Page transition: fade out before navigation */
@@ -532,26 +600,9 @@ html.hq-nav-in  { animation: hqNavIn .32s ease forwards; }
 }
 .upsLabel { font-size: 4.5px; letter-spacing: 1px; color: rgba(200,160,255,.25); }
 
-/* ── Named workstation plaques ── */
-#stationPlaque { display: none; }   /* hide old single plaque */
-#stationPlaques {
-  position: absolute;
-  bottom: -14px; left: 0; right: 0;
-  display: flex; justify-content: space-around;
-  font-size: 5.5px; letter-spacing: 1.5px;
-}
-.sPlaqueItem { color: rgba(200,160,255,.4); }
-.sPlaqueNimbus { color: rgba(156,246,255,.35); }
-
-/* ── Desk prop icons ── */
-#deskProps {
-  position: absolute;
-  bottom: -22px; right: 6px;
-  display: flex; gap: 6px;
-  font-size: 10px; line-height: 1;
-  opacity: .55;
-}
-.deskProp { cursor: default; }
+/* ── Legacy plaque helpers (hidden by Phase 12b CSS) ── */
+#stationPlaque  { display: none; }
+#stationPlaques { display: none; }
 </style>
 
 </body>
