@@ -123,6 +123,41 @@ button { cursor: pointer; font-family: inherit; }
 }
 
 /* ================================================================
+   COMPANY WORKDAY STATUS BAR (Phase 15)
+================================================================ */
+
+#oc-workdayBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 20px;
+  background: rgba(0,0,0,.55);
+  border-bottom: 1px solid rgba(150,80,255,.10);
+  font-size: 9px;
+  letter-spacing: 1.2px;
+  color: rgba(200,160,255,.55);
+  font-family: 'Courier New', monospace;
+  overflow: hidden;
+  white-space: nowrap;
+}
+#oc-workdayPhase {
+  color: rgba(200,160,255,.85);
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+#oc-workdayActivity {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.oc-workdaySep { opacity: .3; }
+.oc-workdaySepRight { margin-left: auto; }
+.oc-wdHealth-green  { color: #2ecc71; letter-spacing: 1px; }
+.oc-wdHealth-yellow { color: #ffdc32; letter-spacing: 1px; }
+.oc-wdHealth-red    { color: #ff5050; letter-spacing: 1px; animation: wdBlink 1.2s step-end infinite; }
+@keyframes wdBlink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+/* ================================================================
    PAGE BODY: sidebar + main
 ================================================================ */
 
@@ -1932,3 +1967,59 @@ button { cursor: pointer; font-family: inherit; }
 #oc-approvalList::-webkit-scrollbar-track { background: transparent; }
 #oc-missionList::-webkit-scrollbar-thumb,
 #oc-approvalList::-webkit-scrollbar-thumb { background: rgba(150,80,255,.2); border-radius: 2px; }
+
+/* ================================================================
+   PHASE 15: BRIEFING ENHANCEMENTS
+================================================================ */
+
+.oc-briefingDate {
+  font-size: 8px;
+  letter-spacing: 1.2px;
+  color: rgba(200,160,255,.4);
+  margin: -3px 0 8px;
+  text-transform: uppercase;
+}
+
+.oc-briefFocus {
+  font-size: 9px;
+  letter-spacing: .8px;
+  background: rgba(156,246,255,.05);
+  border: 1px solid rgba(156,246,255,.15);
+  border-radius: 4px;
+  padding: 5px 8px;
+  color: rgba(156,246,255,.85);
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+.oc-briefFocusLabel {
+  font-size: 7px;
+  letter-spacing: 1.5px;
+  color: rgba(156,246,255,.45);
+  margin-right: 6px;
+  vertical-align: 1px;
+}
+
+.oc-briefItem-high {
+  background: rgba(255,140,66,.05);
+}
+.oc-briefItem-low {
+  opacity: .65;
+}
+
+#oc-briefInsights {
+  margin-top: 8px;
+  border-top: 1px solid rgba(150,80,255,.08);
+  padding-top: 8px;
+}
+.oc-insightTitle {
+  font-size: 7px;
+  letter-spacing: 1.5px;
+  color: rgba(200,160,255,.35);
+  margin-bottom: 5px;
+}
+.oc-insightItem {
+  font-size: 9px;
+  line-height: 1.5;
+  padding: 2px 0;
+  opacity: .8;
+}

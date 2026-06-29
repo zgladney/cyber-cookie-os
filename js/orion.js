@@ -247,54 +247,133 @@
 
     var now     = new Date();
     var hour    = now.getHours();
-    var greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+    var dayName = now.toLocaleDateString('en-US', { weekday: 'long' });
+    var dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
-    var kpiAll         = typeof KPI !== 'undefined' ? KPI.all() : {};
-    var pendingApps    = approvals.pending();
-    var routineStatus  = routines.getStatus();
-    var overdueList    = routineStatus.filter(function (r) { return r.overdue; });
-    var missionCount   = typeof MS !== 'undefined' ? MS.count() : { complete: 0, pending: 0 };
+    var greeting;
+    if (hour < 5)        greeting = 'Working late';
+    else if (hour < 12)  greeting = 'Good morning';
+    else if (hour < 17)  greeting = 'Good afternoon';
+    else if (hour < 21)  greeting = 'Good evening';
+    else                 greeting = 'Still at it';
 
-    var items = [];
+    var kpiAll        = typeof KPI !== 'undefined' ? KPI.all() : {};
+    var pendingApps   = approvals.pending();
+    var routineStatus = routines.getStatus();
+    var overdueList   = routineStatus.filter(function (r) { return r.overdue; });
+    var okRoutines    = routineStatus.filter(function (r) { return !r.overdue; });
+    var missionCount  = typeof MS !== 'undefined' ? MS.count() : { complete: 0, pending: 0 };
+    var allMissions   = typeof MS !== 'undefined' ? MS.list(5) : [];
+    var health        = checkHealth();
 
-    if (kpiAll.security) {
-      var k = kpiAll.security;
-      var secMsg = 'Security: ' + (k.scansCompleted || 0) + ' scan(s) completed.';
-      if (k.threatsDetected > 0) secMsg += ' ' + k.threatsDetected + ' threats detected.';
-      else if (k.scansCompleted > 0) secMsg += ' No threats found.';
-      items.push({ dept: 'security', msg: secMsg, icon: '🛡' });
+    var items       = [];
+    var insights    = [];
+    var focusItems  = [];
+
+    // ── SECURITY REPORT ──────────────────────────────
+    var k = kpiAll.security || {};
+    if ((k.scansCompleted || 0) > 0) {
+      var secDetail = (k.scansCompleted || 0) + ' threat scan' + (k.scansCompleted !== 1 ? 's' : '') + ' completed.';
+      if ((k.threatsDetected || 0) > 0) {
+        secDetail += ' ' + k.threatsDetected + ' threat' + (k.threatsDetected !== 1 ? 's' : '') + ' logged.';
+        if ((k.criticalAlerts || 0) > 0) secDetail += ' ' + k.criticalAlerts + ' CRITICAL — review required.';
+      } else {
+        secDetail += ' Network posture: clean.';
+      }
+      items.push({ dept: 'security', msg: secDetail, icon: '🛡', priority: (k.criticalAlerts || 0) > 0 ? 'high' : 'normal' });
+      if ((k.criticalAlerts || 0) > 0) focusItems.push('Critical security alert requires CEO review');
+    } else {
+      items.push({ dept: 'security', msg: 'Security perimeter active. No scans completed yet today.', icon: '🛡', priority: 'low' });
     }
-    if (kpiAll.career && kpiAll.career.jobsFound > 0) {
-      var c    = kpiAll.career;
-      var carMsg = 'Career: ' + c.jobsFound + ' new job' + (c.jobsFound !== 1 ? 's' : '') + ' found.';
-      if (c.applications > 0) carMsg += ' ' + c.applications + ' applications prepared.';
-      if (c.avgAtsScore  > 0) carMsg += ' Best ATS score: ' + c.avgAtsScore + '%.';
-      items.push({ dept: 'career', msg: carMsg, icon: '💼' });
+
+    // ── CAREER REPORT ────────────────────────────────
+    var c = kpiAll.career || {};
+    if ((c.jobsFound || 0) > 0) {
+      var carDetail = (c.jobsFound || 0) + ' new opportunit' + (c.jobsFound !== 1 ? 'ies' : 'y') + ' identified.';
+      if ((c.applications || 0) > 0) carDetail += ' ' + c.applications + ' application' + (c.applications !== 1 ? 's' : '') + ' prepared for CEO approval.';
+      if ((c.savedJobs || 0) > 0)    carDetail += ' ' + c.savedJobs + ' saved for follow-up.';
+      items.push({ dept: 'career', msg: carDetail, icon: '💼', priority: (c.applications || 0) > 0 ? 'high' : 'normal' });
+      if ((c.applications || 0) > 0) focusItems.push('Career application ready for CEO approval');
+    } else {
+      items.push({ dept: 'career', msg: 'Career Intelligence standing by. Job search scheduled.', icon: '💼', priority: 'low' });
     }
-    if (kpiAll.commerce && kpiAll.commerce.trends > 0) {
-      items.push({ dept: 'commerce', msg: 'Commerce: ' + kpiAll.commerce.trends + ' trend opportunities identified.', icon: '🛍' });
+
+    // ── FINANCE REPORT ───────────────────────────────
+    var f = kpiAll.finance || {};
+    var finDetail = 'Budget health: ' + (f.budgetHealth || 'review pending') + '.';
+    if ((f.savingsRate || 0) > 0) finDetail += ' Savings rate: ' + f.savingsRate + '%.';
+    if (f.emergencyFundMos > 0)   finDetail += ' Emergency fund: ' + f.emergencyFundMos + ' months covered.';
+    items.push({ dept: 'finance', msg: finDetail, icon: '💰', priority: f.budgetHealth === 'at risk' ? 'high' : 'low' });
+
+    // ── PRODUCTIVITY REPORT ──────────────────────────
+    var p = kpiAll.productivity || {};
+    if ((p.tasksCompleted || 0) > 0 || (p.focusHours || 0) > 0) {
+      var prodDetail = '';
+      if ((p.tasksCompleted || 0) > 0) prodDetail += (p.tasksCompleted || 0) + ' tasks completed.';
+      if ((p.focusHours    || 0) > 0) prodDetail += ' ' + p.focusHours + 'h focus time logged.';
+      if ((p.deadlinesMet  || 0) > 0) prodDetail += ' ' + p.deadlinesMet + ' deadlines met.';
+      items.push({ dept: 'productivity', msg: prodDetail.trim() || 'Productivity department operational.', icon: '⏱', priority: 'low' });
     }
-    if (kpiAll.finance) {
-      var f    = kpiAll.finance;
-      var finMsg = 'Finance: budget health ' + (f.budgetHealth || 'not yet evaluated') + '.';
-      items.push({ dept: 'finance', msg: finMsg, icon: '💰' });
+
+    // ── MISSION REPORT ───────────────────────────────
+    if (missionCount.complete > 0 || missionCount.pending > 0) {
+      var msnDetail = missionCount.pending + ' mission' + (missionCount.pending !== 1 ? 's' : '') + ' active';
+      if (missionCount.complete > 0) msnDetail += ', ' + missionCount.complete + ' complete';
+      if (pendingApps.length > 0) msnDetail += '. ' + pendingApps.length + ' awaiting CEO approval.';
+      else msnDetail += '.';
+      items.push({ dept: 'ops', msg: msnDetail, icon: '🎯', priority: pendingApps.length > 0 ? 'high' : 'normal' });
     }
-    if (missionCount.complete > 0) {
-      items.push({ dept: 'ops', msg: 'Missions: ' + missionCount.complete + ' completed, ' + missionCount.pending + ' active.', icon: '🎯' });
-    }
+
+    // ── OVERDUE ALERT ────────────────────────────────
     if (overdueList.length > 0) {
-      items.push({ dept: 'ops', msg: 'Overdue routines: ' + overdueList.map(function (r) { return r.title; }).join(', ') + '.', icon: '⚠' });
+      var overdueNames = overdueList.slice(0, 3).map(function (r) { return r.title; });
+      var overdueMsg = overdueNames.join(' · ');
+      if (overdueList.length > 3) overdueMsg += ' + ' + (overdueList.length - 3) + ' more';
+      items.push({ dept: 'ops', msg: 'Overdue: ' + overdueMsg + '.', icon: '⚠', priority: 'high' });
     }
+
     if (items.length === 0) {
-      items.push({ dept: 'ops', msg: 'All departments operational. Standing by.', icon: '✓' });
+      items.push({ dept: 'ops', msg: 'All departments operational. Company ready for CEO direction.', icon: '✓', priority: 'low' });
     }
+
+    // ── EXECUTIVE INSIGHTS ───────────────────────────
+    var totalScans = (k.scansCompleted || 0);
+    if (totalScans >= 3) {
+      insights.push({ type: 'security', msg: 'Security posture is active — ' + totalScans + ' scans run. Athena has consistent coverage.' });
+    }
+    if ((c.jobsFound || 0) >= 5) {
+      insights.push({ type: 'career', msg: 'Job pipeline is healthy with ' + c.jobsFound + ' opportunities. Career Intelligence performing well.' });
+    }
+    if (pendingApps.length === 0 && missionCount.complete > 2) {
+      insights.push({ type: 'ops', msg: 'Approval queue is clear. Company is executing efficiently.' });
+    }
+    if (typeof AUTO !== 'undefined' && AUTO.learning) {
+      var aiInsights = AUTO.learning.getInsights();
+      aiInsights.forEach(function (i) { insights.push(i); });
+    }
+
+    // ── CEO FOCUS RECOMMENDATION ─────────────────────
+    var focus = focusItems.length > 0
+      ? focusItems[0]
+      : (pendingApps.length > 0
+          ? pendingApps.length + ' decision' + (pendingApps.length !== 1 ? 's' : '') + ' waiting in the approval queue'
+          : 'All clear — ' + (okRoutines.length) + ' routines on schedule');
 
     var briefing = {
       greeting:      greeting + ', Zee.',
+      date:          dayName + ' · ' + dateStr,
       generated:     Date.now(),
+      phase:         typeof AUTO !== 'undefined' ? AUTO.phaseLabel() : 'OPERATIONS',
+      health:        health.health,
       items:         items,
+      insights:      insights,
+      focus:         focus,
       approvalCount: pendingApps.length,
       approvals:     pendingApps.slice(0, 4),
+      routinesOk:    okRoutines.length,
+      routinesOverdue: overdueList.length,
+      missionsActive:  missionCount.pending,
+      missionsComplete: missionCount.complete,
     };
 
     COS.state.set(BRIEFING_KEY, briefing);

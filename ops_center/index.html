@@ -19,6 +19,15 @@
     <div id="oc-topClock"></div>
   </header>
 
+  <!-- COMPANY WORKDAY STATUS BAR -->
+  <div id="oc-workdayBar">
+    <span id="oc-workdayPhase">OPERATIONS</span>
+    <span class="oc-workdaySep">·</span>
+    <span id="oc-workdayActivity">Company is initializing...</span>
+    <span class="oc-workdaySep oc-workdaySepRight">·</span>
+    <span id="oc-workdayHealth" class="oc-wdHealth-green">● NOMINAL</span>
+  </div>
+
   <!-- PAGE BODY -->
   <div id="oc-pageBody">
 
@@ -228,7 +237,10 @@
           </div>
           <div id="oc-briefingContent">
             <div id="oc-briefingGreeting" class="oc-briefingGreeting">Loading briefing…</div>
+            <div id="oc-briefingDate" class="oc-briefingDate"></div>
+            <div id="oc-briefFocus" class="oc-briefFocus"></div>
             <div id="oc-briefingItems"></div>
+            <div id="oc-briefInsights"></div>
           </div>
           <div id="oc-routineStatus">
             <div class="oc-routineTitle">DEPARTMENT ROUTINES</div>
@@ -370,6 +382,7 @@
 <script src="../js/company_kpi.js"></script>
 <script src="../js/company_memory.js"></script>
 <script src="../js/orion.js"></script>
+<script src="../js/autonomous_ops.js"></script>
 <script src="js/ops_dashboard.js" defer></script>
 </body>
 </html>

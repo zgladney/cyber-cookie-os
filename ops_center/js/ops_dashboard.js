@@ -968,6 +968,12 @@ document.addEventListener('DOMContentLoaded', function () {
     COS.events.on('approval:granted', renderApprovalQueue);
     COS.events.on('approval:rejected', renderApprovalQueue);
     COS.events.on('company:DailyBriefingReady', renderOrionBriefing);
+    COS.events.on('company:WorkdayStarted', function (data) {
+      var phaseEl = document.getElementById('oc-workdayPhase');
+      var actEl   = document.getElementById('oc-workdayActivity');
+      if (phaseEl) phaseEl.textContent = data.label || data.phase || 'OPERATIONS';
+      if (actEl)   actEl.textContent   = 'Departments checking in — autonomous routines starting';
+    });
     COS.events.on('company:CompanyHealthChanged', function (h) {
       var el = document.getElementById('oc-companyHealth');
       if (!el) return;
@@ -1011,8 +1017,21 @@ function renderOrionBriefing() {
   if (!briefing) { ORION.buildBriefing(); briefing = ORION.getBriefing(); }
   if (!briefing) return;
 
+  var DEPT_COLORS = { security:'#9b6bff', career:'#7b6bff', housing:'#7b6bff', commerce:'#ff69b4', finance:'#2ecc71', productivity:'#3aa8c8', ops:'#9cf6ff' };
+
   var greetEl = document.getElementById('oc-briefingGreeting');
   if (greetEl) greetEl.textContent = briefing.greeting;
+
+  var dateEl = document.getElementById('oc-briefingDate');
+  if (dateEl) dateEl.textContent = briefing.date || '';
+
+  var focusEl = document.getElementById('oc-briefFocus');
+  if (focusEl && briefing.focus) {
+    focusEl.innerHTML = '<span class="oc-briefFocusLabel">CEO FOCUS</span> ' + briefing.focus;
+    focusEl.style.display = 'block';
+  } else if (focusEl) {
+    focusEl.style.display = 'none';
+  }
 
   var itemsEl = document.getElementById('oc-briefingItems');
   if (itemsEl) {
@@ -1020,14 +1039,43 @@ function renderOrionBriefing() {
       itemsEl.innerHTML = '<div class="oc-briefItem">● All departments operational.</div>';
     } else {
       itemsEl.innerHTML = briefing.items.map(function (item) {
-        var DEPT_COLORS = { security:'#9b6bff', career:'#7b6bff', housing:'#7b6bff', commerce:'#ff69b4', finance:'#2ecc71', productivity:'#3aa8c8', ops:'#9cf6ff' };
-        var col = DEPT_COLORS[item.dept] || '#9cf6ff';
-        return '<div class="oc-briefItem" style="border-left-color:' + col + '">' +
+        var col    = DEPT_COLORS[item.dept] || '#9cf6ff';
+        var hiCls  = item.priority === 'high' ? ' oc-briefItem-high' : (item.priority === 'low' ? ' oc-briefItem-low' : '');
+        return '<div class="oc-briefItem' + hiCls + '" style="border-left-color:' + col + '">' +
           (item.icon ? '<span class="oc-briefIcon">' + item.icon + '</span>' : '') +
           '<span>' + item.msg + '</span>' +
           '</div>';
       }).join('');
     }
+  }
+
+  var insightEl = document.getElementById('oc-briefInsights');
+  if (insightEl) {
+    if (briefing.insights && briefing.insights.length) {
+      insightEl.innerHTML = '<div class="oc-insightTitle">ORION INSIGHTS</div>' +
+        briefing.insights.slice(0, 3).map(function (ins) {
+          var col = DEPT_COLORS[ins.dept || ins.type] || '#9cf6ff';
+          return '<div class="oc-insightItem" style="color:' + col + '">◆ ' + ins.msg + '</div>';
+        }).join('');
+      insightEl.style.display = 'block';
+    } else {
+      insightEl.style.display = 'none';
+    }
+  }
+
+  // Update workday bar
+  var phaseEl    = document.getElementById('oc-workdayPhase');
+  var activityEl = document.getElementById('oc-workdayActivity');
+  var healthEl   = document.getElementById('oc-workdayHealth');
+  if (phaseEl)    phaseEl.textContent    = briefing.phase || 'OPERATIONS';
+  if (activityEl) activityEl.textContent =
+    (briefing.missionsActive || 0) + ' missions active · ' +
+    (briefing.routinesOk || 0) + ' routines on schedule · ' +
+    (briefing.approvalCount || 0) + ' pending approval';
+  if (healthEl) {
+    var h = briefing.health || 'green';
+    healthEl.className    = 'oc-wdHealth-' + h;
+    healthEl.textContent  = '● ' + h.toUpperCase();
   }
 }
 
