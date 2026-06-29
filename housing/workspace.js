@@ -622,6 +622,16 @@ function cicJobMatch(job) {
                  (best ? best.title + ' (' + cicJobMatch(best) + '%)' : 'N/A'),
       }, 'nova', 'housing');
     }
+
+    // Publish company event so Orion can start cross-dept collaboration chain
+    if (best && results.length > 0 && typeof COS !== 'undefined') {
+      COS.company.emit('JobFound', {
+        job:       best,
+        count:     results.length,
+        avgSalary: avgSal,
+        source:    'nova_search',
+      });
+    }
   }
 
   // ── LOAD MY PROFILE ─────────────────────────────────────────

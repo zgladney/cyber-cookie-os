@@ -340,6 +340,14 @@
     // Log to threat board + activity
     if (typeof COS !== 'undefined') {
       COS.activity.log({ agent: 'Athena', dept: 'security', msg: 'Scan complete — ' + ip + ' [' + profile.label + '] — ' + profile.score, source: 'scan' });
+      // Publish company event so Orion can track security KPI and escalate criticals
+      COS.company.emit('ThreatDetected', {
+        ip:       ip,
+        level:    level,
+        severity: level === 'critical' ? 'critical' : (level === 'high' ? 'high' : 'normal'),
+        msg:      'IP ' + ip + ' classified ' + profile.label + ' (' + profile.score + ')',
+        scanType: scanType,
+      });
     }
     if (typeof OE !== 'undefined') {
       OE.generate({ type: 'analyze_traffic', title: 'IP Scan: ' + ip }, 'athena', 'security');

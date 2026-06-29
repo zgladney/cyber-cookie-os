@@ -15,9 +15,9 @@
       desc: 'Protect & Monitor', wing: 'A',
     },
     housing: {
-      id: 'housing', name: 'Housing', short: 'HOUSING',
-      color: '#c4784a', icon: '🏠', room: '/housing/index.html',
-      desc: 'Find Your Next Home', wing: 'B',
+      id: 'housing', name: 'Career Intelligence Center', short: 'CAREER INTEL',
+      color: '#7b6bff', icon: '💼', room: '/housing/index.html',
+      desc: 'Find Your Next Opportunity', wing: 'B',
     },
     commerce: {
       id: 'commerce', name: 'Commerce', short: 'COMMERCE',
@@ -193,6 +193,17 @@
       futureCapabilities: ['SMS/Push Notifications', 'Natural Language Reminder Parsing', 'Smart Snooze Logic'],
       sampleTasks: ['Queuing weekly reminders', 'Tracking follow-up dates', 'Sending overdue alerts', 'Updating reminder schedule'],
     },
+    orion: {
+      id: 'orion', name: 'Orion', title: 'Chief Operations Officer', dept: 'ops',
+      hasArt: false, imgSrc: null,
+      agentScript: 'agents/orion/orion.py',
+      resultsPath: 'data/orion_results.json',
+      bio: 'Orion is the Chief Operations Officer of CyberCookieOS. He monitors every department, watches company KPIs, detects stalled missions, resolves workflow conflicts, builds the morning executive briefing, and manages the CEO approval queue. Orion does not replace departments — he coordinates them.',
+      specialization: ['Cross-Department Coordination', 'Mission Orchestration', 'Executive Briefing', 'Approval Queue Management'],
+      capabilities: ['Mission Status Monitoring', 'Collaboration Chain Orchestration', 'Daily Briefing Generation', 'CEO Approval Queue', 'Company Health Monitoring'],
+      futureCapabilities: ['AI-driven Mission Routing', 'Predictive Department Alerts', 'Automated Escalation', 'Natural Language Briefings'],
+      sampleTasks: ['Building morning executive briefing', 'Routing career mission to all departments', 'Escalating critical security alert', 'Clearing CEO approval queue'],
+    },
     greenbean: {
       id: 'greenbean', name: 'Greenbean', title: 'Finance Manager', dept: 'finance',
       hasArt: false, imgSrc: null,
@@ -241,6 +252,7 @@
 
   // Ordered employee list per department (for consistent rendering)
   var DEPT_EMPLOYEES = {
+    ops:         ['orion'],
     security:    ['athena', 'nimbus', 'sentinel'],
     housing:     ['nova', 'beacon', 'atlas'],
     commerce:    ['pixel', 'etsybot', 'spark', 'forge'],
@@ -445,16 +457,39 @@
     return Math.floor(delta / 3600) + 'h ago';
   }
 
+  // ── COMPANY EVENT NAMESPACE ───────────────────────────────────
+  // Departments use COS.company.emit/on for cross-department events.
+  // Events are namespaced as 'company:{Name}' on the shared bus.
+
+  var COMPANY_EVENTS = [
+    'JobFound', 'ResumeOptimized', 'ResumeAnalyzed', 'FinanceEvaluated', 'GeoAnalyzed',
+    'ThreatDetected', 'BudgetUpdated', 'MissionCreated', 'MissionCompleted',
+    'CalendarConflict', 'InterviewScheduled', 'ApplicationPrepared',
+    'ProductReady', 'RevenueUpdated', 'DailyBriefingReady',
+    'CEOApprovalRequested', 'CompanyHealthChanged',
+  ];
+
+  var company = {
+    EVENTS: COMPANY_EVENTS,
+    emit: function (name, data) {
+      events.emit('company:' + name, data);
+    },
+    on: function (name, fn) {
+      events.on('company:' + name, fn);
+    },
+  };
+
   // ── EXPORT ────────────────────────────────────────────────────
 
   global.COS = {
-    version: '0.3.0',
+    version: '0.4.0',
     departments: DEPARTMENTS,
     employees: EMPLOYEES,
     deptEmployees: DEPT_EMPLOYEES,
     integrations: INTEGRATIONS,
     state: state,
     events: events,
+    company: company,
     activity: activity,
     notifications: notifications,
     tasks: tasks,

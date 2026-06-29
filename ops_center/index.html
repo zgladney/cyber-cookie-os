@@ -34,9 +34,9 @@
           <span class="oc-navIcon">&#128737;</span>
           <span class="oc-navLabel">Security Ops</span>
         </a>
-        <a class="oc-navItem" href="../housing/index.html" style="--nav-color:#c4784a">
-          <span class="oc-navIcon">&#127968;</span>
-          <span class="oc-navLabel">Housing</span>
+        <a class="oc-navItem" href="../housing/index.html" style="--nav-color:#7b6bff">
+          <span class="oc-navIcon">&#128188;</span>
+          <span class="oc-navLabel">Career Intel</span>
         </a>
         <a class="oc-navItem" href="../commerce/index.html" style="--nav-color:#ff69b4">
           <span class="oc-navIcon">&#128717;</span>
@@ -207,6 +207,129 @@
 
       </div>
 
+      <!-- ── ORION BRIEFING + APPROVAL QUEUE ─────────────────────── -->
+      <div id="oc-orionRow">
+
+        <!-- ORION COO MORNING BRIEFING -->
+        <section id="oc-briefing" class="oc-panel">
+          <div class="oc-panelHeader">
+            <span class="oc-panelTitle">ORION — CHIEF OPERATIONS OFFICER</span>
+            <button class="oc-refreshBtn" id="orion-refreshBriefing" title="Rebuild briefing">↻ REFRESH</button>
+          </div>
+          <div id="oc-orionPresence">
+            <div id="oc-orionBadge">
+              <div id="oc-orionSprite">O</div>
+              <div id="oc-orionInfo">
+                <div id="oc-orionName">Orion</div>
+                <div id="oc-orionRole">Chief Operations Officer · Mission Control</div>
+                <div id="oc-orionStatus"><span class="oc-orionDot">●</span> COORDINATING DEPARTMENTS</div>
+              </div>
+            </div>
+          </div>
+          <div id="oc-briefingContent">
+            <div id="oc-briefingGreeting" class="oc-briefingGreeting">Loading briefing…</div>
+            <div id="oc-briefingItems"></div>
+          </div>
+          <div id="oc-routineStatus">
+            <div class="oc-routineTitle">DEPARTMENT ROUTINES</div>
+            <div id="oc-routineList"></div>
+          </div>
+        </section>
+
+        <!-- EXECUTIVE APPROVAL QUEUE -->
+        <section id="oc-approvalQueue" class="oc-panel">
+          <div class="oc-panelHeader">
+            <span class="oc-panelTitle">EXECUTIVE APPROVAL QUEUE</span>
+            <span id="oc-approvalBadge" class="oc-approvalBadge">0 PENDING</span>
+          </div>
+          <div id="oc-ceoRule" class="oc-ceoRule">
+            <span class="oc-ceoRuleIcon">⚖</span>
+            Nothing with legal, financial, public, or irreversible consequences executes without CEO authorization.
+          </div>
+          <div id="oc-approvalList">
+            <div class="oc-approvalEmpty">No decisions required right now. Departments are handling routine work.</div>
+          </div>
+          <div class="oc-approvalHistory">
+            <div class="oc-routineTitle" style="margin-top:10px">RECENT DECISIONS</div>
+            <div id="oc-approvalDecisions"></div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- ── MISSION TIMELINE + KPI DASHBOARD ─────────────────────── -->
+      <div id="oc-intelligenceRow">
+
+        <!-- MISSION TIMELINE -->
+        <section id="oc-missionTimeline" class="oc-panel">
+          <div class="oc-panelHeader">
+            <span class="oc-panelTitle">MISSION TIMELINE</span>
+            <span id="oc-missionCount" class="oc-missionBadge">0 ACTIVE</span>
+          </div>
+          <div id="oc-missionList"></div>
+          <div id="oc-missionEmpty" class="oc-approvalEmpty" style="display:none">No missions yet. Departments are on standby.</div>
+        </section>
+
+        <!-- COMPANY KPI DASHBOARD -->
+        <section id="oc-kpiDash" class="oc-panel">
+          <div class="oc-panelHeader">
+            <span class="oc-panelTitle">COMPANY KPIs</span>
+            <span id="oc-companyHealth" class="oc-healthBadge oc-health-green">● HEALTHY</span>
+          </div>
+          <div id="oc-kpiGrid">
+            <div class="oc-kpiCard oc-kpi-security">
+              <div class="oc-kpiDept">🛡 SECURITY</div>
+              <div class="oc-kpiMetrics" id="kpi-security">
+                <div class="oc-kpiStat"><span class="oc-kpiNum" id="kpi-sec-scans">0</span><span class="oc-kpiLbl">SCANS</span></div>
+                <div class="oc-kpiStat"><span class="oc-kpiNum" id="kpi-sec-threats">0</span><span class="oc-kpiLbl">THREATS</span></div>
+                <div class="oc-kpiStat"><span class="oc-kpiNum oc-kpi-alert" id="kpi-sec-critical">0</span><span class="oc-kpiLbl">CRITICAL</span></div>
+              </div>
+            </div>
+            <div class="oc-kpiCard oc-kpi-career">
+              <div class="oc-kpiDept">💼 CAREER INTEL</div>
+              <div class="oc-kpiMetrics" id="kpi-career">
+                <div class="oc-kpiStat"><span class="oc-kpiNum" id="kpi-car-jobs">0</span><span class="oc-kpiLbl">JOBS FOUND</span></div>
+                <div class="oc-kpiStat"><span class="oc-kpiNum" id="kpi-car-apps">0</span><span class="oc-kpiLbl">APPS PREP'D</span></div>
+                <div class="oc-kpiStat"><span class="oc-kpiNum" id="kpi-car-ats">0%</span><span class="oc-kpiLbl">BEST ATS</span></div>
+              </div>
+            </div>
+            <div class="oc-kpiCard oc-kpi-commerce">
+              <div class="oc-kpiDept">🛍 COMMERCE</div>
+              <div class="oc-kpiMetrics" id="kpi-commerce">
+                <div class="oc-kpiStat"><span class="oc-kpiNum" id="kpi-com-trends">0</span><span class="oc-kpiLbl">TRENDS</span></div>
+                <div class="oc-kpiStat"><span class="oc-kpiNum" id="kpi-com-products">0</span><span class="oc-kpiLbl">PRODUCTS</span></div>
+                <div class="oc-kpiStat"><span class="oc-kpiNum" id="kpi-com-revenue">$0</span><span class="oc-kpiLbl">REVENUE</span></div>
+              </div>
+            </div>
+            <div class="oc-kpiCard oc-kpi-finance">
+              <div class="oc-kpiDept">💰 FINANCE</div>
+              <div class="oc-kpiMetrics" id="kpi-finance">
+                <div class="oc-kpiStat"><span class="oc-kpiNum" id="kpi-fin-savings">0%</span><span class="oc-kpiLbl">SAVINGS RATE</span></div>
+                <div class="oc-kpiStat"><span class="oc-kpiNum" id="kpi-fin-health">—</span><span class="oc-kpiLbl">BUDGET HEALTH</span></div>
+                <div class="oc-kpiStat"><span class="oc-kpiNum" id="kpi-fin-cashflow">$0</span><span class="oc-kpiLbl">CASH FLOW</span></div>
+              </div>
+            </div>
+            <div class="oc-kpiCard oc-kpi-ops">
+              <div class="oc-kpiDept">🎯 OPERATIONS</div>
+              <div class="oc-kpiMetrics" id="kpi-ops">
+                <div class="oc-kpiStat"><span class="oc-kpiNum" id="kpi-ops-missions">0</span><span class="oc-kpiLbl">MISSIONS</span></div>
+                <div class="oc-kpiStat"><span class="oc-kpiNum" id="kpi-ops-complete">0</span><span class="oc-kpiLbl">COMPLETE</span></div>
+                <div class="oc-kpiStat"><span class="oc-kpiNum oc-kpi-pending" id="kpi-ops-approvals">0</span><span class="oc-kpiLbl">APPROVALS</span></div>
+              </div>
+            </div>
+            <div class="oc-kpiCard oc-kpi-productivity">
+              <div class="oc-kpiDept">📅 PRODUCTIVITY</div>
+              <div class="oc-kpiMetrics" id="kpi-productivity">
+                <div class="oc-kpiStat"><span class="oc-kpiNum" id="kpi-pro-tasks">0</span><span class="oc-kpiLbl">TASKS DONE</span></div>
+                <div class="oc-kpiStat"><span class="oc-kpiNum" id="kpi-pro-focus">0h</span><span class="oc-kpiLbl">FOCUS HRS</span></div>
+                <div class="oc-kpiStat"><span class="oc-kpiNum" id="kpi-pro-deadlines">0</span><span class="oc-kpiLbl">ON TIME</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
       <!-- EMPLOYEE DIRECTORY -->
       <section id="oc-empDir" class="oc-panel">
         <div id="oc-empDirHeader">
@@ -243,6 +366,10 @@
 <script src="../js/cybercookieos.js"></script>
 <script src="../js/agent_runtime.js"></script>
 <script src="../js/output_engine.js"></script>
+<script src="../js/mission_system.js"></script>
+<script src="../js/company_kpi.js"></script>
+<script src="../js/company_memory.js"></script>
+<script src="../js/orion.js"></script>
 <script src="js/ops_dashboard.js" defer></script>
 </body>
 </html>

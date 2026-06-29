@@ -1479,3 +1479,456 @@ button { cursor: pointer; font-family: inherit; }
   border-color: rgba(156,246,255,.5) !important;
   background: rgba(156,246,255,.04) !important;
 }
+
+/* ================================================================
+   PHASE 14 — COMPANY INTELLIGENCE PANELS
+================================================================ */
+
+/* ── ORION ROW (briefing + approval queue side by side) ── */
+#oc-orionRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+/* ── INTELLIGENCE ROW (mission timeline + KPI) ── */
+#oc-intelligenceRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+/* ── PANEL HEADER (refresh button) ── */
+.oc-panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.oc-refreshBtn {
+  background: rgba(156,246,255,.06);
+  border: 1px solid rgba(156,246,255,.2);
+  color: rgba(156,246,255,.6);
+  font-size: 7px;
+  letter-spacing: .8px;
+  padding: 3px 9px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .2s;
+}
+.oc-refreshBtn:hover {
+  background: rgba(156,246,255,.12);
+  color: rgba(156,246,255,.9);
+}
+
+/* ── ORION PRESENCE ── */
+#oc-orionPresence {
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(156,246,255,.1);
+}
+#oc-orionBadge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+#oc-orionSprite {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, #0d2a4a, #0a1a2e);
+  border: 2px solid rgba(156,246,255,.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 900;
+  color: rgba(156,246,255,.9);
+  box-shadow: 0 0 14px rgba(156,246,255,.25), inset 0 0 10px rgba(156,246,255,.05);
+  animation: orionPulse 4s ease-in-out infinite alternate;
+  flex-shrink: 0;
+}
+@keyframes orionPulse {
+  from { box-shadow: 0 0 8px rgba(156,246,255,.2); }
+  to   { box-shadow: 0 0 20px rgba(156,246,255,.5); }
+}
+#oc-orionName {
+  font-size: 13px;
+  font-weight: 900;
+  color: rgba(156,246,255,.9);
+  letter-spacing: 1px;
+}
+#oc-orionRole {
+  font-size: 7px;
+  color: rgba(200,160,255,.4);
+  letter-spacing: .5px;
+  margin: 2px 0;
+}
+#oc-orionStatus {
+  font-size: 7px;
+  color: rgba(156,246,255,.6);
+  letter-spacing: .6px;
+}
+.oc-orionDot {
+  color: #9cf6ff;
+  animation: orionDotBlink 1.8s ease-in-out infinite;
+}
+@keyframes orionDotBlink {
+  0%,100% { opacity: 1; }
+  50%      { opacity: .3; }
+}
+
+/* ── MORNING BRIEFING ── */
+.oc-briefingGreeting {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(156,246,255,.85);
+  letter-spacing: .5px;
+  margin-bottom: 10px;
+}
+#oc-briefingItems {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+.oc-briefItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 8px;
+  color: rgba(220,190,255,.7);
+  padding: 5px 8px;
+  border-left: 2px solid rgba(150,80,255,.3);
+  background: rgba(150,80,255,.04);
+  border-radius: 0 4px 4px 0;
+  letter-spacing: .3px;
+  line-height: 1.4;
+}
+.oc-briefIcon {
+  flex-shrink: 0;
+  font-size: 10px;
+}
+
+/* ── ROUTINE STATUS ── */
+#oc-routineStatus {
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(150,80,255,.08);
+}
+.oc-routineTitle {
+  font-size: 7px;
+  letter-spacing: 1.5px;
+  color: rgba(200,160,255,.3);
+  margin-bottom: 6px;
+}
+#oc-routineList {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.oc-routineItem {
+  display: grid;
+  grid-template-columns: 14px 60px 1fr auto;
+  align-items: center;
+  gap: 6px;
+  font-size: 7px;
+  color: rgba(200,160,255,.55);
+  letter-spacing: .3px;
+}
+.oc-routineDot { font-size: 8px; }
+.oc-routineDot-ok      { color: #2ecc71; }
+.oc-routineDot-overdue { color: #ff8c42; animation: orionDotBlink 1.2s infinite; }
+.oc-routineAgent { color: rgba(156,246,255,.6); font-size: 7px; }
+.oc-routineName  { color: rgba(200,160,255,.55); }
+.oc-routineTime  { color: rgba(200,160,255,.3); font-size: 6.5px; white-space: nowrap; }
+
+/* ── CEO RULE ── */
+.oc-ceoRule {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 7px;
+  color: rgba(200,160,255,.35);
+  font-style: italic;
+  letter-spacing: .3px;
+  padding: 6px 8px;
+  background: rgba(255,200,60,.03);
+  border: 1px solid rgba(255,200,60,.08);
+  border-radius: 4px;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+.oc-ceoRuleIcon { font-size: 10px; flex-shrink: 0; }
+
+/* ── APPROVAL CARDS ── */
+#oc-approvalList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+.oc-approvalEmpty {
+  font-size: 8px;
+  color: rgba(200,160,255,.25);
+  font-style: italic;
+  padding: 12px 0;
+  text-align: center;
+}
+.oc-approvalBadge {
+  font-size: 7px;
+  letter-spacing: 1px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,80,80,.4);
+  background: rgba(255,80,80,.1);
+  color: #ff8080;
+  transition: all .3s;
+}
+.oc-approvalCard {
+  padding: 9px 10px;
+  background: rgba(150,80,255,.04);
+  border: 1px solid rgba(150,80,255,.1);
+  border-left: 3px solid rgba(150,80,255,.4);
+  border-radius: 0 5px 5px 0;
+}
+.oc-mission-approval { border-left-color: #ff8c42 !important; }
+.oc-approvalHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.oc-approvalTitle {
+  font-size: 9px;
+  font-weight: 700;
+  color: rgba(240,220,255,.85);
+  letter-spacing: .3px;
+  line-height: 1.3;
+}
+.oc-approvalTime {
+  font-size: 7px;
+  color: rgba(200,160,255,.3);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.oc-approvalSummary {
+  font-size: 7.5px;
+  color: rgba(200,160,255,.55);
+  letter-spacing: .3px;
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+.oc-approvalRecs {
+  margin-bottom: 6px;
+}
+.oc-approvalRec {
+  font-size: 7px;
+  color: rgba(200,160,255,.4);
+  line-height: 1.5;
+}
+.oc-approvalBtns {
+  display: flex;
+  gap: 6px;
+}
+.oc-approveBtn, .oc-rejectBtn {
+  font-family: inherit;
+  font-size: 7px;
+  letter-spacing: .8px;
+  padding: 4px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.oc-approveBtn {
+  background: rgba(46,204,113,.1);
+  border: 1px solid rgba(46,204,113,.35);
+  color: rgba(46,204,113,.8);
+}
+.oc-approveBtn:hover {
+  background: rgba(46,204,113,.2);
+  color: #2ecc71;
+  box-shadow: 0 0 8px rgba(46,204,113,.2);
+}
+.oc-rejectBtn {
+  background: rgba(255,80,80,.08);
+  border: 1px solid rgba(255,80,80,.25);
+  color: rgba(255,80,80,.7);
+}
+.oc-rejectBtn:hover {
+  background: rgba(255,80,80,.15);
+  color: #ff5050;
+}
+.oc-approvalHistory {}
+.oc-decisionRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 7.5px;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(150,80,255,.06);
+  color: rgba(200,160,255,.5);
+}
+.oc-decisionDot { font-size: 10px; flex-shrink: 0; font-weight: 700; }
+.oc-decisionTitle { flex: 1; }
+.oc-decisionStatus { font-size: 6.5px; letter-spacing: .8px; white-space: nowrap; }
+
+/* ── MISSION TIMELINE ── */
+.oc-missionBadge {
+  font-size: 7px;
+  letter-spacing: 1px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  border: 1px solid rgba(156,246,255,.25);
+  background: rgba(156,246,255,.06);
+  color: rgba(156,246,255,.6);
+}
+#oc-missionList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 380px;
+  overflow-y: auto;
+}
+.oc-missionCard {
+  padding: 8px 10px;
+  background: rgba(150,80,255,.04);
+  border: 1px solid rgba(150,80,255,.1);
+  border-left: 3px solid rgba(150,80,255,.4);
+  border-radius: 0 5px 5px 0;
+}
+.oc-mission-approval {
+  background: rgba(255,140,66,.04) !important;
+  border-left-color: #ff8c42 !important;
+  animation: missionApprovalPulse 2s ease-in-out infinite;
+}
+@keyframes missionApprovalPulse {
+  0%,100% { box-shadow: none; }
+  50%      { box-shadow: 0 0 8px rgba(255,140,66,.15); }
+}
+.oc-missionCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.oc-missionId {
+  font-size: 6.5px;
+  font-family: monospace;
+  color: rgba(200,160,255,.3);
+  letter-spacing: .3px;
+  flex-shrink: 0;
+}
+.oc-missionStatus {
+  font-size: 6.5px;
+  letter-spacing: .8px;
+  padding: 2px 7px;
+  border-radius: 2px;
+  border: 1px solid rgba(150,80,255,.2);
+  white-space: nowrap;
+}
+.oc-missionElapsed {
+  font-size: 6.5px;
+  color: rgba(200,160,255,.3);
+  margin-left: auto;
+  white-space: nowrap;
+}
+.oc-missionTitle {
+  font-size: 8.5px;
+  font-weight: 700;
+  color: rgba(220,190,255,.8);
+  letter-spacing: .3px;
+  margin-bottom: 3px;
+  line-height: 1.3;
+}
+.oc-missionParticipants {
+  font-size: 7px;
+  color: rgba(200,160,255,.4);
+  letter-spacing: .3px;
+  margin-bottom: 3px;
+}
+.oc-missionNote {
+  font-size: 7px;
+  color: rgba(200,160,255,.4);
+  font-style: italic;
+  line-height: 1.4;
+  border-top: 1px solid rgba(150,80,255,.06);
+  padding-top: 4px;
+  margin-top: 2px;
+}
+
+/* ── KPI DASHBOARD ── */
+.oc-healthBadge {
+  font-size: 7px;
+  letter-spacing: 1px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  border: 1px solid;
+}
+.oc-health-green  { color: #2ecc71; border-color: rgba(46,204,113,.35); background: rgba(46,204,113,.08); }
+.oc-health-yellow { color: #ffdc32; border-color: rgba(255,220,50,.35); background: rgba(255,220,50,.06); animation: orionDotBlink 2s infinite; }
+.oc-health-red    { color: #ff5050; border-color: rgba(255,80,80,.4);   background: rgba(255,80,80,.08);  animation: orionDotBlink 1s infinite; }
+
+#oc-kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.oc-kpiCard {
+  padding: 10px;
+  border-radius: 5px;
+  background: rgba(150,80,255,.04);
+  border: 1px solid rgba(150,80,255,.1);
+}
+.oc-kpi-security    { border-top: 2px solid rgba(155,107,255,.5); }
+.oc-kpi-career      { border-top: 2px solid rgba(123,107,255,.5); }
+.oc-kpi-commerce    { border-top: 2px solid rgba(255,105,180,.5); }
+.oc-kpi-finance     { border-top: 2px solid rgba(46,204,113,.5); }
+.oc-kpi-ops         { border-top: 2px solid rgba(156,246,255,.5); }
+.oc-kpi-productivity{ border-top: 2px solid rgba(58,168,200,.5); }
+.oc-kpiDept {
+  font-size: 7px;
+  letter-spacing: 1.2px;
+  color: rgba(200,160,255,.45);
+  margin-bottom: 8px;
+}
+.oc-kpiMetrics {
+  display: flex;
+  gap: 6px;
+  justify-content: space-between;
+}
+.oc-kpiStat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  flex: 1;
+}
+.oc-kpiNum {
+  font-size: 16px;
+  font-weight: 900;
+  color: rgba(220,190,255,.85);
+  letter-spacing: .5px;
+  line-height: 1;
+}
+.oc-kpiLbl {
+  font-size: 6px;
+  letter-spacing: .8px;
+  color: rgba(200,160,255,.3);
+  text-align: center;
+  line-height: 1.2;
+}
+.oc-kpi-alert   { color: #ff5050 !important; }
+.oc-kpi-pending { color: #ff8c42 !important; }
+
+/* Scrollbar styles for new panels */
+#oc-missionList::-webkit-scrollbar,
+#oc-approvalList::-webkit-scrollbar { width: 3px; }
+#oc-missionList::-webkit-scrollbar-track,
+#oc-approvalList::-webkit-scrollbar-track { background: transparent; }
+#oc-missionList::-webkit-scrollbar-thumb,
+#oc-approvalList::-webkit-scrollbar-thumb { background: rgba(150,80,255,.2); border-radius: 2px; }

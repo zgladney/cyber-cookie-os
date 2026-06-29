@@ -11,12 +11,12 @@ var TOTAL_EMPLOYEES = 18;
 
 // Department room configs for the 6-card grid
 var ROOM_CONFIGS = [
-  { id: 'security',    name: 'SECURITY OPS', desc: '// Protect & Monitor', color: '#9b6bff', room: '../hq/index.html' },
-  { id: 'commerce',    name: 'COMMERCE',     desc: '// Create & Profit',   color: '#ff69b4', room: '../commerce/index.html' },
-  { id: 'housing',     name: 'HOUSING',      desc: '// Find Your Home',    color: '#c4784a', room: '../housing/index.html' },
-  { id: 'productivity',name: 'PRODUCTIVITY', desc: '// Plan & Organize',   color: '#3aa8c8', room: '../productivity/index.html' },
-  { id: 'finance',     name: 'FINANCE',      desc: '// Manage & Grow',     color: '#2ecc71', room: '../finance/index.html' },
-  { id: 'ops',         name: 'OPS CENTER',   desc: '// Mission Control',   color: '#9cf6ff', room: './index.html' },
+  { id: 'security',    name: 'SECURITY OPS',  desc: '// Protect & Monitor',       color: '#9b6bff', room: '../hq/index.html' },
+  { id: 'commerce',    name: 'COMMERCE',      desc: '// Create & Profit',         color: '#ff69b4', room: '../commerce/index.html' },
+  { id: 'housing',     name: 'CAREER INTEL',  desc: '// Find Your Opportunity',   color: '#7b6bff', room: '../housing/index.html' },
+  { id: 'productivity',name: 'PRODUCTIVITY',  desc: '// Plan & Organize',         color: '#3aa8c8', room: '../productivity/index.html' },
+  { id: 'finance',     name: 'FINANCE',       desc: '// Manage & Grow',           color: '#2ecc71', room: '../finance/index.html' },
+  { id: 'ops',         name: 'OPS CENTER',    desc: '// Mission Control',         color: '#9cf6ff', room: './index.html' },
 ];
 
 // ── SIMULATION STATE ─────────────────────────────────────────────
@@ -43,9 +43,10 @@ function initEmpStates() {
     athena:       ['Scanning IPv6 threats', 'Classifying suspicious IPs', 'Generating report'],
     nimbus:       ['Monitoring cloud logs', 'Checking service uptime', 'Reviewing metrics'],
     sentinel:     ['Triaging alert queue', 'Coordinating SOC', 'Reviewing incidents'],
-    nova:         ['Searching listings', 'Filtering voucher homes', 'Ranking matches'],
-    beacon:       ['Comparing prices', 'Monitoring availability', 'Tracking history'],
-    atlas:        ['Drafting inquiries', 'Tracking responses', 'Updating contacts'],
+    nova:         ['Searching job listings', 'Filtering career opportunities', 'Ranking skill matches'],
+    beacon:       ['Tracking application status', 'Monitoring recruiter activity', 'Updating pipeline'],
+    atlas:        ['Drafting recruiter outreach', 'Tracking interview schedules', 'Updating contact log'],
+    orion:        ['Building morning briefing', 'Routing career mission', 'Monitoring company health', 'Processing approval queue'],
     pixel:        ['Analyzing TikTok trends', 'Researching niches', 'Generating report'],
     etsybot:      ['Optimizing listings', 'Writing descriptions', 'Analyzing store'],
     spark:        ['Researching viral clips', 'Tracking hashtags', 'Writing briefs'],
@@ -946,4 +947,298 @@ document.addEventListener('DOMContentLoaded', function () {
       COS.state.set('pref.lastRoomOpened', this.href);
     });
   });
+
+  // ── PHASE 14: COMPANY INTELLIGENCE PANELS ────────────────────
+  if (typeof ORION !== 'undefined') {
+    renderOrionBriefing();
+    renderApprovalQueue();
+    renderRoutineStatus();
+
+    var refreshBtn = document.getElementById('orion-refreshBriefing');
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', function () {
+        ORION.buildBriefing();
+        renderOrionBriefing();
+        renderRoutineStatus();
+        showToast('Orion rebuilt the morning briefing.', '#9cf6ff');
+      });
+    }
+
+    COS.events.on('approval:added',   renderApprovalQueue);
+    COS.events.on('approval:granted', renderApprovalQueue);
+    COS.events.on('approval:rejected', renderApprovalQueue);
+    COS.events.on('company:DailyBriefingReady', renderOrionBriefing);
+    COS.events.on('company:CompanyHealthChanged', function (h) {
+      var el = document.getElementById('oc-companyHealth');
+      if (!el) return;
+      if (h.health === 'red') {
+        el.className = 'oc-healthBadge oc-health-red';
+        el.textContent = '⚠ ALERT';
+      } else if (h.health === 'yellow') {
+        el.className = 'oc-healthBadge oc-health-yellow';
+        el.textContent = '● CAUTION';
+      } else {
+        el.className = 'oc-healthBadge oc-health-green';
+        el.textContent = '● HEALTHY';
+      }
+    });
+  }
+
+  if (typeof MS !== 'undefined') {
+    renderMissionTimeline();
+    COS.events.on('mission:created', renderMissionTimeline);
+    COS.events.on('mission:updated', renderMissionTimeline);
+    COS.events.on('mission:completed', renderMissionTimeline);
+  }
+
+  if (typeof KPI !== 'undefined') {
+    renderKPIDashboard();
+    COS.events.on('kpi:updated', renderKPIDashboard);
+  }
+
+  setInterval(function () {
+    if (typeof ORION !== 'undefined') renderApprovalQueue();
+    if (typeof MS    !== 'undefined') renderMissionTimeline();
+    if (typeof KPI   !== 'undefined') renderKPIDashboard();
+  }, 8000);
 });
+
+// ── PHASE 14: ORION BRIEFING ──────────────────────────────────────
+
+function renderOrionBriefing() {
+  if (typeof ORION === 'undefined') return;
+  var briefing = ORION.getBriefing();
+  if (!briefing) { ORION.buildBriefing(); briefing = ORION.getBriefing(); }
+  if (!briefing) return;
+
+  var greetEl = document.getElementById('oc-briefingGreeting');
+  if (greetEl) greetEl.textContent = briefing.greeting;
+
+  var itemsEl = document.getElementById('oc-briefingItems');
+  if (itemsEl) {
+    if (!briefing.items || !briefing.items.length) {
+      itemsEl.innerHTML = '<div class="oc-briefItem">● All departments operational.</div>';
+    } else {
+      itemsEl.innerHTML = briefing.items.map(function (item) {
+        var DEPT_COLORS = { security:'#9b6bff', career:'#7b6bff', housing:'#7b6bff', commerce:'#ff69b4', finance:'#2ecc71', productivity:'#3aa8c8', ops:'#9cf6ff' };
+        var col = DEPT_COLORS[item.dept] || '#9cf6ff';
+        return '<div class="oc-briefItem" style="border-left-color:' + col + '">' +
+          (item.icon ? '<span class="oc-briefIcon">' + item.icon + '</span>' : '') +
+          '<span>' + item.msg + '</span>' +
+          '</div>';
+      }).join('');
+    }
+  }
+}
+
+// ── PHASE 14: ROUTINE STATUS ──────────────────────────────────────
+
+function renderRoutineStatus() {
+  if (typeof ORION === 'undefined') return;
+  var list = document.getElementById('oc-routineList');
+  if (!list) return;
+  var status = ORION.routines.getStatus();
+  list.innerHTML = status.map(function (r) {
+    var lastRunStr = r.lastRun
+      ? (function () {
+          var d = Math.floor((Date.now() - r.lastRun) / 3600000);
+          return d === 0 ? 'recently' : d + 'h ago';
+        }())
+      : 'never';
+    var dotClass = r.overdue ? 'oc-routineDot-overdue' : 'oc-routineDot-ok';
+    return '<div class="oc-routineItem">' +
+      '<span class="oc-routineDot ' + dotClass + '">●</span>' +
+      '<span class="oc-routineAgent">' + r.agent + '</span>' +
+      '<span class="oc-routineName">' + r.title + '</span>' +
+      '<span class="oc-routineTime">' + lastRunStr + '</span>' +
+    '</div>';
+  }).join('');
+}
+
+// ── PHASE 14: APPROVAL QUEUE ──────────────────────────────────────
+
+function renderApprovalQueue() {
+  if (typeof ORION === 'undefined') return;
+
+  var pending  = ORION.approvals.pending();
+  var all      = ORION.approvals.all();
+  var decided  = all.filter(function (a) { return a.status !== 'pending'; }).slice(0, 3);
+
+  var badge    = document.getElementById('oc-approvalBadge');
+  if (badge) {
+    badge.textContent = pending.length + ' PENDING';
+    badge.style.background = pending.length > 0 ? 'rgba(255,80,80,.15)' : 'rgba(46,204,113,.1)';
+    badge.style.borderColor = pending.length > 0 ? 'rgba(255,80,80,.4)' : 'rgba(46,204,113,.3)';
+    badge.style.color       = pending.length > 0 ? '#ff8080'            : '#2ecc71';
+  }
+
+  var listEl = document.getElementById('oc-approvalList');
+  if (listEl) {
+    if (!pending.length) {
+      listEl.innerHTML = '<div class="oc-approvalEmpty">No decisions required right now. Departments are handling routine work.</div>';
+    } else {
+      listEl.innerHTML = pending.map(function (item) {
+        var DEPT_COLORS = { security:'#9b6bff', career:'#7b6bff', housing:'#7b6bff', commerce:'#ff69b4', finance:'#2ecc71', productivity:'#3aa8c8', ops:'#9cf6ff' };
+        var col = DEPT_COLORS[item.dept] || '#9b6bff';
+        var ago = item.ts ? (function () {
+          var d = Math.floor((Date.now() - item.ts) / 60000);
+          return d < 1 ? 'just now' : d + 'm ago';
+        }()) : '—';
+        var recs = (item.recommendations || []).map(function (r) {
+          return '<div class="oc-approvalRec">· ' + r + '</div>';
+        }).join('');
+        return '<div class="oc-approvalCard" style="border-left-color:' + col + '">' +
+          '<div class="oc-approvalHeader">' +
+            '<span class="oc-approvalTitle">' + item.title + '</span>' +
+            '<span class="oc-approvalTime">' + ago + '</span>' +
+          '</div>' +
+          '<div class="oc-approvalSummary">' + (item.impact || item.summary || '') + '</div>' +
+          (recs ? '<div class="oc-approvalRecs">' + recs + '</div>' : '') +
+          '<div class="oc-approvalBtns">' +
+            '<button class="oc-approveBtn" data-aprid="' + item.id + '">✓ APPROVE</button>' +
+            '<button class="oc-rejectBtn"  data-aprid="' + item.id + '">✕ REJECT</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      // Wire buttons
+      listEl.querySelectorAll('.oc-approveBtn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var id = this.dataset.aprid;
+          ORION.approvals.grant(id);
+          showToast('Decision approved and executed.', '#2ecc71');
+        });
+      });
+      listEl.querySelectorAll('.oc-rejectBtn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var id = this.dataset.aprid;
+          ORION.approvals.reject(id, 'CEO rejected at ops center.');
+          showToast('Decision rejected.', '#ff5050');
+        });
+      });
+    }
+  }
+
+  // Recent decisions
+  var decisionsEl = document.getElementById('oc-approvalDecisions');
+  if (decisionsEl) {
+    if (!decided.length) {
+      decisionsEl.innerHTML = '<div style="font-size:8px;color:rgba(200,160,255,.2);font-style:italic">No decisions made yet.</div>';
+    } else {
+      decisionsEl.innerHTML = decided.map(function (item) {
+        var approved = item.status === 'approved';
+        return '<div class="oc-decisionRow">' +
+          '<span class="oc-decisionDot" style="color:' + (approved ? '#2ecc71' : '#ff5050') + '">' + (approved ? '✓' : '✕') + '</span>' +
+          '<span class="oc-decisionTitle">' + item.title + '</span>' +
+          '<span class="oc-decisionStatus" style="color:' + (approved ? '#2ecc71' : '#ff5050') + '">' + item.status.toUpperCase() + '</span>' +
+        '</div>';
+      }).join('');
+    }
+  }
+}
+
+// ── PHASE 14: MISSION TIMELINE ────────────────────────────────────
+
+var STATUS_COLORS = {
+  queued:               'rgba(200,160,255,.4)',
+  assigned:             'rgba(156,246,255,.6)',
+  research:             '#ffdc32',
+  collaboration:        '#ff69b4',
+  recommendation_ready: '#3aa8c8',
+  ceo_approval:         '#ff8c42',
+  execution:            '#9b6bff',
+  complete:             '#2ecc71',
+  rejected:             '#ff5050',
+};
+
+function renderMissionTimeline() {
+  if (typeof MS === 'undefined') return;
+
+  var missions  = MS.list().slice(0, 12);
+  var count     = MS.count();
+  var el        = document.getElementById('oc-missionList');
+  var emptyEl   = document.getElementById('oc-missionEmpty');
+  var countEl   = document.getElementById('oc-missionCount');
+
+  if (countEl) countEl.textContent = count.pending + ' ACTIVE';
+
+  if (!el) return;
+
+  if (!missions.length) {
+    el.style.display = 'none';
+    if (emptyEl) emptyEl.style.display = '';
+    return;
+  }
+  if (emptyEl) emptyEl.style.display = 'none';
+  el.style.display = '';
+
+  el.innerHTML = missions.map(function (m) {
+    var statusColor  = STATUS_COLORS[m.status] || 'rgba(200,160,255,.4)';
+    var statusLabel  = (MS.STATUS[m.status] || m.status).toUpperCase();
+    var lastEvent    = m.timeline[m.timeline.length - 1];
+    var elapsed      = m.completed
+      ? (function () { var s = Math.floor((m.completed - m.created) / 1000); return s < 60 ? s + 's' : Math.floor(s/60) + 'm'; }())
+      : (function () { var s = Math.floor((Date.now() - m.created) / 1000); return s < 60 ? s + 's' : Math.floor(s/60) + 'm'; }());
+
+    var priorityDot = m.priority === 'high' ? '<span style="color:#ff8c42;margin-right:4px">▲</span>' : '';
+    var participants = m.participants.length ? m.participants.join(' · ') : m.owner;
+
+    return '<div class="oc-missionCard' + (m.status === 'ceo_approval' ? ' oc-mission-approval' : '') + '">' +
+      '<div class="oc-missionCardHeader">' +
+        '<span class="oc-missionId">' + m.id + '</span>' +
+        '<span class="oc-missionStatus" style="color:' + statusColor + ';border-color:' + statusColor + '">' + priorityDot + statusLabel + '</span>' +
+        '<span class="oc-missionElapsed">' + elapsed + '</span>' +
+      '</div>' +
+      '<div class="oc-missionTitle">' + m.title + '</div>' +
+      '<div class="oc-missionParticipants">' + participants + '</div>' +
+      (lastEvent && lastEvent.note ? '<div class="oc-missionNote">' + lastEvent.note + '</div>' : '') +
+    '</div>';
+  }).join('');
+}
+
+// ── PHASE 14: KPI DASHBOARD ───────────────────────────────────────
+
+function renderKPIDashboard() {
+  if (typeof KPI === 'undefined') return;
+  var all = KPI.all();
+
+  function set(id, v) { var el = document.getElementById(id); if (el) el.textContent = v; }
+
+  var s = all.security || {};
+  set('kpi-sec-scans',    s.scansCompleted   || 0);
+  set('kpi-sec-threats',  s.threatsDetected  || 0);
+  set('kpi-sec-critical', s.criticalAlerts   || 0);
+
+  var c = all.career || {};
+  set('kpi-car-jobs',  c.jobsFound   || 0);
+  set('kpi-car-apps',  c.applications || 0);
+  set('kpi-car-ats',   c.avgAtsScore ? c.avgAtsScore + '%' : '—');
+
+  var cm = all.commerce || {};
+  set('kpi-com-trends',   cm.trends         || 0);
+  set('kpi-com-products', cm.productsCreated || 0);
+  set('kpi-com-revenue',  cm.revenue ? '$' + Number(cm.revenue).toLocaleString() : '$0');
+
+  var f = all.finance || {};
+  set('kpi-fin-savings',  f.savingsRate ? f.savingsRate + '%' : '—');
+  set('kpi-fin-health',   f.budgetHealth || '—');
+  set('kpi-fin-cashflow', f.cashFlow ? '$' + Number(f.cashFlow).toLocaleString() : '$0');
+
+  var o = all.ops || {};
+  set('kpi-ops-missions', (o.missionsCreated  || 0) + ' / ' + (o.missionsCompleted || 0));
+  set('kpi-ops-complete', o.missionsCompleted  || 0);
+  set('kpi-ops-approvals', o.approvalsQueued   || 0);
+
+  var p = all.productivity || {};
+  set('kpi-pro-tasks',     p.tasksCompleted  || 0);
+  set('kpi-pro-focus',     p.focusHours ? p.focusHours + 'h' : '0h');
+  set('kpi-pro-deadlines', p.deadlinesMet    || 0);
+
+  // Critical alert highlight
+  var critEl = document.getElementById('kpi-sec-critical');
+  if (critEl) {
+    var critical = s.criticalAlerts || 0;
+    critEl.style.color = critical > 0 ? '#ff5050' : 'rgba(200,160,255,.85)';
+    critEl.style.textShadow = critical > 0 ? '0 0 8px rgba(255,80,80,.6)' : '';
+  }
+}
