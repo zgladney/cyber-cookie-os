@@ -532,7 +532,13 @@ a { color: inherit; text-decoration: none; }
           // After approval the provider redirects to /api/auth/{service}/callback.
           // The backend exchanges the code for a token (never exposed here),
           // then redirects back to this page with ?connected={service}.
-          window.location.href = data.url;
+          // When inside the ECC workspace overlay, open in new tab so the ECC
+          // parent page is never replaced by an external OAuth URL.
+          if (window !== window.parent) {
+            window.open(data.url, '_blank');
+          } else {
+            window.location.href = data.url;
+          }
         } else if (data.status === 'credentials_missing') {
           showToast(data.message, 'warning');
         } else if (data.status === 'coming_soon') {
