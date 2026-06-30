@@ -34,10 +34,10 @@ var ECC_CONFIG = {
     { name: 'Vault',     role: 'ASSET MANAGER',    status: 'standby', task: 'Ready to analyze savings and assets' }
   ],
   quick_actions: [
-    { label: 'ADD REVENUE',  icon: '💵', href: '../finance/index.html' },
-    { label: 'LOG EXPENSE',  icon: '📤', href: '../finance/index.html' },
-    { label: 'VIEW LEDGER',  icon: '📒', href: '../finance/index.html' },
-    { label: 'BUDGET PLAN',  icon: '📊', href: '../finance/index.html' }
+    { label: 'LEDGER STATUS', icon: '📒', action: 'api_status', endpoint: '/api/finance/ledger', key: 'transactions', noun: 'transaction' },
+    { label: 'REFRESH DATA',  icon: '🔄', action: 'refresh',    msg: 'Refreshing financial data...' },
+    { label: 'QUEUE CHECK',   icon: '📋', action: 'api_status', endpoint: '/api/orion/queue',    key: 'queue',        noun: 'decision pending' },
+    { label: 'CASH FLOW',     icon: '📊', action: 'refresh',    msg: 'Loading cash flow analysis...' }
   ]
 };
 </script>

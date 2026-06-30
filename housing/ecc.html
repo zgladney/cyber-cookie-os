@@ -35,10 +35,10 @@ var ECC_CONFIG = {
     { name: 'Atlas',     role: 'COMMUNICATIONS',   status: 'standby', task: 'Ready to draft recruiter outreach' }
   ],
   quick_actions: [
-    { label: 'REVIEW JOBS',   icon: '🔍', href: '../housing/index.html' },
-    { label: 'ATS ANALYSIS',  icon: '⭐',       href: '../housing/index.html' },
-    { label: 'OPEN PIPELINE', icon: '📊', href: '../housing/index.html' },
-    { label: 'UPLOAD DOCS',   icon: '📄', href: '../housing/index.html' }
+    { label: 'JOB PIPELINE',   icon: '🔍', action: 'api_status', endpoint: '/api/career/jobs',            key: 'jobs',            noun: 'job' },
+    { label: 'SKILLS REPORT',  icon: '📄', action: 'refresh',    msg: 'Refreshing career intelligence...' },
+    { label: 'ATS QUEUE',      icon: '⭐', action: 'api_status', endpoint: '/api/career/recommendations', key: 'recommendations', noun: 'recommendation' },
+    { label: 'QUEUE STATUS',   icon: '📋', action: 'api_status', endpoint: '/api/orion/queue',            key: 'queue',           noun: 'pending item' }
   ]
 };
 </script>

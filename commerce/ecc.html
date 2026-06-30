@@ -34,10 +34,10 @@ var ECC_CONFIG = {
     { name: 'EtsyBot',  role: 'LISTING MANAGER',   status: 'idle',    task: 'Pending Etsy account connection' }
   ],
   quick_actions: [
-    { label: 'CREATE PRODUCT', icon: '✨', href: '../commerce/index.html' },
-    { label: 'VIEW PIPELINE',  icon: '📦', href: '../commerce/index.html' },
-    { label: 'TREND REPORT',   icon: '📈', href: '../commerce/index.html' },
-    { label: 'CONNECT ETSY',   icon: '🔗', href: '../commerce/index.html' }
+    { label: 'PIPELINE',      icon: '📦', action: 'api_status', endpoint: '/api/commerce/pipeline', key: 'products',      noun: 'product' },
+    { label: 'CONTENT COUNT', icon: '🎬', action: 'api_status', endpoint: '/api/commerce/pipeline', key: 'content_items', noun: 'content item' },
+    { label: 'ACCOUNT STATUS',icon: '🔗', action: 'api_status', endpoint: '/api/accounts',          key: 'accounts',      noun: 'account' },
+    { label: 'REFRESH',       icon: '🔄', action: 'refresh',    msg: 'Refreshing commerce data...' }
   ]
 };
 </script>

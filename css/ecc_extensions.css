@@ -448,3 +448,64 @@
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+
+/* ── WORKSPACE OVERLAY ───────────────────────────────────────────────────────────
+   The old workspace room loads here — inside the ECC, never as a page navigation.
+   ECC is always the controller. Workspace is subordinate and lazy-loaded.
+   ─────────────────────────────────────────────────────────────────────────────── */
+.ecc-ws-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: none;
+  flex-direction: column;
+  background: #050008;
+}
+
+.ecc-ws-overlay.ecc-ws-open {
+  display: flex;
+}
+
+.ecc-ws-topbar {
+  flex-shrink: 0;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background: rgba(5, 0, 12, 0.98);
+  border-bottom: 1px solid rgba(155, 107, 255, 0.2);
+  z-index: 501;
+}
+
+.ecc-ws-topbar-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: rgba(180, 150, 255, 0.5);
+  font-weight: 700;
+}
+
+.ecc-ws-close-btn {
+  font-family: inherit;
+  font-size: 10px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  padding: 5px 16px;
+  background: rgba(155, 107, 255, 0.08);
+  border: 1px solid rgba(155, 107, 255, 0.3);
+  color: rgba(180, 150, 255, 0.8);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+.ecc-ws-close-btn:hover {
+  background: rgba(155, 107, 255, 0.16);
+  color: rgba(200, 170, 255, 1);
+}
+
+.ecc-ws-iframe {
+  flex: 1;
+  width: 100%;
+  border: none;
+  display: block;
+}

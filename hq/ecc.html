@@ -33,10 +33,10 @@ var ECC_CONFIG = {
     { name: 'Sentinel', role: 'THREAT HUNTER',     status: 'idle',    task: 'Standing by for threat hunt request' }
   ],
   quick_actions: [
-    { label: 'RUN SCAN',      icon: '🔍', href: '../hq/index.html' },
-    { label: 'THREAT HUNT',   icon: '🎯', href: '../hq/index.html' },
-    { label: 'VIEW CASES',    icon: '📁', href: '../hq/index.html' },
-    { label: 'AUDIT LOG',     icon: '📋', href: '../hq/index.html' }
+    { label: 'SCAN COUNT',   icon: '🔍', action: 'refresh',    msg: 'Loading security status...' },
+    { label: 'AUDIT LOG',    icon: '📋', action: 'api_status', endpoint: '/api/orion/audit',  key: 'entries', noun: 'audit entry' },
+    { label: 'QUEUE CHECK',  icon: '📊', action: 'api_status', endpoint: '/api/orion/queue',  key: 'queue',   noun: 'pending item' },
+    { label: 'THREAT BRIEF', icon: '🛡', action: 'refresh',    msg: 'Refreshing threat status...' }
   ]
 };
 </script>

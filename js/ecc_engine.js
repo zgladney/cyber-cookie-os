@@ -1,21 +1,41 @@
 /* ecc_engine.js — Phase 22: Executive Control Center Engine
  * ES5 IIFE. Reads window.ECC_CONFIG, calls /api/ecc/dept/{dept}, renders all sections.
- * SECURITY: never handles tokens, never stores credentials, never takes irreversible action.
+ *
+ * CONTROLLER RULE: The ECC owns this page. The workspace is subordinate.
+ * Quick actions execute within the ECC. Only openWorkspace() loads the
+ * old workspace — inside an iframe overlay, not as a page navigation.
+ *
+ * SECURITY: never handles tokens, never takes irreversible action.
  * CEO approval required for any action routed to ORION queue.
  */
 (function () {
   'use strict';
 
-  // ── read config from each dept ECC page ──────────────────────────────────
-  var CFG = window.ECC_CONFIG || {};
-  var DEPT      = CFG.dept      || 'unknown';
-  var LABEL     = CFG.label     || DEPT.toUpperCase();
-  var ICON      = CFG.icon      || '';
-  var COLOR     = CFG.color     || '#9b6bff';
-  var WORKSPACE = CFG.workspace || '../index.html';
-  var EMPLOYEES = CFG.employees || [];
+  // ── iframe guard: if this ECC page loaded inside the workspace overlay,
+  // close the overlay in the parent instead of rendering a nested ECC ──────
+  if (window !== window.parent) {
+    try {
+      if (window.parent.EccEngine && window.parent.EccEngine.closeWorkspace) {
+        window.parent.EccEngine.closeWorkspace();
+        // halt this page's rendering — parent will handle it
+        throw new Error('ECC_IFRAME_GUARD');
+      }
+    } catch (guardErr) {
+      if (guardErr.message === 'ECC_IFRAME_GUARD') return;
+      // parent access blocked (cross-origin) — proceed normally
+    }
+  }
 
-  // ── cached server data ────────────────────────────────────────────────────
+  // ── read config from each dept ECC page ──────────────────────────────────
+  var CFG      = window.ECC_CONFIG || {};
+  var DEPT     = CFG.dept      || 'unknown';
+  var LABEL    = CFG.label     || DEPT.toUpperCase();
+  var ICON     = CFG.icon      || '';
+  var COLOR    = CFG.color     || '#9b6bff';
+  var WORKSPACE= CFG.workspace || '../index.html';
+  var EMPLOYEES= CFG.employees || [];
+
+  // ── server data cache ─────────────────────────────────────────────────────
   var _data = null;
 
   // ── boot ─────────────────────────────────────────────────────────────────
@@ -26,13 +46,13 @@
     _startClock();
   });
 
-  // ── shell: build static page skeleton ────────────────────────────────────
+  // ── shell: build static skeleton ─────────────────────────────────────────
   function _renderShell() {
     var hdr = document.getElementById('ecc-header');
     if (hdr) {
       hdr.innerHTML =
         '<a class="ecc-back-btn" href="../index.html">← ORION</a>' +
-        '<div class="ecc-dept-title" style="color:' + COLOR + '">' + ICON + ' ' + LABEL + '</div>' +
+        '<div class="ecc-dept-title" style="color:' + COLOR + '">' + ICON + '  ' + LABEL + '</div>' +
         '<div class="ecc-dept-sub">EXECUTIVE CONTROL CENTER</div>' +
         '<div class="ecc-health-badge" id="ecc-health-badge" data-status="initializing">LOADING...</div>' +
         '<div id="ecc-clock" style="font-size:11px;letter-spacing:1.5px;color:rgba(180,150,255,.4);margin-left:auto"></div>';
@@ -82,9 +102,11 @@
         '<div class="ecc-footer-left">' +
           '<span class="ecc-footer-status" id="ecc-footer-status">● CONNECTING...</span>' +
         '</div>' +
-        '<a class="ecc-open-workspace" href="' + WORKSPACE + '" style="border-color:' + COLOR + '33;color:' + COLOR + '">' +
+        '<button class="ecc-open-workspace" id="ecc-open-workspace-btn" ' +
+          'onclick="EccEngine.openWorkspace()" ' +
+          'style="border-color:' + COLOR + '44;color:' + COLOR + '">' +
           'OPEN WORKSPACE →' +
-        '</a>';
+        '</button>';
     }
 
     _renderEmployees();
@@ -96,24 +118,23 @@
     var xhr = new XMLHttpRequest();
     xhr.open('GET', '/api/ecc/dept/' + DEPT, true);
     xhr.onreadystatechange = function () {
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          try {
-            _data = JSON.parse(xhr.responseText);
-            _render(_data);
-            _setFooter('● ' + LABEL + ' ONLINE');
-          } catch (e) {
-            _setFooter('■ PARSE ERROR');
-          }
-        } else {
-          _setFooter('■ SERVER UNREACHABLE');
+      if (xhr.readyState !== 4) return;
+      if (xhr.status === 200) {
+        try {
+          _data = JSON.parse(xhr.responseText);
+          _render(_data);
+          _setFooter('● ' + LABEL + ' ONLINE');
+        } catch (e) {
+          _setFooter('■ PARSE ERROR');
         }
+      } else {
+        _setFooter('■ SERVER UNREACHABLE');
       }
     };
     xhr.send();
   }
 
-  // ── render all sections from data ─────────────────────────────────────────
+  // ── render from data ──────────────────────────────────────────────────────
   function _render(d) {
     _renderHealth(d);
     _renderSummary(d);
@@ -127,10 +148,8 @@
   function _renderHealth(d) {
     var el = document.getElementById('ecc-health-badge');
     if (!el) return;
-    var label  = d.health_label || 'UNKNOWN';
-    var status = d.health_status || 'neutral';
-    el.textContent = label.toUpperCase();
-    el.setAttribute('data-status', status);
+    el.textContent = (d.health_label || 'UNKNOWN').toUpperCase();
+    el.setAttribute('data-status', d.health_status || 'neutral');
   }
 
   // ── executive summary ─────────────────────────────────────────────────────
@@ -147,9 +166,10 @@
     var actionBtn = '';
     if (rec.action_label) {
       if (rec.action_url) {
-        actionBtn = '<a class="ecc-rec-action-btn" href="' + rec.action_url + '">' + rec.action_label + '</a>';
+        actionBtn = '<a class="ecc-rec-action-btn" href="' + rec.action_url + '">' + _esc(rec.action_label) + '</a>';
       } else {
-        actionBtn = '<button class="ecc-rec-action-btn" onclick="EccEngine.openWorkspace()">' + rec.action_label + '</button>';
+        // action opens workspace, does not navigate away
+        actionBtn = '<button class="ecc-rec-action-btn" onclick="EccEngine.openWorkspace()">' + _esc(rec.action_label) + '</button>';
       }
     }
     el.innerHTML =
@@ -192,10 +212,10 @@
     if (!EMPLOYEES.length) { el.innerHTML = '<div class="ecc-act-empty">No employees configured.</div>'; return; }
     var html = '';
     for (var i = 0; i < EMPLOYEES.length; i++) {
-      var emp    = EMPLOYEES[i];
+      var emp      = EMPLOYEES[i];
       var initials = (emp.name || '?').substring(0, 2).toUpperCase();
-      var statusCls = emp.status || 'idle';
-      var statusLbl = (emp.status === 'working') ? 'WORKING' : (emp.status === 'standby' ? 'STANDBY' : 'IDLE');
+      var statusCls= emp.status || 'idle';
+      var statusLbl= emp.status === 'working' ? 'WORKING' : (emp.status === 'standby' ? 'STANDBY' : 'IDLE');
       html +=
         '<div class="ecc-emp-card">' +
           '<div class="ecc-emp-avatar" style="border-color:' + COLOR + '44;color:' + COLOR + '">' + initials + '</div>' +
@@ -210,7 +230,12 @@
     el.innerHTML = html;
   }
 
-  // ── quick actions (from ECC_CONFIG) ──────────────────────────────────────
+  // ── quick actions — ECC-level only, no workspace navigation ──────────────
+  // Action types:
+  //   'refresh'  — reload ECC data
+  //   'info'     — show a static informational toast
+  //   'api_status' — GET endpoint, show item count in toast, then refresh
+  // The ONLY thing that opens the workspace is the footer "OPEN WORKSPACE" button.
   function _renderActions() {
     var el = document.getElementById('ecc-action-grid');
     if (!el) return;
@@ -219,9 +244,10 @@
     var html = '';
     for (var i = 0; i < actions.length; i++) {
       var a = actions[i];
-      var href = a.href || WORKSPACE;
-      html += '<a class="ecc-action-btn" href="' + href + '">' +
-        (a.icon ? a.icon + ' ' : '') + _esc(a.label) + '</a>';
+      html +=
+        '<button class="ecc-action-btn" onclick="EccEngine.doAction(' + i + ')">' +
+          (a.icon ? a.icon + '  ' : '') + _esc(a.label) +
+        '</button>';
     }
     el.innerHTML = html;
   }
@@ -250,7 +276,7 @@
         '</div>';
     }
     if (pending.length > 3) {
-      html += '<div class="ecc-dec-empty">' + (pending.length - 3) + ' more — open ORION</div>';
+      html += '<div class="ecc-dec-empty">' + (pending.length - 3) + ' more — see ORION</div>';
     }
     el.innerHTML = html;
   }
@@ -265,8 +291,8 @@
     }
     var html = '';
     for (var i = 0; i < Math.min(entries.length, 6); i++) {
-      var e   = entries[i];
-      var ts  = (e.ts || '').substring(11, 16);
+      var e  = entries[i];
+      var ts = (e.ts || '').substring(11, 16);
       html +=
         '<div class="ecc-act-item">' +
           '<span class="ecc-act-dot">●</span>' +
@@ -285,16 +311,58 @@
     function tick() {
       var el = document.getElementById('ecc-clock');
       if (!el) return;
-      var now = new Date();
-      var h = now.getHours();
-      var m = now.getMinutes();
-      var s = now.getSeconds();
+      var now  = new Date();
+      var h    = now.getHours();
       var ampm = h >= 12 ? 'PM' : 'AM';
       h = h % 12 || 12;
-      el.textContent = _pad(h) + ':' + _pad(m) + ':' + _pad(s) + ' ' + ampm;
+      el.textContent = _pad(h) + ':' + _pad(now.getMinutes()) + ':' + _pad(now.getSeconds()) + ' ' + ampm;
     }
     tick();
     setInterval(tick, 1000);
+  }
+
+  // ── workspace overlay ─────────────────────────────────────────────────────
+  // The workspace loads inside a full-screen iframe overlay.
+  // No page navigation occurs. The ECC remains the page controller.
+
+  function _createOverlay() {
+    var el = document.createElement('div');
+    el.id = 'ecc-ws-overlay';
+    el.className = 'ecc-ws-overlay';
+    el.innerHTML =
+      '<div class="ecc-ws-topbar">' +
+        '<span class="ecc-ws-topbar-label">' + ICON + '  ' + LABEL + ' — WORKSPACE</span>' +
+        '<button class="ecc-ws-close-btn" onclick="EccEngine.closeWorkspace()">← RETURN TO ECC</button>' +
+      '</div>' +
+      '<iframe class="ecc-ws-iframe" id="ecc-ws-iframe" src="" title="' + LABEL + ' Workspace"></iframe>';
+    document.body.appendChild(el);
+    return el;
+  }
+
+  function _openWorkspace() {
+    var overlay = document.getElementById('ecc-ws-overlay') || _createOverlay();
+    var iframe  = document.getElementById('ecc-ws-iframe');
+    // Load workspace only when opened; set src now (lazy load)
+    if (iframe && !iframe.getAttribute('data-loaded')) {
+      iframe.src = WORKSPACE;
+      iframe.setAttribute('data-loaded', '1');
+    }
+    overlay.classList.add('ecc-ws-open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function _closeWorkspace() {
+    var overlay = document.getElementById('ecc-ws-overlay');
+    if (overlay) {
+      overlay.classList.remove('ecc-ws-open');
+      document.body.style.overflow = '';
+      // Clear src so workspace scripts don't keep running in background
+      var iframe = document.getElementById('ecc-ws-iframe');
+      if (iframe) {
+        iframe.removeAttribute('data-loaded');
+        setTimeout(function () { iframe.src = ''; }, 200);
+      }
+    }
   }
 
   // ── footer status ─────────────────────────────────────────────────────────
@@ -309,7 +377,7 @@
     if (!el) return;
     el.textContent = msg;
     el.classList.add('ecc-toast-show');
-    setTimeout(function () { el.classList.remove('ecc-toast-show'); }, 2800);
+    setTimeout(function () { el.classList.remove('ecc-toast-show'); }, 3000);
   }
 
   // ── helpers ───────────────────────────────────────────────────────────────
@@ -326,10 +394,64 @@
 
   // ── public API ────────────────────────────────────────────────────────────
   window.EccEngine = {
+
     reload: _load,
 
+    // Called by OPEN WORKSPACE footer button only.
+    // Creates an iframe overlay — no page navigation.
     openWorkspace: function () {
-      window.location.href = WORKSPACE;
+      _openWorkspace();
+    },
+
+    // Called by the iframe topbar close button or by the workspace back button
+    // when the workspace detects it is running inside this overlay.
+    closeWorkspace: function () {
+      _closeWorkspace();
+    },
+
+    // Quick action handler — ECC-level operations only.
+    // action types: 'refresh', 'info', 'api_status'
+    // Nothing here navigates to the workspace.
+    doAction: function (index) {
+      var actions = CFG.quick_actions || [];
+      var a = actions[index];
+      if (!a) return;
+
+      switch (a.action) {
+
+        case 'refresh':
+          _toast((a.msg || 'Refreshing ' + LABEL + '...'));
+          _load();
+          break;
+
+        case 'info':
+          _toast(a.msg || 'No information available.');
+          break;
+
+        case 'api_status':
+          _toast('Checking ' + (a.label || '') + '...');
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', a.endpoint, true);
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState !== 4 || xhr.status !== 200) return;
+            try {
+              var d    = JSON.parse(xhr.responseText);
+              var list = d[a.key] || d.jobs || d.recommendations || d.transactions || d.contacts || d.entries || [];
+              var n    = Array.isArray(list) ? list.length : (d.count || 0);
+              var noun = a.noun || 'item';
+              _toast(n + ' ' + noun + (n !== 1 ? 's' : '') + ' on record.');
+              _load();
+            } catch (e) {
+              _toast('Error reading ' + (a.label || 'data') + '.');
+            }
+          };
+          xhr.send();
+          break;
+
+        default:
+          _toast(a.msg || 'Action not yet available. Use Open Workspace.');
+          break;
+      }
     },
 
     approve: function (id) {
@@ -352,4 +474,5 @@
 
     toast: _toast,
   };
+
 }());

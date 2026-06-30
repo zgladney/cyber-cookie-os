@@ -33,10 +33,10 @@ var ECC_CONFIG = {
     { name: 'Memo',    role: 'TASK MANAGER',       status: 'idle',    task: 'Tracking tasks and reminders' }
   ],
   quick_actions: [
-    { label: 'SYNC CALENDAR',  icon: '📅', href: '../productivity/index.html' },
-    { label: 'CREATE TASK',    icon: '✅', href: '../productivity/index.html' },
-    { label: 'VIEW SCHEDULE',  icon: '🗓', href: '../productivity/index.html' },
-    { label: 'SET REMINDER',   icon: '⏰', href: '../productivity/index.html' }
+    { label: 'REFRESH',        icon: '🔄', action: 'refresh',    msg: 'Refreshing productivity data...' },
+    { label: 'QUEUE CHECK',    icon: '📋', action: 'api_status', endpoint: '/api/orion/queue', key: 'queue', noun: 'pending item' },
+    { label: 'AUDIT LOG',      icon: '📊', action: 'api_status', endpoint: '/api/orion/audit', key: 'entries', noun: 'audit entry' },
+    { label: 'CALENDAR STATUS',icon: '📅', action: 'info',       msg: 'Connect Google Calendar in Workspace to activate scheduling.' }
   ]
 };
 </script>

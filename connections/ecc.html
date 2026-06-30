@@ -33,10 +33,10 @@ var ECC_CONFIG = {
     { name: 'Bridge',  role: 'INTEGRATION MGR',   status: 'working', task: 'Checking account connection status' }
   ],
   quick_actions: [
-    { label: 'ADD CONTACT',     icon: '👤', href: '../connections/index.html' },
-    { label: 'LOG MESSAGE',     icon: '💬', href: '../connections/index.html' },
-    { label: 'VIEW CRM',        icon: '📋', href: '../connections/index.html' },
-    { label: 'CONNECT LINKEDIN',icon: '🔗', href: '../connections/index.html' }
+    { label: 'CRM STATUS',    icon: '📋', action: 'api_status', endpoint: '/api/connections/crm', key: 'contacts',   noun: 'contact' },
+    { label: 'COMM LOG',      icon: '💬', action: 'api_status', endpoint: '/api/connections/crm', key: 'communication_log', noun: 'message' },
+    { label: 'ACCOUNT STATUS',icon: '🔗', action: 'api_status', endpoint: '/api/accounts',        key: 'accounts',   noun: 'account' },
+    { label: 'REFRESH',       icon: '🔄', action: 'refresh',    msg: 'Refreshing connections data...' }
   ]
 };
 </script>
