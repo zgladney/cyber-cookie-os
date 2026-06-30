@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects ECC — CyberCookieOS</title>
+<link rel="stylesheet" href="../css/orion_executive.css">
+<link rel="stylesheet" href="../css/ecc_extensions.css">
+</head>
+<body>
+<script>
+window.ECC_CONFIG = {
+  dept:      'projects',
+  label:     'PROJECTS',
+  icon:      '📋',
+  color:     '#3498db',
+  workspace: '../apartment/index.html',
+  employees: [
+    { name: 'Planner',  role: 'Project Strategist',   task: 'Breaking goals into actionable milestones',   status: 'working' },
+    { name: 'Tracker',  role: 'Milestone Monitor',     task: 'Watching deadlines across all departments',   status: 'working' },
+    { name: 'Scribe',   role: 'Documentation Agent',   task: 'Capturing decisions and progress notes',      status: 'idle'    },
+  ],
+  quick_actions: [
+    { label: 'REFRESH',         icon: '', action: 'refresh',  msg: 'Refreshing Projects...' },
+    { label: 'ADD PROJECT',     icon: '', action: 'open_ws',  msg: '' },
+    { label: 'ACTIVE PROJECTS', icon: '', action: 'info',     msg: 'Open workspace to view active project board.' },
+    { label: 'OPEN WORKSPACE',  icon: '', action: 'open_ws',  msg: '' },
+  ],
+};
+</script>
+
+<div id="ecc-header" class="ecc-header"></div>
+<div class="ecc-body">
+  <div id="ecc-left"  class="ecc-left"></div>
+  <div id="ecc-right" class="ecc-right"></div>
+</div>
+<div id="ecc-footer" class="ecc-footer"></div>
+<div id="ecc-toast"></div>
+
+<script src="../js/cybercookieos.js"></script>
+<script src="../js/orion.js"></script>
+<script src="../js/cos_orion_server.js"></script>
+<script src="../js/ecc_engine.js"></script>
+</body>
+</html>

@@ -3,367 +3,653 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Commerce Department — CyberCookieOS</title>
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="../css/workspace.css">
-<link rel="stylesheet" href="../css/cos_ui.css">
-<link rel="stylesheet" href="../css/p19-polish.css">
+<title>Revenue Operations Center — CyberCookieOS</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;width:100%;overflow:hidden;background:#05000f;color:rgba(200,180,255,.9);font-family:'Courier New',monospace;font-size:12px}
+button,select,input,textarea{font-family:inherit;font-size:11px;background:transparent;color:inherit;border:1px solid rgba(255,105,180,.2);border-radius:2px;padding:4px 8px;outline:none}
+input::placeholder,textarea::placeholder{color:rgba(200,100,150,.3)}
+
+/* ── TOPBAR ── */
+#rev-topbar{flex-shrink:0;height:40px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:rgba(5,0,12,.98);border-bottom:1px solid rgba(255,105,180,.2);letter-spacing:1.5px;z-index:10}
+.rev-ecc-btn{font-size:9px;letter-spacing:2px;font-weight:700;color:rgba(255,105,180,.6);text-decoration:none;padding:3px 10px;border:1px solid rgba(255,105,180,.2);border-radius:2px;transition:color .12s}
+.rev-ecc-btn:hover{color:#ff69b4;border-color:rgba(255,105,180,.45)}
+.rev-room-label{font-size:9px;letter-spacing:2.5px;color:rgba(180,150,255,.35)}
+.rev-topbar-center{font-size:10px;letter-spacing:3px;font-weight:700;color:rgba(255,105,180,.6)}
+.rev-topbar-right{display:flex;align-items:center;gap:8px}
+.rev-agent-dot{font-size:9px;letter-spacing:1.5px;font-weight:700;padding:2px 8px;border-radius:2px;border:1px solid}
+.rev-agent-dot.trend {color:#f1c40f;border-color:rgba(241,196,15,.25);background:rgba(241,196,15,.05)}
+.rev-agent-dot.maker {color:#e74c3c;border-color:rgba(231,76,60,.25);background:rgba(231,76,60,.05)}
+.rev-agent-dot.market{color:#9b59b6;border-color:rgba(155,89,182,.25);background:rgba(155,89,182,.05)}
+.rev-agent-dot.revenue{color:#2ecc71;border-color:rgba(46,204,113,.25);background:rgba(46,204,113,.05)}
+.rev-header-btn{font-size:9px;letter-spacing:1.5px;font-weight:700;padding:4px 12px;cursor:pointer;background:rgba(255,105,180,.08);border:1px solid rgba(255,105,180,.3);color:#ff69b4;border-radius:2px;transition:background .12s}
+.rev-header-btn:hover{background:rgba(255,105,180,.16)}
+
+/* ── LAYOUT ── */
+.rev-layout{display:flex;height:calc(100vh - 40px);overflow:hidden}
+.rev-main{flex:1;display:flex;flex-direction:column;gap:5px;padding:5px;overflow:hidden}
+.rev-sidebar{width:250px;flex-shrink:0;background:rgba(5,0,12,.9);border-left:1px solid rgba(255,105,180,.1);overflow-y:auto;padding:7px;display:flex;flex-direction:column;gap:7px}
+.rev-sidebar::-webkit-scrollbar,.rev-main::-webkit-scrollbar{width:2px}
+.rev-sidebar::-webkit-scrollbar-thumb,.rev-main::-webkit-scrollbar-thumb{background:rgba(255,105,180,.15)}
+
+/* ── ROWS ── */
+.rev-row{display:flex;gap:5px;flex:1;min-height:0}
+
+/* ── ZONE ── */
+.rev-zone{background:rgba(10,2,26,.88);border:1px solid rgba(155,107,255,.12);border-radius:3px;display:flex;flex-direction:column;overflow:hidden;flex:1}
+.rev-zone-hdr{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:6px 10px;font-size:8px;letter-spacing:2.5px;font-weight:700;color:rgba(180,150,255,.45);border-bottom:1px solid rgba(155,107,255,.1)}
+.rev-zone-hdr-right{display:flex;align-items:center;gap:5px}
+.rev-zone-btn{font-size:8px;letter-spacing:1px;font-weight:700;padding:2px 8px;cursor:pointer;background:rgba(155,107,255,.06);border:1px solid rgba(155,107,255,.18);color:rgba(180,150,255,.65);border-radius:2px;transition:background .12s}
+.rev-zone-btn:hover{background:rgba(155,107,255,.13);color:rgba(200,170,255,1)}
+.rev-zone-btn.pink{border-color:rgba(255,105,180,.3);color:rgba(255,105,180,.8)}
+.rev-zone-btn.pink:hover{background:rgba(255,105,180,.1);color:#ff69b4}
+.rev-zone-scroll{flex:1;overflow-y:auto;padding:5px}
+.rev-zone-scroll::-webkit-scrollbar{width:2px}
+.rev-zone-scroll::-webkit-scrollbar-thumb{background:rgba(255,105,180,.12)}
+
+/* ── AGENT WORKSTATIONS ── */
+.rev-agents-zone{flex:0 0 230px}
+.rev-ws-card{padding:7px 9px;border:1px solid rgba(155,107,255,.15);border-left:3px solid;border-radius:2px;background:rgba(5,0,12,.6);margin-bottom:5px}
+.rev-ws-card.trendseer{border-left-color:#f1c40f}
+.rev-ws-card.maker    {border-left-color:#e74c3c}
+.rev-ws-card.marketmind{border-left-color:#9b59b6}
+.rev-ws-card.revenueai{border-left-color:#2ecc71}
+.rev-ws-hdr{display:flex;align-items:center;gap:5px;margin-bottom:4px}
+.rev-ws-name{font-size:9.5px;font-weight:700;letter-spacing:.5px;flex:1}
+.rev-ws-card.trendseer  .rev-ws-name{color:#f1c40f}
+.rev-ws-card.maker      .rev-ws-name{color:#e74c3c}
+.rev-ws-card.marketmind .rev-ws-name{color:#9b59b6}
+.rev-ws-card.revenueai  .rev-ws-name{color:#2ecc71}
+.rev-ws-role{font-size:7px;letter-spacing:1.5px;color:rgba(180,150,255,.35)}
+.rev-ws-status{font-size:7px;letter-spacing:1px;font-weight:700;padding:1px 5px;border-radius:2px;border:1px solid;color:rgba(150,120,200,.45);border-color:rgba(155,107,255,.2)}
+.rev-ws-status.working{color:#2ecc71;border-color:rgba(46,204,113,.3);background:rgba(46,204,113,.05)}
+.rev-ws-task{font-size:8px;color:rgba(180,150,255,.4);margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rev-ws-output{font-size:7.5px;color:rgba(255,105,180,.4);min-height:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:3px}
+.rev-ws-bar{height:2px;background:rgba(155,107,255,.1);border-radius:1px;overflow:hidden}
+.rev-ws-fill{height:100%;border-radius:1px;width:0;transition:width .6s ease}
+.rev-ws-card.trendseer  .rev-ws-fill{background:#f1c40f}
+.rev-ws-card.maker      .rev-ws-fill{background:#e74c3c}
+.rev-ws-card.marketmind .rev-ws-fill{background:#9b59b6}
+.rev-ws-card.revenueai  .rev-ws-fill{background:#2ecc71}
+
+/* ── REVENUE PIPELINE ── */
+.rev-pipe-stages{display:flex;gap:0;border-bottom:1px solid rgba(155,107,255,.1);flex-shrink:0}
+.rev-pipe-stage{flex:1;text-align:center;padding:6px 3px;border-right:1px solid rgba(155,107,255,.07);cursor:pointer;transition:background .12s}
+.rev-pipe-stage:last-child{border-right:none}
+.rev-pipe-stage:hover{background:rgba(255,105,180,.05)}
+.rev-pipe-stage.active{background:rgba(255,105,180,.07)}
+.rev-pipe-num{font-size:17px;font-weight:700;line-height:1;color:rgba(200,180,255,.8)}
+.rev-pipe-num.pink{color:#ff69b4}
+.rev-pipe-num.green{color:#2ecc71}
+.rev-pipe-num.amber{color:#f39c12}
+.rev-pipe-num.gold{color:#f1c40f}
+.rev-pipe-lbl{font-size:6.5px;letter-spacing:1.5px;color:rgba(180,150,255,.35);margin-top:2px}
+.rev-pipe-products{flex:1;overflow-y:auto;padding:5px}
+.rev-pipe-products::-webkit-scrollbar{width:2px}
+
+/* ── PRODUCT CARD ── */
+.rev-product-card{padding:7px 9px;margin-bottom:5px;background:rgba(5,0,12,.5);border:1px solid rgba(155,107,255,.12);border-left:3px solid rgba(255,105,180,.4);border-radius:2px;cursor:pointer;transition:background .12s}
+.rev-product-card:hover{background:rgba(10,4,30,.7)}
+.rev-product-card-top{display:flex;align-items:flex-start;gap:6px;margin-bottom:4px}
+.rev-product-name{font-size:9.5px;font-weight:700;color:rgba(200,180,255,.9);flex:1;line-height:1.3}
+.rev-product-price{font-size:9.5px;font-weight:700;color:#2ecc71;flex-shrink:0}
+.rev-product-meta{font-size:8px;color:rgba(180,150,255,.4)}
+.rev-product-status{display:inline-block;font-size:7px;letter-spacing:1.5px;font-weight:700;padding:1px 5px;border-radius:2px;border:1px solid;margin-left:5px}
+.rev-product-status.idea      {color:#f1c40f;border-color:rgba(241,196,15,.3)}
+.rev-product-status.research  {color:#3498db;border-color:rgba(52,152,219,.3)}
+.rev-product-status.creating  {color:#e74c3c;border-color:rgba(231,76,60,.3)}
+.rev-product-status.ready     {color:#9b59b6;border-color:rgba(155,89,182,.3)}
+.rev-product-status.published {color:#ff69b4;border-color:rgba(255,105,180,.3)}
+.rev-product-status.selling   {color:#2ecc71;border-color:rgba(46,204,113,.3)}
+
+/* ── TREND FEED ── */
+.rev-trend-filters{flex-shrink:0;padding:5px 7px;display:flex;align-items:center;gap:5px;border-bottom:1px solid rgba(155,107,255,.08)}
+.rev-trend-filters select{font-size:8px;padding:3px 5px;flex:1}
+.rev-trend-filters button{font-size:8px;padding:3px 7px;cursor:pointer}
+.rev-trend-card{padding:7px 9px;margin-bottom:4px;background:rgba(5,0,12,.5);border:1px solid rgba(155,107,255,.1);border-radius:2px;cursor:pointer;transition:background .12s}
+.rev-trend-card:hover{background:rgba(10,4,30,.7)}
+.rev-trend-top{display:flex;align-items:flex-start;gap:6px;margin-bottom:4px}
+.rev-trend-keyword{font-size:9.5px;font-weight:700;color:rgba(200,180,255,.9);flex:1}
+.rev-trend-platform{font-size:7px;letter-spacing:1.5px;font-weight:700;padding:1px 5px;border-radius:2px;color:#ff69b4;border:1px solid rgba(255,105,180,.3);flex-shrink:0}
+.rev-trend-meta{display:flex;gap:8px;font-size:8px;color:rgba(180,150,255,.4)}
+.rev-trend-tag{padding:1px 5px;border-radius:2px;font-size:7px;font-weight:700;border:1px solid}
+.rev-trend-tag.high  {color:#2ecc71;border-color:rgba(46,204,113,.3)}
+.rev-trend-tag.medium{color:#f39c12;border-color:rgba(243,156,18,.3)}
+.rev-trend-tag.low   {color:rgba(180,150,255,.4);border-color:rgba(155,107,255,.2)}
+.rev-trend-scanning{font-size:9px;color:rgba(241,196,15,.6);letter-spacing:1px;padding:8px 0;text-align:center}
+
+/* ── PRODUCT WORKSHOP ── */
+.rev-workshop-zone{flex:0 0 260px}
+.rev-workshop-list{flex:1;overflow-y:auto;padding:5px}
+.rev-workshop-item{padding:7px 9px;margin-bottom:4px;background:rgba(5,0,12,.5);border:1px solid rgba(155,107,255,.12);border-radius:2px;cursor:pointer;transition:background .12s}
+.rev-workshop-item:hover{background:rgba(10,4,30,.7)}
+.rev-workshop-top{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.rev-workshop-title{font-size:9px;font-weight:700;color:rgba(200,180,255,.9);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rev-workshop-bar{height:2px;background:rgba(155,107,255,.1);border-radius:1px;overflow:hidden;margin-bottom:3px}
+.rev-workshop-fill{height:100%;background:#e74c3c;border-radius:1px;transition:width .5s}
+.rev-workshop-meta{font-size:7.5px;color:rgba(180,150,255,.35);display:flex;justify-content:space-between}
+
+/* ── MARKETPLACE TABS ── */
+.rev-mp-tabs{flex-shrink:0;display:flex;border-bottom:1px solid rgba(155,107,255,.1)}
+.rev-mp-tab{flex:1;padding:7px;text-align:center;font-size:8px;letter-spacing:1.5px;font-weight:700;color:rgba(180,150,255,.4);cursor:pointer;border-right:1px solid rgba(155,107,255,.08);transition:color .12s,background .12s}
+.rev-mp-tab:last-child{border-right:none}
+.rev-mp-tab.active{color:#ff69b4;background:rgba(255,105,180,.07)}
+.rev-mp-tab:hover:not(.active){color:rgba(200,170,255,.7);background:rgba(155,107,255,.05)}
+.rev-mp-panel{display:none;flex:1;overflow-y:auto;padding:5px}
+.rev-mp-panel.active{display:block}
+.rev-mp-panel::-webkit-scrollbar{width:2px}
+
+/* ── LISTING CARD ── */
+.rev-listing-card{padding:7px 9px;margin-bottom:4px;background:rgba(5,0,12,.5);border:1px solid rgba(155,107,255,.1);border-radius:2px;cursor:pointer;transition:background .12s;display:flex;align-items:center;gap:8px}
+.rev-listing-card:hover{background:rgba(10,4,30,.7)}
+.rev-listing-body{flex:1;overflow:hidden}
+.rev-listing-title{font-size:9px;font-weight:700;color:rgba(200,180,255,.85);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:2px}
+.rev-listing-meta{font-size:7.5px;color:rgba(180,150,255,.35)}
+.rev-listing-revenue{font-size:10px;font-weight:700;color:#2ecc71;flex-shrink:0}
+
+/* ── REVENUE ANALYTICS ── */
+.rev-analytics-zone{flex:0 0 260px}
+.rev-analytics-body{flex:1;overflow-y:auto;padding:7px}
+.rev-metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px}
+.rev-metric-cell{background:rgba(5,0,12,.6);border:1px solid rgba(155,107,255,.12);border-radius:2px;padding:7px 8px}
+.rev-metric-lbl{font-size:7px;letter-spacing:2px;color:rgba(180,150,255,.4);margin-bottom:3px}
+.rev-metric-val{font-size:13px;font-weight:700;color:rgba(200,180,255,.9)}
+.rev-metric-val.green{color:#2ecc71}
+.rev-metric-val.pink{color:#ff69b4}
+.rev-metric-val.gold{color:#f1c40f}
+.rev-chart-section{margin-bottom:8px}
+.rev-chart-hdr{font-size:7.5px;letter-spacing:2px;color:rgba(180,150,255,.4);margin-bottom:5px}
+.rev-bar-row{display:flex;align-items:center;gap:7px;margin-bottom:4px}
+.rev-bar-label{font-size:8px;color:rgba(180,150,255,.5);width:55px;flex-shrink:0;text-align:right}
+.rev-bar-track{flex:1;height:7px;background:rgba(155,107,255,.1);border-radius:2px;overflow:hidden}
+.rev-bar-fill{height:100%;border-radius:2px;background:#ff69b4;transition:width .6s ease}
+.rev-bar-fill.green{background:#2ecc71}
+.rev-bar-fill.gold {background:#f1c40f}
+.rev-bar-val{font-size:8px;color:rgba(200,180,255,.6);width:42px;text-align:right;flex-shrink:0}
+
+/* ── SIDEBAR ── */
+.rev-sb-block{background:rgba(10,2,26,.6);border:1px solid rgba(155,107,255,.1);border-radius:2px;padding:7px 9px}
+.rev-sb-hdr{font-size:7.5px;letter-spacing:2px;color:rgba(255,105,180,.5);font-weight:700;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid rgba(255,105,180,.1)}
+.rev-sb-hdr.purple{color:rgba(180,150,255,.45);border-bottom-color:rgba(155,107,255,.1)}
+.rev-alert-item{padding:5px 0;border-bottom:1px solid rgba(155,107,255,.07);font-size:8.5px}
+.rev-alert-item:last-child{border-bottom:none}
+.rev-alert-dot{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:5px;background:#f39c12;vertical-align:middle}
+.rev-alert-dot.green{background:#2ecc71}
+.rev-alert-dot.red{background:#e74c3c}
+.rev-alert-dot.pink{background:#ff69b4}
+.rev-alert-text{color:rgba(180,150,255,.6)}
+.rev-approval-item{padding:6px 0;border-bottom:1px solid rgba(155,107,255,.07);font-size:8.5px}
+.rev-approval-item:last-child{border-bottom:none}
+.rev-approval-title{color:rgba(200,180,255,.75);margin-bottom:2px;font-weight:700;font-size:8.5px}
+.rev-approval-meta{font-size:7.5px;color:rgba(180,150,255,.35);margin-bottom:4px}
+.rev-approval-btns{display:flex;gap:4px}
+.rev-approval-btn{flex:1;font-size:7px;letter-spacing:1px;font-weight:700;padding:3px 0;cursor:pointer;border-radius:2px;border:1px solid;text-align:center}
+.rev-approval-btn.approve{color:#2ecc71;border-color:rgba(46,204,113,.3);background:rgba(46,204,113,.06)}
+.rev-approval-btn.approve:hover{background:rgba(46,204,113,.12)}
+.rev-approval-btn.decline{color:#e74c3c;border-color:rgba(231,76,60,.2);background:rgba(231,76,60,.04)}
+.rev-approval-btn.decline:hover{background:rgba(231,76,60,.09)}
+.rev-recent-item{padding:5px 0;border-bottom:1px solid rgba(155,107,255,.06);font-size:8px}
+.rev-recent-item:last-child{border-bottom:none}
+.rev-recent-decision{font-size:7px;letter-spacing:1.5px;font-weight:700;display:inline-block;margin-right:4px}
+.rev-recent-decision.approved{color:#2ecc71}
+.rev-recent-decision.declined{color:#e74c3c}
+.rev-recent-title{color:rgba(180,150,255,.55)}
+.rev-sb-btn{display:block;width:100%;text-align:left;padding:6px 8px;margin-bottom:4px;font-size:9px;letter-spacing:1.5px;font-weight:700;cursor:pointer;background:rgba(255,105,180,.05);border:1px solid rgba(255,105,180,.15);color:rgba(255,105,180,.7);border-radius:2px;transition:background .12s}
+.rev-sb-btn:hover{background:rgba(255,105,180,.1);color:#ff69b4}
+
+/* ── DRAWERS ── */
+.rev-drawer-ov{position:fixed;inset:0;z-index:800;background:rgba(5,0,12,.65);backdrop-filter:blur(2px);display:none;justify-content:flex-end}
+.rev-drawer-ov.open{display:flex}
+.rev-drawer{width:460px;height:100%;background:rgba(6,1,18,.98);border-left:1px solid rgba(255,105,180,.2);display:flex;flex-direction:column;overflow:hidden}
+.rev-drawer-hdr{flex-shrink:0;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-size:9px;letter-spacing:2.5px;font-weight:700;color:rgba(255,105,180,.7);border-bottom:1px solid rgba(255,105,180,.18)}
+.rev-drawer-hdr button{font-size:11px;padding:3px 9px;cursor:pointer;background:rgba(155,107,255,.07);border:1px solid rgba(155,107,255,.2);color:rgba(180,150,255,.6);border-radius:2px}
+.rev-drawer-body{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:9px}
+.rev-drawer-body::-webkit-scrollbar{width:2px}
+.rev-drawer-body label{font-size:7.5px;letter-spacing:2px;color:rgba(180,150,255,.45);display:block;margin-bottom:2px}
+.rev-drawer-body input,.rev-drawer-body select,.rev-drawer-body textarea{width:100%;background:rgba(10,2,26,.8);border:1px solid rgba(155,107,255,.2);color:rgba(200,180,255,.9);padding:6px 8px;border-radius:2px}
+.rev-drawer-body textarea{resize:vertical;min-height:70px}
+.rev-drawer-row2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.rev-btn-primary{width:100%;padding:9px;font-size:9px;letter-spacing:2px;font-weight:700;cursor:pointer;background:rgba(255,105,180,.08);border:1px solid rgba(255,105,180,.3);color:#ff69b4;border-radius:2px;transition:background .12s;margin-top:4px}
+.rev-btn-primary:hover{background:rgba(255,105,180,.16)}
+.rev-btn-orion{width:100%;padding:9px;font-size:9px;letter-spacing:2px;font-weight:700;cursor:pointer;background:rgba(155,107,255,.07);border:1px solid rgba(155,107,255,.3);color:rgba(180,150,255,.8);border-radius:2px;transition:background .12s}
+.rev-btn-orion:hover{background:rgba(155,107,255,.14)}
+.rev-btn-danger{width:100%;padding:7px;font-size:9px;letter-spacing:2px;font-weight:700;cursor:pointer;background:rgba(231,76,60,.06);border:1px solid rgba(231,76,60,.25);color:rgba(231,76,60,.7);border-radius:2px}
+.rev-drawer-field-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(155,107,255,.06);font-size:9px}
+.rev-drawer-field-row span:first-child{color:rgba(180,150,255,.4);letter-spacing:1px}
+.rev-orion-notice{background:rgba(155,107,255,.07);border:1px solid rgba(155,107,255,.2);border-radius:2px;padding:8px 10px;font-size:8px;color:rgba(180,150,255,.5);line-height:1.5}
+
+/* ── TOAST ── */
+#rev-toast{position:fixed;bottom:55px;left:50%;transform:translateX(-50%) translateY(10px);background:rgba(5,0,12,.97);border:1px solid rgba(255,105,180,.3);border-radius:3px;padding:7px 18px;font-size:10px;letter-spacing:1px;color:rgba(255,105,180,.9);opacity:0;pointer-events:none;z-index:9000;white-space:nowrap;transition:opacity .2s,transform .2s}
+#rev-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── UTILS ── */
+.rev-empty{font-size:9px;color:rgba(180,150,255,.25);font-style:italic;padding:10px 0;text-align:center}
+.rev-divider{height:1px;background:rgba(155,107,255,.09);margin:5px 0}
+</style>
 </head>
+<body style="display:flex;flex-direction:column;height:100vh">
 
-<body>
+<!-- TOPBAR -->
+<header id="rev-topbar">
+  <div style="display:flex;align-items:center;gap:10px">
+    <a href="../commerce/ecc.html" class="rev-ecc-btn">← REVENUE ECC</a>
+    <span class="rev-room-label">WING C — REVENUE OPERATIONS</span>
+  </div>
+  <div class="rev-topbar-center">CyberCookieOS / REVENUE OPERATIONS CENTER</div>
+  <div class="rev-topbar-right">
+    <span class="rev-agent-dot trend">● TRENDSEER</span>
+    <span class="rev-agent-dot maker">● MAKER</span>
+    <span class="rev-agent-dot market">● MARKETMIND</span>
+    <span class="rev-agent-dot revenue">● REVENUEAI</span>
+    <button class="rev-header-btn" onclick="revOpenDrawer('rev-drawer-product')">+ NEW PRODUCT</button>
+  </div>
+</header>
 
-<div id="cm-app">
+<!-- LAYOUT -->
+<div class="rev-layout">
+  <div class="rev-main">
 
-    <header id="cm-topBar">
-        <a href="../commerce/ecc.html" class="cm-back">← COMMERCE ECC</a>
-        <div id="cm-title">
-            <h1>Commerce Department</h1>
-            <p>// Pink Neon Creative Studio — WING C</p>
+    <!-- ROW 1: Agents + Pipeline -->
+    <div class="rev-row">
+      <!-- Agents -->
+      <div class="rev-zone rev-agents-zone">
+        <div class="rev-zone-hdr">AGENT WORKSTATIONS</div>
+        <div class="rev-zone-scroll" style="padding:5px">
+          <div class="rev-ws-card trendseer">
+            <div class="rev-ws-hdr">
+              <span class="rev-ws-name">TRENDSEER</span>
+              <span class="rev-ws-role">TREND INTELLIGENCE</span>
+              <span class="rev-ws-status working" id="rev-status-trend">SCANNING</span>
+            </div>
+            <div class="rev-ws-task"  id="rev-task-trend">Scanning Etsy + TikTok for demand spikes...</div>
+            <div class="rev-ws-output" id="rev-output-trend">Found: digital planners trending +34% this week</div>
+            <div class="rev-ws-bar"><div class="rev-ws-fill" id="rev-fill-trend" style="width:72%"></div></div>
+          </div>
+          <div class="rev-ws-card maker">
+            <div class="rev-ws-hdr">
+              <span class="rev-ws-name">MAKER</span>
+              <span class="rev-ws-role">PRODUCT CREATOR</span>
+              <span class="rev-ws-status working" id="rev-status-maker">BUILDING</span>
+            </div>
+            <div class="rev-ws-task"  id="rev-task-maker">Generating Budget Binder Kit layout...</div>
+            <div class="rev-ws-output" id="rev-output-maker">20 pages — Canva template draft ready</div>
+            <div class="rev-ws-bar"><div class="rev-ws-fill" id="rev-fill-maker" style="width:58%"></div></div>
+          </div>
+          <div class="rev-ws-card marketmind">
+            <div class="rev-ws-hdr">
+              <span class="rev-ws-name">MARKETMIND</span>
+              <span class="rev-ws-role">MARKETPLACE OPS</span>
+              <span class="rev-ws-status working" id="rev-status-market">MONITORING</span>
+            </div>
+            <div class="rev-ws-task"  id="rev-task-market">Updating Etsy SEO tags for planner listing...</div>
+            <div class="rev-ws-output" id="rev-output-market">CTR improved — 2.4% above category avg</div>
+            <div class="rev-ws-bar"><div class="rev-ws-fill" id="rev-fill-market" style="width:45%"></div></div>
+          </div>
+          <div class="rev-ws-card revenueai">
+            <div class="rev-ws-hdr">
+              <span class="rev-ws-name">REVENUEAI</span>
+              <span class="rev-ws-role">REVENUE ANALYST</span>
+              <span class="rev-ws-status" id="rev-status-revenue">CALCULATING</span>
+            </div>
+            <div class="rev-ws-task"  id="rev-task-revenue">Calculating Q3 revenue forecast...</div>
+            <div class="rev-ws-output" id="rev-output-revenue">Projected: $1,240/mo at current trajectory</div>
+            <div class="rev-ws-bar"><div class="rev-ws-fill" id="rev-fill-revenue" style="width:38%"></div></div>
+          </div>
         </div>
-        <a href="../ops_center/index.html" class="cm-back">OPS CENTER →</a>
-    </header>
+      </div>
 
-    <main id="cm-main">
+      <!-- Revenue Pipeline -->
+      <div class="rev-zone">
+        <div class="rev-zone-hdr">
+          REVENUE PIPELINE
+          <div class="rev-zone-hdr-right">
+            <button class="rev-zone-btn pink" onclick="revOpenDrawer('rev-drawer-product')">+ PRODUCT</button>
+          </div>
+        </div>
+        <div class="rev-pipe-stages">
+          <div class="rev-pipe-stage active" id="rev-stage-all" onclick="revFilterPipeline('all')">
+            <div class="rev-pipe-num pink" id="rev-cnt-total">0</div>
+            <div class="rev-pipe-lbl">ALL</div>
+          </div>
+          <div class="rev-pipe-stage" id="rev-stage-idea" onclick="revFilterPipeline('idea')">
+            <div class="rev-pipe-num gold" id="rev-cnt-idea">0</div>
+            <div class="rev-pipe-lbl">IDEAS</div>
+          </div>
+          <div class="rev-pipe-stage" id="rev-stage-research" onclick="revFilterPipeline('research')">
+            <div class="rev-pipe-num" id="rev-cnt-research">0</div>
+            <div class="rev-pipe-lbl">RESEARCH</div>
+          </div>
+          <div class="rev-pipe-stage" id="rev-stage-creating" onclick="revFilterPipeline('creating')">
+            <div class="rev-pipe-num amber" id="rev-cnt-creating">0</div>
+            <div class="rev-pipe-lbl">CREATING</div>
+          </div>
+          <div class="rev-pipe-stage" id="rev-stage-ready" onclick="revFilterPipeline('ready')">
+            <div class="rev-pipe-num" id="rev-cnt-ready">0</div>
+            <div class="rev-pipe-lbl">READY</div>
+          </div>
+          <div class="rev-pipe-stage" id="rev-stage-published" onclick="revFilterPipeline('published')">
+            <div class="rev-pipe-num pink" id="rev-cnt-published">0</div>
+            <div class="rev-pipe-lbl">PUBLISHED</div>
+          </div>
+          <div class="rev-pipe-stage" id="rev-stage-selling" onclick="revFilterPipeline('selling')">
+            <div class="rev-pipe-num green" id="rev-cnt-selling">0</div>
+            <div class="rev-pipe-lbl">SELLING</div>
+          </div>
+        </div>
+        <div class="rev-pipe-products rev-zone-scroll" id="rev-pipeline-list">
+          <div class="rev-empty">No products yet.</div>
+        </div>
+      </div>
+    </div>
 
-        <div id="cm-room">
+    <!-- ROW 2: Trend Feed + Product Workshop -->
+    <div class="rev-row">
+      <!-- Trend Feed -->
+      <div class="rev-zone">
+        <div class="rev-zone-hdr">
+          TREND INTELLIGENCE FEED
+          <div class="rev-zone-hdr-right">
+            <button class="rev-zone-btn" id="rev-scan-btn" onclick="revRunTrendScan()">SCAN NOW</button>
+          </div>
+        </div>
+        <div class="rev-trend-filters">
+          <select id="rev-trend-platform" onchange="revRenderTrends()">
+            <option value="all">ALL PLATFORMS</option>
+            <option value="Etsy">ETSY</option>
+            <option value="TikTok">TIKTOK</option>
+            <option value="Gumroad">GUMROAD</option>
+          </select>
+          <select id="rev-trend-category" onchange="revRenderTrends()">
+            <option value="all">ALL CATEGORIES</option>
+            <option value="Planners">PLANNERS</option>
+            <option value="Finance">FINANCE</option>
+            <option value="Digital">DIGITAL</option>
+            <option value="Career">CAREER</option>
+            <option value="Wellness">WELLNESS</option>
+          </select>
+        </div>
+        <div class="rev-zone-scroll" id="rev-trend-list">
+          <div class="rev-empty">Loading trends...</div>
+        </div>
+      </div>
 
-            <!-- Back wall -->
-            <div id="cm-backWall">
-                <div id="cm-neonSign">COMMERCE</div>
-                <div id="cm-subSign">// CREATIVE STUDIO</div>
+      <!-- Product Workshop -->
+      <div class="rev-zone rev-workshop-zone">
+        <div class="rev-zone-hdr">
+          PRODUCT WORKSHOP
+          <button class="rev-zone-btn pink" onclick="revOpenDrawer('rev-drawer-product')">NEW</button>
+        </div>
+        <div class="rev-workshop-list" id="rev-workshop-list">
+          <div class="rev-empty">No products in workshop.</div>
+        </div>
+      </div>
+    </div>
 
-                <div id="cm-analyticsWall">
-                    <div class="cm-wallTitle">ANALYTICS COMMAND CENTER</div>
-                    <div class="cm-analyticsGrid">
-                        <div class="cm-aStat cm-slot-etsy">
-                            <div class="cm-aLabel">ETSY LISTINGS</div>
-                            <div class="cm-aVal" id="cm-wall-listings">2</div>
-                            <div class="cm-aSub">ACTIVE</div>
-                        </div>
-                        <div class="cm-aStat cm-slot-tiktok">
-                            <div class="cm-aLabel">TIKTOK REACH</div>
-                            <div class="cm-aVal" id="cm-wall-reach">—</div>
-                            <div class="cm-aSub">TRACKING</div>
-                        </div>
-                        <div class="cm-aStat cm-slot-pod">
-                            <div class="cm-aLabel">POD ORDERS</div>
-                            <div class="cm-aVal" id="cm-wall-orders">0</div>
-                            <div class="cm-aSub">IN QUEUE</div>
-                        </div>
-                        <div class="cm-aStat cm-slot-trend">
-                            <div class="cm-aLabel">TREND SCORE</div>
-                            <div class="cm-aVal" id="cm-wall-trendscore">94</div>
-                            <div class="cm-aSub">TODAY</div>
-                        </div>
-                    </div>
-                    <div class="cm-revBar">
-                        <span class="cm-revLabel">REVENUE PIPELINE</span>
-                        <div class="cm-revTrack"><div class="cm-revFill" id="cm-revFill" style="width:38%"></div></div>
-                        <span class="cm-revVal" id="cm-revVal">38%</span>
-                    </div>
-                </div>
+    <!-- ROW 3: Marketplace Ops + Revenue Analytics -->
+    <div class="rev-row">
+      <!-- Marketplace Operations -->
+      <div class="rev-zone">
+        <div class="rev-zone-hdr">
+          MARKETPLACE OPERATIONS
+          <button class="rev-zone-btn pink" onclick="revOpenDrawer('rev-drawer-listing')">+ LISTING</button>
+        </div>
+        <div class="rev-mp-tabs">
+          <div class="rev-mp-tab active" id="rev-tab-etsy"    onclick="revMpTab('etsy')">ETSY</div>
+          <div class="rev-mp-tab"        id="rev-tab-tiktok"  onclick="revMpTab('tiktok')">TIKTOK</div>
+          <div class="rev-mp-tab"        id="rev-tab-gumroad" onclick="revMpTab('gumroad')">GUMROAD</div>
+          <div class="rev-mp-tab"        id="rev-tab-shopify" onclick="revMpTab('shopify')">SHOPIFY</div>
+        </div>
+        <div id="rev-mp-etsy"    class="rev-mp-panel active"></div>
+        <div id="rev-mp-tiktok"  class="rev-mp-panel"></div>
+        <div id="rev-mp-gumroad" class="rev-mp-panel"></div>
+        <div id="rev-mp-shopify" class="rev-mp-panel"></div>
+      </div>
 
-                <div id="cm-statusBar">
-                    <span class="cm-sLed led-pink"></span><span class="cm-sLabel">PIXEL</span>
-                    <span class="cm-sLed led-hot"></span><span class="cm-sLabel">ETSYBOT</span>
-                    <span class="cm-sLed led-pink"></span><span class="cm-sLabel">SPARK</span>
-                    <span class="cm-sLed led-hot"></span><span class="cm-sLabel">FORGE</span>
-                </div>
+      <!-- Revenue Analytics -->
+      <div class="rev-zone rev-analytics-zone">
+        <div class="rev-zone-hdr">
+          REVENUE ANALYTICS
+          <button class="rev-zone-btn" onclick="revOpenDrawer('rev-drawer-forecast')">FORECAST</button>
+        </div>
+        <div class="rev-analytics-body">
+          <div class="rev-metric-grid">
+            <div class="rev-metric-cell">
+              <div class="rev-metric-lbl">TODAY</div>
+              <div class="rev-metric-val green" id="rev-rev-today">$0.00</div>
             </div>
-
-            <!-- Floor -->
-            <div id="cm-floor"></div>
-            <div id="cm-floorGlow"></div>
-
-            <!-- Fulfillment shelf (left wall prop) -->
-            <div id="cm-shelf1">
-                <div class="cm-box cm-box-pink" title="Sticker Sheets"></div>
-                <div class="cm-box cm-box-hot" title="Keychains"></div>
-                <div class="cm-box cm-box-pink" title="POD Apparel"></div>
-                <div class="cm-box cm-box-light" title="Gift Sets"></div>
+            <div class="rev-metric-cell">
+              <div class="rev-metric-lbl">THIS WEEK</div>
+              <div class="rev-metric-val green" id="rev-rev-week">$0.00</div>
             </div>
-            <div id="cm-shelfLabel">FULFILLMENT STOCK</div>
-
-            <!-- PIXEL — Trend Intelligence -->
-            <div class="cm-stn" id="cm-stn-pixel">
-                <div class="cm-stn-monitors">
-                    <div class="cm-stn-monitor">
-                        <div class="cm-monHud">PIXEL // TREND RADAR</div>
-                        <div class="cm-monBody">
-                            <div class="cm-trendRow cm-tr-hot"><span>HOLOGRAPHIC STICKERS</span><span class="cm-trScore">94</span></div>
-                            <div class="cm-trendRow cm-tr-hot"><span>CRYSTAL KEYCHAINS</span><span class="cm-trScore">88</span></div>
-                            <div class="cm-trendRow cm-tr-warm"><span>DIGITAL PLANNERS</span><span class="cm-trScore">72</span></div>
-                            <div class="cm-trendRow"><span>POD APPAREL</span><span class="cm-trScore">65</span></div>
-                            <div class="cm-trendRow"><span>TIKTOK GIFT SETS</span><span class="cm-trScore">58</span></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="cm-stn-desk">
-                    <div class="cm-stn-props">📊 🔍</div>
-                    <div class="cm-sprite" id="cm-sp-pixel">P<span class="cm-spritelbl">PIXEL</span></div>
-                </div>
-                <div class="cm-stn-plate">
-                    <div class="cm-stn-name">PIXEL</div>
-                    <div class="cm-stn-role">TREND INTELLIGENCE</div>
-                    <div class="cm-stn-task" id="cm-task-pixel">Scanning TikTok trends...</div>
-                </div>
+            <div class="rev-metric-cell">
+              <div class="rev-metric-lbl">THIS MONTH</div>
+              <div class="rev-metric-val pink" id="rev-rev-month">$0.00</div>
             </div>
-
-            <!-- ETSYBOT — Listings & Orders -->
-            <div class="cm-stn" id="cm-stn-etsybot">
-                <div class="cm-stn-monitors">
-                    <div class="cm-stn-monitor cm-mon-hot">
-                        <div class="cm-monHud cm-hud-hot">ETSYBOT // LISTINGS</div>
-                        <div class="cm-monBody">
-                            <div class="cm-listRow"><span class="cm-lr-badge cm-lr-live">LIVE</span><span>Holo Sticker Set</span><span class="cm-lr-num">×14</span></div>
-                            <div class="cm-listRow"><span class="cm-lr-badge cm-lr-live">LIVE</span><span>Crystal Keychain</span><span class="cm-lr-num">×7</span></div>
-                            <div class="cm-listRow"><span class="cm-lr-badge cm-lr-draft">DRAFT</span><span>POD Hoodie Design A</span><span class="cm-lr-num">—</span></div>
-                            <div class="cm-monMeta">ORDERS IN QUEUE: <span id="cm-orderCount" style="color:hotpink">0</span></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="cm-stn-desk cm-desk-hot">
-                    <div class="cm-stn-props">🏷 📦</div>
-                    <div class="cm-sprite cm-sp-hot" id="cm-sp-etsybot">E<span class="cm-spritelbl">ETSYBOT</span></div>
-                </div>
-                <div class="cm-stn-plate">
-                    <div class="cm-stn-name" style="color:hotpink">ETSYBOT</div>
-                    <div class="cm-stn-role">LISTINGS &amp; ORDER MANAGER</div>
-                    <div class="cm-stn-task" id="cm-task-etsybot">Syncing listing data...</div>
-                </div>
+            <div class="rev-metric-cell">
+              <div class="rev-metric-lbl">PROFIT</div>
+              <div class="rev-metric-val green" id="rev-rev-profit">$0.00</div>
             </div>
-
-            <!-- SPARK — Content Studio -->
-            <div class="cm-stn" id="cm-stn-spark">
-                <div class="cm-stn-monitors">
-                    <div class="cm-stn-monitor cm-mon-purple">
-                        <div class="cm-monHud cm-hud-purple">SPARK // CONTENT STUDIO</div>
-                        <div class="cm-monBody">
-                            <div class="cm-contentRow">▸ Hook: "POV: you ordered this..."</div>
-                            <div class="cm-contentRow">▸ Trend audio: 2.4M uses</div>
-                            <div class="cm-contentRow cm-cr-done">✓ Script: Crystal Unboxing</div>
-                            <div class="cm-contentRow cm-cr-done">✓ Caption: Sticker Sheet Drop</div>
-                            <div class="cm-monMeta">NEXT POST: <span id="cm-nextPost" style="color:rgba(200,120,255,.8)">--:--</span></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="cm-stn-desk cm-desk-purple">
-                    <div class="cm-stn-props">📱 🎬</div>
-                    <div class="cm-sprite cm-sp-purple" id="cm-sp-spark">Sk<span class="cm-spritelbl">SPARK</span></div>
-                </div>
-                <div class="cm-stn-plate">
-                    <div class="cm-stn-name" style="color:rgba(200,100,255,.9)">SPARK</div>
-                    <div class="cm-stn-role">CONTENT STUDIO DIRECTOR</div>
-                    <div class="cm-stn-task" id="cm-task-spark">Drafting hook scripts...</div>
-                </div>
+          </div>
+          <div class="rev-divider"></div>
+          <div class="rev-chart-section">
+            <div class="rev-chart-hdr">PLATFORM BREAKDOWN</div>
+            <div class="rev-bar-row">
+              <span class="rev-bar-label">ETSY</span>
+              <div class="rev-bar-track"><div class="rev-bar-fill" id="rev-bar-etsy" style="width:0%"></div></div>
+              <span class="rev-bar-val" id="rev-bar-etsy-val">$0</span>
             </div>
-
-            <!-- FORGE — POD & Fulfillment -->
-            <div class="cm-stn" id="cm-stn-forge">
-                <div class="cm-stn-monitors">
-                    <div class="cm-stn-monitor cm-mon-amber">
-                        <div class="cm-monHud cm-hud-amber">FORGE // FULFILLMENT</div>
-                        <div class="cm-monBody">
-                            <div class="cm-fulfillRow"><span class="cm-ff-status cm-ff-print">PRINTING</span><span>Design_A_Hoodie.png</span></div>
-                            <div class="cm-fulfillRow"><span class="cm-ff-status cm-ff-ship">SHIPPED</span><span>Sticker_Bundle_01</span></div>
-                            <div class="cm-fulfillRow"><span class="cm-ff-status cm-ff-queue">QUEUED</span><span>Design_B_Mug.svg</span></div>
-                            <div class="cm-monMeta">PIPELINE: <span id="cm-designCount" style="color:rgba(255,200,80,.8)">3</span> designs</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="cm-stn-desk cm-desk-amber">
-                    <div class="cm-stn-props">🎨 🖨</div>
-                    <div class="cm-sprite cm-sp-amber" id="cm-sp-forge">F<span class="cm-spritelbl">FORGE</span></div>
-                </div>
-                <div class="cm-stn-plate">
-                    <div class="cm-stn-name" style="color:rgba(255,200,80,.9)">FORGE</div>
-                    <div class="cm-stn-role">POD &amp; FULFILLMENT MANAGER</div>
-                    <div class="cm-stn-task" id="cm-task-forge">Processing POD orders...</div>
-                </div>
+            <div class="rev-bar-row">
+              <span class="rev-bar-label">GUMROAD</span>
+              <div class="rev-bar-track"><div class="rev-bar-fill green" id="rev-bar-gumroad" style="width:0%"></div></div>
+              <span class="rev-bar-val" id="rev-bar-gumroad-val">$0</span>
             </div>
-
-            <!-- Exit arch -->
-            <div id="cm-exitArch">
-                <div class="cm-archSign">← HALLWAY</div>
-                <div class="cm-archSign">← OPS CTR</div>
+            <div class="rev-bar-row">
+              <span class="rev-bar-label">TIKTOK</span>
+              <div class="rev-bar-track"><div class="rev-bar-fill gold" id="rev-bar-tiktok" style="width:0%"></div></div>
+              <span class="rev-bar-val" id="rev-bar-tiktok-val">$0</span>
             </div>
+          </div>
+          <div class="rev-divider"></div>
+          <div class="rev-chart-section">
+            <div class="rev-chart-hdr">TOP PERFORMERS</div>
+            <div id="rev-top-products"><div class="rev-empty" style="padding:5px 0">No sales yet.</div></div>
+          </div>
+          <div class="rev-divider"></div>
+          <div style="font-size:7.5px;color:rgba(180,150,255,.35);text-align:center;padding:4px 0" id="rev-analytics-ts">—</div>
+        </div>
+      </div>
+    </div>
 
-        </div><!-- /cm-room -->
+  </div>
 
-        <!-- Side panel -->
-        <aside id="cm-panel">
-
-            <div class="cm-card">
-                <div class="cm-cardTitle">// COMMERCE INTEL</div>
-                <div class="cm-statRow"><span>ACTIVE LISTINGS</span><span id="cm-stat-listings">2</span></div>
-                <div class="cm-statRow"><span>ORDERS PENDING</span><span id="cm-stat-orders" class="cm-warn">0</span></div>
-                <div class="cm-statRow"><span>TRENDS TRACKED</span><span id="cm-stat-trends">5</span></div>
-                <div class="cm-statRow"><span>CONTENT PIECES</span><span id="cm-stat-content">4</span></div>
-                <div class="cm-statRow"><span>PIPELINE HEALTH</span><span id="cm-stat-health" class="cm-ok">● ON TRACK</span></div>
-            </div>
-
-            <!-- Data Mode Badge -->
-            <div class="data-mode-row">
-                <span class="dmr-label">DATA</span>
-                <span class="data-status-badge" data-dept="commerce" id="cm-dataBadge">● SIMULATED</span>
-            </div>
-
-            <div class="cm-card">
-                <div class="cm-cardTitle">// AGENT STATUS</div>
-                <div class="cm-agentRow"><span class="cm-agBadge cm-ag-pixel">● PIXEL</span><span class="cm-agActivity" id="cm-ag-pixel">SCANNING</span></div>
-                <div class="cm-agentRow"><span class="cm-agBadge cm-ag-etsy">● ETSYBOT</span><span class="cm-agActivity" id="cm-ag-etsy">MONITORING</span></div>
-                <div class="cm-agentRow"><span class="cm-agBadge cm-ag-spark">● SPARK</span><span class="cm-agActivity" id="cm-ag-spark">CREATING</span></div>
-                <div class="cm-agentRow"><span class="cm-agBadge cm-ag-forge">● FORGE</span><span class="cm-agActivity" id="cm-ag-forge">FULFILLING</span></div>
-            </div>
-
-            <div class="cm-card">
-                <div class="cm-cardTitle">// INTEL REQUESTS</div>
-                <div class="cm-intReq">← Finance: Profit forecast</div>
-                <div class="cm-intReq">← Security: Brand monitor</div>
-                <div class="cm-intReq">→ Finance: Revenue data</div>
-            </div>
-
-            <div class="cm-card">
-                <div class="cm-cardTitle">// TODAY'S ACTIVITY</div>
-                <div class="al-feed" id="cm-lifeFeed"></div>
-            </div>
-
-            <div class="cm-navLinks">
-                <a href="../hallway/index.html" class="cm-navLink">⬡ Hallway</a>
-                <a href="../ops_center/index.html" class="cm-navLink">⬡ Mission Control</a>
-            </div>
-        </aside>
-
-    </main>
-
+  <!-- SIDEBAR -->
+  <aside class="rev-sidebar">
+    <div class="rev-sb-block">
+      <div class="rev-sb-hdr">REVENUE ALERTS</div>
+      <div id="rev-alerts-list">
+        <div class="rev-alert-item"><span class="rev-alert-dot pink"></span><span class="rev-alert-text">TrendSeer found 3 new opportunities</span></div>
+        <div class="rev-alert-item"><span class="rev-alert-dot green"></span><span class="rev-alert-text">Ready to publish: 1 product queued</span></div>
+        <div class="rev-alert-item"><span class="rev-alert-dot"></span><span class="rev-alert-text">Budget Binder 68% complete in workshop</span></div>
+      </div>
+    </div>
+    <div class="rev-sb-block">
+      <div class="rev-sb-hdr">ORION APPROVAL QUEUE</div>
+      <div id="rev-approval-queue">
+        <div class="rev-empty" style="padding:4px 0">No pending approvals.</div>
+      </div>
+    </div>
+    <div class="rev-sb-block">
+      <div class="rev-sb-hdr purple">RECENT DECISIONS</div>
+      <div id="rev-recent-decisions">
+        <div class="rev-empty" style="padding:4px 0">No decisions yet.</div>
+      </div>
+    </div>
+    <div class="rev-sb-block">
+      <div class="rev-sb-hdr purple">QUICK ACTIONS</div>
+      <button class="rev-sb-btn" onclick="revOpenDrawer('rev-drawer-product')">+ NEW PRODUCT</button>
+      <button class="rev-sb-btn" onclick="revOpenDrawer('rev-drawer-trend')">TREND DETAILS</button>
+      <button class="rev-sb-btn" onclick="revOpenDrawer('rev-drawer-campaign')">LAUNCH CAMPAIGN</button>
+      <button class="rev-sb-btn" onclick="revOpenDrawer('rev-drawer-forecast')">REVENUE FORECAST</button>
+      <button class="rev-sb-btn" onclick="revOpenDrawer('rev-drawer-insight')">CUSTOMER INSIGHTS</button>
+    </div>
+  </aside>
 </div>
 
-<!-- ════════════════════════ COMMERCE WORKSPACE ════════════════════════ -->
-<section class="ws-section" id="cm-workspace" style="--ws-color:#ff69b4">
-  <div class="ws-header">
-    <h2 class="ws-title">COMMERCE WORKSPACE</h2>
-    <span class="ws-sub">// Product &amp; Trend Idea Board</span>
-  </div>
-  <div class="ws-body" style="flex-direction:column">
+<!-- DRAWERS -->
 
-    <!-- Idea Board -->
-    <div class="ws-panel ws-panel-full">
-      <div class="ws-pTitle">
-        IDEA BOARD
-        <div class="ws-filterBar">
-          <button class="ws-filter ws-filterActive" data-status="all">ALL</button>
-          <button class="ws-filter" data-status="idea">IDEA</button>
-          <button class="ws-filter" data-status="researching">RESEARCHING</button>
-          <button class="ws-filter" data-status="testing">TESTING</button>
-          <button class="ws-filter" data-status="active">ACTIVE</button>
-          <button class="ws-filter" data-status="dropped">DROPPED</button>
+<!-- Trend Details -->
+<div class="rev-drawer-ov" id="rev-drawer-trend">
+  <div class="rev-drawer">
+    <div class="rev-drawer-hdr"><span id="rev-trend-detail-title">TREND DETAILS</span><button onclick="revCloseDrawers()">✕</button></div>
+    <div class="rev-drawer-body" id="rev-trend-detail-body">
+      <div class="rev-empty">Select a trend from the feed to view details.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Product Editor -->
+<div class="rev-drawer-ov" id="rev-drawer-product">
+  <div class="rev-drawer">
+    <div class="rev-drawer-hdr"><span id="rev-product-drawer-title">NEW PRODUCT</span><button onclick="revCloseDrawers()">✕</button></div>
+    <div class="rev-drawer-body">
+      <input type="hidden" id="rev-prod-id">
+      <label>PRODUCT TITLE *</label>
+      <input type="text" id="rev-prod-title" placeholder="e.g. 2026 Digital Budget Planner">
+      <div class="rev-drawer-row2">
+        <div>
+          <label>TYPE</label>
+          <select id="rev-prod-type">
+            <option value="Printable">Printable</option>
+            <option value="Digital Download">Digital Download</option>
+            <option value="Ebook">Ebook</option>
+            <option value="Template">Template</option>
+            <option value="Prompt Pack">Prompt Pack</option>
+            <option value="Course">Course</option>
+          </select>
+        </div>
+        <div>
+          <label>PLATFORM</label>
+          <select id="rev-prod-platform">
+            <option value="etsy">Etsy</option>
+            <option value="gumroad">Gumroad</option>
+            <option value="tiktok">TikTok Shop</option>
+            <option value="shopify">Shopify</option>
+          </select>
         </div>
       </div>
-      <div class="ws-cards" id="cm-ideaBoard"></div>
-    </div>
-
-    <!-- Add Idea Form -->
-    <div class="ws-panel ws-panel-full" id="cm-formPanel">
-      <div class="ws-pTitle">ADD / EDIT IDEA</div>
-      <div class="ws-form">
-        <div class="ws-form-row">
-          <div class="ws-field">
-            <label class="ws-label">PRODUCT / TREND IDEA *</label>
-            <input class="ws-input" id="cm-newIdea" placeholder="e.g. Holographic Sticker Sheets" type="text" />
-          </div>
-          <div class="ws-field">
-            <label class="ws-label">PLATFORM</label>
-            <select class="ws-input" id="cm-newPlatform">
-              <option>Etsy</option>
-              <option>TikTok Shop</option>
-              <option>Gumroad</option>
-              <option>Amazon Handmade</option>
-              <option>Shopify</option>
-              <option>Instagram</option>
-              <option>Other</option>
-            </select>
-          </div>
+      <div class="rev-drawer-row2">
+        <div>
+          <label>PRICE ($)</label>
+          <input type="text" id="rev-prod-price" placeholder="9.99">
         </div>
-        <div class="ws-form-row">
-          <div class="ws-field">
-            <label class="ws-label">TREND SOURCE</label>
-            <input class="ws-input" id="cm-newTrend" placeholder="e.g. Pixel / TikTok Research" type="text" />
-          </div>
-          <div class="ws-field">
-            <label class="ws-label">STATUS</label>
-            <select class="ws-input" id="cm-newStatus">
-              <option value="idea">Idea</option>
-              <option value="researching">Researching</option>
-              <option value="testing">Testing</option>
-              <option value="active">Active</option>
-              <option value="dropped">Dropped</option>
-            </select>
-          </div>
-        </div>
-        <div class="ws-field">
-          <label class="ws-label">NOTES</label>
-          <textarea class="ws-input" id="cm-newNotes" placeholder="Research notes, initial findings..." rows="2"></textarea>
-        </div>
-        <div style="display:flex;gap:8px">
-          <button class="ws-btn" style="flex:1" id="cm-submitIdea">+ ADD IDEA</button>
-          <button class="ws-btn ws-btn-ghost" id="cm-cancelEdit">CANCEL</button>
+        <div>
+          <label>STATUS</label>
+          <select id="rev-prod-status">
+            <option value="idea">Idea</option>
+            <option value="research">Research</option>
+            <option value="creating" selected>Creating</option>
+            <option value="ready">Ready</option>
+            <option value="published">Published</option>
+            <option value="selling">Selling</option>
+          </select>
         </div>
       </div>
+      <label>DESCRIPTION / SEO NOTES</label>
+      <textarea id="rev-prod-desc" placeholder="What does this product do? Who is it for? Key SEO keywords..."></textarea>
+      <label>TAGS (comma separated)</label>
+      <input type="text" id="rev-prod-tags" placeholder="planner, printable, digital, 2026">
+      <button class="rev-btn-primary" onclick="revSaveProduct()">SAVE PRODUCT</button>
+      <div class="rev-orion-notice">Publishing to any marketplace requires CEO approval through ORION. Save as READY to queue for approval.</div>
+      <button class="rev-btn-danger" id="rev-prod-delete-btn" style="display:none" onclick="revDeleteProduct()">REMOVE PRODUCT</button>
     </div>
-
   </div>
-</section>
+</div>
+
+<!-- Listing Editor -->
+<div class="rev-drawer-ov" id="rev-drawer-listing">
+  <div class="rev-drawer">
+    <div class="rev-drawer-hdr"><span>LISTING EDITOR</span><button onclick="revCloseDrawers()">✕</button></div>
+    <div class="rev-drawer-body">
+      <label>PRODUCT</label>
+      <select id="rev-listing-product"></select>
+      <label>LISTING TITLE (SEO)</label>
+      <input type="text" id="rev-listing-title" placeholder="Keyword-rich title for marketplace">
+      <label>PRICE ($)</label>
+      <input type="text" id="rev-listing-price" placeholder="9.99">
+      <label>DESCRIPTION</label>
+      <textarea id="rev-listing-desc" rows="5" placeholder="Full listing description..."></textarea>
+      <label>TAGS (comma separated)</label>
+      <input type="text" id="rev-listing-tags" placeholder="planner, printable, digital download">
+      <div class="rev-orion-notice">Clicking QUEUE FOR PUBLISH sends this listing to ORION for CEO approval. No listing goes live without approval.</div>
+      <button class="rev-btn-orion" onclick="revQueueListing()">QUEUE FOR PUBLISH → ORION</button>
+    </div>
+  </div>
+</div>
+
+<!-- Revenue Forecast -->
+<div class="rev-drawer-ov" id="rev-drawer-forecast">
+  <div class="rev-drawer">
+    <div class="rev-drawer-hdr"><span>REVENUE FORECAST</span><button onclick="revCloseDrawers()">✕</button></div>
+    <div class="rev-drawer-body" id="rev-forecast-body">
+      <div class="rev-empty">Loading forecast...</div>
+    </div>
+  </div>
+</div>
+
+<!-- Campaign Manager -->
+<div class="rev-drawer-ov" id="rev-drawer-campaign">
+  <div class="rev-drawer">
+    <div class="rev-drawer-hdr"><span>CAMPAIGN MANAGER</span><button onclick="revCloseDrawers()">✕</button></div>
+    <div class="rev-drawer-body">
+      <label>CAMPAIGN NAME</label>
+      <input type="text" id="rev-camp-name" placeholder="Summer Planner Launch">
+      <label>TYPE</label>
+      <select id="rev-camp-type">
+        <option value="social_post">Social Post</option>
+        <option value="email">Email Announcement</option>
+        <option value="promo">Promotional Discount</option>
+        <option value="bundle">Product Bundle</option>
+      </select>
+      <div class="rev-drawer-row2">
+        <div><label>START DATE</label><input type="text" id="rev-camp-start" placeholder="2026-07-01"></div>
+        <div><label>BUDGET ($)</label><input type="text" id="rev-camp-budget" placeholder="0.00"></div>
+      </div>
+      <label>PLATFORM</label>
+      <select id="rev-camp-platform">
+        <option value="etsy">Etsy</option>
+        <option value="tiktok">TikTok</option>
+        <option value="instagram">Instagram</option>
+        <option value="gumroad">Gumroad</option>
+      </select>
+      <label>CAMPAIGN NOTES</label>
+      <textarea id="rev-camp-notes" placeholder="What is the goal? Target audience? Offer details?"></textarea>
+      <div class="rev-orion-notice">All campaign launches, spending, and external posts require CEO approval via ORION. RevenueAI will prepare the brief — CEO approves before anything goes live.</div>
+      <button class="rev-btn-orion" onclick="revQueueCampaign()">SUBMIT TO ORION FOR APPROVAL</button>
+    </div>
+  </div>
+</div>
+
+<!-- Customer Insights -->
+<div class="rev-drawer-ov" id="rev-drawer-insight">
+  <div class="rev-drawer">
+    <div class="rev-drawer-hdr"><span>CUSTOMER INSIGHTS</span><button onclick="revCloseDrawers()">✕</button></div>
+    <div class="rev-drawer-body" id="rev-insight-body">
+      <div class="rev-empty">Loading insights...</div>
+    </div>
+  </div>
+</div>
+
+<div id="rev-toast"></div>
 
 <script src="../js/cybercookieos.js"></script>
-<script src="../js/agent_runtime.js"></script>
-<script src="../js/output_engine.js"></script>
-<script src="../js/mission_system.js"></script>
-<script src="../js/company_kpi.js"></script>
-<script src="../js/company_memory.js"></script>
-<script src="../js/orion.js"></script>
-<script src="../js/autonomous_ops.js"></script>
-<script src="../js/art_room_ui.js"></script>
-<script src="../js/agent_presence.js"></script>
+<script src="../core/event_bus.js"></script>
+<script src="../core/state_manager.js"></script>
+<script src="../core/persistence.js"></script>
+<script src="../core/agent_engine.js"></script>
+<script src="../core/notification_center.js"></script>
+<script src="../core/animation_engine.js"></script>
+<script src="../core/workspace_base.js"></script>
 <script src="workspace.js"></script>
-<script src="../js/company_life.js"></script>
-<script src="../js/cos_data_status.js"></script>
-
-<script>
-/* Phase 12: Page transition support */
-function navigateTo(url) {
-  document.documentElement.classList.add("cos-nav-out");
-  setTimeout(function () { window.location.href = url; }, 280);
-}
-document.addEventListener("DOMContentLoaded", function () {
-  document.documentElement.classList.add("cos-nav-in");
-  setTimeout(function () { document.documentElement.classList.remove("cos-nav-in"); }, 350);
-  document.querySelectorAll("a[href]").forEach(function (a) {
-    var href = a.getAttribute("href");
-    if (href && href.indexOf("http") !== 0 && href.indexOf("javascript") !== 0 && href.charAt(0) !== "#") {
-      a.addEventListener("click", function (e) { e.preventDefault(); navigateTo(href); });
-    }
-  });
-
-  /* Boot ambient activity engine */
-  if (window.LIFE) {
-    LIFE.boot('commerce', {
-      tasks: {
-        pixel:   ['cm-task-pixel',   'cm-ag-pixel'],
-        etsybot: ['cm-task-etsybot', 'cm-ag-etsy'],
-        spark:   ['cm-task-spark',   'cm-ag-spark'],
-        forge:   ['cm-task-forge',   'cm-ag-forge']
-      },
-      logEl: 'cm-lifeFeed'
-    });
-  }
-});
-</script>
-<style>
-html { transition: opacity .28s ease; }
-html.cos-nav-out { opacity: 0; pointer-events: none; }
-html.cos-nav-in  { animation: cosNavIn .32s ease forwards; }
-@keyframes cosNavIn { from { opacity:0; transform:translateY(3px); } to { opacity:1; transform:translateY(0); } }
-</style>
 <script src="../js/workspace_ecc_bridge.js"></script>
 </body>
 </html>

@@ -23,21 +23,21 @@
 <script>
 var ECC_CONFIG = {
   dept:      'commerce',
-  label:     'COMMERCE',
-  icon:      '🛍',
+  label:     'REVENUE OPS',
+  icon:      '💰',
   color:     '#ff69b4',
   workspace: '../commerce/index.html',
   employees: [
-    { name: 'Pixel',    role: 'TREND RESEARCHER',  status: 'working', task: 'Scanning TikTok trends and demand' },
-    { name: 'Spark',    role: 'CONTENT CREATOR',   status: 'idle',    task: 'Ready to produce product content' },
-    { name: 'Forge',    role: 'PRODUCT BUILDER',   status: 'standby', task: 'Awaiting product creation request' },
-    { name: 'EtsyBot',  role: 'LISTING MANAGER',   status: 'idle',    task: 'Pending Etsy account connection' }
+    { name: 'TrendSeer',  role: 'TREND INTELLIGENCE', status: 'working', task: 'Scanning Etsy + TikTok for demand spikes' },
+    { name: 'Maker',      role: 'PRODUCT CREATOR',    status: 'working', task: 'Generating product files and descriptions' },
+    { name: 'MarketMind', role: 'MARKETPLACE OPS',    status: 'working', task: 'Monitoring listings and updating SEO' },
+    { name: 'RevenueAI',  role: 'REVENUE ANALYST',    status: 'idle',    task: 'Calculating profit margins and forecasts' }
   ],
   quick_actions: [
-    { label: 'PIPELINE',      icon: '📦', action: 'api_status', endpoint: '/api/commerce/pipeline', key: 'products',      noun: 'product' },
-    { label: 'CONTENT COUNT', icon: '🎬', action: 'api_status', endpoint: '/api/commerce/pipeline', key: 'content_items', noun: 'content item' },
-    { label: 'ACCOUNT STATUS',icon: '🔗', action: 'api_status', endpoint: '/api/accounts',          key: 'accounts',      noun: 'account' },
-    { label: 'REFRESH',       icon: '🔄', action: 'refresh',    msg: 'Refreshing commerce data...' }
+    { label: 'PIPELINE',       action: 'api_status', endpoint: '/api/commerce/pipeline', key: 'products', noun: 'product' },
+    { label: 'REVENUE TODAY',  action: 'info',       msg: 'Open workspace to view live revenue analytics.' },
+    { label: 'ORION QUEUE',    action: 'refresh',    msg: 'Refreshing approval queue...' },
+    { label: 'OPEN WORKSPACE', action: 'open_ws',    msg: '' }
   ]
 };
 </script>

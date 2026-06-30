@@ -393,6 +393,68 @@ def _build_ecc_data(dept):
             'last_updated': ts(),
         }
 
+    # ── PROJECTS ───────────────────────────────────────────────────
+    elif dept == 'projects':
+        import json as _json
+        _proj_key = 'proj.projects.v1'
+
+        try:
+            _proj_raw = load_json('projects_data.json', [])
+            projects  = _proj_raw if isinstance(_proj_raw, list) else []
+        except Exception:
+            projects = []
+
+        active_count   = len([p for p in projects if p.get('stage') == 'active'])
+        blocked_count  = len([p for p in projects if p.get('stage') == 'blocked'])
+        complete_count = len([p for p in projects if p.get('stage') == 'complete'])
+
+        if active_count > 0:
+            health_label, health_status, health_pct = 'Active', 'active', 80
+        elif projects:
+            health_label, health_status, health_pct = 'Monitoring', 'active', 60
+        else:
+            health_label, health_status, health_pct = 'Ready', 'initializing', 30
+
+        proj_summary = (
+            'Project Command Center is running. {} total project(s): {} active, {} blocked, {} complete. '
+            'Planner and Tracker are monitoring all cross-department initiatives.'.format(
+                len(projects), active_count, blocked_count, complete_count)
+            if projects else
+            'Project Command Center is ready. No projects tracked yet. '
+            'Add your first project to begin coordinating across departments.'
+        )
+
+        rec_text = (
+            'Review {} blocked project(s) to unblock progress.'.format(blocked_count) if blocked_count else
+            'Review active project milestones and advance next steps.' if active_count else
+            'Add your first cross-department project to begin.'
+        )
+
+        return {
+            'dept': 'projects', 'health_label': health_label, 'health_status': health_status,
+            'health_pct': health_pct, 'health_color': '#3498db',
+            'label': 'PROJECTS', 'icon': '\U0001f4cb',
+            'workspace_url': '/apartment/index.html',
+            'summary': proj_summary,
+            'orion_recommendation': _rec(
+                rec_text,
+                'Active project tracking drives faster goal completion across all departments.',
+                'Coordinates Career, Finance, Commerce, and Security initiatives in one view.',
+                85,
+                'VIEW PROJECTS'),
+            'key_metrics': [
+                _metric('TOTAL',    len(projects),   'good' if projects else 'neutral'),
+                _metric('ACTIVE',   active_count,    'good' if active_count else 'neutral'),
+                _metric('BLOCKED',  blocked_count,   'medium' if blocked_count else 'good'),
+                _metric('COMPLETE', complete_count,  'good' if complete_count else 'neutral'),
+                _metric('AGENTS',   3,               'good'),
+                _metric('DEPTS',    4,               'good'),
+            ],
+            'pending_decisions': pending,
+            'recent_activity':   recent,
+            'last_updated': ts(),
+        }
+
     else:
         return {'error': 'Unknown department: ' + dept}
 
@@ -841,6 +903,11 @@ class COSHandler(http.server.SimpleHTTPRequestHandler):
 
         elif path == '/api/finance/ledger':
             self._send(200, load_json('finance_ledger.json', {'transactions': [], 'summary': {}}))
+
+        elif path == '/api/security/scans':
+            raw = load_json('scan_log.json', [])
+            scans = raw if isinstance(raw, list) else raw.get('entries', [])
+            self._send(200, {'scans': scans, 'count': len(scans)})
 
         else:
             self._send(404, {'error': 'Unknown API route: ' + path})

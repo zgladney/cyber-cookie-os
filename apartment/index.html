@@ -3,10 +3,429 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Housing Scout — CyberCookieOS</title>
-<meta http-equiv="refresh" content="0; url=../housing/index.html">
+<title>Project Command Center — CyberCookieOS</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;width:100%;overflow:hidden;background:#05000f;color:rgba(200,180,255,.9);font-family:'Courier New',monospace;font-size:12px}
+button,select,input,textarea{font-family:inherit;font-size:11px;background:transparent;color:inherit;border:1px solid rgba(155,107,255,.25);border-radius:2px;padding:4px 8px;outline:none}
+input::placeholder,textarea::placeholder{color:rgba(150,120,220,.35)}
+
+/* Header */
+#prj-topbar{flex-shrink:0;height:40px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:rgba(5,0,12,.98);border-bottom:1px solid rgba(52,152,219,.2);letter-spacing:1.5px;z-index:10}
+.prj-topbar-left{display:flex;align-items:center;gap:12px}
+.prj-ecc-btn{font-size:9px;letter-spacing:2px;font-weight:700;color:rgba(52,152,219,.7);text-decoration:none;padding:3px 10px;border:1px solid rgba(52,152,219,.25);border-radius:2px;transition:color .12s,border-color .12s}
+.prj-ecc-btn:hover{color:#3498db;border-color:rgba(52,152,219,.5)}
+.prj-room-label{font-size:9px;letter-spacing:2.5px;color:rgba(180,150,255,.4)}
+.prj-topbar-center{font-size:10px;letter-spacing:3px;font-weight:700;color:rgba(200,180,255,.6)}
+.prj-topbar-right{display:flex;align-items:center;gap:10px}
+.prj-agent-badge{font-size:9px;letter-spacing:1.5px;font-weight:700;padding:2px 8px;border-radius:2px;border:1px solid}
+.prj-agent-badge.planner{color:#3498db;border-color:rgba(52,152,219,.3);background:rgba(52,152,219,.06)}
+.prj-agent-badge.tracker{color:#f39c12;border-color:rgba(243,156,18,.3);background:rgba(243,156,18,.06)}
+.prj-agent-badge.scribe {color:#9b6bff;border-color:rgba(155,107,255,.3);background:rgba(155,107,255,.06)}
+.prj-header-btn{font-size:9px;letter-spacing:1.5px;font-weight:700;padding:4px 12px;cursor:pointer;background:rgba(52,152,219,.1);border:1px solid rgba(52,152,219,.3);color:#3498db;border-radius:2px;transition:background .12s}
+.prj-header-btn:hover{background:rgba(52,152,219,.18)}
+
+/* Layout */
+.prj-layout{display:flex;height:calc(100vh - 40px);overflow:hidden}
+.prj-main{flex:1;display:flex;flex-direction:column;gap:6px;padding:6px;overflow:hidden}
+.prj-sidebar{width:250px;flex-shrink:0;background:rgba(5,0,12,.9);border-left:1px solid rgba(155,107,255,.12);overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:8px}
+.prj-sidebar::-webkit-scrollbar{width:2px}
+.prj-sidebar::-webkit-scrollbar-thumb{background:rgba(155,107,255,.2)}
+
+/* Rows */
+.prj-row{display:flex;gap:6px;flex:1;min-height:0}
+
+/* Zone */
+.prj-zone{background:rgba(10,2,26,.85);border:1px solid rgba(155,107,255,.12);border-radius:3px;display:flex;flex-direction:column;overflow:hidden;flex:1}
+.prj-zone-hdr{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:7px 10px;font-size:8px;letter-spacing:2.5px;font-weight:700;color:rgba(180,150,255,.5);border-bottom:1px solid rgba(155,107,255,.1)}
+.prj-zone-btn{font-size:8px;letter-spacing:1.5px;font-weight:700;padding:3px 9px;cursor:pointer;background:rgba(155,107,255,.07);border:1px solid rgba(155,107,255,.2);color:rgba(180,150,255,.7);border-radius:2px;transition:background .12s,color .12s}
+.prj-zone-btn:hover{background:rgba(155,107,255,.14);color:rgba(200,170,255,1)}
+.prj-zone-btn.blue{border-color:rgba(52,152,219,.3);color:rgba(52,152,219,.8)}
+.prj-zone-btn.blue:hover{background:rgba(52,152,219,.12);color:#3498db}
+
+/* Agent workstations */
+.prj-zone-agents{flex:0 0 215px}
+.prj-agents-list{flex:1;overflow-y:auto;padding:6px;display:flex;flex-direction:column;gap:5px}
+.prj-ws-card{padding:7px 9px;border:1px solid rgba(155,107,255,.15);border-left:3px solid;border-radius:2px;background:rgba(5,0,12,.6)}
+.prj-ws-card.planner{border-left-color:#3498db}
+.prj-ws-card.tracker{border-left-color:#f39c12}
+.prj-ws-card.scribe {border-left-color:#9b6bff}
+.prj-ws-hdr{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.prj-ws-name{font-size:10px;font-weight:700;letter-spacing:1px}
+.prj-ws-card.planner .prj-ws-name{color:#3498db}
+.prj-ws-card.tracker .prj-ws-name{color:#f39c12}
+.prj-ws-card.scribe  .prj-ws-name{color:#9b6bff}
+.prj-ws-role{font-size:7.5px;letter-spacing:1.5px;color:rgba(180,150,255,.4);flex:1}
+.prj-ws-status{font-size:7.5px;letter-spacing:1.5px;font-weight:700;padding:1px 6px;border-radius:2px;border:1px solid;color:rgba(150,120,200,.5);border-color:rgba(155,107,255,.2)}
+.prj-ws-status.working{color:#2ecc71;border-color:rgba(46,204,113,.3)}
+.prj-task-label{font-size:8.5px;color:rgba(180,150,255,.4);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prj-progress-track{height:2px;background:rgba(155,107,255,.1);border-radius:1px;overflow:hidden}
+.prj-progress-fill{height:100%;border-radius:1px;width:0;transition:width .5s ease}
+.prj-progress-fill.planner{background:#3498db}
+.prj-progress-fill.tracker{background:#f39c12}
+.prj-progress-fill.scribe {background:#9b6bff}
+
+/* Pipeline */
+.prj-zone-pipeline{flex:1}
+.prj-pipe-stages{display:flex;gap:0;border-bottom:1px solid rgba(155,107,255,.1);flex-shrink:0}
+.prj-pipe-stage{flex:1;text-align:center;padding:7px 4px;border-right:1px solid rgba(155,107,255,.08);cursor:pointer;transition:background .12s}
+.prj-pipe-stage:last-child{border-right:none}
+.prj-pipe-stage:hover,.prj-pipe-stage.active{background:rgba(52,152,219,.07)}
+.prj-pipe-num{font-size:18px;font-weight:700;letter-spacing:1px;line-height:1;color:rgba(200,180,255,.9)}
+.prj-pipe-num.blue{color:#3498db}
+.prj-pipe-num.green{color:#2ecc71}
+.prj-pipe-num.amber{color:#f39c12}
+.prj-pipe-num.red{color:#e74c3c}
+.prj-pipe-lbl{font-size:7px;letter-spacing:2px;color:rgba(180,150,255,.4);margin-top:3px}
+.prj-project-list{flex:1;overflow-y:auto;padding:6px}
+.prj-project-list::-webkit-scrollbar{width:2px}
+.prj-project-list::-webkit-scrollbar-thumb{background:rgba(155,107,255,.15)}
+
+/* Project cards */
+.prj-card{padding:9px 11px;margin-bottom:6px;background:rgba(5,0,12,.5);border:1px solid rgba(155,107,255,.12);border-left:3px solid;border-radius:2px;cursor:pointer;transition:background .12s,border-color .12s}
+.prj-card:hover{background:rgba(10,4,30,.7)}
+.prj-card-top{display:flex;align-items:flex-start;gap:8px;margin-bottom:5px}
+.prj-card-title{font-size:10px;font-weight:700;color:rgba(200,180,255,.9);flex:1;line-height:1.3}
+.prj-card-priority{font-size:7.5px;letter-spacing:1px;font-weight:700;padding:1px 6px;border-radius:2px;border:1px solid;flex-shrink:0}
+.prj-card-priority.high{color:#e74c3c;border-color:rgba(231,76,60,.3)}
+.prj-card-priority.medium{color:#f39c12;border-color:rgba(243,156,18,.3)}
+.prj-card-priority.low{color:rgba(150,120,200,.5);border-color:rgba(155,107,255,.2)}
+.prj-card-meta{font-size:8.5px;color:rgba(180,150,255,.4);margin-bottom:5px}
+.prj-card-progress{height:2px;background:rgba(155,107,255,.1);border-radius:1px;margin-bottom:5px;overflow:hidden}
+.prj-card-progress-fill{height:100%;border-radius:1px;background:#3498db;transition:width .4s}
+.prj-card-tags{display:flex;gap:4px;flex-wrap:wrap}
+.prj-tag{font-size:7.5px;letter-spacing:1px;padding:1px 6px;border-radius:2px;border:1px solid}
+.prj-tag.career  {color:#7b6bff;border-color:rgba(123,107,255,.3)}
+.prj-tag.finance {color:#2ecc71;border-color:rgba(46,204,113,.3)}
+.prj-tag.commerce{color:#ff69b4;border-color:rgba(255,105,180,.3)}
+.prj-tag.security{color:#9b6bff;border-color:rgba(155,107,255,.3)}
+.prj-tag.personal{color:#f39c12;border-color:rgba(243,156,18,.3)}
+.prj-tag.system  {color:rgba(150,120,200,.5);border-color:rgba(155,107,255,.15)}
+
+/* Milestones */
+.prj-zone-milestones{flex:1}
+.prj-milestone-list{flex:1;overflow-y:auto;padding:6px}
+.prj-milestone-item{padding:7px 10px;margin-bottom:5px;background:rgba(5,0,12,.5);border:1px solid rgba(155,107,255,.1);border-radius:2px;display:flex;align-items:center;gap:8px;cursor:pointer}
+.prj-milestone-check{width:13px;height:13px;border:1px solid rgba(155,107,255,.3);border-radius:2px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px;color:#2ecc71}
+.prj-milestone-check.done{background:rgba(46,204,113,.1);border-color:rgba(46,204,113,.4)}
+.prj-milestone-body{flex:1;overflow:hidden}
+.prj-milestone-title{font-size:9px;color:rgba(200,180,255,.8)}
+.prj-milestone-title.done{text-decoration:line-through;color:rgba(150,120,200,.4)}
+.prj-milestone-project{font-size:8px;color:rgba(180,150,255,.35);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* Activity log */
+.prj-zone-log{flex:1}
+.prj-activity-log{flex:1;overflow-y:auto;padding:6px}
+.prj-activity-log::-webkit-scrollbar{width:2px}
+.prj-activity-log::-webkit-scrollbar-thumb{background:rgba(155,107,255,.15)}
+.prj-log-entry{display:flex;gap:7px;align-items:baseline;padding:4px 0;border-bottom:1px solid rgba(155,107,255,.06)}
+.prj-log-dot{color:#9b6bff;font-size:7px;flex-shrink:0;padding-top:2px}
+.prj-log-body{flex:1;overflow:hidden}
+.prj-log-agent{font-size:8.5px;font-weight:700;color:#3498db;letter-spacing:.5px}
+.prj-log-action{font-size:8.5px;color:rgba(180,150,255,.5);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prj-log-time{font-size:7.5px;color:rgba(180,150,255,.3);flex-shrink:0}
+
+/* Sidebar */
+.prj-sb-block{background:rgba(10,2,26,.6);border:1px solid rgba(155,107,255,.1);border-radius:2px;padding:8px 10px}
+.prj-sb-hdr{font-size:7.5px;letter-spacing:2px;color:rgba(180,150,255,.45);font-weight:700;margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid rgba(155,107,255,.1)}
+.prj-sb-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid rgba(155,107,255,.05)}
+.prj-sb-lbl{font-size:8px;letter-spacing:1px;color:rgba(180,150,255,.4)}
+.prj-sb-val{font-size:9px;font-weight:700;color:rgba(200,180,255,.9)}
+.prj-sb-val.blue{color:#3498db}
+.prj-sb-val.green{color:#2ecc71}
+.prj-sb-val.red{color:#e74c3c}
+.prj-sb-btn{display:block;width:100%;text-align:left;padding:6px 8px;margin-bottom:4px;font-size:9px;letter-spacing:1.5px;font-weight:700;cursor:pointer;background:rgba(155,107,255,.05);border:1px solid rgba(155,107,255,.15);color:rgba(180,150,255,.7);border-radius:2px;transition:background .12s,color .12s;text-decoration:none}
+.prj-sb-btn:hover{background:rgba(155,107,255,.12);color:rgba(200,170,255,1)}
+.prj-filter-btn{font-size:8px;letter-spacing:1px;padding:3px 7px;cursor:pointer;border:1px solid rgba(155,107,255,.2);color:rgba(180,150,255,.5);border-radius:2px;background:transparent;margin-right:3px;margin-bottom:3px}
+.prj-filter-btn.active{background:rgba(52,152,219,.1);border-color:rgba(52,152,219,.35);color:#3498db}
+
+/* Drawers */
+.prj-drawer-ov{position:fixed;inset:0;z-index:800;background:rgba(5,0,12,.6);backdrop-filter:blur(2px);display:none;justify-content:flex-end}
+.prj-drawer-ov.open{display:flex}
+.prj-drawer{width:440px;height:100%;background:rgba(6,1,18,.98);border-left:1px solid rgba(155,107,255,.25);display:flex;flex-direction:column;overflow:hidden}
+.prj-drawer-hdr{flex-shrink:0;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-size:9px;letter-spacing:2.5px;font-weight:700;color:rgba(180,150,255,.7);border-bottom:1px solid rgba(155,107,255,.2)}
+.prj-drawer-hdr button{font-size:11px;padding:3px 9px;cursor:pointer;background:rgba(155,107,255,.07);border:1px solid rgba(155,107,255,.2);color:rgba(180,150,255,.6);border-radius:2px}
+.prj-drawer-body{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.prj-drawer-body::-webkit-scrollbar{width:2px}
+.prj-drawer-body label{font-size:7.5px;letter-spacing:2px;color:rgba(180,150,255,.45);display:block;margin-bottom:2px}
+.prj-drawer-body input,.prj-drawer-body select,.prj-drawer-body textarea{width:100%;background:rgba(10,2,26,.7);border:1px solid rgba(155,107,255,.2);color:rgba(200,180,255,.9);padding:6px 8px;border-radius:2px}
+.prj-drawer-body textarea{resize:vertical;min-height:60px}
+.prj-drawer-row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.prj-btn-primary{width:100%;padding:9px;font-size:9px;letter-spacing:2px;font-weight:700;cursor:pointer;background:rgba(52,152,219,.1);border:1px solid rgba(52,152,219,.35);color:#3498db;border-radius:2px;transition:background .12s;margin-top:4px}
+.prj-btn-primary:hover{background:rgba(52,152,219,.18)}
+.prj-btn-secondary{width:100%;padding:7px;font-size:9px;letter-spacing:2px;font-weight:700;cursor:pointer;background:rgba(155,107,255,.07);border:1px solid rgba(155,107,255,.25);color:rgba(180,150,255,.7);border-radius:2px;transition:background .12s}
+
+/* Detail drawer content */
+.prj-detail-project-title{font-size:13px;font-weight:700;color:rgba(200,180,255,.95);margin-bottom:8px;line-height:1.4}
+.prj-detail-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(155,107,255,.07);font-size:9px}
+.prj-detail-row span:first-child{color:rgba(180,150,255,.45);letter-spacing:1px}
+.prj-detail-row span:last-child{color:rgba(200,180,255,.85);font-weight:700}
+.prj-detail-milestones{margin-top:10px}
+.prj-detail-ms-hdr{font-size:7.5px;letter-spacing:2px;color:rgba(180,150,255,.45);margin-bottom:6px}
+.prj-detail-ms-item{display:flex;align-items:center;gap:7px;padding:4px 0;cursor:pointer}
+.prj-detail-ms-box{width:13px;height:13px;border:1px solid rgba(155,107,255,.3);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:8px;color:#2ecc71;flex-shrink:0}
+.prj-detail-ms-box.done{background:rgba(46,204,113,.1);border-color:rgba(46,204,113,.4)}
+.prj-detail-ms-txt{font-size:9px;color:rgba(200,180,255,.7)}
+.prj-detail-ms-txt.done{text-decoration:line-through;color:rgba(150,120,200,.35)}
+
+/* Toast */
+#prj-toast{position:fixed;bottom:60px;left:50%;transform:translateX(-50%) translateY(12px);background:rgba(5,0,12,.97);border:1px solid rgba(155,107,255,.3);border-radius:3px;padding:7px 18px;font-size:10px;letter-spacing:1px;color:rgba(180,150,255,.9);opacity:0;pointer-events:none;z-index:9000;white-space:nowrap;transition:opacity .2s,transform .2s}
+#prj-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Utils */
+.prj-empty{font-size:9.5px;color:rgba(180,150,255,.25);font-style:italic;padding:12px 0;text-align:center}
+</style>
 </head>
-<body style="background:#050010;color:#bf7fff;font-family:monospace;text-align:center;padding:40px">
-<p>Redirecting to <a href="../housing/index.html" style="color:#9cf6ff">Housing Scout</a>...</p>
+<body style="display:flex;flex-direction:column;height:100vh">
+
+<!-- TOP BAR -->
+<header id="prj-topbar">
+  <div class="prj-topbar-left">
+    <a href="../apartment/ecc.html" class="prj-ecc-btn">← PROJECTS ECC</a>
+    <span class="prj-room-label">WING E — PROJECT COMMAND CENTER</span>
+  </div>
+  <div class="prj-topbar-center">CyberCookieOS / PROJECT COMMAND CENTER</div>
+  <div class="prj-topbar-right">
+    <span class="prj-agent-badge planner">● PLANNER</span>
+    <span class="prj-agent-badge tracker">● TRACKER</span>
+    <span class="prj-agent-badge scribe">● SCRIBE</span>
+    <button class="prj-header-btn" onclick="prjOpenDrawer('prj-drawer-add')">+ NEW PROJECT</button>
+  </div>
+</header>
+
+<!-- LAYOUT -->
+<div class="prj-layout">
+  <div class="prj-main">
+
+    <!-- ROW 1: Agents + Pipeline -->
+    <div class="prj-row">
+      <div class="prj-zone prj-zone-agents">
+        <div class="prj-zone-hdr">AGENT WORKSTATIONS</div>
+        <div class="prj-agents-list">
+          <div class="prj-ws-card planner" id="prj-ws-planner">
+            <div class="prj-ws-hdr">
+              <span class="prj-ws-name">PLANNER</span>
+              <span class="prj-ws-role">PROJECT STRATEGIST</span>
+              <span class="prj-ws-status working" id="prj-status-planner">WORKING</span>
+            </div>
+            <div class="prj-task-label" id="prj-task-planner">Mapping milestones for active projects...</div>
+            <div class="prj-progress-track"><div class="prj-progress-fill planner" id="prj-sp-planner" style="width:65%"></div></div>
+          </div>
+          <div class="prj-ws-card tracker" id="prj-ws-tracker">
+            <div class="prj-ws-hdr">
+              <span class="prj-ws-name">TRACKER</span>
+              <span class="prj-ws-role">MILESTONE MONITOR</span>
+              <span class="prj-ws-status working" id="prj-status-tracker">WORKING</span>
+            </div>
+            <div class="prj-task-label" id="prj-task-tracker">Scanning deadlines across all departments...</div>
+            <div class="prj-progress-track"><div class="prj-progress-fill tracker" id="prj-sp-tracker" style="width:40%"></div></div>
+          </div>
+          <div class="prj-ws-card scribe" id="prj-ws-scribe">
+            <div class="prj-ws-hdr">
+              <span class="prj-ws-name">SCRIBE</span>
+              <span class="prj-ws-role">DOCUMENTATION</span>
+              <span class="prj-ws-status" id="prj-status-scribe">IDLE</span>
+            </div>
+            <div class="prj-task-label" id="prj-task-scribe">Ready to capture project notes</div>
+            <div class="prj-progress-track"><div class="prj-progress-fill scribe" id="prj-sp-scribe" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PIPELINE -->
+      <div class="prj-zone prj-zone-pipeline">
+        <div class="prj-zone-hdr">
+          PROJECT PIPELINE
+          <button class="prj-zone-btn blue" onclick="prjOpenDrawer('prj-drawer-add')">+ ADD</button>
+        </div>
+        <div class="prj-pipe-stages">
+          <div class="prj-pipe-stage active" id="prj-stage-all" onclick="prjFilterStage('all')">
+            <div class="prj-pipe-num blue" id="prj-cnt-total">0</div>
+            <div class="prj-pipe-lbl">ALL</div>
+          </div>
+          <div class="prj-pipe-stage" id="prj-stage-backlog" onclick="prjFilterStage('backlog')">
+            <div class="prj-pipe-num" id="prj-cnt-backlog">0</div>
+            <div class="prj-pipe-lbl">BACKLOG</div>
+          </div>
+          <div class="prj-pipe-stage" id="prj-stage-active" onclick="prjFilterStage('active')">
+            <div class="prj-pipe-num blue" id="prj-cnt-active">0</div>
+            <div class="prj-pipe-lbl">ACTIVE</div>
+          </div>
+          <div class="prj-pipe-stage" id="prj-stage-blocked" onclick="prjFilterStage('blocked')">
+            <div class="prj-pipe-num amber" id="prj-cnt-blocked">0</div>
+            <div class="prj-pipe-lbl">BLOCKED</div>
+          </div>
+          <div class="prj-pipe-stage" id="prj-stage-review" onclick="prjFilterStage('review')">
+            <div class="prj-pipe-num" id="prj-cnt-review">0</div>
+            <div class="prj-pipe-lbl">REVIEW</div>
+          </div>
+          <div class="prj-pipe-stage" id="prj-stage-complete" onclick="prjFilterStage('complete')">
+            <div class="prj-pipe-num green" id="prj-cnt-complete">0</div>
+            <div class="prj-pipe-lbl">COMPLETE</div>
+          </div>
+        </div>
+        <div class="prj-project-list" id="prj-project-list">
+          <div class="prj-empty">No projects yet. Add your first project.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 2: Active Projects + Milestones -->
+    <div class="prj-row">
+      <div class="prj-zone" style="flex:1.2">
+        <div class="prj-zone-hdr">
+          ACTIVE PROJECT BOARD
+          <button class="prj-zone-btn" onclick="prjFilterStage('active')">VIEW ACTIVE</button>
+        </div>
+        <div class="prj-project-list" id="prj-active-board">
+          <div class="prj-empty">No active projects.</div>
+        </div>
+      </div>
+      <div class="prj-zone prj-zone-milestones">
+        <div class="prj-zone-hdr">
+          UPCOMING MILESTONES
+          <span id="prj-ms-count" style="font-size:9px;color:rgba(52,152,219,.7)">0 pending</span>
+        </div>
+        <div class="prj-milestone-list" id="prj-milestone-list">
+          <div class="prj-empty">No milestones tracked.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 3: Task Queue + Activity -->
+    <div class="prj-row">
+      <div class="prj-zone">
+        <div class="prj-zone-hdr">
+          TASK QUEUE
+          <button class="prj-zone-btn" onclick="prjOpenDrawer('prj-drawer-add')">+ TASK</button>
+        </div>
+        <div class="prj-project-list" id="prj-task-queue">
+          <div class="prj-empty">No tasks queued.</div>
+        </div>
+      </div>
+      <div class="prj-zone prj-zone-log">
+        <div class="prj-zone-hdr">ACTIVITY LOG</div>
+        <div class="prj-activity-log" id="prj-activity-log">
+          <div class="prj-empty">No activity yet.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="prj-sidebar">
+    <div class="prj-sb-block">
+      <div class="prj-sb-hdr">PROJECT STATS</div>
+      <div class="prj-sb-row"><span class="prj-sb-lbl">TOTAL</span><span class="prj-sb-val" id="prj-stat-total">0</span></div>
+      <div class="prj-sb-row"><span class="prj-sb-lbl">ACTIVE</span><span class="prj-sb-val blue" id="prj-stat-active">0</span></div>
+      <div class="prj-sb-row"><span class="prj-sb-lbl">COMPLETE</span><span class="prj-sb-val green" id="prj-stat-complete">0</span></div>
+      <div class="prj-sb-row"><span class="prj-sb-lbl">BLOCKED</span><span class="prj-sb-val red" id="prj-stat-blocked">0</span></div>
+      <div class="prj-sb-row"><span class="prj-sb-lbl">MILESTONES</span><span class="prj-sb-val" id="prj-stat-ms">0 / 0</span></div>
+    </div>
+    <div class="prj-sb-block">
+      <div class="prj-sb-hdr">FILTER BY DEPT</div>
+      <div id="prj-dept-filters">
+        <button class="prj-filter-btn active" id="prj-f-all"      onclick="prjFilterDept('all')">ALL</button>
+        <button class="prj-filter-btn" id="prj-f-career"   onclick="prjFilterDept('career')">CAREER</button>
+        <button class="prj-filter-btn" id="prj-f-finance"  onclick="prjFilterDept('finance')">FINANCE</button>
+        <button class="prj-filter-btn" id="prj-f-commerce" onclick="prjFilterDept('commerce')">COMMERCE</button>
+        <button class="prj-filter-btn" id="prj-f-security" onclick="prjFilterDept('security')">SECURITY</button>
+        <button class="prj-filter-btn" id="prj-f-personal" onclick="prjFilterDept('personal')">PERSONAL</button>
+      </div>
+    </div>
+    <div class="prj-sb-block">
+      <div class="prj-sb-hdr">QUICK ACTIONS</div>
+      <button class="prj-sb-btn" onclick="prjOpenDrawer('prj-drawer-add')">+ NEW PROJECT</button>
+      <button class="prj-sb-btn" onclick="prjFilterStage('active')">VIEW ACTIVE</button>
+      <button class="prj-sb-btn" onclick="prjFilterStage('blocked')">VIEW BLOCKED</button>
+      <a href="../apartment/ecc.html" class="prj-sb-btn" style="text-align:center">← PROJECTS ECC</a>
+    </div>
+  </aside>
+</div>
+
+<!-- DRAWER: Add / Edit Project -->
+<div class="prj-drawer-ov" id="prj-drawer-add">
+  <div class="prj-drawer">
+    <div class="prj-drawer-hdr">
+      <span id="prj-drawer-add-title">NEW PROJECT</span>
+      <button onclick="prjCloseDrawers()">✕ CLOSE</button>
+    </div>
+    <div class="prj-drawer-body">
+      <input type="hidden" id="prj-inp-id">
+      <label>PROJECT TITLE *</label>
+      <input type="text" id="prj-inp-title" placeholder="e.g. Launch Digital Planner on Etsy">
+      <div class="prj-drawer-row2">
+        <div>
+          <label>DEPARTMENT</label>
+          <select id="prj-inp-dept">
+            <option value="career">Career</option>
+            <option value="finance">Finance</option>
+            <option value="commerce">Commerce</option>
+            <option value="security">Security</option>
+            <option value="personal">Personal</option>
+            <option value="system">System</option>
+          </select>
+        </div>
+        <div>
+          <label>PRIORITY</label>
+          <select id="prj-inp-priority">
+            <option value="high">High</option>
+            <option value="medium" selected>Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+      </div>
+      <div class="prj-drawer-row2">
+        <div>
+          <label>STATUS</label>
+          <select id="prj-inp-stage">
+            <option value="backlog">Backlog</option>
+            <option value="active" selected>Active</option>
+            <option value="blocked">Blocked</option>
+            <option value="review">Review</option>
+            <option value="complete">Complete</option>
+          </select>
+        </div>
+        <div>
+          <label>TARGET DATE</label>
+          <input type="text" id="prj-inp-deadline" placeholder="2026-09-01">
+        </div>
+      </div>
+      <label>NOTES</label>
+      <textarea id="prj-inp-notes" placeholder="What is this project? What does success look like?"></textarea>
+      <label>MILESTONES (one per line)</label>
+      <textarea id="prj-inp-milestones" rows="5" placeholder="Research market&#10;Create product&#10;Publish listing&#10;Get first sale"></textarea>
+      <button class="prj-btn-primary" onclick="prjSaveProject()">SAVE PROJECT</button>
+      <button class="prj-btn-secondary" id="prj-delete-btn" style="display:none" onclick="prjDeleteProject()">REMOVE PROJECT</button>
+    </div>
+  </div>
+</div>
+
+<!-- DRAWER: Project Detail -->
+<div class="prj-drawer-ov" id="prj-drawer-detail">
+  <div class="prj-drawer">
+    <div class="prj-drawer-hdr">
+      <span>PROJECT DETAIL</span>
+      <button onclick="prjCloseDrawers()">✕ CLOSE</button>
+    </div>
+    <div class="prj-drawer-body" id="prj-detail-body">
+      <div class="prj-empty">Select a project to view details.</div>
+    </div>
+  </div>
+</div>
+
+<div id="prj-toast"></div>
+
+<script src="../js/cybercookieos.js"></script>
+<script src="../core/event_bus.js"></script>
+<script src="../core/state_manager.js"></script>
+<script src="../core/persistence.js"></script>
+<script src="../core/agent_engine.js"></script>
+<script src="../core/notification_center.js"></script>
+<script src="../core/animation_engine.js"></script>
+<script src="../core/workspace_base.js"></script>
+<script src="workspace.js"></script>
+<script src="../js/workspace_ecc_bridge.js"></script>
 </body>
 </html>

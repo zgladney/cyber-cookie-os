@@ -449,6 +449,174 @@
   transform: translateX(-50%) translateY(0);
 }
 
+/* ── DETAIL DRAWER ───────────────────────────────────────────────────────────── */
+
+.ecc-detail-ov {
+  position: fixed; inset: 0; z-index: 6000;
+  background: rgba(5,0,12,.55); backdrop-filter: blur(2px);
+  display: none; align-items: stretch; justify-content: flex-end;
+}
+.ecc-detail-ov.ecc-detail-open { display: flex; }
+
+.ecc-detail-panel {
+  width: 420px; height: 100%;
+  background: rgba(6,1,18,.99);
+  border-left: 1px solid rgba(155,107,255,.25);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+
+.ecc-detail-topbar {
+  flex-shrink: 0; height: 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px;
+  border-bottom: 1px solid rgba(155,107,255,.2);
+  background: rgba(8,2,20,.98);
+}
+.ecc-detail-qid {
+  font-size: 8px; letter-spacing: 2px;
+  color: rgba(180,150,255,.35); font-weight: 700;
+}
+.ecc-detail-title {
+  font-size: 10px; font-weight: 700; letter-spacing: 1px;
+  color: var(--orion-text); flex: 1;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  margin: 0 10px;
+}
+.ecc-detail-close {
+  font-family: inherit; font-size: 9px; letter-spacing: 1.5px; font-weight: 700;
+  padding: 4px 12px;
+  background: rgba(155,107,255,.07); border: 1px solid rgba(155,107,255,.2);
+  color: rgba(180,150,255,.6); border-radius: 2px; cursor: pointer;
+  transition: background .12s, color .12s; flex-shrink: 0;
+}
+.ecc-detail-close:hover { background: rgba(155,107,255,.14); color: rgba(200,180,255,.9); }
+
+.ecc-detail-body {
+  flex: 1; overflow-y: auto; padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 0;
+}
+.ecc-detail-body::-webkit-scrollbar { width: 2px; }
+.ecc-detail-body::-webkit-scrollbar-thumb { background: rgba(155,107,255,.2); }
+
+.ecc-detail-badge-row { display: flex; gap: 6px; margin-bottom: 10px; }
+.ecc-detail-badge {
+  font-size: 7.5px; letter-spacing: 1.5px; font-weight: 700;
+  padding: 2px 8px; border-radius: 2px; border: 1px solid;
+}
+.ecc-detail-badge.dept            { color: var(--orion-accent);    border-color: rgba(156,246,255,.2); background: rgba(156,246,255,.04); }
+.ecc-detail-badge.risk-low        { color: var(--orion-good);      border-color: rgba(46,204,113,.3);  background: rgba(46,204,113,.06); }
+.ecc-detail-badge.risk-medium     { color: var(--orion-medium);    border-color: rgba(255,220,50,.3);  background: rgba(255,220,50,.05); }
+.ecc-detail-badge.risk-high       { color: var(--orion-high);      border-color: rgba(255,140,66,.3);  background: rgba(255,140,66,.05); }
+.ecc-detail-badge.risk-irreversible { color: var(--orion-critical); border-color: rgba(255,68,68,.35); background: rgba(255,68,68,.06); }
+
+.ecc-detail-field {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 6px 0; border-bottom: 1px solid rgba(155,107,255,.07); gap: 8px;
+}
+.ecc-detail-field-key {
+  font-size: 7.5px; letter-spacing: 1.5px; color: var(--orion-sub);
+  font-weight: 700; flex-shrink: 0; width: 120px;
+}
+.ecc-detail-field-val {
+  font-size: 9px; color: var(--orion-text);
+  text-align: right; overflow: hidden; text-overflow: ellipsis;
+}
+.ecc-detail-field-val.critical { color: var(--orion-critical); }
+.ecc-detail-field-val.good     { color: var(--orion-good); }
+
+.ecc-detail-desc {
+  margin: 10px 0; font-size: 10px;
+  color: rgba(200,180,255,.6); line-height: 1.6;
+  padding: 8px 10px; background: rgba(155,107,255,.04);
+  border-left: 2px solid rgba(155,107,255,.2); border-radius: 1px;
+}
+
+.ecc-detail-actions {
+  flex-shrink: 0; display: flex; flex-direction: column; gap: 6px;
+  padding: 12px 16px;
+  border-top: 1px solid rgba(155,107,255,.15);
+  background: rgba(5,0,12,.8);
+}
+.ecc-detail-action-row { display: flex; gap: 6px; }
+
+.ecc-detail-approve-btn {
+  flex: 1; font-family: inherit; font-size: 9px; letter-spacing: 1.5px; font-weight: 700;
+  padding: 9px; background: rgba(46,204,113,.08); border: 1px solid rgba(46,204,113,.3);
+  color: var(--orion-good); border-radius: 2px; cursor: pointer; transition: background .12s;
+}
+.ecc-detail-approve-btn:hover { background: rgba(46,204,113,.16); }
+
+.ecc-detail-decline-btn {
+  flex: 1; font-family: inherit; font-size: 9px; letter-spacing: 1.5px; font-weight: 700;
+  padding: 9px; background: rgba(255,68,68,.06); border: 1px solid rgba(255,68,68,.25);
+  color: var(--orion-critical); border-radius: 2px; cursor: pointer; transition: background .12s;
+}
+.ecc-detail-decline-btn:hover { background: rgba(255,68,68,.12); }
+
+.ecc-detail-ws-btn {
+  flex: 1; font-family: inherit; font-size: 9px; letter-spacing: 1.5px; font-weight: 700;
+  padding: 7px; background: rgba(156,246,255,.05); border: 1px solid rgba(156,246,255,.2);
+  color: var(--orion-accent); border-radius: 2px; cursor: pointer; transition: background .12s;
+}
+.ecc-detail-ws-btn:hover { background: rgba(156,246,255,.1); }
+
+.ecc-detail-secondary-btn {
+  flex: 1; font-family: inherit; font-size: 9px; letter-spacing: 1.5px; font-weight: 700;
+  padding: 7px; background: rgba(155,107,255,.06); border: 1px solid rgba(155,107,255,.2);
+  color: var(--orion-sub); border-radius: 2px; cursor: pointer; transition: background .12s, color .12s;
+}
+.ecc-detail-secondary-btn:hover { background: rgba(155,107,255,.12); color: var(--orion-purple); }
+
+/* ── DECIDED CARD STATES ─────────────────────────────────────────────────────── */
+
+.ecc-dec-card.ecc-dec-decided {
+  opacity: 0.5; pointer-events: none;
+  border-left-color: rgba(155,107,255,.12) !important;
+}
+.ecc-dec-card.ecc-dec-decided-approved { border-left-color: rgba(46,204,113,.4) !important; }
+.ecc-dec-card.ecc-dec-decided-declined { border-left-color: rgba(255,68,68,.3) !important; }
+.ecc-dec-decided-label {
+  font-size: 8px; letter-spacing: 1.5px; font-weight: 700;
+  padding: 1px 7px; border-radius: 2px; border: 1px solid;
+}
+.ecc-dec-decided-label.approved { color: var(--orion-good);     border-color: rgba(46,204,113,.3); }
+.ecc-dec-decided-label.declined { color: var(--orion-critical); border-color: rgba(255,68,68,.3); }
+
+/* Preview text inside decision card */
+.ecc-dec-preview {
+  font-size: 8.5px; color: rgba(180,150,255,.35);
+  margin: 3px 0 5px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+/* DETAILS link inside card */
+.ecc-dec-details-btn {
+  font-family: inherit; font-size: 8px; letter-spacing: 1px; font-weight: 700;
+  padding: 3px 9px; background: rgba(155,107,255,.06);
+  border: 1px solid rgba(155,107,255,.18);
+  color: rgba(180,150,255,.6); border-radius: 2px; cursor: pointer;
+  transition: background .12s, color .12s;
+}
+.ecc-dec-details-btn:hover { background: rgba(155,107,255,.12); color: rgba(200,180,255,.9); }
+
+/* ── RECENT DECISIONS ────────────────────────────────────────────────────────── */
+
+.ecc-recent-dec-item {
+  display: flex; gap: 6px; align-items: center;
+  padding: 5px 0; border-bottom: 1px solid rgba(155,107,255,.06);
+}
+.ecc-recent-dec-item:last-child { border-bottom: none; }
+.ecc-recent-dec-decision {
+  font-size: 7.5px; letter-spacing: 1.5px; font-weight: 700;
+  padding: 1px 6px; border-radius: 2px; border: 1px solid; flex-shrink: 0;
+}
+.ecc-recent-dec-decision.approved { color: var(--orion-good);     border-color: rgba(46,204,113,.3); background: rgba(46,204,113,.06); }
+.ecc-recent-dec-decision.declined { color: var(--orion-critical); border-color: rgba(255,68,68,.3);  background: rgba(255,68,68,.05); }
+.ecc-recent-dec-title {
+  flex: 1; font-size: 8.5px; color: rgba(200,180,255,.6);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ecc-recent-dec-time { font-size: 7.5px; color: rgba(180,150,255,.3); flex-shrink: 0; }
+
 /* ── WORKSPACE OVERLAY ───────────────────────────────────────────────────────────
    The old workspace room loads here — inside the ECC, never as a page navigation.
    ECC is always the controller. Workspace is subordinate and lazy-loaded.
@@ -508,4 +676,97 @@
   width: 100%;
   border: none;
   display: block;
+}
+
+/* ── LOADING SKELETON ────────────────────────────────────────────────────────────
+   Shown for max 2 seconds while API call is in flight.
+   ─────────────────────────────────────────────────────────────────────────────── */
+@keyframes ecc-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.ecc-skeleton-line {
+  height: 8px;
+  border-radius: 2px;
+  margin: 5px 0;
+  background: linear-gradient(
+    90deg,
+    rgba(155, 107, 255, .07) 25%,
+    rgba(155, 107, 255, .15) 50%,
+    rgba(155, 107, 255, .07) 75%
+  );
+  background-size: 200% 100%;
+  animation: ecc-shimmer 1.4s infinite linear;
+}
+.ecc-skeleton-line.short { width: 55%; }
+.ecc-skeleton-line.med   { width: 78%; }
+.ecc-skeleton-line.tall  { height: 18px; }
+
+.ecc-skeleton-metric {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+}
+.ecc-skeleton-metric-cell {
+  background: rgba(155, 107, 255, .04);
+  border: 1px solid rgba(155, 107, 255, .1);
+  border-radius: 2px;
+  padding: 8px;
+}
+
+/* ── ERROR / OFFLINE STATES ──────────────────────────────────────────────────────
+   Displayed when the API call fails or the 2-second timeout elapses.
+   ─────────────────────────────────────────────────────────────────────────────── */
+.ecc-error-block {
+  padding: 4px 0 8px;
+}
+.ecc-error-label {
+  font-size: 8px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  color: rgba(231, 76, 60, .75);
+  margin-bottom: 4px;
+}
+.ecc-error-msg {
+  font-size: 9.5px;
+  color: rgba(180, 150, 255, .45);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+.ecc-retry-btn {
+  font-family: inherit;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  padding: 5px 14px;
+  cursor: pointer;
+  background: rgba(155, 107, 255, .07);
+  border: 1px solid rgba(155, 107, 255, .25);
+  color: rgba(180, 150, 255, .7);
+  border-radius: 2px;
+  transition: background .12s, color .12s;
+}
+.ecc-retry-btn:hover {
+  background: rgba(155, 107, 255, .14);
+  color: rgba(200, 175, 255, .95);
+}
+.ecc-retry-countdown {
+  font-size: 7.5px;
+  letter-spacing: 1px;
+  color: rgba(180, 150, 255, .3);
+  margin-top: 5px;
+  min-height: 12px;
+}
+
+/* Health badge — offline state */
+.ecc-health-badge[data-status="offline"] {
+  color: rgba(231, 76, 60, .85);
+  background: rgba(231, 76, 60, .07);
+  border-color: rgba(231, 76, 60, .25);
+}
+.ecc-health-badge[data-status="error"] {
+  color: rgba(231, 76, 60, .85);
+  background: rgba(231, 76, 60, .07);
+  border-color: rgba(231, 76, 60, .25);
 }
