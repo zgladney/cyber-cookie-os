@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connections — Executive Control Center</title>
+<link rel="stylesheet" href="../css/orion_executive.css">
+<link rel="stylesheet" href="../css/ecc_extensions.css">
+</head>
+<body>
+
+<div class="ecc-page">
+  <header class="ecc-header" id="ecc-header"></header>
+  <main class="ecc-main">
+    <div class="ecc-left"  id="ecc-left"></div>
+    <div class="ecc-right" id="ecc-right"></div>
+  </main>
+  <footer class="ecc-footer" id="ecc-footer"></footer>
+</div>
+
+<div id="ecc-toast"></div>
+
+<script>
+var ECC_CONFIG = {
+  dept:      'connections',
+  label:     'CONNECTIONS',
+  icon:      '🔗',
+  color:     '#9cf6ff',
+  workspace: '../connections/index.html',
+  employees: [
+    { name: 'Atlas',   role: 'NETWORK MANAGER',   status: 'idle',    task: 'Ready to manage recruiter outreach' },
+    { name: 'Relay',   role: 'CRM ANALYST',       status: 'standby', task: 'Monitoring response rates' },
+    { name: 'Bridge',  role: 'INTEGRATION MGR',   status: 'working', task: 'Checking account connection status' }
+  ],
+  quick_actions: [
+    { label: 'ADD CONTACT',     icon: '👤', href: '../connections/index.html' },
+    { label: 'LOG MESSAGE',     icon: '💬', href: '../connections/index.html' },
+    { label: 'VIEW CRM',        icon: '📋', href: '../connections/index.html' },
+    { label: 'CONNECT LINKEDIN',icon: '🔗', href: '../connections/index.html' }
+  ]
+};
+</script>
+<script src="../js/cybercookieos.js"></script>
+<script src="../js/orion.js"></script>
+<script src="../js/cos_orion_server.js"></script>
+<script src="../js/ecc_engine.js"></script>
+</body>
+</html>

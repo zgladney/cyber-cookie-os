@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finance — Executive Control Center</title>
+<link rel="stylesheet" href="../css/orion_executive.css">
+<link rel="stylesheet" href="../css/ecc_extensions.css">
+</head>
+<body>
+
+<div class="ecc-page">
+  <header class="ecc-header" id="ecc-header"></header>
+  <main class="ecc-main">
+    <div class="ecc-left"  id="ecc-left"></div>
+    <div class="ecc-right" id="ecc-right"></div>
+  </main>
+  <footer class="ecc-footer" id="ecc-footer"></footer>
+</div>
+
+<div id="ecc-toast"></div>
+
+<script>
+var ECC_CONFIG = {
+  dept:      'finance',
+  label:     'FINANCE',
+  icon:      '💰',
+  color:     '#2ecc71',
+  workspace: '../finance/index.html',
+  employees: [
+    { name: 'Penny',     role: 'BUDGET ANALYST',   status: 'working', task: 'Monitoring cash flow and subscriptions' },
+    { name: 'Greenbean', role: 'REVENUE TRACKER',  status: 'working', task: 'Recording and categorizing transactions' },
+    { name: 'Ledger',    role: 'TRANSACTION LOG',  status: 'idle',    task: 'Audit trail maintained and current' },
+    { name: 'Vault',     role: 'ASSET MANAGER',    status: 'standby', task: 'Ready to analyze savings and assets' }
+  ],
+  quick_actions: [
+    { label: 'ADD REVENUE',  icon: '💵', href: '../finance/index.html' },
+    { label: 'LOG EXPENSE',  icon: '📤', href: '../finance/index.html' },
+    { label: 'VIEW LEDGER',  icon: '📒', href: '../finance/index.html' },
+    { label: 'BUDGET PLAN',  icon: '📊', href: '../finance/index.html' }
+  ]
+};
+</script>
+<script src="../js/cybercookieos.js"></script>
+<script src="../js/orion.js"></script>
+<script src="../js/cos_orion_server.js"></script>
+<script src="../js/ecc_engine.js"></script>
+</body>
+</html>

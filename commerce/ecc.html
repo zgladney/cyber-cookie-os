@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commerce — Executive Control Center</title>
+<link rel="stylesheet" href="../css/orion_executive.css">
+<link rel="stylesheet" href="../css/ecc_extensions.css">
+</head>
+<body>
+
+<div class="ecc-page">
+  <header class="ecc-header" id="ecc-header"></header>
+  <main class="ecc-main">
+    <div class="ecc-left"  id="ecc-left"></div>
+    <div class="ecc-right" id="ecc-right"></div>
+  </main>
+  <footer class="ecc-footer" id="ecc-footer"></footer>
+</div>
+
+<div id="ecc-toast"></div>
+
+<script>
+var ECC_CONFIG = {
+  dept:      'commerce',
+  label:     'COMMERCE',
+  icon:      '🛍',
+  color:     '#ff69b4',
+  workspace: '../commerce/index.html',
+  employees: [
+    { name: 'Pixel',    role: 'TREND RESEARCHER',  status: 'working', task: 'Scanning TikTok trends and demand' },
+    { name: 'Spark',    role: 'CONTENT CREATOR',   status: 'idle',    task: 'Ready to produce product content' },
+    { name: 'Forge',    role: 'PRODUCT BUILDER',   status: 'standby', task: 'Awaiting product creation request' },
+    { name: 'EtsyBot',  role: 'LISTING MANAGER',   status: 'idle',    task: 'Pending Etsy account connection' }
+  ],
+  quick_actions: [
+    { label: 'CREATE PRODUCT', icon: '✨', href: '../commerce/index.html' },
+    { label: 'VIEW PIPELINE',  icon: '📦', href: '../commerce/index.html' },
+    { label: 'TREND REPORT',   icon: '📈', href: '../commerce/index.html' },
+    { label: 'CONNECT ETSY',   icon: '🔗', href: '../commerce/index.html' }
+  ]
+};
+</script>
+<script src="../js/cybercookieos.js"></script>
+<script src="../js/orion.js"></script>
+<script src="../js/cos_orion_server.js"></script>
+<script src="../js/ecc_engine.js"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Productivity — Executive Control Center</title>
+<link rel="stylesheet" href="../css/orion_executive.css">
+<link rel="stylesheet" href="../css/ecc_extensions.css">
+</head>
+<body>
+
+<div class="ecc-page">
+  <header class="ecc-header" id="ecc-header"></header>
+  <main class="ecc-main">
+    <div class="ecc-left"  id="ecc-left"></div>
+    <div class="ecc-right" id="ecc-right"></div>
+  </main>
+  <footer class="ecc-footer" id="ecc-footer"></footer>
+</div>
+
+<div id="ecc-toast"></div>
+
+<script>
+var ECC_CONFIG = {
+  dept:      'productivity',
+  label:     'PRODUCTIVITY',
+  icon:      '📅',
+  color:     '#3aa8c8',
+  workspace: '../productivity/index.html',
+  employees: [
+    { name: 'Calypso', role: 'EXEC ASSISTANT',     status: 'working', task: 'Monitoring calendar for conflicts' },
+    { name: 'Echo',    role: 'COMMUNICATIONS MGR', status: 'standby', task: 'Ready to triage email and messages' },
+    { name: 'Memo',    role: 'TASK MANAGER',       status: 'idle',    task: 'Tracking tasks and reminders' }
+  ],
+  quick_actions: [
+    { label: 'SYNC CALENDAR',  icon: '📅', href: '../productivity/index.html' },
+    { label: 'CREATE TASK',    icon: '✅', href: '../productivity/index.html' },
+    { label: 'VIEW SCHEDULE',  icon: '🗓', href: '../productivity/index.html' },
+    { label: 'SET REMINDER',   icon: '⏰', href: '../productivity/index.html' }
+  ]
+};
+</script>
+<script src="../js/cybercookieos.js"></script>
+<script src="../js/orion.js"></script>
+<script src="../js/cos_orion_server.js"></script>
+<script src="../js/ecc_engine.js"></script>
+</body>
+</html>

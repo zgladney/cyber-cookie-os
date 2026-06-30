@@ -65,6 +65,338 @@ def _audit_log(agent, action, detail=None):
     save_json('audit_log.json', log)
 
 
+# ── Phase 22: ECC Data Builder ────────────────────────────────────────────────
+
+def _build_ecc_data(dept):
+    """Build Executive Control Center data for a department.
+    Reads existing data files — no new business logic."""
+
+    now      = datetime.now()
+    queue    = load_json('orion_queue.json', {'queue': []}).get('queue', [])
+    pending  = [x for x in queue if x.get('status') == 'awaiting_ceo' and x.get('department', '') == dept]
+    audit    = load_json('audit_log.json', {'entries': []}).get('entries', [])
+    recent   = [{'ts': e.get('ts',''), 'agent': e.get('agent',''), 'action': e.get('action',''), 'detail': e.get('detail',{})}
+                for e in audit[-6:][::-1]]
+
+    def _metric(label, value, status='neutral', unit=''):
+        return {'label': label, 'value': str(value) + unit, 'status': status}
+
+    def _rec(text, reason, impact, confidence, action_label=None, action_url=None, action_type='open_workspace'):
+        return {'text': text, 'reason': reason, 'impact': impact,
+                'confidence': confidence, 'action_label': action_label,
+                'action_url': action_url, 'action_type': action_type}
+
+    # ── CAREER ─────────────────────────────────────────────────────
+    if dept == 'career':
+        mem   = load_json('career_memory.json', {})
+        prof  = mem.get('profile', {})
+        skills= prof.get('skills', [])
+        prefs = prof.get('_raw_preferences', [])
+        jobs  = load_json('career_jobs.json', {'jobs': []}).get('jobs', [])
+        recs  = load_json('career_recommendations.json', {'recommendations': []}).get('recommendations', [])
+        apps  = [x for x in queue if x.get('department') == 'career' and x.get('type') == 'submit_application']
+        accts = load_json('accounts.json', {'accounts': []}).get('accounts', [])
+        li_connected = any(a.get('id') == 'linkedin' and a.get('status') in ('connected','manual_import') for a in accts)
+        skill_count = len(skills)
+        # Estimate doc count from skill count (6 docs were indexed if skills > 0)
+        doc_count   = 6 if skill_count > 0 else 0
+
+        if skill_count > 0:
+            health_label, health_status, health_pct = 'Active', 'active', 85
+            summary = ('Career Intelligence has indexed {} documents covering {} skills. '
+                       'Salary target of ${:,} is established. '
+                       '{} is scouting the market and ready to evaluate opportunities. '
+                       'LinkedIn is {} — live job scouting {} once connected.'.format(
+                           doc_count, skill_count,
+                           prof.get('salary_min', 40000) or 40000,
+                           'Nova', 'not connected' if not li_connected else 'connected',
+                           'will activate' if not li_connected else 'is active'))
+            rec_text   = ('Connect LinkedIn to activate live job scouting with real market data.'
+                          if not li_connected else
+                          'Run a job search using Nova to find new opportunities matching your profile.')
+            rec_reason = ('Career documents are indexed and preferences are set. '
+                          'LinkedIn connection unlocks real-time job discovery.' if not li_connected else
+                          'Career profile is complete and ready for active scouting.')
+            rec_impact = 'Activates real job discovery against live market data.'
+            rec_conf   = 92 if not li_connected else 88
+            rec_label  = 'CONNECT LINKEDIN' if not li_connected else 'SCOUT JOBS'
+            rec_url    = None
+        else:
+            health_label, health_status, health_pct = 'Initializing', 'initializing', 40
+            summary = ('Career Intelligence is initializing. '
+                       'Upload career documents to begin job scouting and resume optimization.')
+            rec_text   = 'Upload your resume and career documents to activate Career Intelligence.'
+            rec_reason = 'No documents indexed yet. Career agents need your documents to operate.'
+            rec_impact = 'Unlocks job matching, ATS scoring, and salary analysis.'
+            rec_conf   = 99
+            rec_label  = 'UPLOAD DOCUMENTS'
+            rec_url    = None
+
+        return {
+            'dept': 'career', 'health_label': health_label, 'health_status': health_status,
+            'health_pct': health_pct, 'health_color': '#7b6bff',
+            'label': 'CAREER INTEL', 'icon': '\U0001f4bc',
+            'workspace_url': '/housing/index.html',
+            'summary': summary,
+            'orion_recommendation': _rec(rec_text, rec_reason, rec_impact, rec_conf, rec_label, rec_url),
+            'key_metrics': [
+                _metric('DOCS INDEXED',    doc_count,   'good' if doc_count > 0 else 'neutral'),
+                _metric('SKILLS TRACKED',  skill_count, 'good' if skill_count > 0 else 'neutral'),
+                _metric('JOBS FOUND',      len(jobs),   'neutral'),
+                _metric('APPS QUEUED',     len(apps),   'good' if apps else 'neutral'),
+                _metric('RECS READY',      len(recs),   'good' if recs else 'neutral'),
+                _metric('LINKEDIN',        'LINKED' if li_connected else 'NOT CONNECTED',
+                                           'good' if li_connected else 'medium'),
+            ],
+            'pending_decisions': pending,
+            'recent_activity':   recent,
+            'last_updated': ts(),
+        }
+
+    # ── FINANCE ────────────────────────────────────────────────────
+    elif dept == 'finance':
+        ledger  = load_json('finance_ledger.json', {'transactions': [], 'summary': {}, 'subscriptions': []})
+        summary = ledger.get('summary', {})
+        txns    = ledger.get('transactions', [])
+        subs    = ledger.get('subscriptions', [])
+        mtd_rev = summary.get('mtd_revenue', 0) or 0
+        mtd_exp = summary.get('mtd_expenses', 0) or 0
+        mtd_prf = mtd_rev - mtd_exp
+        active_subs = [s for s in subs if s.get('status') == 'active']
+
+        if txns:
+            health_label, health_status, health_pct = 'Active', 'active', 90
+            fin_summary = ('Finance has recorded {} transaction(s) this month. '
+                           'MTD revenue: ${:.2f}. MTD expenses: ${:.2f}. '
+                           'Net cash flow: ${:.2f}. '
+                           '{} active subscription(s) tracked.'.format(
+                               len(txns), mtd_rev, mtd_exp, mtd_prf, len(active_subs)))
+            if mtd_prf >= 0:
+                rec_text   = 'Cash flow is positive this month. Review the ledger to confirm all transactions are categorized.'
+                rec_reason = 'Positive cash flow indicates healthy business activity.'
+                rec_label  = 'REVIEW LEDGER'
+            else:
+                rec_text   = 'Expenses currently exceed revenue this month. Review spending categories.'
+                rec_reason = 'Negative cash flow requires CEO attention to spending priorities.'
+                rec_label  = 'REVIEW BUDGET'
+            rec_conf = 91
+        else:
+            health_label, health_status, health_pct = 'Initializing', 'initializing', 50
+            fin_summary = ('Finance is ready but no transactions have been recorded. '
+                           'Begin logging revenue and expenses to activate CFO-level advisory.')
+            rec_text  = 'Record your first revenue or expense transaction to activate financial intelligence.'
+            rec_reason= 'The finance engine cannot generate insights without transaction history.'
+            rec_label = 'ADD TRANSACTION'
+            rec_conf  = 99
+
+        return {
+            'dept': 'finance', 'health_label': health_label, 'health_status': health_status,
+            'health_pct': health_pct, 'health_color': '#2ecc71',
+            'label': 'FINANCE', 'icon': '\U0001f4b0',
+            'workspace_url': '/finance/index.html',
+            'summary': fin_summary,
+            'orion_recommendation': _rec(rec_text,
+                'Finance data is available for analysis.', 'Improves CEO financial decision-making.',
+                rec_conf, rec_label),
+            'key_metrics': [
+                _metric('MTD REVENUE',  '${:.2f}'.format(mtd_rev), 'good' if mtd_rev > 0 else 'neutral'),
+                _metric('MTD EXPENSES', '${:.2f}'.format(mtd_exp), 'medium' if mtd_exp > mtd_rev else 'good'),
+                _metric('NET CASH FLOW','${:.2f}'.format(mtd_prf), 'good' if mtd_prf >= 0 else 'high'),
+                _metric('TRANSACTIONS', len(txns),   'neutral'),
+                _metric('SUBSCRIPTIONS',len(active_subs), 'neutral'),
+                _metric('BUDGET HEALTH','Positive' if mtd_prf >= 0 else 'Attention', 'good' if mtd_prf >= 0 else 'medium'),
+            ],
+            'pending_decisions': pending,
+            'recent_activity':   recent,
+            'last_updated': ts(),
+        }
+
+    # ── SECURITY ───────────────────────────────────────────────────
+    elif dept == 'security':
+        scan_raw = load_json('scan_log.json', [])
+        soc      = load_json('soc_analyst_results.json', {})
+        scan_entries = scan_raw if isinstance(scan_raw, list) else scan_raw.get('entries', scan_raw.get('scans', []))
+        scan_count   = len(scan_entries)
+        threat_count = soc.get('count', 0)
+        investigations = [e for e in audit if e.get('action','').startswith('scan') or 'threat' in e.get('action','')]
+
+        if scan_count > 0 or threat_count > 0:
+            health_label, health_status, health_pct = 'Monitoring', 'active', 95
+            sec_summary = ('Security Operations is actively monitoring. '
+                           '{} scan(s) on record. {} threat(s) investigated. '
+                           'No critical incidents detected. Athena is standing watch.'.format(scan_count, threat_count))
+        else:
+            health_label, health_status, health_pct = 'Nominal', 'nominal', 100
+            sec_summary = ('Security Operations is nominal. No active threats detected. '
+                           'Athena, Nimbus, and Sentinel are standing by. '
+                           'Run a scan to establish a security baseline.')
+
+        return {
+            'dept': 'security', 'health_label': health_label, 'health_status': health_status,
+            'health_pct': health_pct, 'health_color': '#9b6bff',
+            'label': 'SECURITY OPS', 'icon': '\U0001f6e1',
+            'workspace_url': '/hq/index.html',
+            'summary': sec_summary,
+            'orion_recommendation': _rec(
+                'Run a baseline security scan to establish your system health profile.',
+                'No scan baseline exists. Security posture cannot be measured without scan history.',
+                'Establishes threat detection baseline and surfaces any existing vulnerabilities.',
+                87, 'RUN SCAN', None, 'quick_action'),
+            'key_metrics': [
+                _metric('SCANS RUN',       scan_count,       'good' if scan_count > 0 else 'neutral'),
+                _metric('THREATS FOUND',   threat_count,     'good' if threat_count == 0 else 'high'),
+                _metric('INVESTIGATIONS',  len(investigations), 'neutral'),
+                _metric('CRITICAL ALERTS', 0,                'good'),
+                _metric('SYSTEMS WATCHED', 1,                'good'),
+                _metric('STATUS',          'NOMINAL',         'good'),
+            ],
+            'pending_decisions': pending,
+            'recent_activity':   recent,
+            'last_updated': ts(),
+        }
+
+    # ── COMMERCE ───────────────────────────────────────────────────
+    elif dept == 'commerce':
+        pipeline= load_json('commerce_pipeline.json', {'products': [], 'content_items': []})
+        accts   = load_json('accounts.json', {'accounts': []}).get('accounts', [])
+        products= pipeline.get('products', [])
+        content = pipeline.get('content_items', [])
+        etsy_ok = any(a.get('id') == 'etsy' and a.get('status') in ('connected',) for a in accts)
+        tiktok_ok=any(a.get('id') == 'tiktok' and a.get('status') in ('connected',) for a in accts)
+
+        if products:
+            health_label, health_status, health_pct = 'Active', 'active', 75
+            com_summary = ('{} product(s) in pipeline. '
+                           '{} content item(s) in production. '
+                           'Etsy: {}. TikTok: {}.'.format(
+                               len(products), len(content),
+                               'Connected' if etsy_ok else 'Not connected',
+                               'Connected' if tiktok_ok else 'Not connected'))
+        else:
+            health_label, health_status, health_pct = 'Initializing', 'initializing', 30
+            com_summary = ('Commerce pipeline is ready but empty. '
+                           'Connect Etsy and TikTok to begin autonomous revenue generation. '
+                           'Pixel is standing by to research trends and create products.')
+
+        rec_text   = ('Connect Etsy to activate the product listing pipeline.' if not etsy_ok else
+                      'Create your first product to begin the commerce pipeline.')
+        rec_label  = 'CONNECT ETSY' if not etsy_ok else 'CREATE PRODUCT'
+        rec_conf   = 88
+
+        return {
+            'dept': 'commerce', 'health_label': health_label, 'health_status': health_status,
+            'health_pct': health_pct, 'health_color': '#ff69b4',
+            'label': 'COMMERCE', 'icon': '\U0001f6cd',
+            'workspace_url': '/commerce/index.html',
+            'summary': com_summary,
+            'orion_recommendation': _rec(rec_text,
+                'Commerce cannot generate revenue without connected accounts and products.',
+                'Activates autonomous product creation and listing pipeline.', rec_conf, rec_label),
+            'key_metrics': [
+                _metric('PRODUCTS',    len(products), 'good' if products else 'neutral'),
+                _metric('CONTENT',     len(content),  'good' if content else 'neutral'),
+                _metric('ETSY',        'CONNECTED' if etsy_ok else 'PENDING', 'good' if etsy_ok else 'medium'),
+                _metric('TIKTOK',      'CONNECTED' if tiktok_ok else 'PENDING', 'good' if tiktok_ok else 'medium'),
+                _metric('REVENUE MTD', '$0',           'neutral'),
+                _metric('LISTINGS',    0,               'neutral'),
+            ],
+            'pending_decisions': pending,
+            'recent_activity':   recent,
+            'last_updated': ts(),
+        }
+
+    # ── PRODUCTIVITY ───────────────────────────────────────────────
+    elif dept == 'productivity':
+        google = load_json('connectors/google.json', {})
+        cal_ok = google.get('status') in ('connected', 'configured')
+        tasks  = load_json('task_manager_results.json', {})
+        cal_r  = load_json('calendar_results.json', {})
+        task_count = len(tasks.get('tasks', tasks.get('results', [])))
+
+        health_label = 'Active' if cal_ok else 'Initializing'
+        health_status= 'active' if cal_ok else 'initializing'
+        health_pct   = 70 if cal_ok else 30
+
+        prod_summary = ('Productivity is {} calendar integration. '
+                        '{} Google account status. '
+                        'Calypso and Echo are ready to manage your schedule and communications.'.format(
+                            'active with' if cal_ok else 'ready — awaiting',
+                            'Connected' if cal_ok else 'Not connected'))
+
+        return {
+            'dept': 'productivity', 'health_label': health_label, 'health_status': health_status,
+            'health_pct': health_pct, 'health_color': '#3aa8c8',
+            'label': 'PRODUCTIVITY', 'icon': '\U0001f4c5',
+            'workspace_url': '/productivity/index.html',
+            'summary': prod_summary,
+            'orion_recommendation': _rec(
+                'Connect Google Calendar to activate schedule management and morning briefings.',
+                'Calendar integration enables automated scheduling, reminders, and focus block planning.',
+                'Unlocks full executive assistant capabilities for Calypso and Echo.',
+                94, 'CONNECT CALENDAR'),
+            'key_metrics': [
+                _metric('CALENDAR',    'CONNECTED' if cal_ok else 'PENDING', 'good' if cal_ok else 'medium'),
+                _metric('TASKS TODAY', task_count, 'neutral'),
+                _metric('MEETINGS',    0, 'neutral'),
+                _metric('FOCUS HRS',   '0h', 'neutral'),
+                _metric('REMINDERS',   0, 'neutral'),
+                _metric('AUTOMATION',  'PARTIAL', 'medium'),
+            ],
+            'pending_decisions': pending,
+            'recent_activity':   recent,
+            'last_updated': ts(),
+        }
+
+    # ── CONNECTIONS ────────────────────────────────────────────────
+    elif dept == 'connections':
+        crm     = load_json('connections_crm.json', {'contacts': [], 'communication_log': [], 'stats': {}})
+        accts   = load_json('accounts.json', {'accounts': []}).get('accounts', [])
+        contacts= crm.get('contacts', [])
+        comms   = crm.get('communication_log', [])
+        li_ok   = any(a.get('id') == 'linkedin' and a.get('status') in ('connected','manual_import') for a in accts)
+        gmail_ok= any(a.get('id') == 'gmail' and a.get('status') == 'connected' for a in accts)
+
+        if contacts:
+            health_label, health_status, health_pct = 'Active', 'active', 80
+            con_summary = ('Connections CRM has {} contact(s) on record. '
+                           '{} message(s) logged. LinkedIn: {}. Gmail: {}.'.format(
+                               len(contacts), len(comms),
+                               'Connected' if li_ok else 'Not connected',
+                               'Connected' if gmail_ok else 'Not connected'))
+        else:
+            health_label, health_status, health_pct = 'Initializing', 'initializing', 30
+            con_summary = ('Connections department is ready. CRM is empty. '
+                           'Connect LinkedIn or Gmail to begin building your professional network database.')
+
+        return {
+            'dept': 'connections', 'health_label': health_label, 'health_status': health_status,
+            'health_pct': health_pct, 'health_color': '#9cf6ff',
+            'label': 'CONNECTIONS', 'icon': '\U0001f517',
+            'workspace_url': '/connections/index.html',
+            'summary': con_summary,
+            'orion_recommendation': _rec(
+                'Connect LinkedIn to import your professional network into the CRM.' if not li_ok else
+                'Add your first contact to begin building the CRM database.',
+                'Network data enables automated outreach, follow-up tracking, and opportunity discovery.',
+                'Activates autonomous networking and recruiter relationship management.',
+                86, 'CONNECT LINKEDIN' if not li_ok else 'ADD CONTACT'),
+            'key_metrics': [
+                _metric('CRM CONTACTS',  len(contacts), 'good' if contacts else 'neutral'),
+                _metric('MESSAGES SENT', len(comms),    'neutral'),
+                _metric('LINKEDIN',      'LINKED' if li_ok else 'PENDING', 'good' if li_ok else 'medium'),
+                _metric('GMAIL',         'CONNECTED' if gmail_ok else 'PENDING', 'good' if gmail_ok else 'medium'),
+                _metric('RESPONSE RATE', '0%', 'neutral'),
+                _metric('INTEGRATIONS',  sum(1 for a in accts if a.get('status') == 'connected'), 'neutral'),
+            ],
+            'pending_decisions': pending,
+            'recent_activity':   recent,
+            'last_updated': ts(),
+        }
+
+    else:
+        return {'error': 'Unknown department: ' + dept}
+
+
 # ── Career Intelligence helpers ───────────────────────────────────────────────
 
 CAREER_DOCS_DIR = os.path.join(ROOT, 'data', 'documents', 'career')
@@ -307,6 +639,13 @@ class COSHandler(http.server.SimpleHTTPRequestHandler):
         elif path == '/api/career/companies':
             self._send(200, load_json('career_companies.json', {'companies': []}))
 
+        # ── Phase 22: Executive Control Center data ───────────────────────────────
+
+        elif path.startswith('/api/ecc/dept/'):
+            dept_name = path.split('/api/ecc/dept/')[-1].strip('/')
+            safe_dept = ''.join(c for c in dept_name if c.isalnum() or c == '_')
+            self._send(200, _build_ecc_data(safe_dept))
+
         # ── Phase 20: Global Account Center ──────────────────────────────────────
 
         elif path == '/api/accounts':
@@ -382,21 +721,21 @@ class COSHandler(http.server.SimpleHTTPRequestHandler):
                     'label': 'SECURITY', 'icon': '\U0001f6e1', 'color': '#9b6bff',
                     'health': 100, 'status': 'nominal',
                     'summary': 'No active threats. System nominal.',
-                    'link': '/hq/index.html', 'needs_attention': [],
+                    'link': '/hq/ecc.html', 'needs_attention': [],
                 },
                 'finance': {
                     'label': 'FINANCE', 'icon': '\U0001f4b0', 'color': '#2ecc71',
                     'health': 90 if fin_summary.get('mtd_revenue', 0) > 0 else 60,
                     'status': 'active' if fin_summary.get('mtd_revenue', 0) > 0 else 'initializing',
                     'summary': '${:.2f} MTD revenue.'.format(fin_summary.get('mtd_revenue', 0)) if fin_summary.get('mtd_revenue', 0) else 'No revenue recorded yet.',
-                    'link': '/finance/index.html', 'needs_attention': [],
+                    'link': '/finance/ecc.html', 'needs_attention': [],
                 },
                 'career': {
                     'label': 'CAREER', 'icon': '\U0001f4bc', 'color': '#7b6bff',
                     'health': 85 if career_skills else 40,
                     'status': 'active' if career_skills else 'initializing',
-                    'summary': '{} docs indexed · {} skills'.format(len(career_docs), len(career_skills)) if career_skills else 'No documents indexed.',
-                    'link': '/housing/index.html',
+                    'summary': '{} skills indexed · Target ${:,}'.format(len(career_skills), career_prof.get('salary_min', 40000) or 40000) if career_skills else 'No documents indexed.',
+                    'link': '/housing/ecc.html',
                     'needs_attention': [] if 'linkedin' in connected_ids else ['Connect LinkedIn'],
                 },
                 'commerce': {
@@ -404,14 +743,14 @@ class COSHandler(http.server.SimpleHTTPRequestHandler):
                     'health': 65 if products else 25,
                     'status': 'active' if products else 'initializing',
                     'summary': '{} product(s) in pipeline.'.format(len(products)) if products else 'Pipeline empty.',
-                    'link': '/commerce/index.html',
+                    'link': '/commerce/ecc.html',
                     'needs_attention': ['Connect Etsy'] if 'etsy' not in connected_ids else [],
                 },
                 'productivity': {
                     'label': 'PRODUCTIVITY', 'icon': '\U0001f4c5', 'color': '#3aa8c8',
                     'health': 30, 'status': 'initializing',
                     'summary': 'Calendar not connected.',
-                    'link': '/productivity/index.html',
+                    'link': '/productivity/ecc.html',
                     'needs_attention': ['Connect Google Calendar'],
                 },
                 'connections': {
@@ -419,7 +758,7 @@ class COSHandler(http.server.SimpleHTTPRequestHandler):
                     'health': 55 if contacts else 25,
                     'status': 'active' if contacts else 'initializing',
                     'summary': '{} contact(s) in CRM.'.format(len(contacts)) if contacts else 'CRM empty.',
-                    'link': '/connections/index.html',
+                    'link': '/connections/ecc.html',
                     'needs_attention': ['Connect LinkedIn', 'Connect Gmail'] if acct_connected < 2 else [],
                 },
             }

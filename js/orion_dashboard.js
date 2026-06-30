@@ -383,12 +383,12 @@ function showOrionToast(msg, color) {
 /* ── Command Palette ──────────────────────────────────────────── */
 
 var CMD_ITEMS = [
-  { group: 'DEPARTMENTS', icon: '\u{1f6e1}', text: 'Security Ops',     url: '/hq/index.html' },
-  { group: 'DEPARTMENTS', icon: '\u{1f4b0}', text: 'Finance',          url: '/finance/index.html' },
-  { group: 'DEPARTMENTS', icon: '\u{1f4bc}', text: 'Career Intel',     url: '/housing/index.html' },
-  { group: 'DEPARTMENTS', icon: '\u{1f6cd}', text: 'Commerce',         url: '/commerce/index.html' },
-  { group: 'DEPARTMENTS', icon: '\u{1f4c5}', text: 'Productivity',     url: '/productivity/index.html' },
-  { group: 'DEPARTMENTS', icon: '\u{1f517}', text: 'Connections',      url: '/connections/index.html' },
+  { group: 'DEPARTMENTS', icon: '\u{1f6e1}', text: 'Security Ops',     url: '/hq/ecc.html' },
+  { group: 'DEPARTMENTS', icon: '\u{1f4b0}', text: 'Finance',          url: '/finance/ecc.html' },
+  { group: 'DEPARTMENTS', icon: '\u{1f4bc}', text: 'Career Intel',     url: '/housing/ecc.html' },
+  { group: 'DEPARTMENTS', icon: '\u{1f6cd}', text: 'Commerce',         url: '/commerce/ecc.html' },
+  { group: 'DEPARTMENTS', icon: '\u{1f4c5}', text: 'Productivity',     url: '/productivity/ecc.html' },
+  { group: 'DEPARTMENTS', icon: '\u{1f517}', text: 'Connections',      url: '/connections/ecc.html' },
   { group: 'NAVIGATE',    icon: '\u{1f3e2}', text: 'Enter Headquarters', url: '/hallway/index.html' },
   { group: 'NAVIGATE',    icon: '\u{1f3af}', text: 'Operations Center', url: '/ops_center/index.html' },
   { group: 'NAVIGATE',    icon: '\u{1f4ca}', text: 'Reports',          url: '/reports/index.html' },

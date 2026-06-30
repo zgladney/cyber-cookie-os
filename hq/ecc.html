@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Security Ops — Executive Control Center</title>
+<link rel="stylesheet" href="../css/orion_executive.css">
+<link rel="stylesheet" href="../css/ecc_extensions.css">
+</head>
+<body>
+
+<div class="ecc-page">
+  <header class="ecc-header" id="ecc-header"></header>
+  <main class="ecc-main">
+    <div class="ecc-left"  id="ecc-left"></div>
+    <div class="ecc-right" id="ecc-right"></div>
+  </main>
+  <footer class="ecc-footer" id="ecc-footer"></footer>
+</div>
+
+<div id="ecc-toast"></div>
+
+<script>
+var ECC_CONFIG = {
+  dept:      'security',
+  label:     'SECURITY OPS',
+  icon:      '🛡',
+  color:     '#9b6bff',
+  workspace: '../hq/index.html',
+  employees: [
+    { name: 'Athena',   role: 'SOC ANALYST',       status: 'working', task: 'Monitoring systems for anomalies' },
+    { name: 'Nimbus',   role: 'CLOUD SENTINEL',    status: 'working', task: 'Scanning cloud infrastructure' },
+    { name: 'Sentinel', role: 'THREAT HUNTER',     status: 'idle',    task: 'Standing by for threat hunt request' }
+  ],
+  quick_actions: [
+    { label: 'RUN SCAN',      icon: '🔍', href: '../hq/index.html' },
+    { label: 'THREAT HUNT',   icon: '🎯', href: '../hq/index.html' },
+    { label: 'VIEW CASES',    icon: '📁', href: '../hq/index.html' },
+    { label: 'AUDIT LOG',     icon: '📋', href: '../hq/index.html' }
+  ]
+};
+</script>
+<script src="../js/cybercookieos.js"></script>
+<script src="../js/orion.js"></script>
+<script src="../js/cos_orion_server.js"></script>
+<script src="../js/ecc_engine.js"></script>
+</body>
+</html>
