@@ -327,6 +327,7 @@ var RevTrends = (function () {
     if (!t) { return; }
 
     revCloseDrawers();
+    if (window.COS && COS.events) { try { COS.events.emit('commerce.idea_found', { keyword: t.keyword, platform: t.platform, volume: t.volume, source: 'trendseer' }); } catch (e) {} }
     setTimeout(function () {
       var titleEl = document.getElementById('rev-prod-title');
       var descEl  = document.getElementById('rev-prod-desc');
@@ -435,6 +436,7 @@ var RevAnalytics = (function () {
 
     var ts = document.getElementById('rev-analytics-ts');
     if (ts) { ts.textContent = 'Last updated: ' + new Date().toLocaleTimeString(); }
+    if (window.COS && COS.events) { try { COS.events.emit('commerce.revenue_updated', { today: rev.today, week: rev.week, month: rev.month, profit: rev.profit }); } catch (e) {} }
   }
 
   function _setBar(barId, valId, val, max) {
@@ -733,6 +735,9 @@ var RevAgents = (function () {
     RevSidebar.renderApprovals();
     RevSidebar.pushAlert('amber', 'Sent to ORION: ' + item.title);
     _emit('commerce.orion_submitted', { id: item.id, title: item.title });
+    if (window.ORION && ORION.approvals) {
+      try { ORION.approvals.add({ id: item.id, title: item.title, action: item.type, dept: 'commerce', risk: item.risk, ts: item.ts }); } catch (e) {}
+    }
     _toast('Submitted to ORION for CEO approval.');
   }
 
@@ -825,6 +830,7 @@ var RevAgents = (function () {
     CommerceStore.upsertProduct(prod);
     CommerceStore.pushLog('Maker', 'Product saved: ' + prod.title);
     _emit('commerce.product_created', { id: prod.id, title: prod.title, status: prod.status });
+    if (prod.status === 'idea') { _emit('commerce.idea_found', { id: prod.id, title: prod.title, source: 'manual' }); }
 
     if (prod.status === 'ready') {
       _orionSubmit({ id: 'appr' + Date.now(), type: 'publish_product', risk: 'reversible', title: prod.title, productId: prod.id, ts: Date.now() });
@@ -913,6 +919,7 @@ var RevAgents = (function () {
       description: descEl  ? descEl.value  : '',
       ts:          Date.now()
     });
+    _emit('commerce.launch_requested', { type: 'listing', title: title.trim(), platform: prod ? prod.platform : 'unknown' });
 
     revCloseDrawers();
     ['rev-listing-title','rev-listing-price','rev-listing-desc','rev-listing-tags'].forEach(function (fid) {
@@ -940,6 +947,7 @@ var RevAgents = (function () {
       budget:   budgetEl ? budgetEl.value : '0',
       ts:       Date.now()
     });
+    _emit('commerce.launch_requested', { type: 'campaign', title: name.trim(), platform: platEl ? platEl.value : '' });
 
     revCloseDrawers();
     ['rev-camp-name','rev-camp-start','rev-camp-budget','rev-camp-notes'].forEach(function (fid) {
@@ -964,7 +972,8 @@ var RevAgents = (function () {
 
     CommerceStore.pushLog('CEO', 'Approved: ' + item.title);
     _emit('approval.completed', { id: id, decision: 'approved', department: 'commerce', title: item.title, ts: Date.now() });
-    _emit('commerce.product_published', { id: id, title: item.title });
+    _emit('commerce.product_published', { id: id, title: item.title, type: item.type });
+    if (item.type === 'publish_listing') { _emit('commerce.sale_recorded', { id: id, title: item.title, platform: item.platform, ts: Date.now() }); }
 
     if (item.type === 'publish_product' && item.productId) {
       var all = CommerceStore.getProducts();

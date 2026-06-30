@@ -255,7 +255,7 @@ input::placeholder,textarea::placeholder{color:rgba(200,100,150,.3)}
       <div class="rev-zone rev-agents-zone">
         <div class="rev-zone-hdr">AGENT WORKSTATIONS</div>
         <div class="rev-zone-scroll" style="padding:5px">
-          <div class="rev-ws-card trendseer">
+          <div class="rev-ws-card trendseer" style="cursor:pointer" onclick="revOpenDrawer('rev-drawer-trend')">
             <div class="rev-ws-hdr">
               <span class="rev-ws-name">TRENDSEER</span>
               <span class="rev-ws-role">TREND INTELLIGENCE</span>
@@ -265,7 +265,7 @@ input::placeholder,textarea::placeholder{color:rgba(200,100,150,.3)}
             <div class="rev-ws-output" id="rev-output-trend">Found: digital planners trending +34% this week</div>
             <div class="rev-ws-bar"><div class="rev-ws-fill" id="rev-fill-trend" style="width:72%"></div></div>
           </div>
-          <div class="rev-ws-card maker">
+          <div class="rev-ws-card maker" style="cursor:pointer" onclick="revOpenDrawer('rev-drawer-product')">
             <div class="rev-ws-hdr">
               <span class="rev-ws-name">MAKER</span>
               <span class="rev-ws-role">PRODUCT CREATOR</span>
@@ -275,7 +275,7 @@ input::placeholder,textarea::placeholder{color:rgba(200,100,150,.3)}
             <div class="rev-ws-output" id="rev-output-maker">20 pages — Canva template draft ready</div>
             <div class="rev-ws-bar"><div class="rev-ws-fill" id="rev-fill-maker" style="width:58%"></div></div>
           </div>
-          <div class="rev-ws-card marketmind">
+          <div class="rev-ws-card marketmind" style="cursor:pointer" onclick="revOpenDrawer('rev-drawer-listing')">
             <div class="rev-ws-hdr">
               <span class="rev-ws-name">MARKETMIND</span>
               <span class="rev-ws-role">MARKETPLACE OPS</span>
@@ -285,7 +285,7 @@ input::placeholder,textarea::placeholder{color:rgba(200,100,150,.3)}
             <div class="rev-ws-output" id="rev-output-market">CTR improved — 2.4% above category avg</div>
             <div class="rev-ws-bar"><div class="rev-ws-fill" id="rev-fill-market" style="width:45%"></div></div>
           </div>
-          <div class="rev-ws-card revenueai">
+          <div class="rev-ws-card revenueai" style="cursor:pointer" onclick="revOpenDrawer('rev-drawer-forecast')">
             <div class="rev-ws-hdr">
               <span class="rev-ws-name">REVENUEAI</span>
               <span class="rev-ws-role">REVENUE ANALYST</span>
@@ -413,19 +413,19 @@ input::placeholder,textarea::placeholder{color:rgba(200,100,150,.3)}
         </div>
         <div class="rev-analytics-body">
           <div class="rev-metric-grid">
-            <div class="rev-metric-cell">
+            <div class="rev-metric-cell" style="cursor:pointer" onclick="revOpenDrawer('rev-drawer-forecast')">
               <div class="rev-metric-lbl">TODAY</div>
               <div class="rev-metric-val green" id="rev-rev-today">$0.00</div>
             </div>
-            <div class="rev-metric-cell">
+            <div class="rev-metric-cell" style="cursor:pointer" onclick="revOpenDrawer('rev-drawer-forecast')">
               <div class="rev-metric-lbl">THIS WEEK</div>
               <div class="rev-metric-val green" id="rev-rev-week">$0.00</div>
             </div>
-            <div class="rev-metric-cell">
+            <div class="rev-metric-cell" style="cursor:pointer" onclick="revOpenDrawer('rev-drawer-forecast')">
               <div class="rev-metric-lbl">THIS MONTH</div>
               <div class="rev-metric-val pink" id="rev-rev-month">$0.00</div>
             </div>
-            <div class="rev-metric-cell">
+            <div class="rev-metric-cell" style="cursor:pointer" onclick="revOpenDrawer('rev-drawer-insight')">
               <div class="rev-metric-lbl">PROFIT</div>
               <div class="rev-metric-val green" id="rev-rev-profit">$0.00</div>
             </div>
