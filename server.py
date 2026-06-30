@@ -5,7 +5,8 @@ Serves static files + handles /api/* routes for config, documents, and data sour
 No external dependencies — uses Python standard library only.
 
 Run: python server.py
-Then open: http://localhost:3000/hallway/index.html
+Then open: http://localhost:3000/  (ORION Executive OS — new entry point)
+Legacy hallway: http://localhost:3000/hallway/index.html
 
 SECURITY NOTE: This server is for LOCAL use only (localhost).
 Never expose it to the internet. Tokens and credentials belong
@@ -342,6 +343,145 @@ class COSHandler(http.server.SimpleHTTPRequestHandler):
             entries = log.get('entries', [])
             # Return newest first, max 200
             self._send(200, {'entries': entries[-200:][::-1], 'total': len(entries)})
+
+        # ── Phase 21: ORION Morning Brief (aggregates all departments) ────────────
+
+        elif path == '/api/orion/morning-brief':
+            now = datetime.now()
+            hour = now.hour
+            if hour < 12:   time_of_day = 'morning'
+            elif hour < 17: time_of_day = 'afternoon'
+            else:            time_of_day = 'evening'
+
+            # Load all data in one pass
+            q_data      = load_json('orion_queue.json',    {'queue': []})
+            ledger      = load_json('finance_ledger.json', {'transactions': [], 'summary': {}})
+            career_mem  = load_json('career_memory.json',  {})
+            pipeline    = load_json('commerce_pipeline.json', {'products': [], 'content_items': []})
+            crm_data    = load_json('connections_crm.json', {'contacts': []})
+            accts_data  = load_json('accounts.json',       {'accounts': []})
+            audit_data  = load_json('audit_log.json',      {'entries': []})
+
+            queue        = q_data.get('queue', [])
+            pending      = [x for x in queue if x.get('status') == 'awaiting_ceo']
+            fin_summary  = ledger.get('summary', {})
+            career_prof  = career_mem.get('profile', {})
+            career_docs  = career_prof.get('source_documents', [])
+            career_skills= career_prof.get('skills', [])
+            products     = pipeline.get('products', [])
+            contacts     = crm_data.get('contacts', [])
+            acct_list    = accts_data.get('accounts', [])
+            audit_entries= audit_data.get('entries', [])
+
+            connected_ids = {a['id'] for a in acct_list if a.get('status') in ('connected', 'manual_import', 'configured')}
+            acct_connected= len(connected_ids)
+
+            # Department health cards
+            dept_health = {
+                'security': {
+                    'label': 'SECURITY', 'icon': '\U0001f6e1', 'color': '#9b6bff',
+                    'health': 100, 'status': 'nominal',
+                    'summary': 'No active threats. System nominal.',
+                    'link': '/hq/index.html', 'needs_attention': [],
+                },
+                'finance': {
+                    'label': 'FINANCE', 'icon': '\U0001f4b0', 'color': '#2ecc71',
+                    'health': 90 if fin_summary.get('mtd_revenue', 0) > 0 else 60,
+                    'status': 'active' if fin_summary.get('mtd_revenue', 0) > 0 else 'initializing',
+                    'summary': '${:.2f} MTD revenue.'.format(fin_summary.get('mtd_revenue', 0)) if fin_summary.get('mtd_revenue', 0) else 'No revenue recorded yet.',
+                    'link': '/finance/index.html', 'needs_attention': [],
+                },
+                'career': {
+                    'label': 'CAREER', 'icon': '\U0001f4bc', 'color': '#7b6bff',
+                    'health': 85 if career_skills else 40,
+                    'status': 'active' if career_skills else 'initializing',
+                    'summary': '{} docs indexed · {} skills'.format(len(career_docs), len(career_skills)) if career_skills else 'No documents indexed.',
+                    'link': '/housing/index.html',
+                    'needs_attention': [] if 'linkedin' in connected_ids else ['Connect LinkedIn'],
+                },
+                'commerce': {
+                    'label': 'COMMERCE', 'icon': '\U0001f6cd', 'color': '#ff69b4',
+                    'health': 65 if products else 25,
+                    'status': 'active' if products else 'initializing',
+                    'summary': '{} product(s) in pipeline.'.format(len(products)) if products else 'Pipeline empty.',
+                    'link': '/commerce/index.html',
+                    'needs_attention': ['Connect Etsy'] if 'etsy' not in connected_ids else [],
+                },
+                'productivity': {
+                    'label': 'PRODUCTIVITY', 'icon': '\U0001f4c5', 'color': '#3aa8c8',
+                    'health': 30, 'status': 'initializing',
+                    'summary': 'Calendar not connected.',
+                    'link': '/productivity/index.html',
+                    'needs_attention': ['Connect Google Calendar'],
+                },
+                'connections': {
+                    'label': 'CONNECTIONS', 'icon': '\U0001f517', 'color': '#9cf6ff',
+                    'health': 55 if contacts else 25,
+                    'status': 'active' if contacts else 'initializing',
+                    'summary': '{} contact(s) in CRM.'.format(len(contacts)) if contacts else 'CRM empty.',
+                    'link': '/connections/index.html',
+                    'needs_attention': ['Connect LinkedIn', 'Connect Gmail'] if acct_connected < 2 else [],
+                },
+            }
+
+            # Executive recommendations from real data
+            recs = []
+            if pending:
+                recs.append({'priority': 'high', 'confidence': 100,
+                    'text': '{} decision{} await your approval.'.format(len(pending), 's' if len(pending) != 1 else ''),
+                    'action': 'review_approvals'})
+            if career_skills and 'linkedin' not in connected_ids:
+                recs.append({'priority': 'medium', 'confidence': 88,
+                    'text': 'Career documents indexed and ready. Connect LinkedIn to begin live job scouting.',
+                    'action': 'connect_linkedin'})
+            if 'etsy' not in connected_ids and not products:
+                recs.append({'priority': 'medium', 'confidence': 82,
+                    'text': 'Commerce pipeline ready. Connect Etsy to activate revenue generation.',
+                    'action': 'connect_etsy'})
+            if not recs:
+                recs.append({'priority': 'low', 'confidence': 95,
+                    'text': 'All departments nominal. No immediate action required.',
+                    'action': None})
+
+            # Overnight summary
+            overnight = {
+                'tasks_completed': len(audit_entries),
+                'decisions_pending': len(pending),
+                'threats_investigated': 0,
+                'revenue_mtd': fin_summary.get('mtd_revenue', 0),
+                'jobs_found': 0,
+                'accounts_connected': acct_connected,
+            }
+
+            # Snapshot
+            dept_active = sum(1 for d in dept_health.values() if d['status'] == 'active')
+            snapshot = {
+                'employees_online': 18,
+                'departments_active': dept_active,
+                'tasks_today': 0,
+                'revenue_mtd': fin_summary.get('mtd_revenue', 0),
+                'threats': 0,
+                'approvals_pending': len(pending),
+                'accounts_connected': acct_connected,
+                'accounts_total': len(acct_list),
+            }
+
+            # Recent activity (newest first, max 8)
+            recent = [{'ts': e.get('ts', ''), 'agent': e.get('agent', ''), 'action': e.get('action', ''), 'detail': e.get('detail', {})}
+                      for e in audit_entries[-8:][::-1]]
+
+            self._send(200, {
+                'greeting': 'Good {}, Zee.'.format(time_of_day),
+                'date':     now.strftime('%A, %B %d, %Y'),
+                'time':     now.strftime('%I:%M %p'),
+                'generated_at': ts(),
+                'overnight':    overnight,
+                'dept_health':  dept_health,
+                'pending_decisions': pending[:5],
+                'recommendations':   recs[:3],
+                'recent_activity':   recent,
+                'snapshot':     snapshot,
+            })
 
         # ── Phase 20: Commerce pipeline ───────────────────────────────────────────
 
@@ -1014,7 +1154,8 @@ if __name__ == '__main__':
 
     with ServerClass(('', PORT), COSHandler) as httpd:
         print('CyberCookieOS Server')
-        print('  App:   http://localhost:{}/hallway/index.html'.format(PORT))
+        print('  ORION: http://localhost:{}/'.format(PORT))
+        print('  HQ:    http://localhost:{}/hallway/index.html'.format(PORT))
         print('  API:   http://localhost:{}/api/status'.format(PORT))
         print()
         print('Press Ctrl+C to stop.')

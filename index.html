@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberCookieOS — ORION Executive OS</title>
+<link rel="stylesheet" href="css/orion_executive.css">
+</head>
+<body>
+
+<!-- ── BOOT SEQUENCE ──────────────────────────────────────────── -->
+<div id="orion-boot">
+  <div class="ob-logo-block">
+    <div class="ob-logo-text">CYBERCOOKIE<svg style="width:28px;height:28px;vertical-align:middle;margin:0 2px -2px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><defs><mask id="bmask"><rect width="20" height="20" fill="white"/><circle cx="17" cy="3" r="5" fill="black"/></mask></defs><circle cx="10" cy="10" r="9" fill="#c87941" mask="url(#bmask)"/><circle cx="7" cy="8" r="1.9" fill="#3c1c0c" mask="url(#bmask)"/><circle cx="13" cy="8" r="1.6" fill="#3c1c0c" mask="url(#bmask)"/><circle cx="9" cy="13" r="1.8" fill="#3c1c0c" mask="url(#bmask)"/><circle cx="13" cy="13" r="1.5" fill="#3c1c0c" mask="url(#bmask)"/><circle cx="6" cy="13" r="1.3" fill="#3c1c0c" mask="url(#bmask)"/></svg>OS</div>
+    <div class="ob-logo-sub">EXECUTIVE OPERATING SYSTEM v2.0</div>
+  </div>
+  <div class="ob-lines" id="ob-lines"></div>
+  <div class="ob-progress-bar">
+    <div class="ob-progress-fill" id="ob-progress-fill"></div>
+  </div>
+</div>
+
+<!-- ── ORION EXECUTIVE DASHBOARD ──────────────────────────────── -->
+<div id="orion-dashboard">
+
+  <!-- HEADER -->
+  <header id="orion-header">
+    <div class="orion-header-logo">CYBERCOOKIE<svg style="width:16px;height:16px;vertical-align:middle;margin:0 1px -1px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><defs><mask id="hmask"><rect width="20" height="20" fill="white"/><circle cx="17" cy="3" r="5" fill="black"/></mask></defs><circle cx="10" cy="10" r="9" fill="#c87941" mask="url(#hmask)"/><circle cx="7" cy="8" r="1.9" fill="#3c1c0c" mask="url(#hmask)"/><circle cx="13" cy="8" r="1.6" fill="#3c1c0c" mask="url(#hmask)"/><circle cx="9" cy="13" r="1.8" fill="#3c1c0c" mask="url(#hmask)"/><circle cx="13" cy="13" r="1.5" fill="#3c1c0c" mask="url(#hmask)"/><circle cx="6" cy="13" r="1.3" fill="#3c1c0c" mask="url(#hmask)"/></svg>OS</div>
+    <div class="orion-header-sep"></div>
+    <div class="orion-header-title">ORION &nbsp;// &nbsp;CHIEF EXECUTIVE INTELLIGENCE</div>
+    <button class="orion-header-badge" id="orion-refresh-btn">&#8635; REFRESH</button>
+    <div id="orion-clock">--:-- --</div>
+  </header>
+
+  <!-- MORNING BRIEF STRIP -->
+  <div id="orion-brief">
+    <div>
+      <div id="orion-greeting" style="font-size:18px;font-weight:700">Loading...</div>
+      <div id="orion-date" style="font-size:11px;color:rgba(180,150,255,.55);letter-spacing:1.5px;margin-top:3px"></div>
+    </div>
+    <div class="orion-brief-pills" id="orion-pills"></div>
+  </div>
+
+  <!-- DEPARTMENT HEALTH ROW -->
+  <div id="orion-dept-row">
+    <!-- populated by JS -->
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div id="orion-main">
+
+    <!-- LEFT: DECISIONS + RECOMMENDATIONS -->
+    <div id="orion-left">
+
+      <!-- Pending decisions -->
+      <div class="orion-section-header">
+        <span class="orion-section-title">PENDING CEO DECISIONS</span>
+        <span class="orion-section-badge orion-badge-good" id="orion-decisions-badge">0 PENDING</span>
+      </div>
+      <div id="orion-decisions">
+        <div class="orion-decisions-empty">Loading decisions...</div>
+      </div>
+
+      <!-- Recommendations -->
+      <div id="orion-recs-section">
+        <div class="orion-section-header">
+          <span class="orion-section-title">ORION RECOMMENDS</span>
+        </div>
+        <div id="orion-recs"></div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: SNAPSHOT + ACTIVITY -->
+    <div id="orion-right">
+
+      <!-- Company Snapshot -->
+      <div class="orion-section-header">
+        <span class="orion-section-title">COMPANY SNAPSHOT</span>
+      </div>
+      <div id="orion-snapshot">
+        <!-- populated by JS -->
+      </div>
+
+      <!-- Recent Activity -->
+      <div id="orion-activity-section">
+        <div class="orion-section-header">
+          <span class="orion-section-title">RECENT ACTIVITY</span>
+        </div>
+        <div id="orion-activity">
+          <div class="orion-activity-empty">Loading activity...</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer id="orion-footer">
+    <div class="orion-footer-left">
+      <button id="orion-cmd-btn">&#9000; COMMAND PALETTE &nbsp; <span style="opacity:.5;font-size:9px">CTRL+K</span></button>
+      <span class="orion-footer-sep">|</span>
+      <span class="orion-footer-status" id="orion-footer-status">&#9679; ORION ONLINE</span>
+    </div>
+    <a id="orion-enter-hq" href="hallway/index.html">
+      ENTER HEADQUARTERS &nbsp;&#8594;
+    </a>
+  </footer>
+
+</div><!-- /orion-dashboard -->
+
+<!-- ── COMMAND PALETTE ────────────────────────────────────────── -->
+<div id="orion-cmd-palette">
+  <div class="ocp-modal">
+    <div class="ocp-input-row">
+      <span class="ocp-search-icon">&#128269;</span>
+      <input type="text" id="ocp-input" placeholder="Search departments, actions, employees..." autocomplete="off" spellcheck="false">
+      <span class="ocp-hint">ESC to close</span>
+    </div>
+    <div class="ocp-results" id="ocp-results"></div>
+    <div class="ocp-footer">
+      <span class="ocp-key-hint">&#8593;&#8595; navigate &nbsp;&nbsp; ENTER select &nbsp;&nbsp; ESC close</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ──────────────────────────────────────────────────── -->
+<div id="orion-toast"></div>
+
+<script src="js/cybercookieos.js"></script>
+<script src="js/orion.js"></script>
+<script src="js/cos_accounts.js"></script>
+<script src="js/cos_orion_server.js"></script>
+<script src="js/orion_dashboard.js"></script>
+
+</body>
+</html>

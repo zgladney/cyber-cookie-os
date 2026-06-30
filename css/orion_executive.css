@@ -1,0 +1,1020 @@
+/* ================================================================
+   orion_executive.css — Phase 21 Executive Design Language
+   Reusable components for ORION and all future Executive Control
+   Centers. Import this file on any executive-layer page.
+
+   Color system:
+     --orion-critical : #ff4444
+     --orion-high     : #ff8c42
+     --orion-medium   : #ffdc32
+     --orion-good     : #2ecc71
+     --orion-info     : #3aa8c8
+     --orion-accent   : #9cf6ff
+     --orion-purple   : #9b6bff
+================================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --orion-bg:       #050008;
+  --orion-surface:  rgba(10, 2, 26, 0.85);
+  --orion-border:   rgba(156, 246, 255, 0.08);
+  --orion-border2:  rgba(155, 107, 255, 0.15);
+  --orion-text:     rgba(230, 210, 255, 0.92);
+  --orion-sub:      rgba(180, 150, 255, 0.55);
+  --orion-accent:   #9cf6ff;
+  --orion-purple:   #9b6bff;
+  --orion-good:     #2ecc71;
+  --orion-medium:   #ffdc32;
+  --orion-high:     #ff8c42;
+  --orion-critical: #ff4444;
+  --orion-pink:     #ff69b4;
+  --orion-blue:     #3aa8c8;
+  --orion-career:   #7b6bff;
+}
+
+html, body {
+  background: var(--orion-bg);
+  color: var(--orion-text);
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+  height: 100%;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* ── BOOT SEQUENCE ────────────────────────────────────────────── */
+
+#orion-boot {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  transition: opacity 0.6s ease;
+}
+
+#orion-boot.ob-fade {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ob-logo-block {
+  text-align: center;
+}
+
+.ob-logo-text {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 8px;
+  color: var(--orion-accent);
+  text-shadow: 0 0 30px rgba(156, 246, 255, 0.6);
+}
+
+.ob-logo-sub {
+  font-size: 10px;
+  letter-spacing: 5px;
+  color: rgba(156, 246, 255, 0.4);
+  margin-top: 6px;
+}
+
+.ob-lines {
+  width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ob-line {
+  font-size: 12px;
+  color: rgba(156, 246, 255, 0.0);
+  letter-spacing: 1px;
+  transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ob-line.ob-visible {
+  color: rgba(156, 246, 255, 0.7);
+}
+
+.ob-line.ob-done {
+  color: rgba(156, 246, 255, 0.45);
+}
+
+.ob-line.ob-complete {
+  color: var(--orion-good);
+  font-weight: 700;
+}
+
+.ob-prefix {
+  color: rgba(155, 107, 255, 0.6);
+}
+
+.ob-progress-bar {
+  width: 480px;
+  height: 2px;
+  background: rgba(156, 246, 255, 0.08);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.ob-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--orion-purple), var(--orion-accent));
+  width: 0%;
+  transition: width 0.15s ease;
+  box-shadow: 0 0 8px rgba(156, 246, 255, 0.4);
+}
+
+/* ── ORION EXECUTIVE DASHBOARD ────────────────────────────────── */
+
+#orion-dashboard {
+  display: grid;
+  grid-template-rows: 56px auto auto 1fr 52px;
+  height: 100vh;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.5s ease 0.1s;
+}
+
+#orion-dashboard.orion-visible {
+  opacity: 1;
+}
+
+/* ── HEADER ───────────────────────────────────────────────────── */
+
+#orion-header {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0 24px;
+  background: rgba(5, 0, 12, 0.95);
+  border-bottom: 1px solid var(--orion-border2);
+  flex-shrink: 0;
+}
+
+.orion-header-logo {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--orion-accent);
+  text-shadow: 0 0 16px rgba(156, 246, 255, 0.4);
+  white-space: nowrap;
+}
+
+.orion-header-sep {
+  width: 1px;
+  height: 28px;
+  background: var(--orion-border2);
+  margin: 0 20px;
+  flex-shrink: 0;
+}
+
+.orion-header-title {
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--orion-sub);
+  flex: 1;
+}
+
+.orion-header-badge {
+  font-size: 9px;
+  letter-spacing: 2px;
+  padding: 3px 10px;
+  border-radius: 2px;
+  border: 1px solid rgba(156, 246, 255, 0.2);
+  color: var(--orion-accent);
+  background: rgba(156, 246, 255, 0.05);
+  margin-right: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.orion-header-badge:hover {
+  background: rgba(156, 246, 255, 0.12);
+}
+
+#orion-clock {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--orion-sub);
+  min-width: 60px;
+  text-align: right;
+}
+
+/* ── MORNING BRIEF STRIP ──────────────────────────────────────── */
+
+#orion-brief {
+  padding: 14px 24px;
+  background: rgba(8, 0, 18, 0.7);
+  border-bottom: 1px solid var(--orion-border);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+#orion-greeting {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--orion-text);
+  white-space: nowrap;
+}
+
+#orion-date {
+  font-size: 11px;
+  color: var(--orion-sub);
+  letter-spacing: 1.5px;
+}
+
+.orion-brief-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.orion-pill {
+  font-size: 10px;
+  letter-spacing: 1px;
+  padding: 4px 12px;
+  border-radius: 2px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+.orion-pill-good     { color: var(--orion-good);     border-color: rgba(46,204,113,.3);  background: rgba(46,204,113,.07);  }
+.orion-pill-medium   { color: var(--orion-medium);   border-color: rgba(255,220,50,.3);  background: rgba(255,220,50,.07);  }
+.orion-pill-high     { color: var(--orion-high);     border-color: rgba(255,140,66,.3);  background: rgba(255,140,66,.07);  }
+.orion-pill-critical { color: var(--orion-critical); border-color: rgba(255,68,68,.3);   background: rgba(255,68,68,.07);   }
+.orion-pill-neutral  { color: var(--orion-sub);      border-color: rgba(180,150,255,.2); background: rgba(155,107,255,.05); }
+
+/* ── DEPARTMENT HEALTH ROW ────────────────────────────────────── */
+
+#orion-dept-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0;
+  border-bottom: 1px solid var(--orion-border);
+  flex-shrink: 0;
+}
+
+.orion-dept-card {
+  padding: 14px 16px;
+  border-right: 1px solid var(--orion-border);
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.orion-dept-card:last-child { border-right: none; }
+
+.orion-dept-card:hover {
+  background: rgba(155, 107, 255, 0.06);
+}
+
+.orion-dept-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.orion-dept-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.orion-dept-health-pct {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.orion-dept-label {
+  font-size: 9px;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+
+.orion-dept-status {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+}
+
+.orion-dept-summary {
+  font-size: 10px;
+  color: var(--orion-sub);
+  line-height: 1.4;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.orion-dept-attn {
+  font-size: 9px;
+  color: var(--orion-medium);
+  letter-spacing: 0.5px;
+}
+
+/* Status colors applied via JS data-status attribute */
+.orion-dept-card[data-status="nominal"]      .orion-dept-health-pct,
+.orion-dept-card[data-status="active"]       .orion-dept-health-pct { color: var(--orion-good); }
+.orion-dept-card[data-status="initializing"] .orion-dept-health-pct { color: var(--orion-medium); }
+.orion-dept-card[data-status="alert"]        .orion-dept-health-pct { color: var(--orion-critical); }
+
+.orion-dept-card[data-status="nominal"]      .orion-dept-status { color: var(--orion-good); }
+.orion-dept-card[data-status="active"]       .orion-dept-status { color: var(--orion-good); }
+.orion-dept-card[data-status="initializing"] .orion-dept-status { color: var(--orion-medium); }
+.orion-dept-card[data-status="alert"]        .orion-dept-status { color: var(--orion-critical); }
+
+/* ── MAIN CONTENT AREA ────────────────────────────────────────── */
+
+#orion-main {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 0;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ── LEFT: DECISIONS + RECOMMENDATIONS ───────────────────────── */
+
+#orion-left {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--orion-border);
+  overflow: hidden;
+  min-height: 0;
+}
+
+.orion-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px 8px;
+  border-bottom: 1px solid var(--orion-border);
+  flex-shrink: 0;
+}
+
+.orion-section-title {
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  font-weight: 700;
+  color: var(--orion-sub);
+}
+
+.orion-section-badge {
+  font-size: 9px;
+  letter-spacing: 1px;
+  padding: 2px 8px;
+  border-radius: 2px;
+}
+
+.orion-badge-alert  { color: var(--orion-critical); background: rgba(255,68,68,.1);   border: 1px solid rgba(255,68,68,.3);   }
+.orion-badge-good   { color: var(--orion-good);     background: rgba(46,204,113,.1);  border: 1px solid rgba(46,204,113,.3);  }
+.orion-badge-medium { color: var(--orion-medium);   background: rgba(255,220,50,.1);  border: 1px solid rgba(255,220,50,.3);  }
+.orion-badge-neutral{ color: var(--orion-sub);      background: rgba(180,150,255,.05);border: 1px solid rgba(180,150,255,.15);}
+
+#orion-decisions {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#orion-decisions::-webkit-scrollbar { width: 3px; }
+#orion-decisions::-webkit-scrollbar-track { background: transparent; }
+#orion-decisions::-webkit-scrollbar-thumb { background: rgba(155,107,255,.25); border-radius: 2px; }
+
+/* ── DECISION CARD (pending CEO approval) ─────────────────────── */
+
+.orion-decision-card {
+  border: 1px solid rgba(155, 107, 255, 0.18);
+  border-left-width: 3px;
+  border-radius: 4px;
+  padding: 14px 16px;
+  background: rgba(10, 2, 26, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.orion-dc-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.orion-dc-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--orion-text);
+  line-height: 1.3;
+  flex: 1;
+}
+
+.orion-dc-time {
+  font-size: 9px;
+  color: var(--orion-sub);
+  white-space: nowrap;
+  padding-top: 2px;
+}
+
+.orion-dc-meta {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.orion-dc-dept {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+}
+
+.orion-dc-risk {
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.orion-dc-risk-irreversible { color: var(--orion-critical); }
+.orion-dc-risk-financial     { color: var(--orion-high); }
+.orion-dc-risk-publishing    { color: var(--orion-medium); }
+.orion-dc-risk-reversible    { color: var(--orion-blue); }
+.orion-dc-risk-read_only     { color: var(--orion-good); }
+
+.orion-dc-summary {
+  font-size: 11px;
+  color: var(--orion-sub);
+  line-height: 1.5;
+}
+
+.orion-dc-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.orion-dc-actions button {
+  font-family: inherit;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  padding: 5px 14px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+  border: 1px solid;
+}
+
+.orion-btn-approve {
+  background: rgba(46,204,113,.1);
+  border-color: rgba(46,204,113,.4);
+  color: var(--orion-good);
+}
+.orion-btn-approve:hover { background: rgba(46,204,113,.2); }
+
+.orion-btn-decline {
+  background: rgba(255,68,68,.07);
+  border-color: rgba(255,68,68,.3);
+  color: var(--orion-critical);
+}
+.orion-btn-decline:hover { background: rgba(255,68,68,.15); }
+
+.orion-btn-review {
+  background: rgba(156,246,255,.05);
+  border-color: rgba(156,246,255,.2);
+  color: var(--orion-accent);
+}
+.orion-btn-review:hover { background: rgba(156,246,255,.1); }
+
+.orion-decisions-empty {
+  font-size: 12px;
+  color: rgba(180,150,255,.3);
+  font-style: italic;
+  padding: 20px 0;
+  text-align: center;
+}
+
+/* ── RECOMMENDATIONS ──────────────────────────────────────────── */
+
+#orion-recs-section {
+  border-top: 1px solid var(--orion-border);
+  flex-shrink: 0;
+}
+
+#orion-recs {
+  padding: 10px 20px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.orion-rec-card {
+  border: 1px solid rgba(155,107,255,.12);
+  border-radius: 4px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(155,107,255,.04);
+}
+
+.orion-rec-priority {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.orion-rec-priority-high     { background: var(--orion-high); box-shadow: 0 0 6px rgba(255,140,66,.4); }
+.orion-rec-priority-medium   { background: var(--orion-medium); }
+.orion-rec-priority-low      { background: var(--orion-good); }
+
+.orion-rec-body { flex: 1; }
+
+.orion-rec-text {
+  font-size: 11px;
+  color: var(--orion-text);
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+
+.orion-rec-confidence {
+  font-size: 9px;
+  color: var(--orion-sub);
+  letter-spacing: 1px;
+}
+
+/* ── RIGHT: SNAPSHOT + ACTIVITY ───────────────────────────────── */
+
+#orion-right {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ── SNAPSHOT ─────────────────────────────────────────────────── */
+
+#orion-snapshot {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--orion-border);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.orion-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.orion-metric-value {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--orion-text);
+}
+
+.orion-metric-label {
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--orion-sub);
+}
+
+.orion-metric-value-good     { color: var(--orion-good); }
+.orion-metric-value-medium   { color: var(--orion-medium); }
+.orion-metric-value-high     { color: var(--orion-high); }
+.orion-metric-value-critical { color: var(--orion-critical); }
+.orion-metric-value-accent   { color: var(--orion-accent); }
+
+/* ── ACTIVITY FEED ────────────────────────────────────────────── */
+
+#orion-activity-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+
+#orion-activity {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+#orion-activity::-webkit-scrollbar { width: 2px; }
+#orion-activity::-webkit-scrollbar-thumb { background: rgba(155,107,255,.2); }
+
+.orion-activity-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(155,107,255,.06);
+}
+
+.orion-act-dot {
+  color: var(--orion-purple);
+  font-size: 8px;
+  flex-shrink: 0;
+}
+
+.orion-act-agent {
+  font-size: 10px;
+  color: var(--orion-accent);
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.orion-act-action {
+  font-size: 10px;
+  color: var(--orion-sub);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.orion-act-time {
+  font-size: 9px;
+  color: rgba(180,150,255,.3);
+  white-space: nowrap;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.orion-activity-empty {
+  font-size: 11px;
+  color: rgba(180,150,255,.25);
+  font-style: italic;
+  padding: 16px 0;
+  text-align: center;
+}
+
+/* ── FOOTER ───────────────────────────────────────────────────── */
+
+#orion-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  border-top: 1px solid var(--orion-border2);
+  background: rgba(5, 0, 12, 0.9);
+  flex-shrink: 0;
+}
+
+.orion-footer-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.orion-footer-status {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: rgba(180,150,255,.4);
+}
+
+.orion-footer-sep {
+  font-size: 9px;
+  color: rgba(155,107,255,.2);
+}
+
+#orion-cmd-btn {
+  font-family: inherit;
+  font-size: 10px;
+  letter-spacing: 2px;
+  padding: 6px 16px;
+  background: rgba(156,246,255,.05);
+  border: 1px solid rgba(156,246,255,.15);
+  color: var(--orion-accent);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+#orion-cmd-btn:hover { background: rgba(156,246,255,.1); }
+
+#orion-enter-hq {
+  font-family: inherit;
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  font-weight: 700;
+  padding: 8px 24px;
+  background: rgba(155,107,255,.1);
+  border: 1px solid rgba(155,107,255,.35);
+  color: var(--orion-purple);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#orion-enter-hq:hover {
+  background: rgba(155,107,255,.18);
+  border-color: rgba(155,107,255,.55);
+  color: rgba(200,160,255,.95);
+}
+
+/* ── COMMAND PALETTE ──────────────────────────────────────────── */
+
+#orion-cmd-palette {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.7);
+  z-index: 8000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 15vh;
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+
+#orion-cmd-palette.ocp-open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.ocp-modal {
+  width: 560px;
+  max-width: 90vw;
+  background: #0a0118;
+  border: 1px solid var(--orion-border2);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,.8), 0 0 0 1px rgba(155,107,255,.1);
+}
+
+.ocp-input-row {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--orion-border);
+  gap: 10px;
+}
+
+.ocp-search-icon {
+  color: var(--orion-sub);
+  font-size: 14px;
+}
+
+#ocp-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--orion-text);
+  padding: 14px 0;
+  caret-color: var(--orion-accent);
+}
+
+#ocp-input::placeholder { color: rgba(180,150,255,.3); }
+
+.ocp-hint {
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: rgba(180,150,255,.3);
+  white-space: nowrap;
+}
+
+.ocp-results {
+  max-height: 360px;
+  overflow-y: auto;
+  padding: 6px 0;
+}
+
+.ocp-results::-webkit-scrollbar { width: 3px; }
+.ocp-results::-webkit-scrollbar-thumb { background: rgba(155,107,255,.25); }
+
+.ocp-group-label {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: rgba(180,150,255,.35);
+  padding: 10px 16px 4px;
+}
+
+.ocp-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 16px;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.ocp-item:hover,
+.ocp-item.ocp-active {
+  background: rgba(155,107,255,.1);
+}
+
+.ocp-item-icon { font-size: 14px; width: 20px; text-align: center; flex-shrink: 0; }
+
+.ocp-item-text { flex: 1; font-size: 12px; color: var(--orion-text); }
+
+.ocp-item-shortcut {
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: rgba(180,150,255,.4);
+  background: rgba(155,107,255,.08);
+  border: 1px solid rgba(155,107,255,.15);
+  border-radius: 2px;
+  padding: 2px 6px;
+}
+
+.ocp-footer {
+  padding: 8px 16px;
+  border-top: 1px solid var(--orion-border);
+  display: flex;
+  gap: 14px;
+}
+
+.ocp-key-hint {
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: rgba(180,150,255,.3);
+}
+
+/* ── TOAST ────────────────────────────────────────────────────── */
+
+#orion-toast {
+  position: fixed;
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(10,2,26,.95);
+  border: 1px solid var(--orion-border2);
+  border-radius: 4px;
+  padding: 8px 20px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--orion-accent);
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+  z-index: 7000;
+  white-space: nowrap;
+}
+
+#orion-toast.orion-toast-show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ── UTILITY ──────────────────────────────────────────────────── */
+
+.orion-hidden { display: none !important; }
+.orion-scrollable { overflow-y: auto; }
+
+/* ── EXECUTIVE CONTROL CENTER (reusable for dept Layer One) ────── */
+
+.ecc-page {
+  display: grid;
+  grid-template-rows: 56px 1fr 52px;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--orion-bg);
+  color: var(--orion-text);
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.ecc-header {
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 16px;
+  background: rgba(5,0,12,.95);
+  border-bottom: 1px solid var(--orion-border2);
+}
+
+.ecc-back-btn {
+  font-family: inherit;
+  font-size: 10px;
+  letter-spacing: 2px;
+  padding: 5px 14px;
+  background: transparent;
+  border: 1px solid rgba(155,107,255,.25);
+  color: var(--orion-sub);
+  border-radius: 2px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color 0.15s, color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ecc-back-btn:hover { border-color: rgba(155,107,255,.5); color: var(--orion-purple); }
+
+.ecc-dept-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 5px;
+}
+
+.ecc-dept-sub {
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--orion-sub);
+  flex: 1;
+}
+
+.ecc-health-badge {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  padding: 4px 12px;
+  border-radius: 2px;
+  font-weight: 700;
+}
+
+.ecc-main {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.ecc-left { overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+.ecc-right { border-left: 1px solid var(--orion-border); overflow-y: auto; padding: 16px 18px; display: flex; flex-direction: column; gap: 14px; }
+
+.ecc-card {
+  border: 1px solid var(--orion-border2);
+  border-radius: 4px;
+  padding: 16px 18px;
+  background: rgba(10,2,26,.6);
+}
+
+.ecc-card-title {
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  color: var(--orion-sub);
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.ecc-primary-action {
+  width: 100%;
+  font-family: inherit;
+  font-size: 11px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  padding: 10px;
+  border-radius: 2px;
+  cursor: pointer;
+  border: 1px solid;
+  transition: background 0.15s;
+  text-align: center;
+}
+
+.ecc-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  border-top: 1px solid var(--orion-border2);
+  background: rgba(5,0,12,.9);
+}
+
+.ecc-open-workspace {
+  font-family: inherit;
+  font-size: 11px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  padding: 8px 22px;
+  background: rgba(155,107,255,.08);
+  border: 1px solid rgba(155,107,255,.3);
+  color: var(--orion-purple);
+  border-radius: 2px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.ecc-open-workspace:hover { background: rgba(155,107,255,.16); }
