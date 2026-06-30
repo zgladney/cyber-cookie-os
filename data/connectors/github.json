@@ -1,0 +1,18 @@
+{
+  "_version": "1.0",
+  "account_id": "github",
+  "status": "not_connected",
+  "username": null,
+  "token_path": "data/tokens/github.json",
+  "token_status": "missing",
+  "token_scopes": ["repo", "read:user", "read:org"],
+  "last_sync": null,
+  "repos": [],
+  "open_issues": 0,
+  "recent_commits": [],
+  "setup_steps": [
+    "Go to github.com/settings/tokens",
+    "Generate new token (classic) with scopes: repo, read:user",
+    "Save to data/tokens/github.json as { \"token\": \"ghp_...\" } (gitignored)"
+  ]
+}

@@ -291,3 +291,114 @@
 /* ── TOOLTIP / SPRITE LABEL ──────────────────────────────────── */
 
 .cic-spritelbl { font-size: 10px !important; padding: 4px 10px !important; }
+
+/* ── PHASE 20: GLOBAL ACCOUNT CENTER ────────────────────────── */
+
+#oc-accountCenter {
+    margin-top: 18px !important;
+}
+
+#oc-accountGrid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important;
+    gap: 10px !important;
+    padding-top: 10px !important;
+}
+
+.oc-acctCard {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 12px 14px !important;
+    border-radius: 6px !important;
+    border: 1px solid rgba(150,100,255,.15) !important;
+    background: rgba(10,2,26,.5) !important;
+    transition: border-color .2s !important;
+}
+
+.oc-acctCard:hover {
+    border-color: rgba(150,100,255,.35) !important;
+}
+
+.oc-acctCard.oc-acct-connected {
+    border-color: rgba(46,204,113,.25) !important;
+}
+
+.oc-acctCard.oc-acct-partial {
+    border-color: rgba(255,220,50,.2) !important;
+}
+
+.oc-acctCard.oc-acct-pending {
+    border-color: rgba(150,100,255,.12) !important;
+    opacity: .75 !important;
+}
+
+.oc-acctIcon {
+    font-size: 22px !important;
+    line-height: 1 !important;
+    flex-shrink: 0 !important;
+}
+
+.oc-acctInfo {
+    flex: 1 !important;
+    min-width: 0 !important;
+}
+
+.oc-acctName {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: rgba(230,210,255,.95) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.oc-acctDept {
+    font-size: 9px !important;
+    letter-spacing: 1px !important;
+    color: rgba(150,100,255,.6) !important;
+    margin-top: 2px !important;
+}
+
+.oc-acctStatus {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    flex-shrink: 0 !important;
+    gap: 2px !important;
+}
+
+.oc-acct-connected .oc-acctDot   { color: #2ecc71 !important; font-size: 11px !important; }
+.oc-acct-partial .oc-acctDot     { color: #ffdc32 !important; font-size: 11px !important; }
+.oc-acct-pending .oc-acctDot     { color: rgba(150,100,255,.4) !important; font-size: 11px !important; }
+
+.oc-acctLabel {
+    font-size: 8px !important;
+    letter-spacing: 1px !important;
+    font-weight: 700 !important;
+}
+
+.oc-acct-connected .oc-acctLabel  { color: #2ecc71 !important; }
+.oc-acct-partial .oc-acctLabel    { color: #ffdc32 !important; }
+.oc-acct-pending .oc-acctLabel    { color: rgba(150,100,255,.4) !important; }
+
+/* ── PHASE 20: APPROVAL QUEUE — RISK + META ──────────────────── */
+
+.oc-approvalMeta {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 5px !important;
+}
+
+.oc-aprDept {
+    font-size: 9px !important;
+    letter-spacing: 1.5px !important;
+    font-weight: 700 !important;
+}
+
+.oc-aprRisk {
+    font-size: 9px !important;
+    letter-spacing: 1px !important;
+    font-weight: 700 !important;
+}

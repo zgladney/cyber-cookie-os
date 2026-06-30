@@ -1,0 +1,28 @@
+{
+  "_version": "1.0",
+  "_note": "Security audit trail. Every autonomous action is logged here for CEO visibility. Immutable \u2014 entries are never deleted.",
+  "entries": [
+    {
+      "id": "AUDIT-1782781228484",
+      "ts": "2026-06-29T21:00:28.484792",
+      "agent": "EtsyBot",
+      "action": "orion_submitted",
+      "detail": {
+        "id": "ORION-1782781228480",
+        "title": "Publish: Test Digital Sticker Pack",
+        "risk": "publishing",
+        "dept": "commerce"
+      }
+    },
+    {
+      "id": "AUDIT-1782781230561",
+      "ts": "2026-06-29T21:00:30.561471",
+      "agent": "CEO",
+      "action": "orion_approved",
+      "detail": {
+        "id": "ORION-1782781228480",
+        "notes": "Approved - looks good."
+      }
+    }
+  ]
+}

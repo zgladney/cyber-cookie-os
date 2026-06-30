@@ -1,0 +1,34 @@
+{
+  "_version": "1.0",
+  "account_id": "tiktok",
+  "status": "not_connected",
+  "user_id": null,
+  "username": null,
+  "token_path": "data/tokens/tiktok.json",
+  "token_status": "missing",
+  "scopes_granted": [],
+  "scopes_required": ["user.info.basic", "video.list", "video.upload", "research.adlib.basic"],
+  "last_sync": null,
+  "profile": {
+    "followers": 0,
+    "following": 0,
+    "likes": 0,
+    "video_count": 0
+  },
+  "analytics_30d": {
+    "views": 0,
+    "likes": 0,
+    "comments": 0,
+    "shares": 0,
+    "profile_views": 0
+  },
+  "draft_uploads": [],
+  "scheduled_posts": [],
+  "setup_steps": [
+    "Register app at developers.tiktok.com",
+    "Set redirect URI to http://localhost:3000/auth/tiktok/callback",
+    "Copy Client Key to .env as TIKTOK_CLIENT_KEY",
+    "Copy Client Secret to .env as TIKTOK_CLIENT_SECRET",
+    "Run python scripts/connect_tiktok.py to complete OAuth flow"
+  ]
+}

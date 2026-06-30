@@ -948,6 +948,17 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  // ── PHASE 20: ACCOUNT CENTER ─────────────────────────────────
+  if (typeof CosAccounts !== 'undefined') {
+    CosAccounts.onReady(function () { renderAccountCenter(); });
+  }
+  // Wire ORION:submitted event to refresh queue
+  if (typeof COS !== 'undefined' && COS.events) {
+    COS.events.on('orion:submitted', renderApprovalQueue);
+    COS.events.on('orion:approved',  renderApprovalQueue);
+    COS.events.on('orion:declined',  renderApprovalQueue);
+  }
+
   // ── PHASE 14: COMPANY INTELLIGENCE PANELS ────────────────────
   if (typeof ORION !== 'undefined') {
     renderOrionBriefing();
@@ -1003,10 +1014,11 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   setInterval(function () {
-    if (typeof ORION !== 'undefined') renderApprovalQueue();
-    if (typeof MS    !== 'undefined') renderMissionTimeline();
-    if (typeof KPI   !== 'undefined') renderKPIDashboard();
-  }, 8000);
+    renderApprovalQueue();
+    if (typeof MS  !== 'undefined') renderMissionTimeline();
+    if (typeof KPI !== 'undefined') renderKPIDashboard();
+    renderAccountCenter();
+  }, 10000);
 });
 
 // ── PHASE 14: ORION BRIEFING ──────────────────────────────────────
@@ -1103,86 +1115,198 @@ function renderRoutineStatus() {
   }).join('');
 }
 
-// ── PHASE 14: APPROVAL QUEUE ──────────────────────────────────────
+// ── PHASE 20: SERVER-BACKED APPROVAL QUEUE ───────────────────────
+
+var DEPT_COLORS = { security:'#9b6bff', career:'#7b6bff', housing:'#7b6bff', commerce:'#ff69b4', finance:'#2ecc71', productivity:'#3aa8c8', connections:'#9cf6ff', ops:'#9cf6ff' };
+var RISK_COLORS = { irreversible:'#ff5050', financial:'#ff8c42', publishing:'#ffdc32', reversible:'#3aa8c8', read_only:'#2ecc71' };
+
+function _timeAgo(isoStr) {
+  if (!isoStr) return '—';
+  var d = Math.floor((Date.now() - new Date(isoStr).getTime()) / 60000);
+  if (d < 1) return 'just now';
+  if (d < 60) return d + 'm ago';
+  return Math.floor(d / 60) + 'h ago';
+}
 
 function renderApprovalQueue() {
-  if (typeof ORION === 'undefined') return;
+  /* Merge server queue with localStorage queue. Server queue takes precedence. */
+  if (typeof OrionServer !== 'undefined') {
+    OrionServer.getPending(function (err, serverPending) {
+      var serverIds = {};
+      (serverPending || []).forEach(function (x) { serverIds[x.id] = true; });
 
-  var pending  = ORION.approvals.pending();
-  var all      = ORION.approvals.all();
-  var decided  = all.filter(function (a) { return a.status !== 'pending'; }).slice(0, 3);
+      /* Legacy localStorage items that are NOT already in server queue */
+      var localPending = [];
+      if (typeof ORION !== 'undefined' && ORION.approvals) {
+        localPending = ORION.approvals.pending().filter(function (x) { return !serverIds[x.id]; });
+      }
 
-  var badge    = document.getElementById('oc-approvalBadge');
+      var allPending = (serverPending || []).concat(localPending);
+      _renderApprovalList(allPending);
+
+      /* Recent decisions (server) */
+      OrionServer.getQueue(function (err2, queue) {
+        var decided = (queue || []).filter(function (x) { return x.status !== 'awaiting_ceo'; }).slice(0, 5);
+        _renderRecentDecisions(decided);
+      });
+    });
+  } else if (typeof ORION !== 'undefined') {
+    /* Fallback: localStorage-only */
+    var pending = ORION.approvals.pending();
+    var decided = ORION.approvals.all().filter(function (a) { return a.status !== 'pending'; }).slice(0, 5);
+    _renderApprovalList(pending);
+    _renderRecentDecisions(decided);
+  }
+}
+
+function _renderApprovalList(pending) {
+  var badge = document.getElementById('oc-approvalBadge');
   if (badge) {
     badge.textContent = pending.length + ' PENDING';
-    badge.style.background = pending.length > 0 ? 'rgba(255,80,80,.15)' : 'rgba(46,204,113,.1)';
-    badge.style.borderColor = pending.length > 0 ? 'rgba(255,80,80,.4)' : 'rgba(46,204,113,.3)';
-    badge.style.color       = pending.length > 0 ? '#ff8080'            : '#2ecc71';
+    badge.style.background  = pending.length > 0 ? 'rgba(255,80,80,.15)' : 'rgba(46,204,113,.1)';
+    badge.style.borderColor = pending.length > 0 ? 'rgba(255,80,80,.4)'  : 'rgba(46,204,113,.3)';
+    badge.style.color       = pending.length > 0 ? '#ff8080'             : '#2ecc71';
   }
 
   var listEl = document.getElementById('oc-approvalList');
-  if (listEl) {
-    if (!pending.length) {
-      listEl.innerHTML = '<div class="oc-approvalEmpty">No decisions required right now. Departments are handling routine work.</div>';
-    } else {
-      listEl.innerHTML = pending.map(function (item) {
-        var DEPT_COLORS = { security:'#9b6bff', career:'#7b6bff', housing:'#7b6bff', commerce:'#ff69b4', finance:'#2ecc71', productivity:'#3aa8c8', ops:'#9cf6ff' };
-        var col = DEPT_COLORS[item.dept] || '#9b6bff';
-        var ago = item.ts ? (function () {
-          var d = Math.floor((Date.now() - item.ts) / 60000);
-          return d < 1 ? 'just now' : d + 'm ago';
-        }()) : '—';
-        var recs = (item.recommendations || []).map(function (r) {
-          return '<div class="oc-approvalRec">· ' + r + '</div>';
-        }).join('');
-        return '<div class="oc-approvalCard" style="border-left-color:' + col + '">' +
-          '<div class="oc-approvalHeader">' +
-            '<span class="oc-approvalTitle">' + item.title + '</span>' +
-            '<span class="oc-approvalTime">' + ago + '</span>' +
-          '</div>' +
-          '<div class="oc-approvalSummary">' + (item.impact || item.summary || '') + '</div>' +
-          (recs ? '<div class="oc-approvalRecs">' + recs + '</div>' : '') +
-          '<div class="oc-approvalBtns">' +
-            '<button class="oc-approveBtn" data-aprid="' + item.id + '">✓ APPROVE</button>' +
-            '<button class="oc-rejectBtn"  data-aprid="' + item.id + '">✕ REJECT</button>' +
-          '</div>' +
-        '</div>';
-      }).join('');
-
-      // Wire buttons
-      listEl.querySelectorAll('.oc-approveBtn').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          var id = this.dataset.aprid;
-          ORION.approvals.grant(id);
-          showToast('Decision approved and executed.', '#2ecc71');
-        });
-      });
-      listEl.querySelectorAll('.oc-rejectBtn').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          var id = this.dataset.aprid;
-          ORION.approvals.reject(id, 'CEO rejected at ops center.');
-          showToast('Decision rejected.', '#ff5050');
-        });
-      });
-    }
+  if (!listEl) return;
+  if (!pending.length) {
+    listEl.innerHTML = '<div class="oc-approvalEmpty">No decisions required right now. Departments are handling routine work.</div>';
+    return;
   }
 
-  // Recent decisions
+  listEl.innerHTML = pending.map(function (item) {
+    /* Normalise between server items and legacy localStorage items */
+    var dept    = item.department || item.dept || 'ops';
+    var summary = item.description || item.impact || item.summary || '';
+    var riskKey = item.risk || 'reversible';
+    var col     = DEPT_COLORS[dept] || '#9b6bff';
+    var riskCol = RISK_COLORS[riskKey] || '#3aa8c8';
+    var isServer= (item.id || '').indexOf('ORION-') === 0;
+    var tsStr   = item.submitted_at || item.ts || '';
+    var ago     = _timeAgo(tsStr);
+    var agent   = item.agent ? (' · ' + item.agent.toUpperCase()) : '';
+    var recs    = (item.recommendations || []).map(function (r) {
+      return '<div class="oc-approvalRec">· ' + r + '</div>';
+    }).join('');
+
+    return '<div class="oc-approvalCard" style="border-left-color:' + col + '" data-aprid="' + item.id + '" data-server="' + isServer + '">' +
+      '<div class="oc-approvalHeader">' +
+        '<span class="oc-approvalTitle">' + (item.title || '—') + '</span>' +
+        '<span class="oc-approvalTime">' + ago + '</span>' +
+      '</div>' +
+      '<div class="oc-approvalMeta">' +
+        '<span class="oc-aprDept" style="color:' + col + '">' + dept.toUpperCase() + agent + '</span>' +
+        '<span class="oc-aprRisk" style="color:' + riskCol + '">⚠ ' + riskKey.toUpperCase() + '</span>' +
+      '</div>' +
+      '<div class="oc-approvalSummary">' + summary + '</div>' +
+      (recs ? '<div class="oc-approvalRecs">' + recs + '</div>' : '') +
+      '<div class="oc-approvalBtns">' +
+        '<button class="oc-approveBtn" data-aprid="' + item.id + '" data-server="' + isServer + '">✓ APPROVE</button>' +
+        '<button class="oc-rejectBtn"  data-aprid="' + item.id + '" data-server="' + isServer + '">✕ DECLINE</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  /* Wire buttons */
+  listEl.querySelectorAll('.oc-approveBtn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var id       = this.getAttribute('data-aprid');
+      var isServer = this.getAttribute('data-server') === 'true';
+      if (isServer && typeof OrionServer !== 'undefined') {
+        OrionServer.approve(id, '', function () {
+          showToast('CEO approved — action authorized.', '#2ecc71');
+          renderApprovalQueue();
+        });
+      } else if (typeof ORION !== 'undefined') {
+        ORION.approvals.grant(id);
+        showToast('Decision approved and executed.', '#2ecc71');
+        renderApprovalQueue();
+      }
+    });
+  });
+  listEl.querySelectorAll('.oc-rejectBtn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var id       = this.getAttribute('data-aprid');
+      var isServer = this.getAttribute('data-server') === 'true';
+      if (isServer && typeof OrionServer !== 'undefined') {
+        OrionServer.decline(id, 'CEO declined at Mission Control.', function () {
+          showToast('CEO declined — action blocked.', '#ff5050');
+          renderApprovalQueue();
+        });
+      } else if (typeof ORION !== 'undefined') {
+        ORION.approvals.reject(id, 'CEO rejected at ops center.');
+        showToast('Decision rejected.', '#ff5050');
+        renderApprovalQueue();
+      }
+    });
+  });
+}
+
+function _renderRecentDecisions(decided) {
   var decisionsEl = document.getElementById('oc-approvalDecisions');
-  if (decisionsEl) {
-    if (!decided.length) {
-      decisionsEl.innerHTML = '<div style="font-size:8px;color:rgba(200,160,255,.2);font-style:italic">No decisions made yet.</div>';
-    } else {
-      decisionsEl.innerHTML = decided.map(function (item) {
-        var approved = item.status === 'approved';
-        return '<div class="oc-decisionRow">' +
-          '<span class="oc-decisionDot" style="color:' + (approved ? '#2ecc71' : '#ff5050') + '">' + (approved ? '✓' : '✕') + '</span>' +
-          '<span class="oc-decisionTitle">' + item.title + '</span>' +
-          '<span class="oc-decisionStatus" style="color:' + (approved ? '#2ecc71' : '#ff5050') + '">' + item.status.toUpperCase() + '</span>' +
-        '</div>';
-      }).join('');
-    }
+  if (!decisionsEl) return;
+  if (!decided.length) {
+    decisionsEl.innerHTML = '<div style="font-size:8px;color:rgba(200,160,255,.2);font-style:italic">No decisions made yet.</div>';
+    return;
   }
+  decisionsEl.innerHTML = decided.map(function (item) {
+    var approved = (item.status === 'approved');
+    return '<div class="oc-decisionRow">' +
+      '<span class="oc-decisionDot" style="color:' + (approved ? '#2ecc71' : '#ff5050') + '">' + (approved ? '✓' : '✕') + '</span>' +
+      '<span class="oc-decisionTitle">' + (item.title || item.action || '—') + '</span>' +
+      '<span class="oc-decisionStatus" style="color:' + (approved ? '#2ecc71' : '#ff5050') + '">' + (item.status || '').toUpperCase() + '</span>' +
+    '</div>';
+  }).join('');
+}
+
+// ── PHASE 20: ACCOUNT CENTER ──────────────────────────────────────
+
+function renderAccountCenter() {
+  var grid = document.getElementById('oc-accountGrid');
+  if (!grid) return;
+
+  if (typeof CosAccounts === 'undefined') {
+    grid.innerHTML = '<div style="color:rgba(200,160,255,.3);font-size:11px;padding:12px 0">Account manager loading…</div>';
+    return;
+  }
+
+  var accounts = CosAccounts.getAll();
+  if (!accounts.length) {
+    grid.innerHTML = '<div style="color:rgba(200,160,255,.3);font-size:11px;padding:12px 0">No accounts registered.</div>';
+    return;
+  }
+
+  var summary = CosAccounts.getConnectionSummary();
+  var summaryEl = document.getElementById('oc-accountSummary');
+  if (summaryEl) {
+    summaryEl.textContent = summary.connected + '/' + summary.total + ' CONNECTED  ·  ' + summary.pending + ' PENDING';
+    summaryEl.style.color = summary.connected > 0 ? '#2ecc71' : '#ff8080';
+  }
+
+  var statusMap = {
+    'connected':     { cls:'oc-acct-connected',  dot:'●', label:'CONNECTED' },
+    'manual_import': { cls:'oc-acct-partial',     dot:'◑', label:'MANUAL' },
+    'configured':    { cls:'oc-acct-partial',     dot:'◑', label:'CONFIGURED' },
+    'not_connected': { cls:'oc-acct-pending',     dot:'○', label:'NOT CONNECTED' },
+    'disconnected':  { cls:'oc-acct-pending',     dot:'○', label:'DISCONNECTED' },
+  };
+
+  grid.innerHTML = accounts.map(function (a) {
+    var info = statusMap[a.status] || { cls:'oc-acct-pending', dot:'○', label:(a.status||'UNKNOWN').toUpperCase() };
+    var depts = (a.departments || []).join(' · ').toUpperCase();
+    return '<div class="oc-acctCard ' + info.cls + '">' +
+      '<div class="oc-acctIcon">' + (a.icon || '🔗') + '</div>' +
+      '<div class="oc-acctInfo">' +
+        '<div class="oc-acctName">' + a.name + '</div>' +
+        '<div class="oc-acctDept">' + depts + '</div>' +
+      '</div>' +
+      '<div class="oc-acctStatus">' +
+        '<span class="oc-acctDot">' + info.dot + '</span>' +
+        '<span class="oc-acctLabel">' + info.label + '</span>' +
+      '</div>' +
+    '</div>';
+  }).join('');
 }
 
 // ── PHASE 14: MISSION TIMELINE ────────────────────────────────────

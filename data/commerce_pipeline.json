@@ -1,0 +1,8 @@
+{
+  "_version": "1.0",
+  "_note": "Digital product pipeline. Each product moves through stages: trend → research → brief → design → mockups → seo → listing_draft → awaiting_ceo → published.",
+  "_rule": "No product moves to 'published' without ceo_decision = 'approved' in orion_queue.json.",
+  "stages": ["trend", "research", "brief", "design", "mockups", "seo", "listing_draft", "awaiting_ceo", "published", "archived"],
+  "products": [],
+  "content_items": []
+}

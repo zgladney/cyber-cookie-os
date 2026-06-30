@@ -1,0 +1,33 @@
+{
+  "_version": "1.0",
+  "account_id": "etsy",
+  "status": "not_connected",
+  "shop_id": null,
+  "shop_name": null,
+  "token_path": "data/tokens/etsy.json",
+  "token_status": "missing",
+  "scopes_granted": [],
+  "scopes_required": ["listings_r", "listings_w", "transactions_r", "shops_r", "billing_r"],
+  "last_sync": null,
+  "shop_data": {
+    "listing_count": 0,
+    "order_count": 0,
+    "revenue_30d": 0,
+    "top_listings": []
+  },
+  "draft_listings": [],
+  "pending_orders": [],
+  "analytics": {
+    "views_30d": 0,
+    "favorites_30d": 0,
+    "sales_30d": 0
+  },
+  "setup_steps": [
+    "Register app at etsy.com/developers",
+    "Set redirect URI to http://localhost:3000/auth/etsy/callback",
+    "Copy API key to .env as ETSY_API_KEY",
+    "Copy shared secret to .env as ETSY_SHARED_SECRET",
+    "Run python scripts/connect_etsy.py to complete OAuth flow",
+    "Token will be saved to data/tokens/etsy.json (gitignored)"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "_version": "1.0",
+  "_note": "Persistent ORION CEO approval queue. All irreversible actions must pass through here before executing.",
+  "_rule": "Nothing publishes, sends, applies, or spends without a record in this file and an explicit ceo_decision of 'approved'.",
+  "queue": [
+    {
+      "id": "ORION-1782781228480",
+      "type": "publish_listing",
+      "department": "commerce",
+      "agent": "EtsyBot",
+      "title": "Publish: Test Digital Sticker Pack",
+      "description": "Listing draft ready. CEO must approve.",
+      "risk": "publishing",
+      "data": {
+        "product_id": "P-001"
+      },
+      "submitted_at": "2026-06-29T21:00:28.480587",
+      "status": "approved",
+      "ceo_decision": "approved",
+      "ceo_notes": "Approved - looks good.",
+      "decided_at": "2026-06-29T21:00:30.548491"
+    }
+  ]
+}

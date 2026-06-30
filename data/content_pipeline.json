@@ -1,0 +1,16 @@
+{
+  "_version": "1.0",
+  "_note": "Faceless content pipeline. Each piece moves through: trend → script → visuals → video_assets → captions → hashtags → scheduled → awaiting_ceo → published.",
+  "_rule": "Nothing posts or publishes without CEO approval via ORION.",
+  "stages": ["trend", "script", "visuals", "video_assets", "captions", "hashtags", "scheduled", "awaiting_ceo", "published", "archived"],
+  "agents": {
+    "trend_finder": "Pixel",
+    "script_writer": "Spark",
+    "visual_builder": "Forge",
+    "video_assembler": "VideoBot",
+    "caption_writer": "CaptionBot",
+    "hashtag_researcher": "HashtagBot",
+    "scheduler": "Scheduler"
+  },
+  "items": []
+}

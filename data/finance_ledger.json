@@ -1,0 +1,60 @@
+{
+  "_version": "1.0",
+  "_note": "Finance ledger \u2014 revenue, expenses, royalties, subscriptions. No bank transactions execute without CEO approval.",
+  "categories": {
+    "revenue": [
+      "etsy_sales",
+      "tiktok_creator_fund",
+      "royalties",
+      "digital_products",
+      "other_income"
+    ],
+    "expenses": [
+      "subscriptions",
+      "tools",
+      "ads",
+      "supplies",
+      "taxes",
+      "other_expense"
+    ],
+    "subscriptions": []
+  },
+  "transactions": [
+    {
+      "id": "TXN-1782781260",
+      "type": "revenue",
+      "category": "etsy_sales",
+      "amount": 24.99,
+      "currency": "USD",
+      "description": "Digital sticker pack sale",
+      "source": "etsy",
+      "date": "2026-06-29",
+      "recorded_at": "2026-06-29T21:01:00.458048",
+      "tags": []
+    }
+  ],
+  "subscriptions": [
+    {
+      "id": "sub_001",
+      "name": "CyberCookieOS Hosting",
+      "amount": 0,
+      "currency": "USD",
+      "cycle": "monthly",
+      "category": "tools",
+      "status": "active",
+      "next_due": null,
+      "notes": "Local server \u2014 no cost"
+    }
+  ],
+  "summary": {
+    "mtd_revenue": 24.99,
+    "mtd_expenses": 0,
+    "mtd_profit": 24.99,
+    "ytd_revenue": 0,
+    "ytd_expenses": 0,
+    "ytd_profit": 0,
+    "projected_monthly": 0,
+    "currency": "USD",
+    "last_updated": "2026-06-29T21:01:00.458184"
+  }
+}

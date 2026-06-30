@@ -1,0 +1,34 @@
+{
+  "_version": "1.0",
+  "_note": "CRM \u2014 communication history and contact records. Managed by the Connections department.",
+  "contacts": [
+    {
+      "id": "CRM-1782781262",
+      "name": "Jane Smith",
+      "platform": "linkedin",
+      "handle": "janesmith",
+      "email": "",
+      "company": "TechCorp",
+      "role": "Recruiter",
+      "category": "recruiter",
+      "tags": [],
+      "notes": "Reached out about Help Desk role",
+      "added_at": "2026-06-29T21:01:02.538093",
+      "last_contact": null,
+      "messages": []
+    }
+  ],
+  "communication_log": [],
+  "templates": {
+    "recruiter_outreach": "Hello,\n\nI came across this opportunity and am very interested in learning more. I have experience in IT support and am actively pursuing CompTIA certifications.\n\nCould you share more details about this role?\n\nThank you \u2014 Zimiah Gladney",
+    "networking": "Hi [Name],\n\nI came across your profile and found your work in [field] really interesting. I'm working toward a career in IT/cybersecurity and would love to connect.\n\nBest, Zimiah",
+    "follow_up": "Hi [Name],\n\nI wanted to follow up on my previous message regarding [topic]. I'm still very interested and would love to connect at your convenience.\n\nThank you, Zimiah"
+  },
+  "stats": {
+    "total_contacts": 1,
+    "messages_sent": 0,
+    "responses_received": 0,
+    "response_rate": 0
+  },
+  "_updated": "2026-06-29T21:01:02.538112"
+}

@@ -49,6 +49,21 @@ def ts():
     return datetime.now().isoformat()
 
 
+def _audit_log(agent, action, detail=None):
+    """Append an immutable entry to data/audit_log.json."""
+    log = load_json('audit_log.json', {'entries': []})
+    log.setdefault('entries', []).append({
+        'id':     'AUDIT-' + str(int(datetime.now().timestamp() * 1000)),
+        'ts':     ts(),
+        'agent':  agent,
+        'action': action,
+        'detail': detail or {},
+    })
+    # Keep newest 2000
+    log['entries'] = log['entries'][-2000:]
+    save_json('audit_log.json', log)
+
+
 # ── Career Intelligence helpers ───────────────────────────────────────────────
 
 CAREER_DOCS_DIR = os.path.join(ROOT, 'data', 'documents', 'career')
@@ -290,6 +305,63 @@ class COSHandler(http.server.SimpleHTTPRequestHandler):
 
         elif path == '/api/career/companies':
             self._send(200, load_json('career_companies.json', {'companies': []}))
+
+        # ── Phase 20: Global Account Center ──────────────────────────────────────
+
+        elif path == '/api/accounts':
+            self._send(200, load_json('accounts.json', {'accounts': []}))
+
+        elif path.startswith('/api/connectors/'):
+            name = path.split('/api/connectors/')[-1].strip('/')
+            safe = ''.join(c for c in name if c.isalnum() or c == '_')
+            data = load_json('connectors/' + safe + '.json', None)
+            if data is None:
+                self._send(404, {'error': 'Connector not found: ' + safe})
+            else:
+                # Strip token_path from response — frontend never needs the path
+                safe_data = {k: v for k, v in data.items() if k != 'token_path'}
+                self._send(200, safe_data)
+
+        # ── Phase 20: ORION Mission Control ──────────────────────────────────────
+
+        elif path == '/api/orion/queue':
+            q = load_json('orion_queue.json', {'queue': []})
+            self._send(200, q)
+
+        elif path == '/api/orion/briefing':
+            briefing = load_json('orion_briefing.json', {})
+            # Always refresh pending_approvals count from live queue
+            q = load_json('orion_queue.json', {'queue': []})
+            pending = [x for x in q.get('queue', []) if x.get('status') == 'awaiting_ceo']
+            briefing['pending_approvals'] = len(pending)
+            briefing['generated_at'] = ts()
+            self._send(200, briefing)
+
+        elif path == '/api/orion/audit':
+            log = load_json('audit_log.json', {'entries': []})
+            entries = log.get('entries', [])
+            # Return newest first, max 200
+            self._send(200, {'entries': entries[-200:][::-1], 'total': len(entries)})
+
+        # ── Phase 20: Commerce pipeline ───────────────────────────────────────────
+
+        elif path == '/api/commerce/pipeline':
+            self._send(200, load_json('commerce_pipeline.json', {'products': [], 'content_items': []}))
+
+        # ── Phase 20: Content pipeline ────────────────────────────────────────────
+
+        elif path == '/api/content/pipeline':
+            self._send(200, load_json('content_pipeline.json', {'items': []}))
+
+        # ── Phase 20: Connections CRM ─────────────────────────────────────────────
+
+        elif path == '/api/connections/crm':
+            self._send(200, load_json('connections_crm.json', {'contacts': [], 'communication_log': []}))
+
+        # ── Phase 20: Finance ledger ──────────────────────────────────────────────
+
+        elif path == '/api/finance/ledger':
+            self._send(200, load_json('finance_ledger.json', {'transactions': [], 'summary': {}}))
 
         else:
             self._send(404, {'error': 'Unknown API route: ' + path})
@@ -633,6 +705,275 @@ class COSHandler(http.server.SimpleHTTPRequestHandler):
             companies['_updated'] = ts()
             save_json('career_companies.json', companies)
             self._send(200, {'ok': True, 'company': co})
+
+        # ── Phase 20: Accounts ────────────────────────────────────────────────────
+
+        elif path == '/api/accounts/connect':
+            # Mark an account as connected (or update status)
+            # NEVER accepts tokens — only status + metadata
+            acct_id = body.get('id', '')
+            status  = body.get('status', 'connected')
+            meta    = body.get('meta', {})
+            accts   = load_json('accounts.json', {'accounts': []})
+            found   = False
+            for a in accts.get('accounts', []):
+                if a['id'] == acct_id:
+                    a['status']       = status
+                    a['connected_at'] = meta.get('connected_at', ts())
+                    a['last_sync']    = meta.get('last_sync', ts())
+                    if meta.get('notes'): a['notes'] = meta['notes']
+                    found = True
+                    break
+            if not found:
+                self._send(404, {'error': 'Account not found: ' + acct_id})
+                return
+            save_json('accounts.json', accts)
+            _audit_log('system', 'account_connected', {'account': acct_id, 'status': status})
+            self._send(200, {'ok': True, 'id': acct_id, 'status': status})
+
+        # ── Phase 20: ORION Queue ─────────────────────────────────────────────────
+
+        elif path == '/api/orion/submit':
+            # Departments submit items for CEO review
+            # Required fields: type, department, agent, title, description, risk
+            # Optional: data (arbitrary payload, stored as-is for context)
+            item_type = body.get('type', 'action')
+            dept      = body.get('department', 'unknown')
+            agent     = body.get('agent', 'unknown')
+            title     = body.get('title', 'Untitled Action')
+            desc      = body.get('description', '')
+            risk      = body.get('risk', 'reversible')
+            payload   = body.get('data', {})
+
+            q = load_json('orion_queue.json', {'queue': []})
+            item = {
+                'id':           'ORION-' + str(int(datetime.now().timestamp() * 1000)),
+                'type':         item_type,
+                'department':   dept,
+                'agent':        agent,
+                'title':        title,
+                'description':  desc,
+                'risk':         risk,
+                'data':         payload,
+                'submitted_at': ts(),
+                'status':       'awaiting_ceo',
+                'ceo_decision': None,
+                'ceo_notes':    None,
+                'decided_at':   None,
+            }
+            q.setdefault('queue', []).insert(0, item)
+            # Keep last 500 items
+            q['queue'] = q['queue'][:500]
+            save_json('orion_queue.json', q)
+            _audit_log(agent, 'orion_submitted', {'id': item['id'], 'title': title, 'risk': risk, 'dept': dept})
+            self._send(200, {'ok': True, 'item': item})
+
+        elif path == '/api/orion/approve':
+            item_id = body.get('id', '')
+            notes   = body.get('notes', '')
+            q = load_json('orion_queue.json', {'queue': []})
+            found = False
+            for item in q.get('queue', []):
+                if item['id'] == item_id:
+                    item['status']       = 'approved'
+                    item['ceo_decision'] = 'approved'
+                    item['ceo_notes']    = notes
+                    item['decided_at']   = ts()
+                    found = True
+                    break
+            if not found:
+                self._send(404, {'error': 'Queue item not found: ' + item_id})
+                return
+            save_json('orion_queue.json', q)
+            _audit_log('CEO', 'orion_approved', {'id': item_id, 'notes': notes})
+            self._send(200, {'ok': True, 'id': item_id, 'decision': 'approved'})
+
+        elif path == '/api/orion/decline':
+            item_id = body.get('id', '')
+            notes   = body.get('notes', '')
+            q = load_json('orion_queue.json', {'queue': []})
+            found = False
+            for item in q.get('queue', []):
+                if item['id'] == item_id:
+                    item['status']       = 'declined'
+                    item['ceo_decision'] = 'declined'
+                    item['ceo_notes']    = notes
+                    item['decided_at']   = ts()
+                    found = True
+                    break
+            if not found:
+                self._send(404, {'error': 'Queue item not found: ' + item_id})
+                return
+            save_json('orion_queue.json', q)
+            _audit_log('CEO', 'orion_declined', {'id': item_id, 'notes': notes})
+            self._send(200, {'ok': True, 'id': item_id, 'decision': 'declined'})
+
+        elif path == '/api/orion/audit/log':
+            agent  = body.get('agent', 'system')
+            action = body.get('action', '')
+            detail = body.get('detail', {})
+            _audit_log(agent, action, detail)
+            self._send(200, {'ok': True})
+
+        # ── Phase 20: Commerce pipeline ───────────────────────────────────────────
+
+        elif path == '/api/commerce/pipeline/create':
+            pipeline = load_json('commerce_pipeline.json', {'products': [], 'content_items': []})
+            kind     = body.get('kind', 'product')  # 'product' or 'content'
+            item = {
+                'id':          kind[0].upper() + '-' + str(int(datetime.now().timestamp())),
+                'kind':        kind,
+                'title':       body.get('title', 'Untitled'),
+                'description': body.get('description', ''),
+                'trend_source':body.get('trend_source', ''),
+                'tags':        body.get('tags', []),
+                'stage':       'research',
+                'created_at':  ts(),
+                'updated_at':  ts(),
+                'stages_completed': [],
+                'assets':      [],
+                'listing_draft': None,
+                'orion_item_id': None,
+            }
+            if kind == 'product':
+                pipeline.setdefault('products', []).insert(0, item)
+            else:
+                pipeline.setdefault('content_items', []).insert(0, item)
+            pipeline['_updated'] = ts()
+            save_json('commerce_pipeline.json', pipeline)
+            _audit_log('Pixel', 'pipeline_created', {'id': item['id'], 'title': item['title'], 'kind': kind})
+            self._send(200, {'ok': True, 'item': item})
+
+        elif path == '/api/commerce/pipeline/advance':
+            pipeline = load_json('commerce_pipeline.json', {'products': [], 'content_items': []})
+            item_id  = body.get('id', '')
+            new_stage= body.get('stage', '')
+            allowed  = ['trend','research','brief','design','mockups','seo','listing_draft','awaiting_ceo','published','archived']
+            if new_stage not in allowed:
+                self._send(400, {'error': 'Invalid stage: ' + new_stage})
+                return
+            found = False
+            for collection in ['products', 'content_items']:
+                for item in pipeline.get(collection, []):
+                    if item['id'] == item_id:
+                        item['stages_completed'].append(item.get('stage', ''))
+                        item['stage']      = new_stage
+                        item['updated_at'] = ts()
+                        found = True
+                        break
+                if found: break
+            if not found:
+                self._send(404, {'error': 'Pipeline item not found: ' + item_id})
+                return
+            pipeline['_updated'] = ts()
+            save_json('commerce_pipeline.json', pipeline)
+            _audit_log('system', 'pipeline_advanced', {'id': item_id, 'new_stage': new_stage})
+            self._send(200, {'ok': True, 'id': item_id, 'stage': new_stage})
+
+        # ── Phase 20: Content pipeline ────────────────────────────────────────────
+
+        elif path == '/api/content/pipeline/create':
+            pipeline = load_json('content_pipeline.json', {'items': []})
+            item = {
+                'id':           'CON-' + str(int(datetime.now().timestamp())),
+                'topic':        body.get('topic', ''),
+                'platform':     body.get('platform', 'tiktok'),
+                'trend_source': body.get('trend_source', ''),
+                'stage':        'script',
+                'created_at':   ts(),
+                'updated_at':   ts(),
+                'stages_completed': [],
+                'script':       None,
+                'visual_plan':  None,
+                'captions':     None,
+                'hashtags':     [],
+                'scheduled_for':None,
+                'orion_item_id':None,
+                'output_files': {},
+            }
+            pipeline.setdefault('items', []).insert(0, item)
+            pipeline['_updated'] = ts()
+            save_json('content_pipeline.json', pipeline)
+            _audit_log('Pixel', 'content_created', {'id': item['id'], 'topic': item['topic']})
+            self._send(200, {'ok': True, 'item': item})
+
+        # ── Phase 20: CRM ─────────────────────────────────────────────────────────
+
+        elif path == '/api/connections/crm/add':
+            crm = load_json('connections_crm.json', {'contacts': [], 'communication_log': []})
+            contact = {
+                'id':           'CRM-' + str(int(datetime.now().timestamp())),
+                'name':         body.get('name', ''),
+                'platform':     body.get('platform', ''),
+                'handle':       body.get('handle', ''),
+                'email':        body.get('email', ''),
+                'company':      body.get('company', ''),
+                'role':         body.get('role', ''),
+                'category':     body.get('category', 'networking'),
+                'tags':         body.get('tags', []),
+                'notes':        body.get('notes', ''),
+                'added_at':     ts(),
+                'last_contact': None,
+                'messages':     [],
+            }
+            crm.setdefault('contacts', []).insert(0, contact)
+            crm['stats']['total_contacts'] = len(crm['contacts'])
+            crm['_updated'] = ts()
+            save_json('connections_crm.json', crm)
+            self._send(200, {'ok': True, 'contact': contact})
+
+        elif path == '/api/connections/crm/log':
+            crm = load_json('connections_crm.json', {'contacts': [], 'communication_log': []})
+            log_entry = {
+                'id':           'LOG-' + str(int(datetime.now().timestamp())),
+                'contact_id':   body.get('contact_id', ''),
+                'direction':    body.get('direction', 'sent'),
+                'platform':     body.get('platform', ''),
+                'subject':      body.get('subject', ''),
+                'content':      body.get('content', ''),
+                'logged_at':    ts(),
+                'status':       body.get('status', 'draft'),
+            }
+            crm.setdefault('communication_log', []).insert(0, log_entry)
+            # Update last_contact on matching contact
+            for c in crm.get('contacts', []):
+                if c['id'] == log_entry['contact_id']:
+                    c['last_contact'] = ts()
+                    c.setdefault('messages', []).append(log_entry['id'])
+                    break
+            save_json('connections_crm.json', crm)
+            self._send(200, {'ok': True, 'entry': log_entry})
+
+        # ── Phase 20: Finance ledger ──────────────────────────────────────────────
+
+        elif path == '/api/finance/ledger/add':
+            ledger = load_json('finance_ledger.json', {'transactions': [], 'summary': {}})
+            txn = {
+                'id':         'TXN-' + str(int(datetime.now().timestamp())),
+                'type':       body.get('type', 'expense'),
+                'category':   body.get('category', 'other'),
+                'amount':     body.get('amount', 0),
+                'currency':   body.get('currency', 'USD'),
+                'description':body.get('description', ''),
+                'source':     body.get('source', ''),
+                'date':       body.get('date', ts()[:10]),
+                'recorded_at':ts(),
+                'tags':       body.get('tags', []),
+            }
+            ledger.setdefault('transactions', []).insert(0, txn)
+            # Recompute MTD summary
+            from datetime import date as _date
+            this_month = ts()[:7]
+            mtd_rev = sum(t['amount'] for t in ledger['transactions'] if t.get('type') == 'revenue' and t.get('date','').startswith(this_month))
+            mtd_exp = sum(t['amount'] for t in ledger['transactions'] if t.get('type') == 'expense' and t.get('date','').startswith(this_month))
+            ledger.setdefault('summary', {}).update({
+                'mtd_revenue': mtd_rev,
+                'mtd_expenses': mtd_exp,
+                'mtd_profit': mtd_rev - mtd_exp,
+                'last_updated': ts(),
+            })
+            save_json('finance_ledger.json', ledger)
+            self._send(200, {'ok': True, 'transaction': txn})
 
         else:
             self._send(404, {'error': 'Unknown API route: ' + path})

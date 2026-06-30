@@ -1,0 +1,28 @@
+{
+  "_version": "1.0",
+  "account_id": "google",
+  "services": ["google_drive", "gmail", "google_calendar"],
+  "status": "not_connected",
+  "email": null,
+  "token_path": "data/tokens/google.json",
+  "token_status": "missing",
+  "scopes_granted": [],
+  "scopes_required": [
+    "https://www.googleapis.com/auth/drive.file",
+    "https://www.googleapis.com/auth/gmail.readonly",
+    "https://www.googleapis.com/auth/gmail.send",
+    "https://www.googleapis.com/auth/calendar.readonly",
+    "https://www.googleapis.com/auth/calendar.events"
+  ],
+  "last_sync": null,
+  "drive": { "files_synced": 0, "quota_used_gb": 0 },
+  "gmail": { "unread": 0, "inbox_count": 0 },
+  "calendar": { "upcoming_events": [], "next_event": null },
+  "setup_steps": [
+    "Create project at console.cloud.google.com",
+    "Enable Drive API, Gmail API, Calendar API",
+    "Create OAuth 2.0 credentials (Desktop app type)",
+    "Download credentials.json to project root (gitignored)",
+    "Run python scripts/connect_google.py to complete OAuth flow"
+  ]
+}

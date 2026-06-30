@@ -1,0 +1,61 @@
+{
+  "_version": "1.0",
+  "generated_at": null,
+  "daily_priorities": [],
+  "pending_approvals": 0,
+  "department_status": {
+    "career": {
+      "status": "active",
+      "last_activity": null,
+      "summary": "6 documents indexed. Knowledge base ready.",
+      "ready_items": [],
+      "needs_attention": []
+    },
+    "commerce": {
+      "status": "initializing",
+      "last_activity": null,
+      "summary": "No products in pipeline. Accounts not connected.",
+      "ready_items": [],
+      "needs_attention": ["Connect Etsy account", "Connect TikTok account"]
+    },
+    "finance": {
+      "status": "initializing",
+      "last_activity": null,
+      "summary": "No transactions recorded.",
+      "ready_items": [],
+      "needs_attention": []
+    },
+    "productivity": {
+      "status": "initializing",
+      "last_activity": null,
+      "summary": "No calendar connected.",
+      "ready_items": [],
+      "needs_attention": ["Connect Google Calendar"]
+    },
+    "connections": {
+      "status": "initializing",
+      "last_activity": null,
+      "summary": "CRM empty. No accounts connected.",
+      "ready_items": [],
+      "needs_attention": ["Connect LinkedIn", "Connect Gmail"]
+    },
+    "security": {
+      "status": "nominal",
+      "last_activity": null,
+      "summary": "No active threats. Credential audit pending.",
+      "ready_items": [],
+      "needs_attention": []
+    }
+  },
+  "revenue_snapshot": {
+    "mtd": 0,
+    "projected": 0,
+    "currency": "USD"
+  },
+  "publishing_queue": [],
+  "audit_summary": {
+    "actions_today": 0,
+    "approvals_granted": 0,
+    "approvals_declined": 0
+  }
+}
