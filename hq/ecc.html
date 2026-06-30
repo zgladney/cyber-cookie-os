@@ -28,9 +28,10 @@ var ECC_CONFIG = {
   color:     '#9b6bff',
   workspace: '../hq/index.html',
   employees: [
-    { name: 'Athena',   role: 'SOC ANALYST',       status: 'working', task: 'Monitoring systems for anomalies' },
-    { name: 'Nimbus',   role: 'CLOUD SENTINEL',    status: 'working', task: 'Scanning cloud infrastructure' },
-    { name: 'Sentinel', role: 'THREAT HUNTER',     status: 'idle',    task: 'Standing by for threat hunt request' }
+    { name: 'Orion',        role: 'NETWORK TRAFFIC ANALYST',    status: 'working', task: 'Analyzing network traffic patterns' },
+    { name: 'Athena',       role: 'MALWARE & EVIDENCE ANALYST', status: 'working', task: 'Scanning suspicious IPs and evidence' },
+    { name: 'Threat Hunter',role: 'INCIDENT INVESTIGATOR',      status: 'idle',    task: 'Standing by for incident assignment' },
+    { name: 'Cloudix',      role: 'CLOUD SECURITY MONITOR',     status: 'working', task: 'Auditing cloud asset exposure' }
   ],
   quick_actions: [
     { label: 'SCAN COUNT',   icon: '🔍', action: 'refresh',    msg: 'Loading security status...' },
@@ -43,6 +44,7 @@ var ECC_CONFIG = {
 <script src="../js/cybercookieos.js"></script>
 <script src="../js/orion.js"></script>
 <script src="../js/cos_orion_server.js"></script>
+<script src="../js/dept_nav.js"></script>
 <script src="../js/ecc_engine.js"></script>
 </body>
 </html>

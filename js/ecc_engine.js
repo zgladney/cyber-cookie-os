@@ -60,7 +60,7 @@
     var hdr = document.getElementById('ecc-header');
     if (hdr) {
       hdr.innerHTML =
-        '<a class="ecc-back-btn" href="../index.html">← ORION</a>' +
+        '<button class="ecc-back-btn" type="button" onclick="(window.DeptNav?DeptNav.back():(window.location.href=\'../hallway/index.html\'))">← ORION</button>' +
         '<div class="ecc-dept-title" style="color:' + COLOR + '">' + ICON + '  ' + LABEL + '</div>' +
         '<div class="ecc-dept-sub">EXECUTIVE CONTROL CENTER</div>' +
         '<div class="ecc-health-badge" id="ecc-health-badge" data-status="initializing">LOADING</div>' +
@@ -146,6 +146,9 @@
     /* These never wait on the API */
     _renderEmployees();
     _renderActions();
+
+    /* Department nav rail — injected by dept_nav.js if loaded */
+    if (window.DeptNav) { DeptNav.renderSidebar(); }
   }
 
   /* ── skeleton helpers ───────────────────────────────────────────────────────── */

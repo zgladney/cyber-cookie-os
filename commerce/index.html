@@ -225,6 +225,18 @@ input::placeholder,textarea::placeholder{color:rgba(200,100,150,.3)}
 /* ── UTILS ── */
 .rev-empty{font-size:9px;color:rgba(180,150,255,.25);font-style:italic;padding:10px 0;text-align:center}
 .rev-divider{height:1px;background:rgba(155,107,255,.09);margin:5px 0}
+
+/* ── MARKETPLACE CONNECTIONS ── */
+.rev-conn-platform{padding:12px 0;border-bottom:1px solid rgba(155,107,255,.1)}
+.rev-conn-platform:last-of-type{border-bottom:none}
+.rev-conn-platform-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.rev-conn-platform-name{font-size:11px;font-weight:700;letter-spacing:2px}
+.rev-conn-status{font-size:8px;letter-spacing:1.5px;font-weight:700}
+.rev-conn-btns{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:7px}
+.rev-conn-msg{font-size:8px;color:rgba(180,150,255,.35);line-height:1.5;font-style:italic}
+.rev-conn-notice{margin-top:14px;padding:8px 10px;background:rgba(155,107,255,.06);border:1px solid rgba(155,107,255,.15);border-radius:2px;font-size:8px;color:rgba(180,150,255,.4);line-height:1.6}
+.rev-conn-sync-result{margin-top:6px;padding:6px 8px;background:rgba(46,204,113,.04);border:1px solid rgba(46,204,113,.15);border-radius:2px;font-size:8px;color:rgba(46,204,113,.7);display:none}
+.rev-conn-sync-result.show{display:block}
 </style>
 </head>
 <body style="display:flex;flex-direction:column;height:100vh">
@@ -491,6 +503,7 @@ input::placeholder,textarea::placeholder{color:rgba(200,100,150,.3)}
       <button class="rev-sb-btn" onclick="revOpenDrawer('rev-drawer-campaign')">LAUNCH CAMPAIGN</button>
       <button class="rev-sb-btn" onclick="revOpenDrawer('rev-drawer-forecast')">REVENUE FORECAST</button>
       <button class="rev-sb-btn" onclick="revOpenDrawer('rev-drawer-insight')">CUSTOMER INSIGHTS</button>
+      <button class="rev-sb-btn" onclick="revOpenConnections()">🔗 MARKETPLACE CONNECTIONS</button>
     </div>
   </aside>
 </div>
@@ -635,6 +648,16 @@ input::placeholder,textarea::placeholder{color:rgba(200,100,150,.3)}
     <div class="rev-drawer-hdr"><span>CUSTOMER INSIGHTS</span><button onclick="revCloseDrawers()">✕</button></div>
     <div class="rev-drawer-body" id="rev-insight-body">
       <div class="rev-empty">Loading insights...</div>
+    </div>
+  </div>
+</div>
+
+<!-- Marketplace Connections -->
+<div class="rev-drawer-ov" id="rev-drawer-connections">
+  <div class="rev-drawer">
+    <div class="rev-drawer-hdr"><span>MARKETPLACE CONNECTIONS</span><button onclick="revCloseDrawers()">✕</button></div>
+    <div class="rev-drawer-body" id="rev-conn-body">
+      <div class="rev-empty">Loading connection status...</div>
     </div>
   </div>
 </div>

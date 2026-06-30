@@ -1029,6 +1029,7 @@ var RevAgents = (function () {
 
     CommerceStore.pushLog('RevenueAI', 'Revenue Operations Center loaded');
     _emit('commerce.workspace.ready', { ts: Date.now() });
+    RevConnections.fetchAllStatuses();
 
     if (window.COS && COS.events) {
       try {
@@ -1039,3 +1040,248 @@ var RevAgents = (function () {
     }
   });
 }());
+
+
+/* ── 9. MARKETPLACE CONNECTIONS ─────────────────────────────────────── */
+var RevConnections = (function () {
+  'use strict';
+
+  /* Only store connection STATUS in localStorage — never tokens or credentials.
+   * Tokens are stored server-side only (data/integrations.json on the server).
+   * Frontend holds: 'not_connected' | 'connecting' | 'connected' | 'error'     */
+
+  var PLATFORMS = [
+    { id: 'etsy',   label: 'ETSY',        color: '#f1a22b', icon: '🛒' },
+    { id: 'tiktok', label: 'TIKTOK SHOP', color: '#ff004f', icon: '🎵' },
+  ];
+
+  var STATUS_KEY = 'cos.integration.{id}.status';
+  var NOTE_KEY   = 'cos.integration.{id}.note';
+
+  function _key(tmpl, id) { return tmpl.replace('{id}', id); }
+
+  function _readStatus(id)  { return localStorage.getItem(_key(STATUS_KEY, id)) || 'not_connected'; }
+  function _writeStatus(id, s, note) {
+    localStorage.setItem(_key(STATUS_KEY, id), s);
+    if (note !== undefined) { localStorage.setItem(_key(NOTE_KEY, id), note || ''); }
+  }
+  function _readNote(id) { return localStorage.getItem(_key(NOTE_KEY, id)) || ''; }
+
+  function _emitCOS(event, data) {
+    if (window.COS && COS.events) { try { COS.events.emit(event, data); } catch (e) {} }
+  }
+
+  /* ── Render drawer ────────────────────────────────────────────────── */
+  function render() {
+    var el = document.getElementById('rev-conn-body');
+    if (!el) { return; }
+
+    var html = '';
+    for (var i = 0; i < PLATFORMS.length; i++) {
+      html += _renderPlatform(PLATFORMS[i]);
+    }
+    html +=
+      '<div class="rev-conn-notice">' +
+        'OAuth flows open in a new tab to prevent ECC displacement. ' +
+        'Connection tokens are stored server-side only — never in your browser. ' +
+        'Add API credentials to the server to enable live integrations.' +
+      '</div>';
+
+    el.innerHTML = html;
+  }
+
+  function _statusColor(s) {
+    return { connected: '#2ecc71', connecting: '#f1c40f', error: '#e74c3c', not_connected: 'rgba(180,150,255,.3)' }[s] || 'rgba(180,150,255,.3)';
+  }
+  function _statusLabel(s) {
+    return { connected: '● CONNECTED', connecting: '● CONNECTING…', error: '● ERROR', not_connected: '○ NOT CONNECTED' }[s] || '○ NOT CONNECTED';
+  }
+
+  function _renderPlatform(p) {
+    var s    = _readStatus(p.id);
+    var note = _readNote(p.id);
+    var isConnected = (s === 'connected');
+
+    var connectBtn = isConnected
+      ? '<button class="rev-zone-btn" style="color:rgba(231,76,60,.7);border-color:rgba(231,76,60,.25)" onclick="revDisconnectPlatform(\'' + p.id + '\')">DISCONNECT</button>'
+      : '<button class="rev-zone-btn pink" onclick="revConnectPlatform(\'' + p.id + '\')">CONNECT</button>';
+
+    var syncDisabled = isConnected ? '' : ' disabled style="opacity:.35;cursor:not-allowed"';
+
+    return (
+      '<div class="rev-conn-platform" id="rev-conn-' + p.id + '">' +
+        '<div class="rev-conn-platform-hdr">' +
+          '<span class="rev-conn-platform-name" style="color:' + p.color + '">' + p.icon + ' ' + p.label + '</span>' +
+          '<span class="rev-conn-status" id="rev-conn-status-' + p.id + '" style="color:' + _statusColor(s) + '">' + _statusLabel(s) + '</span>' +
+        '</div>' +
+        '<div class="rev-conn-btns">' +
+          connectBtn +
+          '<button class="rev-zone-btn"' + syncDisabled + ' onclick="revSyncListings(\'' + p.id + '\')">SYNC LISTINGS</button>' +
+          '<button class="rev-zone-btn"' + syncDisabled + ' onclick="revSyncAnalytics(\'' + p.id + '\')">SYNC ANALYTICS</button>' +
+        '</div>' +
+        '<div class="rev-conn-msg" id="rev-conn-msg-' + p.id + '">' +
+          (note || 'Not configured yet — add API credentials to server to enable live sync.') +
+        '</div>' +
+        '<div class="rev-conn-sync-result" id="rev-conn-result-' + p.id + '"></div>' +
+      '</div>'
+    );
+  }
+
+  /* ── Fetch status from server ─────────────────────────────────────── */
+  function fetchAllStatuses() {
+    for (var i = 0; i < PLATFORMS.length; i++) {
+      (function (p) { _fetchStatus(p.id); }(PLATFORMS[i]));
+    }
+  }
+
+  function _fetchStatus(platformId) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/api/integrations/' + platformId + '/status', true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4 || xhr.status !== 200) { return; }
+      try {
+        var d = JSON.parse(xhr.responseText);
+        _writeStatus(platformId, d.status || 'not_connected', d.note || '');
+      } catch (e) {}
+    };
+    xhr.send();
+  }
+
+  /* ── Connect ──────────────────────────────────────────────────────── */
+  function connect(platformId) {
+    _writeStatus(platformId, 'connecting', 'Initiating connection…');
+    _updateStatusEl(platformId);
+    _emitCOS('integration.connected', { platform: platformId, status: 'connecting' });
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/api/integrations/' + platformId + '/connect', true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4) { return; }
+      try {
+        var d = JSON.parse(xhr.responseText);
+        if (d.redirect_url) {
+          /* Open OAuth in new tab so iframe / ECC is never displaced */
+          window.open(d.redirect_url, '_blank', 'noopener,noreferrer');
+          _writeStatus(platformId, 'connecting', 'Waiting for OAuth callback in new tab…');
+        } else {
+          /* Not configured yet — show clear message */
+          _writeStatus(platformId, 'not_connected', d.note || 'Integration not configured yet. Add API credentials to the server.');
+          _emitCOS('integration.disconnected', { platform: platformId, reason: 'not_configured' });
+        }
+      } catch (e) {
+        _writeStatus(platformId, 'error', 'Connection request failed.');
+        _emitCOS('integration.disconnected', { platform: platformId, reason: 'error' });
+      }
+      _updateStatusEl(platformId);
+      render();
+    };
+    xhr.send();
+  }
+
+  /* ── Disconnect ───────────────────────────────────────────────────── */
+  function disconnect(platformId) {
+    _writeStatus(platformId, 'not_connected', '');
+    _updateStatusEl(platformId);
+    _emitCOS('integration.disconnected', { platform: platformId });
+    render();
+  }
+
+  /* ── Sync listings ────────────────────────────────────────────────── */
+  function syncListings(platformId) {
+    _emitCOS('integration.sync_started', { platform: platformId, type: 'listings' });
+    _showResult(platformId, 'Syncing listings…');
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/integrations/' + platformId + '/sync', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4) { return; }
+      try {
+        var d = JSON.parse(xhr.responseText);
+        if (d.status === 'not_configured') {
+          _showResult(platformId, d.message || 'Integration not configured yet.');
+          _emitCOS('integration.sync_failed', { platform: platformId, reason: 'not_configured' });
+        } else if (d.ok) {
+          _showResult(platformId, 'Sync complete — ' + (d.listings_synced || 0) + ' listing(s) updated.');
+          _emitCOS('integration.sync_completed', { platform: platformId, type: 'listings', count: d.listings_synced || 0 });
+          RevMarketplace.renderAll();
+        } else {
+          _showResult(platformId, d.error || 'Sync failed. Check server logs.');
+          _emitCOS('integration.sync_failed', { platform: platformId, reason: d.error || 'unknown' });
+        }
+      } catch (e) {
+        _showResult(platformId, 'Sync request failed.');
+        _emitCOS('integration.sync_failed', { platform: platformId, reason: 'network_error' });
+      }
+    };
+    xhr.send(JSON.stringify({ type: 'listings' }));
+  }
+
+  /* ── Sync analytics ───────────────────────────────────────────────── */
+  function syncAnalytics(platformId) {
+    _emitCOS('integration.sync_started', { platform: platformId, type: 'analytics' });
+    _showResult(platformId, 'Syncing analytics…');
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/integrations/' + platformId + '/sync', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4) { return; }
+      try {
+        var d = JSON.parse(xhr.responseText);
+        if (d.status === 'not_configured') {
+          _showResult(platformId, d.message || 'Integration not configured yet.');
+          _emitCOS('integration.sync_failed', { platform: platformId, reason: 'not_configured' });
+        } else if (d.ok) {
+          _showResult(platformId, 'Analytics synced — revenue data updated.');
+          _emitCOS('integration.sync_completed', { platform: platformId, type: 'analytics' });
+          RevAnalytics.render();
+        } else {
+          _showResult(platformId, d.error || 'Sync failed.');
+          _emitCOS('integration.sync_failed', { platform: platformId, reason: d.error || 'unknown' });
+        }
+      } catch (e) {
+        _showResult(platformId, 'Analytics sync failed.');
+        _emitCOS('integration.sync_failed', { platform: platformId, reason: 'network_error' });
+      }
+    };
+    xhr.send(JSON.stringify({ type: 'analytics' }));
+  }
+
+  /* ── DOM helpers ─────────────────────────────────────────────────── */
+  function _updateStatusEl(id) {
+    var s  = _readStatus(id);
+    var el = document.getElementById('rev-conn-status-' + id);
+    if (el) {
+      el.textContent = _statusLabel(s);
+      el.style.color = _statusColor(s);
+    }
+    var msg = document.getElementById('rev-conn-msg-' + id);
+    if (msg) { msg.textContent = _readNote(id) || 'Not configured yet.'; }
+  }
+
+  function _showResult(id, text) {
+    var el = document.getElementById('rev-conn-result-' + id);
+    if (!el) { return; }
+    el.textContent = text;
+    el.classList.add('show');
+    clearTimeout(el._tid);
+    el._tid = setTimeout(function () { el.classList.remove('show'); }, 5000);
+  }
+
+  return {
+    render:           render,
+    fetchAllStatuses: fetchAllStatuses,
+    connect:          connect,
+    disconnect:       disconnect,
+    syncListings:     syncListings,
+    syncAnalytics:    syncAnalytics,
+  };
+}());
+
+/* Global connection handlers (called from inline onclick) */
+window.revOpenConnections    = function ()   { RevConnections.render(); revOpenDrawer('rev-drawer-connections'); };
+window.revConnectPlatform    = function (id) { RevConnections.connect(id); };
+window.revDisconnectPlatform = function (id) { RevConnections.disconnect(id); };
+window.revSyncListings       = function (id) { RevConnections.syncListings(id); };
+window.revSyncAnalytics      = function (id) { RevConnections.syncAnalytics(id); };

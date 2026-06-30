@@ -909,6 +909,49 @@ class COSHandler(http.server.SimpleHTTPRequestHandler):
             scans = raw if isinstance(raw, list) else raw.get('entries', [])
             self._send(200, {'scans': scans, 'count': len(scans)})
 
+        # ── Marketplace Integrations (status + connect init) ──────────────────
+
+        elif path.startswith('/api/integrations/'):
+            parts    = path.split('/')            # ['','api','integrations','etsy','status']
+            platform = parts[3] if len(parts) > 3 else ''
+            action   = parts[4] if len(parts) > 4 else ''
+            integrations = load_json('integrations.json', {})
+            state = integrations.get(platform, {})
+
+            if action == 'status':
+                self._send(200, {
+                    'platform': platform,
+                    'status':   state.get('status', 'not_connected'),
+                    'note':     state.get('note', ''),
+                    'last_sync':     state.get('last_sync'),
+                    'listings_count':state.get('listings_count', 0),
+                })
+
+            elif action == 'connect':
+                # Placeholder: no real OAuth until credentials are added.
+                # Frontend reads redirect_url; None signals "not configured yet".
+                self._send(200, {
+                    'platform':     platform,
+                    'status':       'not_configured',
+                    'redirect_url': None,
+                    'note':         (
+                        'Integration not configured yet. '
+                        'To enable ' + platform.upper() + ' OAuth, add credentials to '
+                        'data/integrations.json and restart the server.'
+                    ),
+                })
+
+            elif action == 'callback':
+                # OAuth callback placeholder.  Real flow wires token here.
+                self._send(200, {
+                    'platform': platform,
+                    'status':   'not_configured',
+                    'note':     'OAuth callback received but no credentials configured.',
+                })
+
+            else:
+                self._send(404, {'error': 'Unknown integration action: ' + action})
+
         else:
             self._send(404, {'error': 'Unknown API route: ' + path})
 
@@ -1491,6 +1534,30 @@ class COSHandler(http.server.SimpleHTTPRequestHandler):
             self._send(200, {'ok': True, 'entry': log_entry})
 
         # ── Phase 20: Finance ledger ──────────────────────────────────────────────
+
+        elif path.startswith('/api/integrations/') and path.endswith('/sync'):
+            parts    = path.split('/')
+            platform = parts[3] if len(parts) > 3 else ''
+            integrations = load_json('integrations.json', {})
+            state = integrations.get(platform, {})
+
+            if state.get('status') != 'connected':
+                self._send(200, {
+                    'status':  'not_configured',
+                    'platform': platform,
+                    'message': (
+                        platform.upper() + ' integration is not configured. '
+                        'Add API credentials to data/integrations.json to enable live sync.'
+                    ),
+                })
+            else:
+                # Real sync logic goes here when credentials are present.
+                self._send(200, {
+                    'ok': True,
+                    'platform':       platform,
+                    'listings_synced':0,
+                    'message':        'Sync complete (no new data — credentials configured but API not yet wired).',
+                })
 
         elif path == '/api/finance/ledger/add':
             ledger = load_json('finance_ledger.json', {'transactions': [], 'summary': {}})

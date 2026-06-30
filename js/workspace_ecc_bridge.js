@@ -90,7 +90,22 @@
     e.stopPropagation();
 
     if (href.indexOf('ecc.html') !== -1) {
-      PARENT_ECC.closeWorkspace();
+      /* Check if the link targets a DIFFERENT department's ECC */
+      var targetDeptId = null;
+      try {
+        if (window.parent.DeptNav) { targetDeptId = window.parent.DeptNav.deptIdFromHref(href); }
+      } catch (ex) {}
+      var currentDeptId = window.ECC_CONFIG ? window.ECC_CONFIG.dept : null;
+
+      if (targetDeptId && targetDeptId !== currentDeptId && window.parent.DeptNav) {
+        /* Close workspace first, then switch department */
+        try {
+          PARENT_ECC.closeWorkspace();
+          setTimeout(function () { window.parent.DeptNav.switchTo(targetDeptId); }, 220);
+        } catch (ex) {}
+      } else {
+        PARENT_ECC.closeWorkspace();
+      }
     } else {
       _iframeToast('Close workspace to navigate to ' + _shortName(href) + '.');
     }
