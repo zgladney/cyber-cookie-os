@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="X-Robots-Tag" content="noindex,nofollow">
+<title>⬡ SYSTEM — CyberCookieOS</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#04000d; --bg2:#08031a; --bg3:#0e0526;
+  --b:rgba(155,107,255,.13); --b2:rgba(155,107,255,.28);
+  --tx:rgba(210,200,255,.82); --dim:rgba(155,107,255,.38);
+  --ok:#3ddc6a; --warn:#f0a540; --err:#ff4466; --info:#9b6bff; --hi:#c9b8ff;
+  --fn:'Courier New',Consolas,monospace; --fs:10.5px;
+}
+
+body{background:var(--bg);color:var(--tx);font-family:var(--fn);font-size:var(--fs);line-height:1.5;min-height:100vh;overflow-x:hidden}
+
+/* ── Header ── */
+#hdr{position:sticky;top:0;z-index:200;display:flex;justify-content:space-between;align-items:center;
+  padding:7px 14px;background:rgba(4,0,13,.96);border-bottom:1px solid var(--b);backdrop-filter:blur(6px)}
+#hdr-l,#hdr-r{display:flex;align-items:center;gap:9px}
+.logo{font-size:15px;opacity:.7}
+.title{font-size:11px;font-weight:700;letter-spacing:4px;color:var(--hi)}
+.sub{font-size:8.5px;letter-spacing:2.5px;color:var(--dim)}
+.pbadge{font-size:7.5px;letter-spacing:1.5px;padding:2px 7px;background:rgba(155,107,255,.08);
+  border:1px solid rgba(155,107,255,.2);color:var(--info);border-radius:2px}
+#sys-ok{font-size:8px;letter-spacing:1.5px;font-weight:700;padding:2px 8px;border-radius:2px;
+  border:1px solid rgba(155,107,255,.15);color:var(--dim);background:rgba(155,107,255,.06);transition:all .2s}
+#sys-ok.ok {color:var(--ok); border-color:rgba(61,220,106,.25);background:rgba(61,220,106,.06)}
+#sys-ok.warn{color:var(--warn);border-color:rgba(240,165,64,.25);background:rgba(240,165,64,.06)}
+#sys-ok.err {color:var(--err); border-color:rgba(255,68,102,.25);background:rgba(255,68,102,.06)}
+#last-ref{font-size:8px;color:var(--dim);letter-spacing:.5px}
+.hbtn{font-family:var(--fn);font-size:8px;letter-spacing:1.5px;padding:3px 9px;cursor:pointer;
+  background:rgba(155,107,255,.07);border:1px solid rgba(155,107,255,.18);color:var(--dim);
+  border-radius:2px;transition:all .12s}
+.hbtn:hover{background:rgba(155,107,255,.14);color:var(--hi)}
+.hbtn.on{color:var(--ok);border-color:rgba(61,220,106,.28);background:rgba(61,220,106,.05)}
+
+/* ── Grid ── */
+#sg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:10px}
+.panel{background:var(--bg2);border:1px solid var(--b);border-radius:3px;padding:11px 13px;min-height:120px;overflow:hidden}
+.panel.sp2{grid-column:span 2}
+.panel.sp4{grid-column:span 4}
+
+.ph{font-size:7.5px;font-weight:700;letter-spacing:3px;color:var(--info);margin-bottom:9px;
+  border-bottom:1px solid var(--b);padding-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+.phc{font-size:7.5px;letter-spacing:1px;color:var(--dim);background:rgba(155,107,255,.07);
+  padding:1px 5px;border-radius:2px;font-weight:400}
+
+/* ── KV ── */
+.kv{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;gap:8px}
+.kk{color:var(--dim);font-size:9px;white-space:nowrap;flex-shrink:0}
+.kv_{color:var(--tx);font-size:9.5px;text-align:right;word-break:break-all}
+
+/* ── Colors ── */
+.ok{color:var(--ok)} .warn{color:var(--warn)} .err{color:var(--err)} .info{color:var(--info)} .dim{color:var(--dim)} .hi{color:var(--hi)}
+
+/* ── Agents ── */
+.ag-hdr{display:grid;grid-template-columns:80px 70px 1fr 90px 55px;gap:4px;
+  font-size:7.5px;letter-spacing:1.5px;color:var(--dim);margin-bottom:5px;
+  border-bottom:1px solid var(--b);padding-bottom:4px}
+.ag-row{display:grid;grid-template-columns:80px 70px 1fr 90px 55px;gap:4px;margin-bottom:3px;align-items:center}
+.ag-name{font-size:10px;font-weight:700;color:var(--hi)}
+.ag-dept{font-size:8.5px;color:var(--dim)}
+.ag-title{font-size:8.5px;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ag-last{font-size:8.5px;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ag-st{font-size:7.5px;font-weight:700;text-align:right;white-space:nowrap}
+
+/* ── Latency ── */
+.lat-row{margin-bottom:5px}
+.lat-top{display:flex;justify-content:space-between;align-items:center}
+.lat-ep{font-size:8.5px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.lat-ms{font-size:10px;font-weight:700;margin-left:6px;white-space:nowrap}
+.lat-bar{height:2px;background:rgba(155,107,255,.08);border-radius:1px;margin-top:2px}
+.lat-fill{height:100%;border-radius:1px;transition:width .35s ease}
+
+/* ── Dept health ── */
+#dh-b{display:flex;gap:10px;flex-wrap:wrap}
+.dhb{display:flex;flex-direction:column;align-items:center;padding:10px 18px;
+  border:1px solid var(--b);border-radius:3px;min-width:110px;background:var(--bg);gap:4px;transition:border-color .2s}
+.dhb.ok  {border-color:rgba(61,220,106,.22)}
+.dhb.warn{border-color:rgba(240,165,64,.22)}
+.dhb.err {border-color:rgba(255,68,102,.22)}
+.dhb-icon{font-size:22px}
+.dhb-label{font-size:7px;letter-spacing:2px;color:var(--dim)}
+.dhb-ms{font-size:8px;color:var(--dim)}
+.dhb-st{font-size:8.5px;font-weight:700}
+
+/* ── Workspaces ── */
+.ws-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.ws-name{font-size:9.5px;color:var(--tx)}
+.ws-folder{font-size:8px;color:var(--dim)}
+.ws-st{font-size:8px;font-weight:700;white-space:nowrap}
+
+/* ── Integrations ── */
+.int-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.int-left{flex:1;overflow:hidden}
+.int-name{font-size:9px;color:var(--tx)}
+.int-dept{font-size:8px;color:var(--dim)}
+.ist{font-size:7.5px;padding:1px 5px;border-radius:2px;font-weight:700;white-space:nowrap}
+.ist.ok  {color:var(--ok); background:rgba(61,220,106,.07);border:1px solid rgba(61,220,106,.18)}
+.ist.warn{color:var(--warn);background:rgba(240,165,64,.07);border:1px solid rgba(240,165,64,.18)}
+.ist.nc  {color:var(--dim); background:rgba(155,107,255,.05);border:1px solid var(--b)}
+.ist.err {color:var(--err); background:rgba(255,68,102,.07);border:1px solid rgba(255,68,102,.18)}
+
+/* ── Notification / Approval rows ── */
+.nrow{border-left:2px solid var(--b);padding-left:7px;margin-bottom:5px}
+.nrow.hi{border-color:rgba(240,165,64,.5)}
+.nrow.read{opacity:.5}
+.ntxt{font-size:8.5px;color:var(--tx);line-height:1.4}
+.nts{font-size:7.5px;color:var(--dim)}
+.arow{border-left:2px solid rgba(240,165,64,.4);padding-left:7px;margin-bottom:5px}
+.atitle{font-size:8.5px;color:var(--tx);line-height:1.4}
+.ameta{font-size:7.5px;color:var(--dim)}
+
+/* ── Routine rows ── */
+.rtn-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;gap:4px}
+.rtn-l{flex:1;overflow:hidden}
+.rtn-title{font-size:8.5px;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rtn-agent{font-size:8px;color:var(--dim)}
+.rtn-r{text-align:right;flex-shrink:0}
+.rtn-st{font-size:7.5px;font-weight:700;white-space:nowrap}
+.rtn-last{font-size:7.5px;color:var(--dim);white-space:nowrap}
+
+/* ── LocalStorage ── */
+.ls-row{display:flex;justify-content:space-between;margin-bottom:2px;gap:4px}
+.ls-key{font-size:8.5px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.ls-sz{font-size:8.5px;color:var(--tx);white-space:nowrap}
+
+/* ── EventBus rows ── */
+.ev-row{display:flex;justify-content:space-between;margin-bottom:3px}
+.ev-type{font-size:8.5px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.ev-ct{font-size:8.5px;color:var(--tx);white-space:nowrap;margin-left:4px}
+
+/* ── Memory bar ── */
+.mem-bar{height:5px;background:rgba(155,107,255,.1);border-radius:2px;margin:6px 0}
+.mem-fill{height:100%;border-radius:2px;transition:width .3s}
+
+/* ── Divider ── */
+.dv{border:none;border-top:1px solid var(--b);margin:7px 0}
+
+/* ── Section label ── */
+.slabel{font-size:7.5px;letter-spacing:1.5px;color:var(--dim);margin-bottom:4px}
+</style>
+</head>
+<body>
+
+<header id="hdr">
+  <div id="hdr-l">
+    <span class="logo">⬡</span>
+    <span class="title">CYBERCOOKIEOS</span>
+    <span class="sub">SYSTEM HEALTH</span>
+    <span class="pbadge">PHASE 25.5</span>
+  </div>
+  <div id="hdr-r">
+    <span id="sys-ok">CHECKING...</span>
+    <span id="last-ref">—</span>
+    <button class="hbtn" id="btn-ref">↺ REFRESH</button>
+    <button class="hbtn" id="btn-auto">AUTO</button>
+  </div>
+</header>
+
+<div id="sg">
+
+  <!-- Row 1 -->
+  <div class="panel" id="p-fw">
+    <div class="ph">FRAMEWORK</div>
+    <div id="fw-b"><span class="dim">Checking...</span></div>
+  </div>
+
+  <div class="panel sp2" id="p-ag">
+    <div class="ph">ACTIVE AGENTS <span class="phc" id="ag-c">—</span></div>
+    <div id="ag-b"><span class="dim">Loading...</span></div>
+  </div>
+
+  <div class="panel" id="p-ev">
+    <div class="ph">EVENT BUS</div>
+    <div id="ev-b"><span class="dim">Monitoring...</span></div>
+  </div>
+
+  <!-- Row 2 -->
+  <div class="panel" id="p-lat">
+    <div class="ph">API LATENCY</div>
+    <div id="lat-b"><span class="dim">Pinging...</span></div>
+  </div>
+
+  <div class="panel" id="p-ws">
+    <div class="ph">REGISTERED WORKSPACES</div>
+    <div id="ws-b"><span class="dim">Checking...</span></div>
+  </div>
+
+  <div class="panel" id="p-int">
+    <div class="ph">INTEGRATIONS <span class="phc" id="int-c">—</span></div>
+    <div id="int-b"><span class="dim">Loading...</span></div>
+  </div>
+
+  <div class="panel" id="p-mem">
+    <div class="ph">MEMORY</div>
+    <div id="mem-b"><span class="dim">Reading...</span></div>
+  </div>
+
+  <!-- Row 3 -->
+  <div class="panel" id="p-ls">
+    <div class="ph">LOCALSTORAGE</div>
+    <div id="ls-b"><span class="dim">Scanning...</span></div>
+  </div>
+
+  <div class="panel" id="p-notif">
+    <div class="ph">NOTIFICATIONS <span class="phc" id="notif-c">—</span></div>
+    <div id="notif-b"><span class="dim">Loading...</span></div>
+  </div>
+
+  <div class="panel" id="p-apr">
+    <div class="ph">APPROVAL QUEUE <span class="phc" id="apr-c">—</span></div>
+    <div id="apr-b"><span class="dim">Loading...</span></div>
+  </div>
+
+  <div class="panel" id="p-rtn">
+    <div class="ph">ORION ROUTINES</div>
+    <div id="rtn-b"><span class="dim">Loading...</span></div>
+  </div>
+
+  <!-- Row 4 — full width -->
+  <div class="panel sp4" id="p-dh">
+    <div class="ph">DEPARTMENT HEALTH</div>
+    <div id="dh-b"><span class="dim">Pinging departments...</span></div>
+  </div>
+
+</div>
+
+<script src="../js/cybercookieos.js"></script>
+<script src="../js/orion.js"></script>
+<script src="../js/dept_nav.js"></script>
+<script>
+(function () {
+'use strict';
+
+/* ── Patch EventBus immediately (before DOMContentLoaded) ──────────────────
+   Must run synchronously so events emitted during ORION.init() are counted. */
+var _evCount  = 0;
+var _evLog    = [];
+var _evBySec  = 0;
+var _evLast   = 0;
+var _evLastTs = Date.now();
+
+if (typeof COS !== 'undefined' && COS.events) {
+  var _origEmit = COS.events.emit;
+  COS.events.emit = function (type, data) {
+    _evCount++;
+    _evLog.unshift({ type: type, ts: Date.now() });
+    if (_evLog.length > 100) { _evLog = _evLog.slice(0, 100); }
+    return _origEmit.apply(this, arguments);
+  };
+}
+
+/* ── Helpers ─────────────────────────────────────────────────────────────── */
+
+function _fmtBytes(b) {
+  if (!b) { return '0 B'; }
+  if (b < 1024)    { return b + ' B'; }
+  if (b < 1048576) { return (b / 1024).toFixed(1) + ' KB'; }
+  return (b / 1048576).toFixed(2) + ' MB';
+}
+
+function _relTime(ts) {
+  if (!ts) { return '—'; }
+  var d = Math.floor((Date.now() - ts) / 1000);
+  if (d < 5)     { return 'just now'; }
+  if (d < 60)    { return d + 's ago'; }
+  if (d < 3600)  { return Math.floor(d / 60) + 'm ago'; }
+  if (d < 86400) { return Math.floor(d / 3600) + 'h ago'; }
+  return Math.floor(d / 86400) + 'd ago';
+}
+
+function _kv(k, v) {
+  return '<div class="kv"><span class="kk">' + k + '</span><span class="kv_">' + v + '</span></div>';
+}
+
+function _esc(s) {
+  return String(s === null || s === undefined ? '—' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function _latColor(ms) {
+  if (!ms || ms >= 5000) { return 'var(--err)'; }
+  if (ms < 50)  { return 'var(--ok)'; }
+  if (ms < 200) { return 'var(--warn)'; }
+  return 'var(--err)';
+}
+function _latClass(ms) {
+  if (!ms || ms >= 5000) { return 'err'; }
+  if (ms < 50)  { return 'ok'; }
+  if (ms < 200) { return 'warn'; }
+  return 'err';
+}
+
+function _intBadge(status) {
+  var map = {
+    active:         ['ok',   'ACTIVE'],
+    connected:      ['ok',   'CONNECTED'],
+    not_connected:  ['nc',   'NOT CONNECTED'],
+    not_configured: ['nc',   'NOT CONFIGURED'],
+    disconnected:   ['warn', 'DISCONNECTED'],
+    error:          ['err',  'ERROR'],
+  };
+  var pair = map[status] || ['nc', status ? String(status).toUpperCase() : '—'];
+  return '<span class="ist ' + pair[0] + '">' + pair[1] + '</span>';
+}
+
+/* ── XHR helpers ────────────────────────────────────────────────────────── */
+
+function _xhr(url, cb) {
+  var t0 = performance.now();
+  var x = new XMLHttpRequest();
+  x.open('GET', url, true);
+  x.timeout = 5000;
+  x.onreadystatechange = function () {
+    if (x.readyState === 4) {
+      cb(x.status, x.responseText, Math.round(performance.now() - t0));
+    }
+  };
+  x.ontimeout = function () { cb(0, 'timeout', 5000); };
+  x.onerror   = function () { cb(0, 'error',   5000); };
+  x.send();
+}
+
+function _head(url, cb) {
+  var t0 = performance.now();
+  var x = new XMLHttpRequest();
+  x.open('HEAD', url, true);
+  x.timeout = 5000;
+  x.onreadystatechange = function () {
+    if (x.readyState === 4) {
+      cb(x.status, Math.round(performance.now() - t0));
+    }
+  };
+  x.ontimeout = function () { cb(0, 5000); };
+  x.onerror   = function () { cb(0, 5000); };
+  x.send();
+}
+
+/* ── LocalStorage scanner ─────────────────────────────────────────────── */
+
+function _lsStats() {
+  var all = [], total = 0, cosTotal = 0;
+  try {
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      var v = localStorage.getItem(k) || '';
+      var sz = (k.length + v.length) * 2;
+      all.push({ k: k, sz: sz });
+      total += sz;
+      if (k.indexOf('cos.') === 0) { cosTotal += sz; }
+    }
+  } catch (e) {}
+  all.sort(function (a, b) { return b.sz - a.sz; });
+  var cosKeys = all.filter(function (x) { return x.k.indexOf('cos.') === 0; });
+  return {
+    total:    all.length,
+    cosCount: cosKeys.length,
+    othCount: all.length - cosKeys.length,
+    bytes:    total,
+    cosBytes: cosTotal,
+    top5:     all.slice(0, 5),
+  };
+}
+
+/* ── Render: FRAMEWORK ─────────────────────────────────────────────────── */
+
+function _renderFramework(srv) {
+  var cos   = typeof COS   !== 'undefined' ? COS   : null;
+  var orion = typeof ORION !== 'undefined' ? ORION : null;
+  var nav   = typeof DepartmentRegistry !== 'undefined';
+
+  var h = '';
+  h += _kv('COS',      cos   ? '<span class="ok">v' + _esc(cos.version)   + '</span>' : '<span class="err">NOT LOADED</span>');
+  h += _kv('ORION',    orion ? '<span class="ok">v' + _esc(orion.version) + '</span>' : '<span class="err">NOT LOADED</span>');
+  h += _kv('DEPT NAV', nav ? '<span class="ok">LOADED (' + DepartmentRegistry.length + ' depts)</span>' : '<span class="err">MISSING</span>');
+  h += _kv('PHASE',    '<span class="info">25.5</span>');
+
+  if (srv) {
+    h += '<hr class="dv">';
+    h += _kv('BUILD',      '<span class="hi">' + _esc(srv.build || 'unknown') + '</span>');
+    h += _kv('PORT',       _esc(srv.port || 3000));
+    h += _kv('SERVER',     _esc((srv.server_time || '').substr(0, 19).replace('T', ' ')));
+    var s = srv.uptime_s || 0;
+    var upH = Math.floor(s / 3600), upM = Math.floor((s % 3600) / 60), upS = s % 60;
+    h += _kv('UPTIME',     upH ? upH + 'h ' + upM + 'm' : (upM ? upM + 'm ' + upS + 's' : upS + 's'));
+    h += _kv('DATA FILES', _esc(srv.data_file_count || 0) + ' files');
+    var dataSz = (srv.data_files || []).reduce(function (a, f) { return a + (f.size_bytes || 0); }, 0);
+    if (dataSz) { h += _kv('DATA SIZE', _fmtBytes(dataSz)); }
+  } else {
+    h += _kv('SERVER', '<span class="warn">UNREACHABLE</span>');
+  }
+
+  /* Last briefing / last sync */
+  if (cos) {
+    var briefing = cos.state.get('orion.briefing');
+    h += '<hr class="dv">';
+    h += _kv('LAST BRIEFING', briefing ? _relTime(briefing.generated) : '<span class="dim">never</span>');
+    var routines = cos.state.get('orion.routines') || {};
+    var rkeys = Object.keys(routines);
+    if (rkeys.length) {
+      var latest = rkeys.reduce(function (a, k) { return routines[k] > a ? routines[k] : a; }, 0);
+      h += _kv('LAST SYNC', _relTime(latest));
+    } else {
+      h += _kv('LAST SYNC', '<span class="dim">never</span>');
+    }
+  }
+
+  document.getElementById('fw-b').innerHTML = h;
+}
+
+/* ── Render: AGENTS ─────────────────────────────────────────────────────── */
+
+function _renderAgents() {
+  var cos = typeof COS !== 'undefined' ? COS : null;
+  if (!cos) {
+    document.getElementById('ag-b').innerHTML = '<span class="err">COS not loaded</span>';
+    return;
+  }
+
+  var log = cos.state.get('activity.log') || [];
+  var lastAct = {};
+  log.forEach(function (e) { if (e.agent && !lastAct[e.agent]) { lastAct[e.agent] = e; } });
+
+  function _st(name) {
+    var e = lastAct[name];
+    if (!e) { return ['dim', 'NO DATA']; }
+    var d = Date.now() - e.ts;
+    if (d < 300000)  { return ['ok',   'ACTIVE'];  }
+    if (d < 3600000) { return ['warn', 'IDLE'];    }
+    return ['dim', 'STANDBY'];
+  }
+
+  var deptOrder = ['ops','security','housing','commerce','productivity','finance'];
+  var empIds = [];
+  deptOrder.forEach(function (d) {
+    (cos.deptEmployees[d] || []).forEach(function (id) { empIds.push(id); });
+  });
+
+  var activeCount = 0;
+  var h = '<div class="ag-hdr"><span>NAME</span><span>DEPT</span><span>TITLE</span><span>LAST ACTIVITY</span><span>STATUS</span></div>';
+
+  empIds.forEach(function (id) {
+    var emp = cos.employees[id];
+    if (!emp) { return; }
+    var last = lastAct[emp.name];
+    var st   = _st(emp.name);
+    if (st[0] === 'ok') { activeCount++; }
+    h += '<div class="ag-row">';
+    h += '<span class="ag-name">' + _esc(emp.name) + '</span>';
+    h += '<span class="ag-dept">' + _esc(emp.dept) + '</span>';
+    h += '<span class="ag-title">' + _esc(emp.title) + '</span>';
+    h += '<span class="ag-last">' + (last ? _esc(last.msg.substr(0, 42)) : '—') + '</span>';
+    h += '<span class="ag-st ' + st[0] + '">' + st[1] + '</span>';
+    h += '</div>';
+  });
+
+  document.getElementById('ag-b').innerHTML = h;
+  document.getElementById('ag-c').textContent = activeCount + ' ACTIVE / ' + empIds.length + ' TOTAL';
+}
+
+/* ── Render: EVENT BUS ──────────────────────────────────────────────────── */
+
+function _renderEventBus() {
+  var now = Date.now();
+  var dt  = Math.max((now - _evLastTs) / 1000, 1);
+  _evBySec  = Math.round((_evCount - _evLast) / dt * 10) / 10;
+  _evLast   = _evCount;
+  _evLastTs = now;
+
+  var typeCounts = {};
+  _evLog.forEach(function (e) { typeCounts[e.type] = (typeCounts[e.type] || 0) + 1; });
+  var typeList = Object.keys(typeCounts).sort(function (a, b) { return typeCounts[b] - typeCounts[a]; });
+
+  var h = '';
+  h += _kv('EVENTS THIS SESSION', '<span class="hi">' + _evCount + '</span>');
+  h += _kv('EVENTS / SEC',        _evBySec > 0 ? '<span class="ok">' + _evBySec + '</span>' : '<span class="dim">0</span>');
+  h += _kv('UNIQUE EVENT TYPES',  typeList.length || '<span class="dim">0</span>');
+  h += _kv('NOTE', '<span class="dim" style="font-size:8px">Cross-page events not observable</span>');
+
+  h += '<hr class="dv">';
+  if (typeList.length > 0) {
+    h += '<div class="slabel">RECENT TYPES</div>';
+    typeList.slice(0, 8).forEach(function (type) {
+      h += '<div class="ev-row"><span class="ev-type">' + _esc(type) + '</span><span class="ev-ct">' + typeCounts[type] + '×</span></div>';
+    });
+  } else {
+    h += '<div class="dim" style="font-size:8.5px">No events fired yet this session.<br>Interact with a workspace to generate events.</div>';
+  }
+
+  if (typeof COS === 'undefined') {
+    h = '<span class="err">COS not loaded</span>';
+  }
+  document.getElementById('ev-b').innerHTML = h;
+}
+
+/* ── Render: API LATENCY ────────────────────────────────────────────────── */
+
+function _renderLatency(results) {
+  var h = '';
+  results.forEach(function (r) {
+    var timedout = r.ms >= 5000;
+    var failed   = r.status === 0;
+    var label    = failed ? '<span class="err">ERROR</span>' : timedout ? '<span class="warn">TIMEOUT</span>' : '<span class="' + _latClass(r.ms) + '">' + r.ms + 'ms</span>';
+    var barW     = failed || timedout ? 100 : Math.min((r.ms / 300) * 100, 100);
+    var barC     = _latColor(r.ms);
+
+    h += '<div class="lat-row">';
+    h += '<div class="lat-top"><span class="lat-ep">' + _esc(r.url) + '</span><span class="lat-ms">' + label + '</span></div>';
+    h += '<div class="lat-bar"><div class="lat-fill" style="width:' + barW + '%;background:' + barC + '"></div></div>';
+    h += '</div>';
+  });
+  document.getElementById('lat-b').innerHTML = h || '<span class="dim">No results</span>';
+}
+
+/* ── Render: WORKSPACES ─────────────────────────────────────────────────── */
+
+function _renderWorkspaces(wsMap) {
+  var reg = typeof DepartmentRegistry !== 'undefined' ? DepartmentRegistry : [];
+  if (!reg.length) {
+    document.getElementById('ws-b').innerHTML = '<span class="err">DepartmentRegistry not loaded</span>';
+    return;
+  }
+  var h = '';
+  reg.forEach(function (dept) {
+    var st  = wsMap[dept.folder] || {};
+    var ok  = st.status === 200;
+    var cls = ok ? 'ok' : (st.status === 0 ? 'err' : 'warn');
+    var stl = ok ? '<span class="ok">200 OK</span>'
+            : st.status === 0 ? '<span class="err">UNREACHABLE</span>'
+            : '<span class="warn">HTTP ' + st.status + '</span>';
+    h += '<div class="ws-row">';
+    h += '<div><div class="ws-name">' + dept.icon + ' ' + _esc(dept.label) + '</div>';
+    h += '<div class="ws-folder">' + _esc(dept.folder) + '/ecc.html</div></div>';
+    h += '<div style="text-align:right"><div class="ws-st ' + cls + '">' + stl + '</div>';
+    if (st.ms) { h += '<div style="font-size:7.5px;color:var(--dim)">' + st.ms + 'ms</div>'; }
+    h += '</div></div>';
+  });
+  document.getElementById('ws-b').innerHTML = h;
+}
+
+/* ── Render: INTEGRATIONS ───────────────────────────────────────────────── */
+
+function _renderIntegrations(liveMap) {
+  var cos  = typeof COS !== 'undefined' ? COS : null;
+  var list = cos ? (cos.integrations || []) : [];
+  if (!list.length) {
+    document.getElementById('int-b').innerHTML = '<span class="dim">No integrations defined</span>';
+    return;
+  }
+
+  var connected = 0;
+  var h = '';
+  list.forEach(function (itg) {
+    var live  = liveMap && liveMap[itg.id];
+    var rawSt = live ? live.status : itg.status;
+    if (rawSt === 'active' || rawSt === 'connected') { connected++; }
+    h += '<div class="int-row">';
+    h += '<div class="int-left"><div class="int-name">' + _esc(itg.name) + '</div>';
+    h += '<div class="int-dept">' + _esc(itg.dept) + '</div></div>';
+    h += _intBadge(rawSt);
+    h += '</div>';
+  });
+  document.getElementById('int-b').innerHTML = h;
+  document.getElementById('int-c').textContent = connected + ' CONNECTED';
+}
+
+/* ── Render: MEMORY ─────────────────────────────────────────────────────── */
+
+function _renderMemory() {
+  var h = '';
+  var mem = performance.memory;
+
+  if (mem) {
+    var used  = mem.usedJSHeapSize;
+    var total = mem.totalJSHeapSize;
+    var limit = mem.jsHeapSizeLimit;
+    var pct   = Math.round((used / limit) * 1000) / 10;
+    var barC  = pct < 50 ? 'var(--ok)' : pct < 80 ? 'var(--warn)' : 'var(--err)';
+    var pctC  = pct < 50 ? 'ok' : pct < 80 ? 'warn' : 'err';
+    h += _kv('HEAP USED',  _fmtBytes(used));
+    h += _kv('HEAP TOTAL', _fmtBytes(total));
+    h += _kv('HEAP LIMIT', _fmtBytes(limit));
+    h += '<div class="mem-bar"><div class="mem-fill" style="width:' + Math.min(pct,100) + '%;background:' + barC + '"></div></div>';
+    h += _kv('HEAP USAGE', '<span class="' + pctC + '">' + pct + '%</span>');
+  } else {
+    h += '<div class="dim" style="font-size:8.5px">performance.memory not available.<br>Use Chrome/Chromium for heap data.</div>';
+  }
+
+  h += '<hr class="dv">';
+  document.getElementById('mem-b').innerHTML = h + '<div class="dim" style="font-size:8.5px">Loading storage estimate...</div>';
+
+  if (navigator.storage && navigator.storage.estimate) {
+    navigator.storage.estimate().then(function (est) {
+      var used  = est.usage  || 0;
+      var quota = est.quota  || 0;
+      var pct   = quota ? Math.round((used / quota) * 10000) / 100 : 0;
+      var extra = _kv('STORAGE USED',  _fmtBytes(used));
+      extra    += _kv('STORAGE QUOTA', _fmtBytes(quota));
+      extra    += _kv('STORAGE %',     pct + '%');
+      var el = document.getElementById('mem-b');
+      if (el) { el.innerHTML = h + extra; }
+    }).catch(function () {});
+  }
+}
+
+/* ── Render: LOCALSTORAGE ──────────────────────────────────────────────── */
+
+function _renderLocalStorage() {
+  var st = _lsStats();
+  var h  = '';
+  h += _kv('TOTAL KEYS',  '<span class="hi">' + st.total + '</span>');
+  h += _kv('COS.* KEYS',  st.cosCount);
+  h += _kv('OTHER KEYS',  st.othCount);
+  h += _kv('TOTAL SIZE',  '<span class="' + (st.bytes > 1048576 ? 'warn' : 'ok') + '">' + _fmtBytes(st.bytes) + '</span>');
+  h += _kv('COS SIZE',    _fmtBytes(st.cosBytes));
+
+  if (st.top5.length > 0) {
+    h += '<hr class="dv">';
+    h += '<div class="slabel">LARGEST KEYS</div>';
+    st.top5.forEach(function (item) {
+      var k = item.k.length > 32 ? item.k.substr(0, 30) + '…' : item.k;
+      h += '<div class="ls-row"><span class="ls-key" title="' + _esc(item.k) + '">' + _esc(k) + '</span><span class="ls-sz">' + _fmtBytes(item.sz) + '</span></div>';
+    });
+  } else {
+    h += '<hr class="dv"><div class="dim" style="font-size:8.5px">LocalStorage is empty.</div>';
+  }
+  document.getElementById('ls-b').innerHTML = h;
+}
+
+/* ── Render: NOTIFICATIONS ──────────────────────────────────────────────── */
+
+function _renderNotifications() {
+  var cos = typeof COS !== 'undefined' ? COS : null;
+  if (!cos) {
+    document.getElementById('notif-b').innerHTML = '<span class="err">COS not loaded</span>';
+    return;
+  }
+  var all    = cos.notifications.get(true);
+  var unread = all.filter(function (n) { return !n.read; });
+  var hi     = all.filter(function (n) { return n.priority === 'high' && !n.read; });
+
+  var h = '';
+  h += _kv('UNREAD',   '<span class="' + (unread.length > 0 ? 'warn' : 'ok') + '">' + unread.length + '</span>');
+  h += _kv('HIGH PRI', '<span class="' + (hi.length     > 0 ? 'err'  : 'ok') + '">' + hi.length     + '</span>');
+  h += _kv('TOTAL',    all.length);
+  h += '<hr class="dv">';
+
+  var recent = all.slice(0, 4);
+  if (!recent.length) {
+    h += '<div class="dim" style="font-size:8.5px">No notifications.</div>';
+  } else {
+    recent.forEach(function (n) {
+      var cls = (n.priority === 'high' ? ' hi' : '') + (n.read ? ' read' : '');
+      h += '<div class="nrow' + cls + '">';
+      h += '<div class="ntxt">' + _esc(n.text.substr(0, 85)) + '</div>';
+      h += '<div class="nts">' + _relTime(n.ts) + '</div>';
+      h += '</div>';
+    });
+  }
+  document.getElementById('notif-b').innerHTML = h;
+  document.getElementById('notif-c').textContent = unread.length + ' UNREAD';
+}
+
+/* ── Render: APPROVAL QUEUE ─────────────────────────────────────────────── */
+
+function _renderApprovals() {
+  var orion = typeof ORION !== 'undefined' ? ORION : null;
+  if (!orion) {
+    document.getElementById('apr-b').innerHTML = '<span class="err">ORION not loaded</span>';
+    document.getElementById('apr-c').textContent = '—';
+    return;
+  }
+  var pending = orion.approvals.pending();
+  var total   = orion.approvals.all().length;
+
+  var h = '';
+  h += _kv('PENDING', '<span class="' + (pending.length > 0 ? 'warn' : 'ok') + '">' + pending.length + '</span>');
+  h += _kv('TOTAL',   total);
+  h += '<hr class="dv">';
+
+  if (!pending.length) {
+    h += '<div class="ok" style="font-size:8.5px">Approval queue clear.</div>';
+  } else {
+    pending.slice(0, 3).forEach(function (a) {
+      h += '<div class="arow"><div class="atitle">' + _esc((a.title || '').substr(0, 60)) + '</div>';
+      h += '<div class="ameta">' + _esc(a.dept || '') + ' · ' + _relTime(a.ts) + '</div></div>';
+    });
+    if (pending.length > 3) {
+      h += '<div class="dim" style="font-size:8px;margin-top:4px">+' + (pending.length - 3) + ' more pending</div>';
+    }
+  }
+  document.getElementById('apr-b').innerHTML = h;
+  document.getElementById('apr-c').textContent = pending.length + ' PENDING';
+}
+
+/* ── Render: ORION ROUTINES ─────────────────────────────────────────────── */
+
+function _renderRoutines() {
+  var orion = typeof ORION !== 'undefined' ? ORION : null;
+  if (!orion) {
+    document.getElementById('rtn-b').innerHTML = '<span class="err">ORION not loaded</span>';
+    return;
+  }
+  var rts     = orion.routines.getStatus();
+  var overdue = rts.filter(function (r) { return r.overdue; }).length;
+
+  var h = '';
+  h += _kv('TOTAL',   rts.length);
+  h += _kv('OVERDUE', overdue > 0 ? '<span class="err">' + overdue + '</span>' : '<span class="ok">0</span>');
+  h += '<hr class="dv">';
+
+  rts.forEach(function (r) {
+    var cls = r.overdue ? 'err' : 'ok';
+    var stl = r.overdue ? 'OVERDUE' : 'OK';
+    h += '<div class="rtn-row">';
+    h += '<div class="rtn-l"><div class="rtn-title">' + _esc(r.title) + '</div>';
+    h += '<div class="rtn-agent">' + _esc(r.agent) + ' · every ' + r.intervalH + 'h</div></div>';
+    h += '<div class="rtn-r"><div class="rtn-st ' + cls + '">' + stl + '</div>';
+    h += '<div class="rtn-last">' + _relTime(r.lastRun) + '</div></div>';
+    h += '</div>';
+  });
+
+  document.getElementById('rtn-b').innerHTML = h;
+}
+
+/* ── Render: DEPT HEALTH ────────────────────────────────────────────────── */
+
+function _renderDeptHealth(wsMap) {
+  var reg = typeof DepartmentRegistry !== 'undefined' ? DepartmentRegistry : [];
+  if (!reg.length) {
+    document.getElementById('dh-b').innerHTML = '<span class="err">DepartmentRegistry not loaded</span>';
+    return;
+  }
+  var h = '';
+  reg.forEach(function (dept) {
+    var st  = wsMap[dept.folder] || {};
+    var ok  = st.status === 200;
+    var cls = ok ? 'ok' : (st.status === 0 ? 'err' : 'warn');
+    var stl = ok ? '<span class="ok">200 OK</span>'
+            : st.status === 0 ? '<span class="err">UNREACHABLE</span>'
+            : '<span class="warn">HTTP ' + st.status + '</span>';
+    h += '<div class="dhb ' + cls + '">';
+    h += '<div class="dhb-icon">' + dept.icon + '</div>';
+    h += '<div class="dhb-label">' + _esc(dept.label) + '</div>';
+    h += '<div class="dhb-st">' + stl + '</div>';
+    h += '<div class="dhb-ms">' + (st.ms ? st.ms + 'ms' : '—') + '</div>';
+    h += '</div>';
+  });
+  document.getElementById('dh-b').innerHTML = h;
+}
+
+/* ── Overall status badge ───────────────────────────────────────────────── */
+
+function _updateOverall(latResults, wsMap) {
+  var el = document.getElementById('sys-ok');
+  var errs = 0, warns = 0;
+
+  latResults.forEach(function (r) {
+    if (!r.status || r.ms >= 5000) { errs++; }
+    else if (r.ms >= 200) { warns++; }
+  });
+
+  (typeof DepartmentRegistry !== 'undefined' ? DepartmentRegistry : []).forEach(function (d) {
+    var st = wsMap[d.folder] || {};
+    if (st.status !== 200) { errs++; }
+  });
+
+  if (typeof ORION !== 'undefined') {
+    var overdue = ORION.routines.getStatus().filter(function (r) { return r.overdue; }).length;
+    var pending = ORION.approvals.pending().length;
+    if (overdue >= 4) { warns++; }
+    if (pending >= 5) { warns++; }
+  }
+
+  if (errs > 0) {
+    el.textContent = errs + ' ERROR' + (errs !== 1 ? 'S' : '');
+    el.className = 'err';
+  } else if (warns > 0) {
+    el.textContent = warns + ' WARNING' + (warns !== 1 ? 'S' : '');
+    el.className = 'warn';
+  } else {
+    el.textContent = 'ALL SYSTEMS OK';
+    el.className = 'ok';
+  }
+}
+
+/* ── Main refresh ───────────────────────────────────────────────────────── */
+
+var _refreshing = false;
+var _autoTimer  = null;
+var _autoOn     = false;
+
+function refresh() {
+  if (_refreshing) { return; }
+  _refreshing = true;
+  document.getElementById('sys-ok').textContent = 'CHECKING...';
+  document.getElementById('sys-ok').className = '';
+
+  /* Synchronous panels (read from memory / localStorage) */
+  _renderAgents();
+  _renderEventBus();
+  _renderMemory();
+  _renderLocalStorage();
+  _renderNotifications();
+  _renderApprovals();
+  _renderRoutines();
+
+  /* Async: API latency pings */
+  var LAT_ENDPOINTS = [
+    '/api/system/health',
+    '/api/security/scans',
+    '/api/finance/ledger',
+    '/api/integrations/etsy/status',
+    '/api/integrations/tiktok/status',
+    '/api/connections/crm',
+  ];
+
+  var reg = typeof DepartmentRegistry !== 'undefined' ? DepartmentRegistry : [];
+  var latResults  = [];
+  var latDone     = 0;
+  var wsMap       = {};
+  var wsDone      = 0;
+  var srvData     = null;
+  var intLiveMap  = {};
+
+  function _checkAllDone() {
+    if (latDone < LAT_ENDPOINTS.length) { return; }
+    if (reg.length > 0 && wsDone < reg.length) { return; }
+    _renderFramework(srvData);
+    _renderLatency(latResults);
+    _renderWorkspaces(wsMap);
+    _renderDeptHealth(wsMap);
+    _renderIntegrations(intLiveMap);
+    _updateOverall(latResults, wsMap);
+    document.getElementById('last-ref').textContent = 'REFRESHED ' + new Date().toLocaleTimeString();
+    _refreshing = false;
+  }
+
+  /* Latency probes */
+  LAT_ENDPOINTS.forEach(function (url) {
+    _xhr(url, function (status, body, ms) {
+      if (url === '/api/system/health' && status === 200) {
+        try { srvData = JSON.parse(body); } catch (e) {}
+      }
+      latResults.push({ url: url, status: status, ms: ms });
+      latDone++;
+      _checkAllDone();
+    });
+  });
+
+  /* Integration live status */
+  ['etsy', 'tiktok'].forEach(function (id) {
+    _xhr('/api/integrations/' + id + '/status', function (status, body) {
+      if (status === 200) {
+        try { intLiveMap[id] = JSON.parse(body); } catch (e) {}
+      }
+    });
+  });
+
+  /* Dept ECC health checks */
+  if (!reg.length) {
+    wsDone = 1; /* skip */
+    _checkAllDone();
+  } else {
+    reg.forEach(function (dept) {
+      _head('/' + dept.folder + '/ecc.html', function (status, ms) {
+        wsMap[dept.folder] = { status: status, ms: ms };
+        wsDone++;
+        _checkAllDone();
+      });
+    });
+  }
+}
+
+/* ── Auto-refresh ───────────────────────────────────────────────────────── */
+
+function _startAuto() { _autoTimer = setInterval(refresh, 5000); }
+function _stopAuto()  { if (_autoTimer) { clearInterval(_autoTimer); _autoTimer = null; } }
+
+/* ── Boot ───────────────────────────────────────────────────────────────── */
+
+document.addEventListener('DOMContentLoaded', function () {
+  refresh();
+
+  document.getElementById('btn-ref').addEventListener('click', function () {
+    if (!_refreshing) { refresh(); }
+  });
+
+  document.getElementById('btn-auto').addEventListener('click', function () {
+    _autoOn = !_autoOn;
+    this.classList.toggle('on', _autoOn);
+    this.textContent = _autoOn ? 'AUTO ●' : 'AUTO';
+    if (_autoOn) { _startAuto(); } else { _stopAuto(); }
+  });
+});
+
+})();
+</script>
+</body>
+</html>

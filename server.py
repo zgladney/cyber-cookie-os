@@ -26,6 +26,7 @@ from datetime import datetime
 PORT = 3000
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(ROOT, 'data')
+_SERVER_BOOT = datetime.now()
 
 
 # ── JSON helpers ─────────────────────────────────────────────────────────────
@@ -908,6 +909,44 @@ class COSHandler(http.server.SimpleHTTPRequestHandler):
             raw = load_json('scan_log.json', [])
             scans = raw if isinstance(raw, list) else raw.get('entries', [])
             self._send(200, {'scans': scans, 'count': len(scans)})
+
+        # ── System health (developer diagnostics page only) ───────────────────
+
+        elif path == '/api/system/health':
+            import subprocess
+            uptime_s = int((datetime.now() - _SERVER_BOOT).total_seconds())
+            build = 'unknown'
+            try:
+                build = subprocess.check_output(
+                    ['git', 'rev-parse', '--short', 'HEAD'],
+                    cwd=ROOT, stderr=subprocess.DEVNULL
+                ).decode('utf-8', errors='replace').strip()
+            except Exception:
+                pass
+            data_files = []
+            try:
+                for fn in sorted(os.listdir(DATA_DIR)):
+                    if fn.endswith('.json'):
+                        fp = os.path.join(DATA_DIR, fn)
+                        try:
+                            sz = os.path.getsize(fp)
+                        except Exception:
+                            sz = 0
+                        data_files.append({'name': fn, 'size_bytes': sz})
+            except Exception:
+                pass
+            self._send(200, {
+                'phase':           '25.5',
+                'cos_version':     '0.4.0',
+                'orion_version':   '1.0.0',
+                'build':           build,
+                'server_time':     ts(),
+                'server_boot':     _SERVER_BOOT.isoformat(),
+                'uptime_s':        uptime_s,
+                'port':            PORT,
+                'data_files':      data_files,
+                'data_file_count': len(data_files),
+            })
 
         # ── Marketplace Integrations (status + connect init) ──────────────────
 
